@@ -1,0 +1,146 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Boundary	peps/predef.h	/^enum Boundary {Open,Cylinder,Torus}$/;"	g
+Complex	peps/predef.h	/^typedef std::complex<double> Complex;$/;"	t
+Coordinate	peps/predef.h	/^typedef array<int,3> Coordinate;$/;"	t
+Cylinder	peps/predef.h	/^enum Boundary {Open,Cylinder,Torus}$/;"	e	enum:Boundary
+D_	peps/ipeps.h	/^        int d_, D_;$/;"	m	class:iPEPS_Simple_Update	access:private
+D_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPS	access:private
+Lattice_Base	peps/lattice.cc	/^Lattice_Base::Lattice_Base(int& n_site_to_links, int &n_sites, int& n_bulk_links, int& n_boundary_links):$/;"	f	class:Lattice_Base	signature:(int& n_site_to_links, int &n_sites, int& n_bulk_links, int& n_boundary_links)
+Lattice_Base	peps/lattice.h	/^        Lattice_Base(int& n_site_to_links, int &n_sites, int& n_bulk_links, int& n_boundary_links);$/;"	p	class:Lattice_Base	access:public	signature:(int& n_site_to_links, int &n_sites, int& n_bulk_links, int& n_boundary_links)
+Lattice_Base	peps/lattice.h	/^class Lattice_Base$/;"	c
+Lattice_Base::Lattice_Base	peps/lattice.cc	/^Lattice_Base::Lattice_Base(int& n_site_to_links, int &n_sites, int& n_bulk_links, int& n_boundary_links):$/;"	f	class:Lattice_Base	signature:(int& n_site_to_links, int &n_sites, int& n_bulk_links, int& n_boundary_links)
+Lattice_Base::Lattice_Base	peps/lattice.h	/^        Lattice_Base(int& n_site_to_links, int &n_sites, int& n_bulk_links, int& n_boundary_links);$/;"	p	class:Lattice_Base	access:public	signature:(int& n_site_to_links, int &n_sites, int& n_bulk_links, int& n_boundary_links)
+Lattice_Base::boundary_conditions_	peps/lattice.h	/^        Boundary boundary_conditions_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::boundary_link_to_sites	peps/lattice.h	/^        inline int boundary_link_to_sites(int& i) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i) const
+Lattice_Base::boundary_link_to_sites_	peps/lattice.h	/^        vector<int> boundary_link_to_sites_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::bulk_link_to_sites	peps/lattice.h	/^        inline int bulk_link_to_sites(int& i, int& j) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i, int& j) const
+Lattice_Base::bulk_link_to_sites_	peps/lattice.h	/^        vector< array<int,2> > bulk_link_to_sites_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::n_boundary_links	peps/lattice.h	/^        inline int n_boundary_links() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_boundary_links_	peps/lattice.h	/^        int n_site_to_links_, n_sites_, n_bulk_links_, n_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::n_bulk_links	peps/lattice.h	/^        inline int n_bulk_links() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_bulk_links_	peps/lattice.h	/^        int n_site_to_links_, n_sites_, n_bulk_links_, n_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::n_site_to_links	peps/lattice.h	/^        inline int n_site_to_links() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_site_to_links_	peps/lattice.h	/^        int n_site_to_links_, n_sites_, n_bulk_links_, n_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::n_sites_	peps/lattice.h	/^        inline int n_sites_() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_sites_	peps/lattice.h	/^        int n_site_to_links_, n_sites_, n_bulk_links_, n_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::neighbour_sites	peps/lattice.h	/^        inline int neighbour_sites(int& i, int &j) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i, int &j) const
+Lattice_Base::neighbour_sites_	peps/lattice.h	/^        vector< vector<int> > neighbour_sites_, site_to_bulk_links_, site_to_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::site_to_boundary_links	peps/lattice.h	/^        inline int site_to_boundary_links(int& i, int& j) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i, int& j) const
+Lattice_Base::site_to_boundary_links_	peps/lattice.h	/^        vector< vector<int> > neighbour_sites_, site_to_bulk_links_, site_to_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::site_to_bulk_links	peps/lattice.h	/^        inline int site_to_bulk_links(int& i, int& j) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i, int& j) const
+Lattice_Base::site_to_bulk_links_	peps/lattice.h	/^        vector< vector<int> > neighbour_sites_, site_to_bulk_links_, site_to_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::~Lattice_Base	peps/lattice.h	/^        virtual ~Lattice_Base()=0;$/;"	p	class:Lattice_Base	access:public	signature:()
+Open	peps/predef.h	/^enum Boundary {Open,Cylinder,Torus}$/;"	e	enum:Boundary
+PEPS	peps/peps.cc	/^PEPS::PEPS(int d, int D, const Lattice_Base& lattice):$/;"	f	class:PEPS	signature:(int d, int D, const Lattice_Base& lattice)
+PEPS	peps/peps.h	/^        PEPS(int d, int D, const Lattice_Base& lattice);$/;"	p	class:PEPS	access:public	signature:(int d, int D, const Lattice_Base& lattice)
+PEPS	peps/peps.h	/^class PEPS$/;"	c
+PEPS::D_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPS	access:private
+PEPS::PEPS	peps/peps.cc	/^PEPS::PEPS(int d, int D, const Lattice_Base& lattice):$/;"	f	class:PEPS	signature:(int d, int D, const Lattice_Base& lattice)
+PEPS::PEPS	peps/peps.h	/^        PEPS(int d, int D, const Lattice_Base& lattice);$/;"	p	class:PEPS	access:public	signature:(int d, int D, const Lattice_Base& lattice)
+PEPS::boundary_link_legs_	peps/peps.h	/^        vector<Index> site_legs_, bulk_link_legs_, boundary_link_legs_;$/;"	m	class:PEPS	access:private
+PEPS::bulk_link_legs_	peps/peps.h	/^        vector<Index> site_legs_, bulk_link_legs_, boundary_link_legs_;$/;"	m	class:PEPS	access:private
+PEPS::d_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPS	access:private
+PEPS::lattice_	peps/peps.h	/^        Lattice_Base& lattice_;$/;"	m	class:PEPS	access:private
+PEPS::site_indexsets_	peps/peps.h	/^        vector< IndexSet<Index> > site_indexsets_;$/;"	m	class:PEPS	access:private
+PEPS::site_legs_	peps/peps.h	/^        vector<Index> site_legs_, bulk_link_legs_, boundary_link_legs_;$/;"	m	class:PEPS	access:private
+PEPS::site_tensors_	peps/peps.h	/^        vector<ITensor> site_tensors_;$/;"	m	class:PEPS	access:private
+PEPS::~PEPS	peps/peps.h	/^        ~PEPS();$/;"	p	class:PEPS	access:public	signature:()
+Square_Lattice	peps/lattice.cc	/^Square_Lattice::Square_Lattice(int& lx, int& ly): $/;"	f	class:Square_Lattice	signature:(int& lx, int& ly)
+Square_Lattice::Square_Lattice	peps/lattice.cc	/^Square_Lattice::Square_Lattice(int& lx, int& ly): $/;"	f	class:Square_Lattice	signature:(int& lx, int& ly)
+Square_Lattice_Open	peps/lattice.h	/^class Square_Lattice_Open : public Lattice_Base$/;"	c	inherits:Lattice_Base
+Square_Lattice_Open::coord_to_site_list_	peps/lattice.h	/^        vector< vector<int> > coord_to_site_list_;$/;"	m	class:Square_Lattice_Open	access:private
+Square_Lattice_Open::lx_	peps/lattice.h	/^        int lx_, ly_;$/;"	m	class:Square_Lattice_Open	access:private
+Square_Lattice_Open::ly_	peps/lattice.h	/^        int lx_, ly_;$/;"	m	class:Square_Lattice_Open	access:private
+Square_Lattice_Open::site_to_coord_list_	peps/lattice.h	/^        vector< array<int,2> > site_to_coord_list_;$/;"	m	class:Square_Lattice_Open	access:private
+Torus	peps/predef.h	/^enum Boundary {Open,Cylinder,Torus}$/;"	e	enum:Boundary
+_ILATTICE_H_	peps/ilattice.h	3;"	d
+_IPEPS_H_	peps/ipeps.h	3;"	d
+_LATTICE_H_	peps/lattice.h	3;"	d
+_PEPS_H_	peps/peps.h	3;"	d
+_PREDEF_H_	peps/predef.h	3;"	d
+boundary_conditions_	peps/lattice.h	/^        Boundary boundary_conditions_;$/;"	m	class:Lattice_Base	access:protected
+boundary_link_legs_	peps/peps.h	/^        vector<Index> site_legs_, bulk_link_legs_, boundary_link_legs_;$/;"	m	class:PEPS	access:private
+boundary_link_to_sites	peps/lattice.h	/^        inline int boundary_link_to_sites(int& i) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i) const
+boundary_link_to_sites_	peps/lattice.h	/^        vector<int> boundary_link_to_sites_;$/;"	m	class:Lattice_Base	access:protected
+bulk_link_legs_	peps/peps.h	/^        vector<Index> site_legs_, bulk_link_legs_, boundary_link_legs_;$/;"	m	class:PEPS	access:private
+bulk_link_to_sites	peps/lattice.h	/^        inline int bulk_link_to_sites(int& i, int& j) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i, int& j) const
+bulk_link_to_sites_	peps/lattice.h	/^        vector< array<int,2> > bulk_link_to_sites_;$/;"	m	class:Lattice_Base	access:protected
+coord_to_site_list_	peps/lattice.h	/^        vector< vector<int> > coord_to_site_list_;$/;"	m	class:Square_Lattice_Open	access:private
+d_	peps/ipeps.h	/^        int d_, D_;$/;"	m	class:iPEPS_Simple_Update	access:private
+d_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPS	access:private
+iLattice_Base	peps/ilattice.h	/^        iLattice_Base(int& n_sites_uc, int& n_links_uc);$/;"	p	class:iLattice_Base	access:public	signature:(int& n_sites_uc, int& n_links_uc)
+iLattice_Base	peps/ilattice.h	/^class iLattice_Base$/;"	c
+iLattice_Base::iLattice_Base	peps/ilattice.h	/^        iLattice_Base(int& n_sites_uc, int& n_links_uc);$/;"	p	class:iLattice_Base	access:public	signature:(int& n_sites_uc, int& n_links_uc)
+iLattice_Base::link_to_sites_	peps/ilattice.h	/^        vector< array<Coordinate,2> > link_to_sites_;$/;"	m	class:iLattice_Base	access:protected
+iLattice_Base::n_links_uc	peps/ilattice.h	/^        inline int n_links_uc() const$/;"	f	class:iLattice_Base	access:public	signature:() const
+iLattice_Base::n_links_uc_	peps/ilattice.h	/^        int n_sites_uc_, n_links_uc_, n_site_to_links;$/;"	m	class:iLattice_Base	access:protected
+iLattice_Base::n_site_to_links	peps/ilattice.h	/^        inline int n_site_to_links() const$/;"	f	class:iLattice_Base	access:public	signature:() const
+iLattice_Base::n_site_to_links	peps/ilattice.h	/^        int n_sites_uc_, n_links_uc_, n_site_to_links;$/;"	m	class:iLattice_Base	access:protected
+iLattice_Base::n_sites_uc	peps/ilattice.h	/^        inline int n_sites_uc() const$/;"	f	class:iLattice_Base	access:public	signature:() const
+iLattice_Base::n_sites_uc_	peps/ilattice.h	/^        int n_sites_uc_, n_links_uc_, n_site_to_links;$/;"	m	class:iLattice_Base	access:protected
+iLattice_Base::neighbour_sites_	peps/ilattice.h	/^        vector< vector<Coordinate> > neighbour_sites_, site_to_links_;$/;"	m	class:iLattice_Base	access:protected
+iLattice_Base::site_to_links_	peps/ilattice.h	/^        vector< vector<Coordinate> > neighbour_sites_, site_to_links_;$/;"	m	class:iLattice_Base	access:protected
+iLattice_Base::~iLattice_Base	peps/ilattice.h	/^        virtual ~iLattice_Base()=0;$/;"	p	class:iLattice_Base	access:public	signature:()
+iPEPS_Simple_Update	peps/ipeps.h	/^        iPEPS_Simple_Update(int& d, int& D, const iLattice_Base& ilattice);$/;"	p	class:iPEPS_Simple_Update	access:public	signature:(int& d, int& D, const iLattice_Base& ilattice)
+iPEPS_Simple_Update	peps/ipeps.h	/^class iPEPS_Simple_Update$/;"	c
+iPEPS_Simple_Update::D_	peps/ipeps.h	/^        int d_, D_;$/;"	m	class:iPEPS_Simple_Update	access:private
+iPEPS_Simple_Update::d_	peps/ipeps.h	/^        int d_, D_;$/;"	m	class:iPEPS_Simple_Update	access:private
+iPEPS_Simple_Update::iPEPS_Simple_Update	peps/ipeps.h	/^        iPEPS_Simple_Update(int& d, int& D, const iLattice_Base& ilattice);$/;"	p	class:iPEPS_Simple_Update	access:public	signature:(int& d, int& D, const iLattice_Base& ilattice)
+iPEPS_Simple_Update::ilattice_	peps/ipeps.h	/^        iLattice_Base& ilattice_;$/;"	m	class:iPEPS_Simple_Update	access:private
+iPEPS_Simple_Update::link_legs	peps/ipeps.h	/^        vector< array<Index,2> > link_legs;$/;"	m	class:iPEPS_Simple_Update	access:private
+iPEPS_Simple_Update::link_tensors_	peps/ipeps.h	/^        vector<ITensor> site_tensors_, link_tensors_;$/;"	m	class:iPEPS_Simple_Update	access:private
+iPEPS_Simple_Update::site_physical_legs_	peps/ipeps.h	/^        vector<Index> site_physical_legs_;$/;"	m	class:iPEPS_Simple_Update	access:private
+iPEPS_Simple_Update::site_tensors_	peps/ipeps.h	/^        vector<ITensor> site_tensors_, link_tensors_;$/;"	m	class:iPEPS_Simple_Update	access:private
+iPEPS_Simple_Update::site_virtual_legs	peps/ipeps.h	/^        vector< vector<Index> > site_virtual_legs;$/;"	m	class:iPEPS_Simple_Update	access:private
+iPEPS_Simple_Update::~iPEPS_Simple_Update	peps/ipeps.h	/^        ~iPEPS_Simple_Update();$/;"	p	class:iPEPS_Simple_Update	access:public	signature:()
+iSquare_Lattice	peps/ilattice.cc	/^iSquare_Lattice::iSquare_Lattice():$/;"	f	class:iSquare_Lattice	signature:()
+iSquare_Lattice	peps/ilattice.h	/^        iSquare_Lattice();$/;"	p	class:iSquare_Lattice	access:public	signature:()
+iSquare_Lattice	peps/ilattice.h	/^class iSquare_Lattice : public iLattice_Base$/;"	c	inherits:iLattice_Base
+iSquare_Lattice::iSquare_Lattice	peps/ilattice.cc	/^iSquare_Lattice::iSquare_Lattice():$/;"	f	class:iSquare_Lattice	signature:()
+iSquare_Lattice::iSquare_Lattice	peps/ilattice.h	/^        iSquare_Lattice();$/;"	p	class:iSquare_Lattice	access:public	signature:()
+ilattice_	peps/ipeps.h	/^        iLattice_Base& ilattice_;$/;"	m	class:iPEPS_Simple_Update	access:private
+lattice_	peps/peps.h	/^        Lattice_Base& lattice_;$/;"	m	class:PEPS	access:private
+link_legs	peps/ipeps.h	/^        vector< array<Index,2> > link_legs;$/;"	m	class:iPEPS_Simple_Update	access:private
+link_tensors_	peps/ipeps.h	/^        vector<ITensor> site_tensors_, link_tensors_;$/;"	m	class:iPEPS_Simple_Update	access:private
+link_to_sites_	peps/ilattice.cc	/^    link_to_sites_(n_links_uc)$/;"	f	signature:(n_links_uc)
+link_to_sites_	peps/ilattice.h	/^        vector< array<Coordinate,2> > link_to_sites_;$/;"	m	class:iLattice_Base	access:protected
+lx_	peps/lattice.h	/^        int lx_, ly_;$/;"	m	class:Square_Lattice_Open	access:private
+ly_	peps/lattice.h	/^        int lx_, ly_;$/;"	m	class:Square_Lattice_Open	access:private
+n_boundary_links	peps/lattice.h	/^        inline int n_boundary_links() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_boundary_links_	peps/lattice.h	/^        int n_site_to_links_, n_sites_, n_bulk_links_, n_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+n_bulk_links	peps/lattice.h	/^        inline int n_bulk_links() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_bulk_links_	peps/lattice.h	/^        int n_site_to_links_, n_sites_, n_bulk_links_, n_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+n_links_uc	peps/ilattice.h	/^        inline int n_links_uc() const$/;"	f	class:iLattice_Base	access:public	signature:() const
+n_links_uc_	peps/ilattice.h	/^        int n_sites_uc_, n_links_uc_, n_site_to_links;$/;"	m	class:iLattice_Base	access:protected
+n_site_to_links	peps/ilattice.h	/^        inline int n_site_to_links() const$/;"	f	class:iLattice_Base	access:public	signature:() const
+n_site_to_links	peps/ilattice.h	/^        int n_sites_uc_, n_links_uc_, n_site_to_links;$/;"	m	class:iLattice_Base	access:protected
+n_site_to_links	peps/lattice.h	/^        inline int n_site_to_links() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_site_to_links_	peps/lattice.h	/^        int n_site_to_links_, n_sites_, n_bulk_links_, n_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+n_sites_	peps/lattice.h	/^        inline int n_sites_() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_sites_	peps/lattice.h	/^        int n_site_to_links_, n_sites_, n_bulk_links_, n_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+n_sites_uc	peps/ilattice.h	/^        inline int n_sites_uc() const$/;"	f	class:iLattice_Base	access:public	signature:() const
+n_sites_uc_	peps/ilattice.h	/^        int n_sites_uc_, n_links_uc_, n_site_to_links;$/;"	m	class:iLattice_Base	access:protected
+neighbour_sites	peps/lattice.h	/^        inline int neighbour_sites(int& i, int &j) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i, int &j) const
+neighbour_sites_	peps/ilattice.h	/^        vector< vector<Coordinate> > neighbour_sites_, site_to_links_;$/;"	m	class:iLattice_Base	access:protected
+neighbour_sites_	peps/lattice.h	/^        vector< vector<int> > neighbour_sites_, site_to_bulk_links_, site_to_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+site_indexsets_	peps/peps.h	/^        vector< IndexSet<Index> > site_indexsets_;$/;"	m	class:PEPS	access:private
+site_legs_	peps/peps.h	/^        vector<Index> site_legs_, bulk_link_legs_, boundary_link_legs_;$/;"	m	class:PEPS	access:private
+site_physical_legs_	peps/ipeps.h	/^        vector<Index> site_physical_legs_;$/;"	m	class:iPEPS_Simple_Update	access:private
+site_tensors_	peps/ipeps.h	/^        vector<ITensor> site_tensors_, link_tensors_;$/;"	m	class:iPEPS_Simple_Update	access:private
+site_tensors_	peps/peps.h	/^        vector<ITensor> site_tensors_;$/;"	m	class:PEPS	access:private
+site_to_boundary_links	peps/lattice.h	/^        inline int site_to_boundary_links(int& i, int& j) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i, int& j) const
+site_to_boundary_links_	peps/lattice.h	/^        vector< vector<int> > neighbour_sites_, site_to_bulk_links_, site_to_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+site_to_bulk_links	peps/lattice.h	/^        inline int site_to_bulk_links(int& i, int& j) const$/;"	f	class:Lattice_Base	access:public	signature:(int& i, int& j) const
+site_to_bulk_links_	peps/lattice.h	/^        vector< vector<int> > neighbour_sites_, site_to_bulk_links_, site_to_boundary_links_;$/;"	m	class:Lattice_Base	access:protected
+site_to_coord_list_	peps/lattice.h	/^        vector< array<int,2> > site_to_coord_list_;$/;"	m	class:Square_Lattice_Open	access:private
+site_to_links_	peps/ilattice.h	/^        vector< vector<Coordinate> > neighbour_sites_, site_to_links_;$/;"	m	class:iLattice_Base	access:protected
+site_virtual_legs	peps/ipeps.h	/^        vector< vector<Index> > site_virtual_legs;$/;"	m	class:iPEPS_Simple_Update	access:private
+~Lattice_Base	peps/lattice.h	/^        virtual ~Lattice_Base()=0;$/;"	p	class:Lattice_Base	access:public	signature:()
+~PEPS	peps/peps.h	/^        ~PEPS();$/;"	p	class:PEPS	access:public	signature:()
+~iLattice_Base	peps/ilattice.h	/^        virtual ~iLattice_Base()=0;$/;"	p	class:iLattice_Base	access:public	signature:()
+~iPEPS_Simple_Update	peps/ipeps.h	/^        ~iPEPS_Simple_Update();$/;"	p	class:iPEPS_Simple_Update	access:public	signature:()
