@@ -1,33 +1,39 @@
 
-#ifndef _IPEPS_H_
-#define _IPEPS_H_
+#ifndef _PEPS_H_
+#define _PEPS_H_
 
-#include "ilattice.h"
+#include "peps_indexset.h"
 
 //
 //class PEPSt_Torus
-//(the lower "t" stands for "template")
+//the lower t is for template
 //
-//Use PEPS_Torus for ITensors,
-//while IQPEPS_Torus for IQTensors
+//using PEPS_Torus for ITensor while IQPEPS_Torus for IQTensor
 //
-class iPEPS
+template <class TensorT>
+class PEPSt_Torus
 {
     public:
+
+        //
+        //type alias
+        //
+        using IndexT=typename TensorT::IndexT;
+
         //
         //Constructors
         //
-        iPEPS(int &d, int &D, const Lattice_uc_Base &lattice_uc);
+        //Assign site tensors with random values
+        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);
 
-        //
-        //Destructors
-        //
-        ~iPEPS();
+        //Initialize site tensors by tensor data in one unit cell.
+        //Thus, the PEPS is translationally invariant.
+        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc);
 
         //
         //Access Methods
         //
-        inline int &d() const
+        inline const int &d() const
         {
             return d_;
         }
@@ -37,20 +43,67 @@ class iPEPS
             return D_;
         }
 
-        inline const Lattice_uc_Base &lattice_uc() const
+        inline const int &n_sites_uc() const
         {
-            return lattice_uc_;
+            return lattice_.n_sites_uc();
         }
 
-        inline ITensor &site_tensors(int i) const
+        inline const int &n_bonds_uc() const
+        {
+            return lattice_.n_bonds_uc();
+        }
+
+        inline const int &n_bonds_to_one_site() const
+        {
+            return lattice_.n_bonds_to_one_site();
+        }
+
+        inline const int &n_sites_total() const
+        {
+            return lattice_.n_sites_total();
+        }
+
+        inline const int &n_bonds_total() const
+        {
+            return lattice_.n_bonds_total();
+        }
+
+        inline const Lattice_Torus_Base &lattice() const
+        {
+            return lattice_;
+        }
+
+        inline TensorT &site_tensors(int i) const
         {
             return site_tensors_[i];
         }
 
-        inline ITensor &link_tensors(int i) const
+        inline std::vector<TensorT> &site_tensors()
         {
-            return link_tensors_[i];
+            return site_tensors_;
         }
+
+        //
+        //Methods
+        //
+
+
+        //
+        //Constructor Helpers
+        //
+
+        //Assign value of tensor TB to tensor TA without changing the index.
+        //Hilbert space of TB should be morphism to that of TA
+        //For IQTensor, arrows should also match
+        void tensor_assignment(TensorT &TA, TensorT &TB);
+        //According to the library, ITensor is constructed by IndexSet<Index>(indexset), while IQTensor is constructed by indexset directly
+        void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);
+        //construct new tensors
+        void new_site_tensors();
+        //using random initial site tensors
+        //for IQTensor we need to make sure at least one block is created
+        void random_site_tensors();
+
 
     private:
         //
@@ -58,14 +111,19 @@ class iPEPS
         //
         //d_ is physical index dimension while D_ is virtual leg dim.
         int d_, D_;
-        const Lattice_uc_Base& lattice_uc_;
-        //site_legs_[i] stores indice for physical leg i, where i labels the sublattice. One should be able to generate legs (x,y,i) by site_legs_[i].
-        vector<Index> site_legs_;
-        //link_legs_[i] stores indice for two indices associated with link i, where i is the sublattice.
-        vector< array<Index,2> > link_legs_;
-        //site_tensors_[i] is an abstract tensor for site with sublattice i. Similar for link_tensors[i]
-        //we set link tensor as diagonal matrix
-        vector<ITensor> site_tensors_, link_tensors_;
+
+        const Lattice_Torus_Base &lattice_;
+
+        const PEPSt_IndexSet_Base<IndexT> &index_set_;
+
+        std::vector<TensorT> site_tensors_; 
+
+        //divergence of each site tensors
+        //used for IQPEPS
+        //default setting to 0
+        std::vector<QN> tensors_div_;
 };
+using PEPS_Torus=PEPSt_Torus<ITensor>;
+using IQPEPS_Torus=PEPSt_Torus<IQTensor>;
 
 #endif
