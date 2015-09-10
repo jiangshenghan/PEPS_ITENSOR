@@ -61,10 +61,20 @@ class Lattice_Torus_Base
             return site_neighbour_bonds_[site_i][j];
         }
 
+        inline const std::vector<int> &site_neighbour_bonds(const int &site_i) const
+        {
+            return site_neighbour_bonds_[site_i];
+        }
+
         //get jth end site of bond_i
         inline const int &bond_end_sites(const int &bond_i, const int &j) const
         {
             return bond_end_sites_[bond_i][j];
+        }
+
+        inline const std::array<int,2> &bond_end_sites(const int &bond_i) const
+        {
+            return bond_end_sites_[bond_i];
         }
 
         inline const Coordinate &site_list_to_coord(int site_i) const

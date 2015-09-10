@@ -28,7 +28,7 @@ class PEPSt_Torus
 
         //Initialize site tensors by tensor data in one unit cell.
         //Thus, the PEPS is translationally invariant.
-        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc);
+        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);
 
         //
         //Access Methods
@@ -83,6 +83,16 @@ class PEPSt_Torus
             return site_tensors_;
         }
 
+        inline TensorT &bond_tensors(int i) const
+        {
+            return bond_tensors_[i];
+        }
+
+        inline std::vector<TensorT> &bond_tensors()
+        {
+            return bond_tensors_;
+        }
+
         //
         //Methods
         //
@@ -96,13 +106,14 @@ class PEPSt_Torus
         //Hilbert space of TB should be morphism to that of TA
         //For IQTensor, arrows should also match
         void tensor_assignment(TensorT &TA, TensorT &TB);
-        //According to the library, ITensor is constructed by IndexSet<Index>(indexset), while IQTensor is constructed by indexset directly
+        //According to the itensor library, ITensor is constructed by IndexSet<Index>(indexset), while IQTensor is constructed by indexset directly
         void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);
         //construct new tensors
         void new_site_tensors();
+        void new_bond_tensors();
         //using random initial site tensors
         //for IQTensor we need to make sure at least one block is created
-        void random_site_tensors();
+        //void random_site_tensors();
 
 
     private:
@@ -116,12 +127,12 @@ class PEPSt_Torus
 
         const PEPSt_IndexSet_Base<IndexT> &index_set_;
 
-        std::vector<TensorT> site_tensors_; 
+        std::vector<TensorT> site_tensors_, bond_tensors_; 
 
         //divergence of each site tensors
         //used for IQPEPS
         //default setting to 0
-        std::vector<QN> tensors_div_;
+        //std::vector<QN> tensors_div_;
 };
 using PEPS_Torus=PEPSt_Torus<ITensor>;
 using IQPEPS_Torus=PEPSt_Torus<IQTensor>;

@@ -15,7 +15,7 @@ template <class IndexT>
 class PEPSt_IndexSet_Base
 {
     public:
-        PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_total);
+        PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);
 
         //
         //Access methods
@@ -35,9 +35,9 @@ class PEPSt_IndexSet_Base
             return phys_legs_[site_i];
         }
 
-        inline const IndexT &virt_legs(const int &bond_i) const
+        inline const IndexT &virt_legs(const int &leg_i) const
         {
-            return virt_legs_[bond_i];
+            return virt_legs_[leg_i];
         }
 
     protected:
@@ -61,8 +61,8 @@ class PEPS_IndexSet : public PEPSt_IndexSet_Base<Index>
         //
         //Constructor Helper
         //
-        void init_phys_legs(const int &n_sites_total);
-        void init_virt_legs(const int &n_bonds_total);
+        void init_phys_legs();
+        void init_virt_legs();
 };
 
 //
@@ -87,8 +87,8 @@ class IQPEPS_IndexSet_SpinHalf : public PEPSt_IndexSet_Base<IQIndex>
         //Constructor Helpers
         //Initialize physical/virtual legs
         //
-        void init_phys_legs(const int &n_sites_total);
-        void init_virt_legs(const int &n_bonds_total, const int &spin_dim, const std::vector<int> &bond_indqn_deg);
+        void init_phys_legs();
+        void init_virt_legs(const int &spin_dim, const std::vector<int> &virt_indqn_deg);
 
     private:
 

@@ -8,6 +8,7 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <algorithm>
 #include <initializer_list>
 #include <cassert>
 #include "core.h"
