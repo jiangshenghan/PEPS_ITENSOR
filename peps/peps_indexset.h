@@ -15,6 +15,7 @@ template <class IndexT>
 class PEPSt_IndexSet_Base
 {
     public:
+        PEPSt_IndexSet_Base() {}
         PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);
 
         //
@@ -56,6 +57,7 @@ class PEPS_IndexSet : public PEPSt_IndexSet_Base<Index>
         //
         //Constructor
         //
+        PEPS_IndexSet() {}
         PEPS_IndexSet(const int &d, const int &D, const Lattice_Torus_Base &lattice);
 
         //
@@ -75,6 +77,7 @@ class IQPEPS_IndexSet_SpinHalf : public PEPSt_IndexSet_Base<IQIndex>
         //
         //Constructor
         //
+        IQPEPS_IndexSet_SpinHalf() {}
         //D=sum_{i=0}^{n}{2*i/2+1}. Namely, a virtual leg is formed by
         //0\circplus 1/2\circplus 1 ...
         IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Torus_Base &lattice);

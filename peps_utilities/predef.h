@@ -12,8 +12,10 @@
 #include <initializer_list>
 #include <cassert>
 #include "core.h"
+#include "wignerSymbols.h"
 
 using namespace itensor;
+using namespace WignerSymbols;
 
 using std::cout;
 using std::endl;

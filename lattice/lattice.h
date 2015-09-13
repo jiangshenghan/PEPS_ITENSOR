@@ -14,6 +14,8 @@ class Lattice_Torus_Base
         //
         //Constructors
         //
+        Lattice_Torus_Base() {}
+
         Lattice_Torus_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc);
 
         //

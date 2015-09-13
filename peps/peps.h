@@ -23,6 +23,7 @@ class PEPSt_Torus
         //
         //Constructors
         //
+        PEPSt_Torus() {}
         //Assign site tensors with random values
         PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);
 
