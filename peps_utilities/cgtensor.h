@@ -14,13 +14,17 @@ class CGTensors
         //
         //spin_qn stores total spin quantum number (times 2) for each legs
         CGTensors() {}
-        CGTensors(const std::vector<Spin> &spins);
+        CGTensors(const std::vector<int> &spins, const std::vector<Arrow> &dirs);
+        CGTensors(const std::vector<IQIndex> &sz_legs);
+        CGTensors(const std::vector<IndexSpin> &spin_legs);
 
         //
         //Access method
         //
         bool valid() { return valid_; }
         const std::vector<IQTensor> &K() const { return K_; }
+        const std::vector<IndexSpin> &spin_indices() const { return spin_legs_; }
+        const IQIndex &iqindice(int i) const { return spin_legs_[i].leg(); }
         
         //
         //Construct helper
@@ -52,5 +56,14 @@ class CGTensors
         //valid_=false means K_ is empty. Namely, the spin_qns are inconsistent
         bool valid_;
 };
+
+inline std::ostream &operator<<(std::ostream &s, const CGTensors &cg_tensors)
+{
+    for (const auto &tensor : cg_tensors.K())
+    {
+        s << tensor << endl;
+    }
+    return s;
+}
 
 #endif

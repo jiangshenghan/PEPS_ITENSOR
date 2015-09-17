@@ -24,4 +24,6 @@ using Complex=std::complex<double>;
 //coordinate for both sites and bonds, expressed as (x,y,s/b)
 using Coordinate=std::array<int,3>;
 
+static const double EPSILON=1E-15;
+
 #endif

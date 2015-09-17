@@ -143,6 +143,8 @@ void IQPEPS_IndexSet_SpinHalf::init_virt_legs(const int &spin_dim, const std::ve
         std::vector<IndexQN> virt_indqn;
         for (int qn_i=0; qn_i<2*spin_dim-1; qn_i++)
         {
+            if (virt_indqn_deg[qn_i]==0) continue;
+
             std::stringstream ss;
             ss << "Sz=" << (spin_dim-qn_i-1)/2.0 << " for virt_leg " << leg_i;
             std::string ind_name=ss.str();

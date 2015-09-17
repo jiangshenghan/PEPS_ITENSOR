@@ -1,16 +1,34 @@
 
 #include "cgtensor.h"
 
-CGTensors::CGTensors(const std::vector<Spin> &spins): valid_(false)
+CGTensors::CGTensors(const std::vector<int> &spins, const std::vector<Arrow> &dirs): valid_(false)
 {
+    assert(spins.size()==dirs.size());
 
-    for (const auto &spin_S : spins)
+    for (int i=0; i<spins.size(); i++)
     {
-        spin_legs_.push_back(IndexSpin(spin_S));
+        spin_legs_.push_back(IndexSpin(spins[i],dirs[i]));
     }
 
     init();
 }
+
+CGTensors::CGTensors(const std::vector<IQIndex> &sz_legs): valid_(false)
+{
+    for (const auto &leg : sz_legs)
+    {
+        spin_legs_.push_back(IndexSpin(leg));
+    }
+
+    init();
+}
+
+CGTensors::CGTensors(const std::vector<IndexSpin> &spin_legs): spin_legs_(spin_legs), valid_(false)
+{
+    init();
+}
+
+
 
 
 void CGTensors::init()
@@ -62,7 +80,7 @@ bool CGTensors::obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std:
     //only out_spin_legs, then consider spin singlet states formed by out spin legs
     if (in_spin_legs.size()==0)
     {
-        IndexSpin in_spin_zero_leg(Spin(0,In));
+        IndexSpin in_spin_zero_leg(0,In);
         bool valid_spin_legs=obtain_K(out_spin_legs,std::vector<IndexSpin>{in_spin_zero_leg},K);
 
         //eliminate the in_spin_zero_leg from K obtained above
@@ -80,7 +98,7 @@ bool CGTensors::obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std:
     //only in_spin_legs, then consider spin singlets formed by in_spin_legs
     if (out_spin_legs.size()==0)
     {
-        IndexSpin out_spin_zero_leg(Spin(0,Out));
+        IndexSpin out_spin_zero_leg(0,Out);
         bool valid_spin_legs=obtain_K(std::vector<IndexSpin>{out_spin_zero_leg},in_spin_legs,K);
 
         //eliminate the out_spin_zero_leg from K
@@ -151,7 +169,7 @@ bool CGTensors::obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std:
             int mediate_spin_max=in_spin_leg.spin_qn()+last_out_spin_leg.spin_qn();
             for (int mediate_spin_qn=mediate_spin_min; mediate_spin_qn<=mediate_spin_max; mediate_spin_qn+=2)
             {
-                IndexSpin mediate_spin_leg(Spin(mediate_spin_qn,In));
+                IndexSpin mediate_spin_leg(mediate_spin_qn,In);
                 std::vector<IQTensor> K_exclude_last;
 
                 if (obtain_K(out_spin_legs_exclude_last,std::vector<IndexSpin>{mediate_spin_leg},K_exclude_last))
@@ -209,7 +227,7 @@ bool CGTensors::obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std:
             int mediate_spin_max=out_spin_leg.spin_qn()+last_in_spin_leg.spin_qn();
             for (int mediate_spin_qn=mediate_spin_min; mediate_spin_qn<=mediate_spin_max; mediate_spin_qn+=2)
             {
-                IndexSpin mediate_spin_leg(Spin(mediate_spin_qn,Out));
+                IndexSpin mediate_spin_leg(mediate_spin_qn,Out);
                 std::vector<IQTensor> K_exclude_last;
 
                 if (obtain_K(std::vector<IndexSpin>{mediate_spin_leg},in_spin_legs_exclude_last,K_exclude_last))
@@ -259,7 +277,7 @@ bool CGTensors::obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std:
             std::vector<IQTensor> K_out, K_in;
             bool valid_out_spin_legs=false, valid_in_spin_legs=false;
 
-            IndexSpin mediate_spin_leg(Spin(mediate_spin_qn,In));
+            IndexSpin mediate_spin_leg(mediate_spin_qn,In);
             valid_out_spin_legs=obtain_K(out_spin_legs,std::vector<IndexSpin>{mediate_spin_leg},K_out);
 
             if (valid_out_spin_legs)
