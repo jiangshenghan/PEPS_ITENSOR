@@ -38,9 +38,9 @@ class Singlet_Tensor_Basis
     private:
         IndexSet<IQIndex> is_;
         //is_spin_degs_[i] stores spin deg for IQIndex is_[i]
-        std::vector<std::vector<int> > is_spin_degs_;
+        std::vector<std::vector<int>> is_spin_degs_;
         //is_spin_basis_[i][j] stores spin basis |S,m,t\rangle for is_[i][j]
-        std::vector<std::vector<Spin_Basis> > is_spin_basis_;
+        std::vector<std::vector<Spin_Basis>> is_spin_basis_;
         std::vector<IQTensor> singlet_tensors_;
         //spin_configs_ stores the spin_list for singlet_tensors_
         std::vector<std::vector<int>> spin_configs_;
