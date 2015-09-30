@@ -51,7 +51,8 @@ void PEPS_IndexSet::init_virt_legs()
 //
 //IQPEPS_IndexSet_SpinHalf
 //
-IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Torus_Base &lattice): PEPSt_IndexSet_Base<IQIndex>(2,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site())
+IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Torus_Base &lattice): 
+    PEPSt_IndexSet_Base<IQIndex>(2,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site())
 {
     //construct physical legs
     init_phys_legs();
@@ -66,6 +67,7 @@ IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_T
     spin_dim-=1;
     assert(Dprime==0);
 
+    name_+="virt_legs: nondeg, ";
     std::vector<int> virt_indqn_deg(2*spin_dim-1);
 
     for (int qn_i=0; qn_i<spin_dim; qn_i++)
@@ -86,18 +88,24 @@ IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_T
     init_virt_legs(spin_dim,virt_indqn_deg);
 }
 
-IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice): PEPSt_IndexSet_Base<IQIndex>(2,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site())
+IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice): 
+    PEPSt_IndexSet_Base<IQIndex>(2,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site())
 {
     //Check the input of D
     int Dprime=0;
     //spin_dim=2S+1, where S is the largest spin #
     int spin_dim=virt_leg_spin.size();
+    bool extra_deg=false;
     for (int spin_i=0; spin_i<spin_dim; spin_i++)
     {
         Dprime+=(spin_i+1)*virt_leg_spin[spin_i];
+        if (virt_leg_spin[spin_i]>1) extra_deg=true;
     }
     //cout << Dprime << endl;
     assert(Dprime==D);
+
+    if (!extra_deg)
+        name_+="virt_legs: nondeg, ";
 
 
     //Constructor physical legs
@@ -123,6 +131,8 @@ IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const std::vect
 
 void IQPEPS_IndexSet_SpinHalf::init_phys_legs()
 {
+    name_="phys_leg: half spin, ";
+
     int site_i=0;
     for (auto &leg : phys_legs_)
     {

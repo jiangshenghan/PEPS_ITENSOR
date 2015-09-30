@@ -43,6 +43,9 @@ Lattice_Torus_Base::Lattice_Torus_Base(const int &n_sites_uc, const int &n_bonds
 
 Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Torus_Base(1,2,n_uc)
 {
+
+    name_="square lattice on torus";
+
     for (int site_i=0; site_i<n_sites_total_; site_i++)
     {
         Coordinate site_i_coord=site_list_to_coord(site_i);
@@ -89,7 +92,7 @@ Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Latti
 
 void Square_Lattice_Torus::print_lattice_inf()
 {
-    cout << "This is square lattice with size " << n_uc_[0] << "x" << n_uc_[1] << " and " << n_sites_total_ << " sites, " << n_bonds_total_ << " bonds." << endl;
+    cout << name_ << endl << "lattice size " << n_uc_[0] << "x" << n_uc_[1] << " and " << n_sites_total_ << " sites, " << n_bonds_total_ << " bonds." << endl;
 
     //cout << "Check neighbouring sites: " << endl << endl;
     //for (int site_i=0; site_i<n_sites_total_; site_i++)

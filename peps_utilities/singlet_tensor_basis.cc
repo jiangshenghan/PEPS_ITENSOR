@@ -23,8 +23,9 @@ void Singlet_Tensor_Basis::init_spin_deg_and_basis()
         std::vector<int> spin_deg;
         std::vector<Spin_Basis> spin_basis;
 
-        assert(iqind_spin_rep(sz_leg,spin_deg));
-        assert(iqind_to_spin_basis(sz_leg,spin_deg,spin_basis));
+        bool spin_rep=iqind_spin_rep(sz_leg,spin_deg);
+        iqind_to_spin_basis(sz_leg,spin_deg,spin_basis);
+        assert(spin_rep);
 
         is_spin_degs_.push_back(spin_deg);
         is_spin_basis_.push_back(spin_basis);
@@ -55,14 +56,14 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
 
     
     int total_spin_sets_num=1;
-    //max_spins stores max spin for each leg
-    std::vector<int> max_spins;
 
     for (const auto &spin_deg : is_spin_degs_)
     {
         total_spin_sets_num*=spin_deg.size();
-        max_spins.push_back(spin_deg.size());
+        max_spins_.push_back(spin_deg.size());
     }
+
+    spin_deg_list_to_num_=std::vector<std::vector<int>>(total_spin_sets_num);
 
     //iqinds is used to initialize IQTensors
     std::vector<IQIndex> iqinds;
@@ -76,7 +77,7 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
     {
         std::vector<int> spin_list;
 
-        spin_list=list_from_num(spin_seti,max_spins);
+        spin_list=list_from_num(spin_seti,max_spins_);
 
 
         //spin_set_degs stores degeneracy for this particualr spin set
@@ -101,6 +102,8 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
             total_deg*=deg;
             total_sz_sets_num*=spin_list[i]+1;
         }
+        spin_deg_list_to_num_[spin_seti]=std::vector<int>(total_deg,-1);
+
         if (!valid_spins) continue;
 
         CGTensors cg_tensors(spin_list,dirs);
@@ -157,6 +160,8 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
 
                 singlet_tensors_.push_back(singlet_tensor);
                 spin_configs_.push_back(spin_list);
+                deg_configs_.push_back(deg_list);
+                spin_deg_list_to_num_[spin_seti][degs_num]=singlet_tensors_.size()-1;
 
                 //PrintDat(singlet_tensor);
 
@@ -166,5 +171,74 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
     }
 }
 
+
+
+IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<double> &params)
+{
+    IQTensor singlet_tensor=params[0]*tensor_basis[0];
+    int size=tensor_basis.dim();
+
+    if (size==1) return singlet_tensor;
+
+    for (int i=1; i<size; i++)
+    {
+        singlet_tensor+=params[i]*tensor_basis[i];
+    }
+
+    return singlet_tensor;
+}
+
+IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<Complex> &params)
+{
+    IQTensor singlet_tensor=params[0]*tensor_basis[0];
+    int size=tensor_basis.dim();
+
+    if (size==1) return singlet_tensor;
+
+    for (int i=1; i<size; i++)
+    {
+        singlet_tensor+=params[i]*tensor_basis[i];
+    }
+
+    return singlet_tensor;
+}
+
+IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const arma::Col<double> &params)
+{
+    IQTensor singlet_tensor=params[0]*tensor_basis[0];
+    int size=tensor_basis.dim();
+
+    if (size==1) return singlet_tensor;
+
+    for (int i=1; i<size; i++)
+    {
+        singlet_tensor+=params[i]*tensor_basis[i];
+    }
+
+    return singlet_tensor;
+}
+
+
+void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params)
+{
+    params.clear();
+
+    for (const auto &base : tensor_basis.tensors())
+    {
+        params.push_back((singlet_tensor*base).toReal());
+    }
+
+}
+
+void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params)
+{
+    params.clear();
+
+    for (const auto &base : tensor_basis.tensors())
+    {
+        params.push_back((singlet_tensor*base).toComplex());
+    }
+
+}
 
 

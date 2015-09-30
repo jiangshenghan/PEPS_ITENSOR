@@ -41,10 +41,14 @@ class PEPSt_IndexSet_Base
             return virt_legs_[leg_i];
         }
 
+        const std::string &name() const { return name_; }
+
     protected:
         //dimension of single physical/virtual leg.
         int d_, D_;
         std::vector<IndexT> phys_legs_, virt_legs_;
+
+        std::string name_;
 };
 
 //

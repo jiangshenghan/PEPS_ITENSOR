@@ -155,3 +155,80 @@ std::vector<int> list_from_num(int num, const std::vector<int> &max_nums)
     return list;
 }
 
+int num_from_list(const std::vector<int> &list, const std::vector<int> &max_nums)
+{
+    int num=list[0];
+
+    for (int i=1; i<list.size(); i++)
+    {
+        num*=max_nums[i-1];
+        num+=list[i];
+    }
+
+    return num;
+}
+
+
+IQTensor eta_from_mu(double mu, const std::vector<int> &spin_deg)
+{
+    auto eta_leg=Spin_leg(spin_deg,"eta_leg",In),
+         eta_leg_prime=prime(dag(eta_leg));
+    auto eta=IQTensor(eta_leg,eta_leg_prime);
+
+    if (std::abs(mu-1)<EPSILON)
+    {
+        for (int val=1; val<=eta_leg.m(); val++)
+        {
+            eta(eta_leg(val),eta_leg_prime(val))=1;
+        }
+        return eta;
+    }
+
+    std::vector<Spin_Basis> eta_leg_spin_basis;
+    iqind_to_spin_basis(eta_leg,spin_deg,eta_leg_spin_basis);
+
+    for (int val=1; val<=eta_leg.m(); val++)
+    {
+        eta(eta_leg(val),eta_leg_prime(val))=std::pow(mu,eta_leg_spin_basis[val-1].S());
+    }
+    return eta;
+
+}
+
+
+IQTensor eta_from_mu(double mu, IQIndex eta_leg)
+{
+    //if (eta_leg.dir()==In) eta_leg.dag();
+    auto eta_leg_prime=prime(dag(eta_leg));
+    auto eta=IQTensor(eta_leg,eta_leg_prime);
+    
+    if (std::abs(mu-1)<EPSILON)
+    {
+        for (int val=1; val<=eta_leg.m(); val++)
+        {
+            eta(eta_leg(val),eta_leg_prime(val))=1;
+        }
+        return eta;
+    }
+
+    std::vector<Spin_Basis> eta_leg_spin_basis;
+    iqind_to_spin_basis(eta_leg,eta_leg_spin_basis);
+
+    for (int val=1; val<=eta_leg.m(); val++)
+    {
+        eta(eta_leg(val),eta_leg_prime(val))=std::pow(mu,eta_leg_spin_basis[val-1].S());
+    }
+    return eta;
+
+}
+
+ITensor eta_from_mu(double mu, Index eta_leg)
+{
+    auto eta_leg_prime=prime(eta_leg);
+    auto eta=ITensor(eta_leg,eta_leg_prime);
+    for (int val=1; val<=eta_leg.m(); val++)
+    {
+        eta(eta_leg(val),eta_leg_prime(val))=1;
+    }
+    return eta;
+}

@@ -2,6 +2,7 @@
 #ifndef _PEPS_H_
 #define _PEPS_H_
 
+#include "singlet_tensor_basis.h"
 #include "peps_indexset.h"
 
 //
@@ -74,22 +75,42 @@ class PEPSt_Torus
             return lattice_;
         }
 
-        inline TensorT &site_tensors(int i) const
+        inline const IndexT &phys_legs(const int &site_i) const
+        {
+            return index_set_.phys_legs(site_i);
+        }
+
+        inline const IndexT &virt_legs(const int &leg_i) const
+        {
+            return index_set_.virt_legs_(leg_i);
+        }
+
+        inline const TensorT &site_tensors(int i) const
         {
             return site_tensors_[i];
         }
 
-        inline std::vector<TensorT> &site_tensors()
+        TensorT &site_tensors(int i)
+        {
+            return site_tensors_[i];
+        }
+
+        inline const std::vector<TensorT> &site_tensors() const
         {
             return site_tensors_;
         }
 
-        inline TensorT &bond_tensors(int i) const
+        inline const TensorT &bond_tensors(int i) const
         {
             return bond_tensors_[i];
         }
 
-        inline std::vector<TensorT> &bond_tensors()
+        TensorT &bond_tensors(int i)
+        {
+            return bond_tensors_[i];
+        }
+
+        inline const std::vector<TensorT> &bond_tensors() const
         {
             return bond_tensors_;
         }
@@ -97,6 +118,9 @@ class PEPSt_Torus
         //
         //Methods
         //
+        //given tensors in one uc, generate all translation related tensors
+        void generate_site_tensors(std::vector<TensorT> site_tensors_uc);
+        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc);
 
 
         //
@@ -106,7 +130,7 @@ class PEPSt_Torus
         //Assign value of tensor TB to tensor TA without changing the index.
         //Hilbert space of TB should be morphism to that of TA
         //For IQTensor, arrows should also match
-        void tensor_assignment(TensorT &TA, TensorT &TB);
+        void tensor_assignment(TensorT &TA, const TensorT &TB);
         //According to the itensor library, ITensor is constructed by IndexSet<Index>(indexset), while IQTensor is constructed by indexset directly
         void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);
         //construct new tensors
@@ -130,6 +154,9 @@ class PEPSt_Torus
 
         std::vector<TensorT> site_tensors_, bond_tensors_; 
 
+        //name stores information about lattice, spin symmetry, extra degenerate
+        std::string name_;
+
         //divergence of each site tensors
         //used for IQPEPS
         //default setting to 0
@@ -137,5 +164,9 @@ class PEPSt_Torus
 };
 using PEPS_Torus=PEPSt_Torus<ITensor>;
 using IQPEPS_Torus=PEPSt_Torus<IQTensor>;
+
+
+void randomize_spin_sym_square_peps(IQPEPS_Torus &square_peps);
+
 
 #endif

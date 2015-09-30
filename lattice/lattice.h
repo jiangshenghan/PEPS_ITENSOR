@@ -106,6 +106,25 @@ class Lattice_Torus_Base
             return bond_coord_to_list_[bond_coord[0]][bond_coord[1]][bond_coord[2]];
         }
 
+        const std::string &name() const { return name_; }
+
+        //get common bond of site A and site B
+        //if no common bond, return -1
+        int comm_bond(int site_A, int site_B) const
+        {
+            for (int i=0; i<n_bonds_to_one_site_; i++)
+            {
+                auto bond_A=site_neighbour_bonds_[site_A][i];
+
+                if (bond_end_sites_[bond_A][0]==site_A && bond_end_sites_[bond_A][1]==site_B)
+                    return bond_A;
+
+                if (bond_end_sites_[bond_A][1]==site_A && bond_end_sites_[bond_A][0]==site_B)
+                    return bond_A;
+            }
+            return -1;
+        }
+
 
         virtual void print_lattice_inf()=0;
 
@@ -128,6 +147,8 @@ class Lattice_Torus_Base
         std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;
         //site/bond_coord_to_list_[x][y][i']=i
         std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;
+
+        std::string name_;
 
 };
 

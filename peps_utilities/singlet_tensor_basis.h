@@ -11,6 +11,7 @@ class Singlet_Tensor_Basis
         //
         //Type Aliens
         //
+        using const_iterator=typename std::vector<IQTensor>::const_iterator;
 
         //
         //Constructor
@@ -25,9 +26,42 @@ class Singlet_Tensor_Basis
         //Access Methods
         //
         const IndexSet<IQIndex> &indices() const { return is_; }
-        const std::vector<IQTensor> &tensors() const {return singlet_tensors_; }
+
+        const_iterator begin() const { return singlet_tensors_.begin(); }
+
+        const_iterator end() const { return singlet_tensors_.end(); }
+
+        //number of basis
+        const int dim() const { return singlet_tensors_.size(); }
+
+        const std::vector<IQTensor> &tensors() const { return singlet_tensors_; }
+        const IQTensor &tensor(int i) const { return singlet_tensors_[i]; }
+
         const std::vector<int> &spin_configs(int i) const { return spin_configs_[i]; }
+        const std::vector<int> &deg_configs(int i) const { return deg_configs_[i]; }
+
+        const std::vector<int> &spin_degs(int legi) const { return is_spin_degs_[legi]; }
+
         const IQTensor &operator()(int i) const { return singlet_tensors_[i]; }
+        const IQTensor &operator[](int i) const { return singlet_tensors_[i]; }
+
+        //Given a spin_list as well as deg_list, get the correpsonding No. of base
+        int spin_deg_list_to_num(const std::vector<int> &spin_list, const std::vector<int> &deg_list)
+        {
+            std::vector<int> spin_set_degs;
+            int total_leg_num=is_.r();
+
+            for (int i=0; i<total_leg_num; i++)
+            {
+                int deg=is_spin_degs_[i][spin_list[i]];
+                spin_set_degs.push_back(deg);
+            }
+
+            int spin_list_num=num_from_list(spin_list,max_spins_),
+                deg_list_num=num_from_list(deg_list,spin_set_degs);
+
+            return spin_deg_list_to_num_[spin_list_num][deg_list_num];
+        }
 
         //
         //Constructor Helper
@@ -39,11 +73,21 @@ class Singlet_Tensor_Basis
         IndexSet<IQIndex> is_;
         //is_spin_degs_[i] stores spin deg for IQIndex is_[i]
         std::vector<std::vector<int>> is_spin_degs_;
+        //max_spins_ stores max spin for each leg
+        std::vector<int> max_spins_;
         //is_spin_basis_[i][j] stores spin basis |S,m,t\rangle for is_[i][j]
         std::vector<std::vector<Spin_Basis>> is_spin_basis_;
-        std::vector<IQTensor> singlet_tensors_;
-        //spin_configs_ stores the spin_list for singlet_tensors_
+
+        //spin_configs_ stores the spin_list for every singlet_tensors_
         std::vector<std::vector<int>> spin_configs_;
+        //deg_configs stores the deg_list for every singlet_tensors_
+        std::vector<std::vector<int>> deg_configs_;
+        //spin_deg_list_to_num_ translate a particular spin_list and deg_list to the no. of tensor basis
+        //spin_list and deg_list are encoded as two numbers
+        std::vector<std::vector<int>> spin_deg_list_to_num_;
+
+
+        std::vector<IQTensor> singlet_tensors_;
 
 
         //
@@ -66,6 +110,19 @@ inline std::ostream &operator<<(std::ostream &s, const Singlet_Tensor_Basis &ten
 
     return s;
 }
+
+
+//obtain singlet tensors from params and tensor basis
+//This function works for real tensor
+IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<double> &params);
+IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<Complex> &params);
+IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const arma::Col<double> &params);
+
+//obtain the parameters of singlet tensors from singlet tensors basis
+//this function works for real tensor
+void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params);
+//this function work for complex tensor
+void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params);
 
 
 #endif
