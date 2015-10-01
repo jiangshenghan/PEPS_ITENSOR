@@ -152,7 +152,7 @@ Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc):
 
         for (int j=0; j<n_bonds_to_one_site_; j++)
         {
-            //site_i is at leftmost, then, we set the left neigh site and bond to be empty (-1)
+            //site_i is at leftmost, then, we set the left neigh site and bond to be -1
             if (neigh_sites_coord[j][0]<0) 
             {
                 site_neighbour_sites_[site_i][j]=-1;
@@ -160,10 +160,10 @@ Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc):
                 continue;
             }
 
-            //site_i is at rightmost, then, we set the right neigh site to be -1 but not right neigh bond
+            //site_i is at rightmost, then, we set the right neigh site to be -2, but right neigh bond still exist
             if (neigh_sites_coord[j][0]>=n_uc_[0])
             {
-                site_neighbour_sites_[site_i][j]=-1;
+                site_neighbour_sites_[site_i][j]=-2;
                 site_neighbour_bonds_[site_i][j]=bond_coord_to_list(neigh_bonds_coord[j]);
                 continue;
             }
@@ -194,14 +194,14 @@ Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc):
         bond_end_sites_[bond_i][1]=site_coord_to_list(end_sites_coord[1]);
         // if the bond is at rightmost, set the end_site_coord[1] to be -1
         if (end_sites_coord[1][0]>=n_uc_[0])
-            bond_end_sites_[bond_i][1]=-1;
+            bond_end_sites_[bond_i][1]=-2;
     }
 }
 
 
 void Square_Lattice_Cylinder::print_lattice_inf()
 {
-    cout << name_ << endl << "lattice size " << n_uc_[0] << "x" << n_uc_[1] << " and " << n_sites_total_ << " sites, " << n_bonds_total_ << " bonds." << endl << endl;
+    cout << name_ << endl << "lattice size " << n_uc_[0] << "x" << n_uc_[1] << " and " << n_sites_total_ << " sites, " << n_bonds_total_ << " bonds, " << n_boundary_legs() << " boudnary legs." << endl << endl;
 
     cout << "Check neighbouring sites: " << endl << endl;
     for (int site_i=0; site_i<n_sites_total_; site_i++)

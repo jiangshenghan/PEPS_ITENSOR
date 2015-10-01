@@ -16,7 +16,7 @@ class PEPSt_IndexSet_Base
 {
     public:
         PEPSt_IndexSet_Base() {}
-        PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);
+        PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);
 
         //
         //Access methods
@@ -31,14 +31,24 @@ class PEPSt_IndexSet_Base
             return D_;
         }
         
-        inline const IndexT &phys_legs(const int &site_i) const
+        const IndexT &phys_legs(const int &site_i) const
         {
             return phys_legs_[site_i];
         }
 
-        inline const IndexT &virt_legs(const int &leg_i) const
+        const std::vector<IndexT> &phys_legs() const
+        {
+            return phys_legs_;
+        }
+
+        const IndexT &virt_legs(const int &leg_i) const
         {
             return virt_legs_[leg_i];
+        }
+
+        const std::vector<IndexT> &virt_legs() const
+        {
+            return virt_legs_;
         }
 
         const std::string &name() const { return name_; }

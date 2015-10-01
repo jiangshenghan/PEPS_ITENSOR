@@ -6,13 +6,13 @@
 #include "peps_indexset.h"
 
 //
-//class PEPSt_Torus
+//class PEPSt
 //the lower t is for template
 //
-//using PEPS_Torus for ITensor while IQPEPS_Torus for IQTensor
+//using PEPS for ITensor while IQPEPS for IQTensor
 //
 template <class TensorT>
-class PEPSt_Torus
+class PEPSt
 {
     public:
 
@@ -20,17 +20,18 @@ class PEPSt_Torus
         //type alias
         //
         using IndexT=typename TensorT::IndexT;
+        using IndexValT=typename TensorT::IndexValT;
+        using CombinerT=typename TensorT::CombinerT;
 
         //
         //Constructors
         //
-        PEPSt_Torus() {}
-        //Assign site tensors with random values
-        PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);
+        PEPSt() {}
+        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);
 
         //Initialize site tensors by tensor data in one unit cell.
         //Thus, the PEPS is translationally invariant.
-        PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);
+        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);
 
         //
         //Access Methods
@@ -43,6 +44,11 @@ class PEPSt_Torus
         inline int &D() const
         {
             return D_;
+        }
+
+        const std::array<int,2> &n_uc() const
+        {
+            return lattice_.n_uc();
         }
 
         inline const int &n_sites_uc() const
@@ -68,6 +74,11 @@ class PEPSt_Torus
         inline const int &n_bonds_total() const
         {
             return lattice_.n_bonds_total();
+        }
+
+        int n_boundary_legs() const
+        {
+            return lattice_.n_boundary_legs();
         }
 
         inline const Lattice_Base &lattice() const
@@ -115,6 +126,26 @@ class PEPSt_Torus
             return bond_tensors_;
         }
 
+        const TensorT &boundary_tensors(int i, int j) const
+        {
+            return boundary_tensors_[i][j];
+        }
+
+        TensorT &boundary_tensors(int i, int j)
+        {
+            return boundary_tensors_[i][j];
+        }
+
+        const std::vector<std::vector<TensorT>> &boundary_tensors() const
+        {
+            return boundary_tensors_;
+        }
+
+        const std::string &name() const
+        {
+            return name_;
+        }
+
         //
         //Methods
         //
@@ -136,6 +167,7 @@ class PEPSt_Torus
         //construct new tensors
         void new_site_tensors();
         void new_bond_tensors();
+        void new_boundary_tensors();
         //using random initial site tensors
         //for IQTensor we need to make sure at least one block is created
         //void random_site_tensors();
@@ -154,6 +186,11 @@ class PEPSt_Torus
 
         std::vector<TensorT> site_tensors_, bond_tensors_; 
 
+        //using for boundary condition
+        //TODO:replaced by vector of MPS?
+        std::vector<std::vector<TensorT>> boundary_tensors_;
+
+
         //name stores information about lattice, spin symmetry, extra degenerate
         std::string name_;
 
@@ -162,11 +199,11 @@ class PEPSt_Torus
         //default setting to 0
         //std::vector<QN> tensors_div_;
 };
-using PEPS_Torus=PEPSt_Torus<ITensor>;
-using IQPEPS_Torus=PEPSt_Torus<IQTensor>;
+using PEPS=PEPSt<ITensor>;
+using IQPEPS=PEPSt<IQTensor>;
 
 
-void randomize_spin_sym_square_peps(IQPEPS_Torus &square_peps);
+void randomize_spin_sym_square_peps(IQPEPS &square_peps);
 
 
 #endif

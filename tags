@@ -205,12 +205,13 @@ COMPILER_VERSION_TWEAK	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	132;"	d	f
 COMPILER_VERSION_TWEAK	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	20;"	d	file:
 COMPILER_VERSION_TWEAK	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	131;"	d	file:
 COMPILER_VERSION_TWEAK	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	22;"	d	file:
-D	peps/peps.h	/^        inline int &D() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
+D	peps/peps.h	/^        inline int &D() const$/;"	f	class:PEPSt	access:public	signature:() const
 D	peps/peps_indexset.h	/^        inline const int &D() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 DEC	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	296;"	d	file:
 DEC	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	284;"	d	file:
-D_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt_Torus	access:private
+D_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt	access:private
 D_	peps/peps_indexset.h	/^        int d_, D_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
+Down	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
 Down	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
 EPSILON	peps_utilities/predef.h	/^static const double EPSILON=1E-10;$/;"	v
 EQUALS	build/Makefile	/^EQUALS = =$/;"	m
@@ -226,17 +227,17 @@ Evolution_Params::ts	simple_update/trotter_gate.h	/^        std::vector<double> 
 HEX	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	307;"	d	file:
 HEX	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	295;"	d	file:
 ID_VOID_MAIN	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	9;"	d	file:
-IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Torus_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const Lattice_Torus_Base &lattice)
-IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice)
+IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const Lattice_Base &lattice)
+IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice)
 IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf() {}$/;"	f	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:()
-IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Torus_Base &lattice);$/;"	p	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:(const int &D, const Lattice_Torus_Base &lattice)
-IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice);$/;"	p	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice)
+IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Base &lattice);$/;"	p	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:(const int &D, const Lattice_Base &lattice)
+IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice);$/;"	p	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice)
 IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^class IQPEPS_IndexSet_SpinHalf : public PEPSt_IndexSet_Base<IQIndex>$/;"	c	inherits:PEPSt_IndexSet_Base
-IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Torus_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const Lattice_Torus_Base &lattice)
-IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice)
+IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const Lattice_Base &lattice)
+IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice)
 IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf() {}$/;"	f	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:()
-IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Torus_Base &lattice);$/;"	p	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:(const int &D, const Lattice_Torus_Base &lattice)
-IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice);$/;"	p	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice)
+IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Base &lattice);$/;"	p	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:(const int &D, const Lattice_Base &lattice)
+IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.h	/^        IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice);$/;"	p	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice)
 IQPEPS_IndexSet_SpinHalf::init_phys_legs	peps/peps_indexset.cc	/^void IQPEPS_IndexSet_SpinHalf::init_phys_legs()$/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:()
 IQPEPS_IndexSet_SpinHalf::init_phys_legs	peps/peps_indexset.h	/^        void init_phys_legs();$/;"	p	class:IQPEPS_IndexSet_SpinHalf	access:public	signature:()
 IQPEPS_IndexSet_SpinHalf::init_virt_legs	peps/peps_indexset.cc	/^void IQPEPS_IndexSet_SpinHalf::init_virt_legs(const int &spin_dim, const std::vector<int> &virt_indqn_deg)$/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &spin_dim, const std::vector<int> &virt_indqn_deg)
@@ -260,48 +261,67 @@ IndexSpin::spin_	peps_utilities/cgtensor.h	/^        int spin_;$/;"	m	class:Inde
 IndexSpin::spin_qn	peps_utilities/cgtensor.h	/^        int spin_qn() const { return spin_; }$/;"	f	class:IndexSpin	access:public	signature:() const
 IndexSpin::sz_legs_	peps_utilities/cgtensor.h	/^        IQIndex sz_legs_;$/;"	m	class:IndexSpin	access:private
 IndexSpin::valid	peps_utilities/cgtensor.h	/^        bool valid()$/;"	f	class:IndexSpin	access:public	signature:()
+J	simple_update/trotter_gate.h	/^        double J() const { return J_; }$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:() const
+J_	simple_update/trotter_gate.h	/^        double J_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
 K	peps_utilities/cgtensor.h	/^        const std::vector<IQTensor> &K() const { return K_; }$/;"	f	class:CGTensors	access:public	signature:() const
 K_	peps_utilities/cgtensor.h	/^        std::vector<IQTensor> K_;$/;"	m	class:CGTensors	access:private
-Lattice_Torus_Base	lattice/lattice.cc	/^Lattice_Torus_Base::Lattice_Torus_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc):$/;"	f	class:Lattice_Torus_Base	signature:(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc)
-Lattice_Torus_Base	lattice/lattice.h	/^        Lattice_Torus_Base() {}$/;"	f	class:Lattice_Torus_Base	access:public	signature:()
-Lattice_Torus_Base	lattice/lattice.h	/^        Lattice_Torus_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc);$/;"	p	class:Lattice_Torus_Base	access:public	signature:(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc)
-Lattice_Torus_Base	lattice/lattice.h	/^class Lattice_Torus_Base$/;"	c
-Lattice_Torus_Base::Lattice_Torus_Base	lattice/lattice.cc	/^Lattice_Torus_Base::Lattice_Torus_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc):$/;"	f	class:Lattice_Torus_Base	signature:(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc)
-Lattice_Torus_Base::Lattice_Torus_Base	lattice/lattice.h	/^        Lattice_Torus_Base() {}$/;"	f	class:Lattice_Torus_Base	access:public	signature:()
-Lattice_Torus_Base::Lattice_Torus_Base	lattice/lattice.h	/^        Lattice_Torus_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc);$/;"	p	class:Lattice_Torus_Base	access:public	signature:(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc)
-Lattice_Torus_Base::bond_coord_to_list	lattice/lattice.h	/^        inline const int &bond_coord_to_list(Coordinate bond_coord) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(Coordinate bond_coord) const
-Lattice_Torus_Base::bond_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::bond_end_sites	lattice/lattice.h	/^        inline const int &bond_end_sites(const int &bond_i, const int &j) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &bond_i, const int &j) const
-Lattice_Torus_Base::bond_end_sites	lattice/lattice.h	/^        inline const std::array<int,2> &bond_end_sites(const int &bond_i) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &bond_i) const
-Lattice_Torus_Base::bond_end_sites_	lattice/lattice.h	/^        std::vector<std::array<int,2>> bond_end_sites_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::bond_list_to_coord	lattice/lattice.h	/^        inline const Coordinate &bond_list_to_coord(int bond_i) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(int bond_i) const
-Lattice_Torus_Base::bond_list_to_coord_	lattice/lattice.h	/^        std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::comm_bond	lattice/lattice.h	/^        int comm_bond(int site_A, int site_B) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(int site_A, int site_B) const
-Lattice_Torus_Base::n_bonds_to_one_site	lattice/lattice.h	/^        inline const int &n_bonds_to_one_site() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-Lattice_Torus_Base::n_bonds_to_one_site_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::n_bonds_total	lattice/lattice.h	/^        inline const int &n_bonds_total() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-Lattice_Torus_Base::n_bonds_total_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::n_bonds_uc	lattice/lattice.h	/^        inline const int &n_bonds_uc() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-Lattice_Torus_Base::n_bonds_uc_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::n_sites_total	lattice/lattice.h	/^        inline const int &n_sites_total() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-Lattice_Torus_Base::n_sites_total_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::n_sites_uc	lattice/lattice.h	/^        inline const int &n_sites_uc() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-Lattice_Torus_Base::n_sites_uc_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::n_uc	lattice/lattice.h	/^        inline const std::array<int,2> &n_uc() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-Lattice_Torus_Base::n_uc_	lattice/lattice.h	/^        std::array<int,2> n_uc_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::name	lattice/lattice.h	/^        const std::string &name() const { return name_; }$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-Lattice_Torus_Base::name_	lattice/lattice.h	/^        std::string name_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf()=0;$/;"	p	class:Lattice_Torus_Base	access:public	signature:()
-Lattice_Torus_Base::site_coord_to_list	lattice/lattice.h	/^        inline const int &site_coord_to_list(Coordinate site_coord) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(Coordinate site_coord) const
-Lattice_Torus_Base::site_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::site_list_to_coord	lattice/lattice.h	/^        inline const Coordinate &site_list_to_coord(int site_i) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(int site_i) const
-Lattice_Torus_Base::site_list_to_coord_	lattice/lattice.h	/^        std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::site_neighbour_bonds	lattice/lattice.h	/^        inline const int &site_neighbour_bonds(const int &site_i, const int &j) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &site_i, const int &j) const
-Lattice_Torus_Base::site_neighbour_bonds	lattice/lattice.h	/^        inline const std::vector<int> &site_neighbour_bonds(const int &site_i) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &site_i) const
-Lattice_Torus_Base::site_neighbour_bonds_	lattice/lattice.h	/^        std::vector<std::vector<int>> site_neighbour_sites_, site_neighbour_bonds_;$/;"	m	class:Lattice_Torus_Base	access:protected
-Lattice_Torus_Base::site_neighbour_sites	lattice/lattice.h	/^        inline const int &site_neighbour_sites(const int &site_i, const int &j) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &site_i, const int &j) const
-Lattice_Torus_Base::site_neighbour_sites_	lattice/lattice.h	/^        std::vector<std::vector<int>> site_neighbour_sites_, site_neighbour_bonds_;$/;"	m	class:Lattice_Torus_Base	access:protected
+Lattice_Base	lattice/lattice.cc	/^Lattice_Base::Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc):$/;"	f	class:Lattice_Base	signature:(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc)
+Lattice_Base	lattice/lattice.h	/^        Lattice_Base() {}$/;"	f	class:Lattice_Base	access:public	signature:()
+Lattice_Base	lattice/lattice.h	/^        Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc);$/;"	p	class:Lattice_Base	access:public	signature:(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc)
+Lattice_Base	lattice/lattice.h	/^class Lattice_Base$/;"	c
+Lattice_Base::Lattice_Base	lattice/lattice.cc	/^Lattice_Base::Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc):$/;"	f	class:Lattice_Base	signature:(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc)
+Lattice_Base::Lattice_Base	lattice/lattice.h	/^        Lattice_Base() {}$/;"	f	class:Lattice_Base	access:public	signature:()
+Lattice_Base::Lattice_Base	lattice/lattice.h	/^        Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc);$/;"	p	class:Lattice_Base	access:public	signature:(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc)
+Lattice_Base::bond_coord_to_list	lattice/lattice.h	/^        const int &bond_coord_to_list(int x, int y, int subbond) const$/;"	f	class:Lattice_Base	access:public	signature:(int x, int y, int subbond) const
+Lattice_Base::bond_coord_to_list	lattice/lattice.h	/^        inline const int &bond_coord_to_list(Coordinate bond_coord) const$/;"	f	class:Lattice_Base	access:public	signature:(Coordinate bond_coord) const
+Lattice_Base::bond_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::bond_end_sites	lattice/lattice.h	/^        inline const int &bond_end_sites(const int &bond_i, const int &j) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &bond_i, const int &j) const
+Lattice_Base::bond_end_sites	lattice/lattice.h	/^        inline const std::array<int,2> &bond_end_sites(const int &bond_i) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &bond_i) const
+Lattice_Base::bond_end_sites_	lattice/lattice.h	/^        std::vector<std::array<int,2>> bond_end_sites_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::bond_list_to_coord	lattice/lattice.h	/^        Coordinate bond_list_to_coord(int bond_i) const$/;"	f	class:Lattice_Base	access:public	signature:(int bond_i) const
+Lattice_Base::bond_list_to_coord_	lattice/lattice.h	/^        std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::comm_bond	lattice/lattice.h	/^        int comm_bond(int site_A, int site_B) const$/;"	f	class:Lattice_Base	access:public	signature:(int site_A, int site_B) const
+Lattice_Base::n_bonds_to_one_site	lattice/lattice.h	/^        inline const int &n_bonds_to_one_site() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_bonds_to_one_site_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::n_bonds_total	lattice/lattice.h	/^        inline const int &n_bonds_total() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_bonds_total_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::n_bonds_uc	lattice/lattice.h	/^        inline const int &n_bonds_uc() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_bonds_uc_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::n_boundary_legs	lattice/lattice.h	/^        virtual int n_boundary_legs() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_sites_total	lattice/lattice.h	/^        inline const int &n_sites_total() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_sites_total_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::n_sites_uc	lattice/lattice.h	/^        inline const int &n_sites_uc() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_sites_uc_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::n_uc	lattice/lattice.h	/^        inline const std::array<int,2> &n_uc() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::n_uc_	lattice/lattice.h	/^        std::array<int,2> n_uc_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::name	lattice/lattice.h	/^        const std::string &name() const { return name_; }$/;"	f	class:Lattice_Base	access:public	signature:() const
+Lattice_Base::name_	lattice/lattice.h	/^        std::string name_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf()=0;$/;"	p	class:Lattice_Base	access:public	signature:()
+Lattice_Base::site_coord_to_list	lattice/lattice.h	/^        const int &site_coord_to_list(int x, int y, int subsite) const$/;"	f	class:Lattice_Base	access:public	signature:(int x, int y, int subsite) const
+Lattice_Base::site_coord_to_list	lattice/lattice.h	/^        inline const int &site_coord_to_list(Coordinate site_coord) const$/;"	f	class:Lattice_Base	access:public	signature:(Coordinate site_coord) const
+Lattice_Base::site_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::site_list_to_coord	lattice/lattice.h	/^        Coordinate site_list_to_coord(int site_i) const$/;"	f	class:Lattice_Base	access:public	signature:(int site_i) const
+Lattice_Base::site_list_to_coord_	lattice/lattice.h	/^        std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::site_neighbour_bonds	lattice/lattice.h	/^        inline const int &site_neighbour_bonds(const int &site_i, const int &j) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &site_i, const int &j) const
+Lattice_Base::site_neighbour_bonds	lattice/lattice.h	/^        inline const std::vector<int> &site_neighbour_bonds(const int &site_i) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &site_i) const
+Lattice_Base::site_neighbour_bonds_	lattice/lattice.h	/^        std::vector<std::vector<int>> site_neighbour_sites_, site_neighbour_bonds_;$/;"	m	class:Lattice_Base	access:protected
+Lattice_Base::site_neighbour_sites	lattice/lattice.h	/^        inline const int &site_neighbour_sites(const int &site_i, const int &j) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &site_i, const int &j) const
+Lattice_Base::site_neighbour_sites_	lattice/lattice.h	/^        std::vector<std::vector<int>> site_neighbour_sites_, site_neighbour_bonds_;$/;"	m	class:Lattice_Base	access:protected
+Left	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
 Left	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
+NN_Heisenberg_Hamiltonian	simple_update/trotter_gate.h	/^        NN_Heisenberg_Hamiltonian(std::array<IQIndex,2> nn_sites, double J=1.) : J_(J)$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:(std::array<IQIndex,2> nn_sites, double J=1.)
+NN_Heisenberg_Hamiltonian	simple_update/trotter_gate.h	/^class NN_Heisenberg_Hamiltonian$/;"	c
+NN_Heisenberg_Hamiltonian::J	simple_update/trotter_gate.h	/^        double J() const { return J_; }$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:() const
+NN_Heisenberg_Hamiltonian::J_	simple_update/trotter_gate.h	/^        double J_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
+NN_Heisenberg_Hamiltonian::NN_Heisenberg_Hamiltonian	simple_update/trotter_gate.h	/^        NN_Heisenberg_Hamiltonian(std::array<IQIndex,2> nn_sites, double J=1.) : J_(J)$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:(std::array<IQIndex,2> nn_sites, double J=1.)
+NN_Heisenberg_Hamiltonian::bond_tensor	simple_update/trotter_gate.h	/^        const IQTensor &bond_tensor() const { return bond_tensor_; }$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:() const
+NN_Heisenberg_Hamiltonian::bond_tensor_	simple_update/trotter_gate.h	/^        IQTensor bond_tensor_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
+NN_Heisenberg_Hamiltonian::init_bond_tensor	simple_update/trotter_gate.h	/^        void init_bond_tensor()$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:()
+NN_Heisenberg_Hamiltonian::init_site_tensors	simple_update/trotter_gate.h	/^        void init_site_tensors()$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:()
+NN_Heisenberg_Hamiltonian::phys_legs_	simple_update/trotter_gate.h	/^        std::array<std::array<IQIndex,2>,2> phys_legs_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
+NN_Heisenberg_Hamiltonian::site_tensors	simple_update/trotter_gate.h	/^        const IQTensor &site_tensors(int i) const { return site_tensors_[i]; }$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:(int i) const
+NN_Heisenberg_Hamiltonian::site_tensors_	simple_update/trotter_gate.h	/^        std::array<IQTensor,2> site_tensors_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
+NN_Heisenberg_Hamiltonian::virt_legs_	simple_update/trotter_gate.h	/^        std::array<IQIndex,2> virt_legs_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
 NN_Heisenberg_Trotter_Gate	simple_update/trotter_gate.h	/^        NN_Heisenberg_Trotter_Gate() {}$/;"	f	class:NN_Heisenberg_Trotter_Gate	access:public	signature:()
 NN_Heisenberg_Trotter_Gate	simple_update/trotter_gate.h	/^        NN_Heisenberg_Trotter_Gate(std::array<IQIndex,2> nn_sites, double t=1.);$/;"	p	class:NN_Heisenberg_Trotter_Gate	access:public	signature:(std::array<IQIndex,2> nn_sites, double t=1.)
 NN_Heisenberg_Trotter_Gate	simple_update/trotter_gate.h	/^NN_Heisenberg_Trotter_Gate::NN_Heisenberg_Trotter_Gate(std::array<IQIndex,2> nn_sites, double t): $/;"	f	class:NN_Heisenberg_Trotter_Gate	signature:(std::array<IQIndex,2> nn_sites, double t)
@@ -314,31 +334,103 @@ NN_Heisenberg_Trotter_Gate::init_bond_tensor	simple_update/trotter_gate.h	/^    
 NN_Heisenberg_Trotter_Gate::init_bond_tensor	simple_update/trotter_gate.h	/^void NN_Heisenberg_Trotter_Gate::init_bond_tensor()$/;"	f	class:NN_Heisenberg_Trotter_Gate	signature:()
 NN_Heisenberg_Trotter_Gate::init_site_tensors	simple_update/trotter_gate.h	/^        void init_site_tensors();$/;"	p	class:NN_Heisenberg_Trotter_Gate	access:public	signature:()
 NN_Heisenberg_Trotter_Gate::init_site_tensors	simple_update/trotter_gate.h	/^void NN_Heisenberg_Trotter_Gate::init_site_tensors()$/;"	f	class:NN_Heisenberg_Trotter_Gate	signature:()
+Neighbour	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	g	class:Square_Lattice_Cylinder	access:public
 Neighbour	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	g	class:Square_Lattice_Torus	access:public
-PEPS_IndexSet	peps/peps_indexset.cc	/^PEPS_IndexSet::PEPS_IndexSet(const int &d, const int &D, const Lattice_Torus_Base &lattice): PEPSt_IndexSet_Base<Index>(d,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site())$/;"	f	class:PEPS_IndexSet	signature:(const int &d, const int &D, const Lattice_Torus_Base &lattice)
+PEPS_IndexSet	peps/peps_indexset.cc	/^PEPS_IndexSet::PEPS_IndexSet(const int &d, const int &D, const Lattice_Base &lattice): PEPSt_IndexSet_Base<Index>(d,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site(),lattice.n_boundary_legs())$/;"	f	class:PEPS_IndexSet	signature:(const int &d, const int &D, const Lattice_Base &lattice)
 PEPS_IndexSet	peps/peps_indexset.h	/^        PEPS_IndexSet() {}$/;"	f	class:PEPS_IndexSet	access:public	signature:()
-PEPS_IndexSet	peps/peps_indexset.h	/^        PEPS_IndexSet(const int &d, const int &D, const Lattice_Torus_Base &lattice);$/;"	p	class:PEPS_IndexSet	access:public	signature:(const int &d, const int &D, const Lattice_Torus_Base &lattice)
+PEPS_IndexSet	peps/peps_indexset.h	/^        PEPS_IndexSet(const int &d, const int &D, const Lattice_Base &lattice);$/;"	p	class:PEPS_IndexSet	access:public	signature:(const int &d, const int &D, const Lattice_Base &lattice)
 PEPS_IndexSet	peps/peps_indexset.h	/^class PEPS_IndexSet : public PEPSt_IndexSet_Base<Index>$/;"	c	inherits:PEPSt_IndexSet_Base
-PEPS_IndexSet::PEPS_IndexSet	peps/peps_indexset.cc	/^PEPS_IndexSet::PEPS_IndexSet(const int &d, const int &D, const Lattice_Torus_Base &lattice): PEPSt_IndexSet_Base<Index>(d,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site())$/;"	f	class:PEPS_IndexSet	signature:(const int &d, const int &D, const Lattice_Torus_Base &lattice)
+PEPS_IndexSet::PEPS_IndexSet	peps/peps_indexset.cc	/^PEPS_IndexSet::PEPS_IndexSet(const int &d, const int &D, const Lattice_Base &lattice): PEPSt_IndexSet_Base<Index>(d,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site(),lattice.n_boundary_legs())$/;"	f	class:PEPS_IndexSet	signature:(const int &d, const int &D, const Lattice_Base &lattice)
 PEPS_IndexSet::PEPS_IndexSet	peps/peps_indexset.h	/^        PEPS_IndexSet() {}$/;"	f	class:PEPS_IndexSet	access:public	signature:()
-PEPS_IndexSet::PEPS_IndexSet	peps/peps_indexset.h	/^        PEPS_IndexSet(const int &d, const int &D, const Lattice_Torus_Base &lattice);$/;"	p	class:PEPS_IndexSet	access:public	signature:(const int &d, const int &D, const Lattice_Torus_Base &lattice)
+PEPS_IndexSet::PEPS_IndexSet	peps/peps_indexset.h	/^        PEPS_IndexSet(const int &d, const int &D, const Lattice_Base &lattice);$/;"	p	class:PEPS_IndexSet	access:public	signature:(const int &d, const int &D, const Lattice_Base &lattice)
 PEPS_IndexSet::init_phys_legs	peps/peps_indexset.cc	/^void PEPS_IndexSet::init_phys_legs()$/;"	f	class:PEPS_IndexSet	signature:()
 PEPS_IndexSet::init_phys_legs	peps/peps_indexset.h	/^        void init_phys_legs();$/;"	p	class:PEPS_IndexSet	access:public	signature:()
 PEPS_IndexSet::init_virt_legs	peps/peps_indexset.cc	/^void PEPS_IndexSet::init_virt_legs()$/;"	f	class:PEPS_IndexSet	signature:()
 PEPS_IndexSet::init_virt_legs	peps/peps_indexset.h	/^        void init_virt_legs();$/;"	p	class:PEPS_IndexSet	access:public	signature:()
-PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<IQIndex>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site)
-PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<Index>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site)
-PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<IndexT>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site): $/;"	f	class:PEPSt_IndexSet_Base	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site)
+PEPSt	peps/peps.cc	/^PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);$/;"	p	class:PEPSt	file:	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set)
+PEPSt	peps/peps.cc	/^PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc)
+PEPSt	peps/peps.cc	/^PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);$/;"	p	class:PEPSt	file:	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set)
+PEPSt	peps/peps.cc	/^PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc)
+PEPSt	peps/peps.cc	/^PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):$/;"	f	class:PEPSt	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set)
+PEPSt	peps/peps.cc	/^PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc):$/;"	f	class:PEPSt	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc)
+PEPSt	peps/peps.h	/^        PEPSt() {}$/;"	f	class:PEPSt	access:public	signature:()
+PEPSt	peps/peps.h	/^        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);$/;"	p	class:PEPSt	access:public	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set)
+PEPSt	peps/peps.h	/^        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);$/;"	p	class:PEPSt	access:public	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc)
+PEPSt	peps/peps.h	/^class PEPSt$/;"	c
+PEPSt::D	peps/peps.h	/^        inline int &D() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::D_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt	access:private
+PEPSt::PEPSt	peps/peps.cc	/^PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);$/;"	p	class:PEPSt	file:	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set)
+PEPSt::PEPSt	peps/peps.cc	/^PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc)
+PEPSt::PEPSt	peps/peps.cc	/^PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);$/;"	p	class:PEPSt	file:	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set)
+PEPSt::PEPSt	peps/peps.cc	/^PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc)
+PEPSt::PEPSt	peps/peps.cc	/^PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):$/;"	f	class:PEPSt	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set)
+PEPSt::PEPSt	peps/peps.cc	/^PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc):$/;"	f	class:PEPSt	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc)
+PEPSt::PEPSt	peps/peps.h	/^        PEPSt() {}$/;"	f	class:PEPSt	access:public	signature:()
+PEPSt::PEPSt	peps/peps.h	/^        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);$/;"	p	class:PEPSt	access:public	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set)
+PEPSt::PEPSt	peps/peps.h	/^        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);$/;"	p	class:PEPSt	access:public	signature:(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc)
+PEPSt::bond_tensors	peps/peps.h	/^        TensorT &bond_tensors(int i)$/;"	f	class:PEPSt	access:public	signature:(int i)
+PEPSt::bond_tensors	peps/peps.h	/^        inline const TensorT &bond_tensors(int i) const$/;"	f	class:PEPSt	access:public	signature:(int i) const
+PEPSt::bond_tensors	peps/peps.h	/^        inline const std::vector<TensorT> &bond_tensors() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::bond_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_; $/;"	m	class:PEPSt	access:private
+PEPSt::boundary_tensors_	peps/peps.h	/^        std::vector<std::vector<TensorT>> boundary_tensors_;$/;"	m	class:PEPSt	access:private
+PEPSt::construct_tensor	peps/peps.cc	/^void PEPSt<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)$/;"	f	class:PEPSt	signature:(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)
+PEPSt::construct_tensor	peps/peps.cc	/^void PEPSt<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)$/;"	f	class:PEPSt	signature:(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)
+PEPSt::construct_tensor	peps/peps.h	/^        void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);$/;"	p	class:PEPSt	access:public	signature:(TensorT &tensor, std::vector<IndexT> &indexset)
+PEPSt::d	peps/peps.h	/^        inline const int &d() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::d_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt	access:private
+PEPSt::generate_bond_tensors	peps/peps.cc	/^void PEPSt<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc)$/;"	f	class:PEPSt	signature:(std::vector<TensorT> bond_tensors_uc)
+PEPSt::generate_bond_tensors	peps/peps.h	/^        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc);$/;"	p	class:PEPSt	access:public	signature:(std::vector<TensorT> bond_tensors_uc)
+PEPSt::generate_site_tensors	peps/peps.cc	/^void PEPSt<IQTensor>::generate_site_tensors(std::vector<IQTensor> site_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(std::vector<IQTensor> site_tensors_uc)
+PEPSt::generate_site_tensors	peps/peps.cc	/^void PEPSt<ITensor>::generate_site_tensors(std::vector<ITensor> site_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(std::vector<ITensor> site_tensors_uc)
+PEPSt::generate_site_tensors	peps/peps.cc	/^void PEPSt<TensorT>::generate_site_tensors(std::vector<TensorT> site_tensors_uc)$/;"	f	class:PEPSt	signature:(std::vector<TensorT> site_tensors_uc)
+PEPSt::generate_site_tensors	peps/peps.h	/^        void generate_site_tensors(std::vector<TensorT> site_tensors_uc);$/;"	p	class:PEPSt	access:public	signature:(std::vector<TensorT> site_tensors_uc)
+PEPSt::index_set_	peps/peps.h	/^        const PEPSt_IndexSet_Base<IndexT> &index_set_;$/;"	m	class:PEPSt	access:private
+PEPSt::lattice	peps/peps.h	/^        inline const Lattice_Base &lattice() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::lattice_	peps/peps.h	/^        const Lattice_Base &lattice_;$/;"	m	class:PEPSt	access:private
+PEPSt::n_bonds_to_one_site	peps/peps.h	/^        inline const int &n_bonds_to_one_site() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::n_bonds_total	peps/peps.h	/^        inline const int &n_bonds_total() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::n_bonds_uc	peps/peps.h	/^        inline const int &n_bonds_uc() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::n_boundary_legs	peps/peps.h	/^        int n_boundary_legs() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::n_sites_total	peps/peps.h	/^        inline const int &n_sites_total() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::n_sites_uc	peps/peps.h	/^        inline const int &n_sites_uc() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::n_uc	peps/peps.h	/^        const std::array<int,2> &n_uc() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::name	peps/peps.h	/^        std::string &name() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::name_	peps/peps.h	/^        std::string name_;$/;"	m	class:PEPSt	access:private
+PEPSt::new_bond_tensors	peps/peps.cc	/^void PEPSt<IQTensor>::new_bond_tensors();$/;"	p	class:PEPSt	file:	signature:()
+PEPSt::new_bond_tensors	peps/peps.cc	/^void PEPSt<ITensor>::new_bond_tensors();$/;"	p	class:PEPSt	file:	signature:()
+PEPSt::new_bond_tensors	peps/peps.cc	/^void PEPSt<TensorT>::new_bond_tensors()$/;"	f	class:PEPSt	signature:()
+PEPSt::new_bond_tensors	peps/peps.h	/^        void new_bond_tensors();$/;"	p	class:PEPSt	access:public	signature:()
+PEPSt::new_boundary_tensors	peps/peps.cc	/^void PEPSt<IQTensor>::new_boundary_tensors();$/;"	p	class:PEPSt	file:	signature:()
+PEPSt::new_boundary_tensors	peps/peps.cc	/^void PEPSt<ITensor>::new_boundary_tensors();$/;"	p	class:PEPSt	file:	signature:()
+PEPSt::new_boundary_tensors	peps/peps.cc	/^void PEPSt<TensorT>::new_boundary_tensors()$/;"	f	class:PEPSt	signature:()
+PEPSt::new_boundary_tensors	peps/peps.h	/^        void new_boundary_tensors();$/;"	p	class:PEPSt	access:public	signature:()
+PEPSt::new_site_tensors	peps/peps.cc	/^void PEPSt<IQTensor>::new_site_tensors();$/;"	p	class:PEPSt	file:	signature:()
+PEPSt::new_site_tensors	peps/peps.cc	/^void PEPSt<ITensor>::new_site_tensors();$/;"	p	class:PEPSt	file:	signature:()
+PEPSt::new_site_tensors	peps/peps.cc	/^void PEPSt<TensorT>::new_site_tensors()$/;"	f	class:PEPSt	signature:()
+PEPSt::new_site_tensors	peps/peps.h	/^        void new_site_tensors();$/;"	p	class:PEPSt	access:public	signature:()
+PEPSt::phys_legs	peps/peps.h	/^        inline const IndexT &phys_legs(const int &site_i) const$/;"	f	class:PEPSt	access:public	signature:(const int &site_i) const
+PEPSt::site_tensors	peps/peps.h	/^        TensorT &site_tensors(int i)$/;"	f	class:PEPSt	access:public	signature:(int i)
+PEPSt::site_tensors	peps/peps.h	/^        inline const TensorT &site_tensors(int i) const$/;"	f	class:PEPSt	access:public	signature:(int i) const
+PEPSt::site_tensors	peps/peps.h	/^        inline const std::vector<TensorT> &site_tensors() const$/;"	f	class:PEPSt	access:public	signature:() const
+PEPSt::site_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_; $/;"	m	class:PEPSt	access:private
+PEPSt::tensor_assignment	peps/peps.cc	/^void PEPSt<IQTensor>::tensor_assignment(IQTensor &TA, const IQTensor &TB);$/;"	p	class:PEPSt	file:	signature:(IQTensor &TA, const IQTensor &TB)
+PEPSt::tensor_assignment	peps/peps.cc	/^void PEPSt<ITensor>::tensor_assignment(ITensor &TA, const ITensor &TB);$/;"	p	class:PEPSt	file:	signature:(ITensor &TA, const ITensor &TB)
+PEPSt::tensor_assignment	peps/peps.cc	/^void PEPSt<TensorT>::tensor_assignment(TensorT &TA, const TensorT &TB)$/;"	f	class:PEPSt	signature:(TensorT &TA, const TensorT &TB)
+PEPSt::tensor_assignment	peps/peps.h	/^        void tensor_assignment(TensorT &TA, const TensorT &TB);$/;"	p	class:PEPSt	access:public	signature:(TensorT &TA, const TensorT &TB)
+PEPSt::virt_legs	peps/peps.h	/^        inline const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt	access:public	signature:(const int &leg_i) const
+PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<IQIndex>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs)
+PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<Index>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs)
+PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<IndexT>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs): $/;"	f	class:PEPSt_IndexSet_Base	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs)
 PEPSt_IndexSet_Base	peps/peps_indexset.h	/^        PEPSt_IndexSet_Base() {}$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:()
-PEPSt_IndexSet_Base	peps/peps_indexset.h	/^        PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);$/;"	p	class:PEPSt_IndexSet_Base	access:public	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site)
+PEPSt_IndexSet_Base	peps/peps_indexset.h	/^        PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);$/;"	p	class:PEPSt_IndexSet_Base	access:public	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs)
 PEPSt_IndexSet_Base	peps/peps_indexset.h	/^class PEPSt_IndexSet_Base$/;"	c
 PEPSt_IndexSet_Base::D	peps/peps_indexset.h	/^        inline const int &D() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 PEPSt_IndexSet_Base::D_	peps/peps_indexset.h	/^        int d_, D_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
-PEPSt_IndexSet_Base::PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<IQIndex>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site)
-PEPSt_IndexSet_Base::PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<Index>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site)
-PEPSt_IndexSet_Base::PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<IndexT>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site): $/;"	f	class:PEPSt_IndexSet_Base	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site)
+PEPSt_IndexSet_Base::PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<IQIndex>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs)
+PEPSt_IndexSet_Base::PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<Index>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs)
+PEPSt_IndexSet_Base::PEPSt_IndexSet_Base	peps/peps_indexset.cc	/^PEPSt_IndexSet_Base<IndexT>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs): $/;"	f	class:PEPSt_IndexSet_Base	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs)
 PEPSt_IndexSet_Base::PEPSt_IndexSet_Base	peps/peps_indexset.h	/^        PEPSt_IndexSet_Base() {}$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:()
-PEPSt_IndexSet_Base::PEPSt_IndexSet_Base	peps/peps_indexset.h	/^        PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);$/;"	p	class:PEPSt_IndexSet_Base	access:public	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site)
+PEPSt_IndexSet_Base::PEPSt_IndexSet_Base	peps/peps_indexset.h	/^        PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);$/;"	p	class:PEPSt_IndexSet_Base	access:public	signature:(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs)
 PEPSt_IndexSet_Base::d	peps/peps_indexset.h	/^        inline const int &d() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 PEPSt_IndexSet_Base::d_	peps/peps_indexset.h	/^        int d_, D_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
 PEPSt_IndexSet_Base::name	peps/peps_indexset.h	/^        const std::string &name() const { return name_; }$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
@@ -347,69 +439,6 @@ PEPSt_IndexSet_Base::phys_legs	peps/peps_indexset.h	/^        inline const Index
 PEPSt_IndexSet_Base::phys_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
 PEPSt_IndexSet_Base::virt_legs	peps/peps_indexset.h	/^        inline const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:(const int &leg_i) const
 PEPSt_IndexSet_Base::virt_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
-PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);$/;"	p	class:PEPSt_Torus	file:	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set)
-PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc);$/;"	p	class:PEPSt_Torus	file:	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc)
-PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);$/;"	p	class:PEPSt_Torus	file:	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set)
-PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc);$/;"	p	class:PEPSt_Torus	file:	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc)
-PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):$/;"	f	class:PEPSt_Torus	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set)
-PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc):$/;"	f	class:PEPSt_Torus	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc)
-PEPSt_Torus	peps/peps.h	/^        PEPSt_Torus() {}$/;"	f	class:PEPSt_Torus	access:public	signature:()
-PEPSt_Torus	peps/peps.h	/^        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);$/;"	p	class:PEPSt_Torus	access:public	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set)
-PEPSt_Torus	peps/peps.h	/^        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);$/;"	p	class:PEPSt_Torus	access:public	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc)
-PEPSt_Torus	peps/peps.h	/^class PEPSt_Torus$/;"	c
-PEPSt_Torus::D	peps/peps.h	/^        inline int &D() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::D_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt_Torus	access:private
-PEPSt_Torus::PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);$/;"	p	class:PEPSt_Torus	file:	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set)
-PEPSt_Torus::PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc);$/;"	p	class:PEPSt_Torus	file:	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc)
-PEPSt_Torus::PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);$/;"	p	class:PEPSt_Torus	file:	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set)
-PEPSt_Torus::PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc);$/;"	p	class:PEPSt_Torus	file:	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc)
-PEPSt_Torus::PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):$/;"	f	class:PEPSt_Torus	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set)
-PEPSt_Torus::PEPSt_Torus	peps/peps.cc	/^PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc):$/;"	f	class:PEPSt_Torus	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc)
-PEPSt_Torus::PEPSt_Torus	peps/peps.h	/^        PEPSt_Torus() {}$/;"	f	class:PEPSt_Torus	access:public	signature:()
-PEPSt_Torus::PEPSt_Torus	peps/peps.h	/^        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);$/;"	p	class:PEPSt_Torus	access:public	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set)
-PEPSt_Torus::PEPSt_Torus	peps/peps.h	/^        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);$/;"	p	class:PEPSt_Torus	access:public	signature:(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc)
-PEPSt_Torus::bond_tensors	peps/peps.h	/^        TensorT &bond_tensors(int i)$/;"	f	class:PEPSt_Torus	access:public	signature:(int i)
-PEPSt_Torus::bond_tensors	peps/peps.h	/^        inline const TensorT &bond_tensors(int i) const$/;"	f	class:PEPSt_Torus	access:public	signature:(int i) const
-PEPSt_Torus::bond_tensors	peps/peps.h	/^        inline std::vector<TensorT> &bond_tensors() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::bond_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_; $/;"	m	class:PEPSt_Torus	access:private
-PEPSt_Torus::construct_tensor	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)$/;"	f	class:PEPSt_Torus	signature:(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)
-PEPSt_Torus::construct_tensor	peps/peps.cc	/^void PEPSt_Torus<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)$/;"	f	class:PEPSt_Torus	signature:(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)
-PEPSt_Torus::construct_tensor	peps/peps.h	/^        void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);$/;"	p	class:PEPSt_Torus	access:public	signature:(TensorT &tensor, std::vector<IndexT> &indexset)
-PEPSt_Torus::d	peps/peps.h	/^        inline const int &d() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::d_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt_Torus	access:private
-PEPSt_Torus::generate_bond_tensors	peps/peps.cc	/^void PEPSt_Torus<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc)$/;"	f	class:PEPSt_Torus	signature:(std::vector<TensorT> bond_tensors_uc)
-PEPSt_Torus::generate_bond_tensors	peps/peps.h	/^        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc);$/;"	p	class:PEPSt_Torus	access:public	signature:(std::vector<TensorT> bond_tensors_uc)
-PEPSt_Torus::generate_site_tensors	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::generate_site_tensors(std::vector<IQTensor> site_tensors_uc);$/;"	p	class:PEPSt_Torus	file:	signature:(std::vector<IQTensor> site_tensors_uc)
-PEPSt_Torus::generate_site_tensors	peps/peps.cc	/^void PEPSt_Torus<ITensor>::generate_site_tensors(std::vector<ITensor> site_tensors_uc);$/;"	p	class:PEPSt_Torus	file:	signature:(std::vector<ITensor> site_tensors_uc)
-PEPSt_Torus::generate_site_tensors	peps/peps.cc	/^void PEPSt_Torus<TensorT>::generate_site_tensors(std::vector<TensorT> site_tensors_uc)$/;"	f	class:PEPSt_Torus	signature:(std::vector<TensorT> site_tensors_uc)
-PEPSt_Torus::generate_site_tensors	peps/peps.h	/^        void generate_site_tensors(std::vector<TensorT> site_tensors_uc);$/;"	p	class:PEPSt_Torus	access:public	signature:(std::vector<TensorT> site_tensors_uc)
-PEPSt_Torus::index_set_	peps/peps.h	/^        const PEPSt_IndexSet_Base<IndexT> &index_set_;$/;"	m	class:PEPSt_Torus	access:private
-PEPSt_Torus::lattice	peps/peps.h	/^        inline const Lattice_Torus_Base &lattice() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::lattice_	peps/peps.h	/^        const Lattice_Torus_Base &lattice_;$/;"	m	class:PEPSt_Torus	access:private
-PEPSt_Torus::n_bonds_to_one_site	peps/peps.h	/^        inline const int &n_bonds_to_one_site() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::n_bonds_total	peps/peps.h	/^        inline const int &n_bonds_total() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::n_bonds_uc	peps/peps.h	/^        inline const int &n_bonds_uc() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::n_sites_total	peps/peps.h	/^        inline const int &n_sites_total() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::n_sites_uc	peps/peps.h	/^        inline const int &n_sites_uc() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::name_	peps/peps.h	/^        std::string name_;$/;"	m	class:PEPSt_Torus	access:private
-PEPSt_Torus::new_bond_tensors	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::new_bond_tensors();$/;"	p	class:PEPSt_Torus	file:	signature:()
-PEPSt_Torus::new_bond_tensors	peps/peps.cc	/^void PEPSt_Torus<ITensor>::new_bond_tensors();$/;"	p	class:PEPSt_Torus	file:	signature:()
-PEPSt_Torus::new_bond_tensors	peps/peps.cc	/^void PEPSt_Torus<TensorT>::new_bond_tensors()$/;"	f	class:PEPSt_Torus	signature:()
-PEPSt_Torus::new_bond_tensors	peps/peps.h	/^        void new_bond_tensors();$/;"	p	class:PEPSt_Torus	access:public	signature:()
-PEPSt_Torus::new_site_tensors	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::new_site_tensors();$/;"	p	class:PEPSt_Torus	file:	signature:()
-PEPSt_Torus::new_site_tensors	peps/peps.cc	/^void PEPSt_Torus<ITensor>::new_site_tensors();$/;"	p	class:PEPSt_Torus	file:	signature:()
-PEPSt_Torus::new_site_tensors	peps/peps.cc	/^void PEPSt_Torus<TensorT>::new_site_tensors()$/;"	f	class:PEPSt_Torus	signature:()
-PEPSt_Torus::new_site_tensors	peps/peps.h	/^        void new_site_tensors();$/;"	p	class:PEPSt_Torus	access:public	signature:()
-PEPSt_Torus::phys_legs	peps/peps.h	/^        inline const IndexT &phys_legs(const int &site_i) const$/;"	f	class:PEPSt_Torus	access:public	signature:(const int &site_i) const
-PEPSt_Torus::site_tensors	peps/peps.h	/^        TensorT &site_tensors(int i)$/;"	f	class:PEPSt_Torus	access:public	signature:(int i)
-PEPSt_Torus::site_tensors	peps/peps.h	/^        inline const TensorT &site_tensors(int i) const$/;"	f	class:PEPSt_Torus	access:public	signature:(int i) const
-PEPSt_Torus::site_tensors	peps/peps.h	/^        inline const std::vector<TensorT> &site_tensors() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-PEPSt_Torus::site_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_; $/;"	m	class:PEPSt_Torus	access:private
-PEPSt_Torus::tensor_assignment	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::tensor_assignment(IQTensor &TA, const IQTensor &TB);$/;"	p	class:PEPSt_Torus	file:	signature:(IQTensor &TA, const IQTensor &TB)
-PEPSt_Torus::tensor_assignment	peps/peps.cc	/^void PEPSt_Torus<ITensor>::tensor_assignment(ITensor &TA, const ITensor &TB);$/;"	p	class:PEPSt_Torus	file:	signature:(ITensor &TA, const ITensor &TB)
-PEPSt_Torus::tensor_assignment	peps/peps.cc	/^void PEPSt_Torus<TensorT>::tensor_assignment(TensorT &TA, const TensorT &TB)$/;"	f	class:PEPSt_Torus	signature:(TensorT &TA, const TensorT &TB)
-PEPSt_Torus::tensor_assignment	peps/peps.h	/^        void tensor_assignment(TensorT &TA, const TensorT &TB);$/;"	p	class:PEPSt_Torus	access:public	signature:(TensorT &TA, const TensorT &TB)
-PEPSt_Torus::virt_legs	peps/peps.h	/^        inline const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt_Torus	access:public	signature:(const int &leg_i) const
 PLATFORM_ID	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	187;"	d	file:
 PLATFORM_ID	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	190;"	d	file:
 PLATFORM_ID	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	193;"	d	file:
@@ -468,6 +497,7 @@ RM	build/peps/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove 
 RM	build/peps_utilities/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
 RM	build/simple_update/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
 RM	build/test/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
+Right	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
 Right	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
 S	peps_utilities/utilities.h	/^        int S() const { return basis_label_[0]; }$/;"	f	class:Spin_Basis	access:public	signature:() const
 SHELL	build/Makefile	/^SHELL = \/bin\/sh$/;"	m
@@ -493,9 +523,11 @@ Singlet_Tensor_Basis::Singlet_Tensor_Basis	peps_utilities/singlet_tensor_basis.c
 Singlet_Tensor_Basis::Singlet_Tensor_Basis	peps_utilities/singlet_tensor_basis.h	/^        Singlet_Tensor_Basis() {}$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:()
 Singlet_Tensor_Basis::Singlet_Tensor_Basis	peps_utilities/singlet_tensor_basis.h	/^        explicit Singlet_Tensor_Basis(const IndexSet<IQIndex> &iqinds_set);$/;"	p	class:Singlet_Tensor_Basis	access:public	signature:(const IndexSet<IQIndex> &iqinds_set)
 Singlet_Tensor_Basis::Singlet_Tensor_Basis	peps_utilities/singlet_tensor_basis.h	/^        explicit Singlet_Tensor_Basis(const std::vector<IQIndex> &iqinds);$/;"	p	class:Singlet_Tensor_Basis	access:public	signature:(const std::vector<IQIndex> &iqinds)
+Singlet_Tensor_Basis::begin	peps_utilities/singlet_tensor_basis.h	/^        const_iterator begin() const { return singlet_tensors_.begin(); }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
 Singlet_Tensor_Basis::deg_configs	peps_utilities/singlet_tensor_basis.h	/^        const std::vector<int> &deg_configs(int i) const { return deg_configs_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
 Singlet_Tensor_Basis::deg_configs_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<std::vector<int>> deg_configs_;$/;"	m	class:Singlet_Tensor_Basis	access:private
 Singlet_Tensor_Basis::dim	peps_utilities/singlet_tensor_basis.h	/^        const int dim() const { return singlet_tensors_.size(); }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
+Singlet_Tensor_Basis::end	peps_utilities/singlet_tensor_basis.h	/^        const_iterator end() const { return singlet_tensors_.end(); }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
 Singlet_Tensor_Basis::indices	peps_utilities/singlet_tensor_basis.h	/^        const IndexSet<IQIndex> &indices() const { return is_; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
 Singlet_Tensor_Basis::init_singlet_tensors	peps_utilities/singlet_tensor_basis.cc	/^void Singlet_Tensor_Basis::init_singlet_tensors()$/;"	f	class:Singlet_Tensor_Basis	signature:()
 Singlet_Tensor_Basis::init_singlet_tensors	peps_utilities/singlet_tensor_basis.h	/^        void init_singlet_tensors();$/;"	p	class:Singlet_Tensor_Basis	access:public	signature:()
@@ -540,14 +572,27 @@ Square::chi_c4	peps_utilities/peps_class_params.h	/^    static const double chi_
 Square::mu_12	peps_utilities/peps_class_params.h	/^    static const double mu_12=1;$/;"	m	namespace:Square
 Square::mu_t1T	peps_utilities/peps_class_params.h	/^    static const double mu_t1T=1;$/;"	m	namespace:Square
 Square::mu_t2c4	peps_utilities/peps_class_params.h	/^    static const double mu_t2c4=-1;$/;"	m	namespace:Square
-Square_Lattice_Torus	lattice/lattice.cc	/^Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Torus_Base(1,2,n_uc)$/;"	f	class:Square_Lattice_Torus	signature:(const std::array<int,2> &n_uc)
+Square_Lattice_Cylinder	lattice/lattice.cc	/^Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc)$/;"	f	class:Square_Lattice_Cylinder	signature:(const std::array<int,2> &n_uc)
+Square_Lattice_Cylinder	lattice/lattice.h	/^        Square_Lattice_Cylinder(const std::array<int,2> &n_uc);$/;"	p	class:Square_Lattice_Cylinder	access:public	signature:(const std::array<int,2> &n_uc)
+Square_Lattice_Cylinder	lattice/lattice.h	/^class Square_Lattice_Cylinder : public Lattice_Base$/;"	c	inherits:Lattice_Base
+Square_Lattice_Cylinder::Down	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
+Square_Lattice_Cylinder::Left	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
+Square_Lattice_Cylinder::Neighbour	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	g	class:Square_Lattice_Cylinder	access:public
+Square_Lattice_Cylinder::Right	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
+Square_Lattice_Cylinder::Square_Lattice_Cylinder	lattice/lattice.cc	/^Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc)$/;"	f	class:Square_Lattice_Cylinder	signature:(const std::array<int,2> &n_uc)
+Square_Lattice_Cylinder::Square_Lattice_Cylinder	lattice/lattice.h	/^        Square_Lattice_Cylinder(const std::array<int,2> &n_uc);$/;"	p	class:Square_Lattice_Cylinder	access:public	signature:(const std::array<int,2> &n_uc)
+Square_Lattice_Cylinder::Up	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
+Square_Lattice_Cylinder::n_boundary_legs	lattice/lattice.h	/^        virtual int n_boundary_legs()$/;"	f	class:Square_Lattice_Cylinder	access:public	signature:()
+Square_Lattice_Cylinder::print_lattice_inf	lattice/lattice.cc	/^void Square_Lattice_Cylinder::print_lattice_inf()$/;"	f	class:Square_Lattice_Cylinder	signature:()
+Square_Lattice_Cylinder::print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf();$/;"	p	class:Square_Lattice_Cylinder	access:public	signature:()
+Square_Lattice_Torus	lattice/lattice.cc	/^Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc)$/;"	f	class:Square_Lattice_Torus	signature:(const std::array<int,2> &n_uc)
 Square_Lattice_Torus	lattice/lattice.h	/^        Square_Lattice_Torus(const std::array<int,2> &n_uc);$/;"	p	class:Square_Lattice_Torus	access:public	signature:(const std::array<int,2> &n_uc)
-Square_Lattice_Torus	lattice/lattice.h	/^class Square_Lattice_Torus : public Lattice_Torus_Base$/;"	c	inherits:Lattice_Torus_Base
+Square_Lattice_Torus	lattice/lattice.h	/^class Square_Lattice_Torus : public Lattice_Base$/;"	c	inherits:Lattice_Base
 Square_Lattice_Torus::Down	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
 Square_Lattice_Torus::Left	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
 Square_Lattice_Torus::Neighbour	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	g	class:Square_Lattice_Torus	access:public
 Square_Lattice_Torus::Right	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
-Square_Lattice_Torus::Square_Lattice_Torus	lattice/lattice.cc	/^Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Torus_Base(1,2,n_uc)$/;"	f	class:Square_Lattice_Torus	signature:(const std::array<int,2> &n_uc)
+Square_Lattice_Torus::Square_Lattice_Torus	lattice/lattice.cc	/^Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc)$/;"	f	class:Square_Lattice_Torus	signature:(const std::array<int,2> &n_uc)
 Square_Lattice_Torus::Square_Lattice_Torus	lattice/lattice.h	/^        Square_Lattice_Torus(const std::array<int,2> &n_uc);$/;"	p	class:Square_Lattice_Torus	access:public	signature:(const std::array<int,2> &n_uc)
 Square_Lattice_Torus::Up	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
 Square_Lattice_Torus::print_lattice_inf	lattice/lattice.cc	/^void Square_Lattice_Torus::print_lattice_inf()$/;"	f	class:Square_Lattice_Torus	signature:()
@@ -569,6 +614,7 @@ Trotter_Gate::site_tensors_	simple_update/trotter_gate.h	/^        std::vector<I
 Trotter_Gate::t	simple_update/trotter_gate.h	/^        double t() { return t_; }$/;"	f	class:Trotter_Gate	access:public	signature:()
 Trotter_Gate::t_	simple_update/trotter_gate.h	/^        double t_;$/;"	m	class:Trotter_Gate	access:protected
 Trotter_Gate::virt_legs_	simple_update/trotter_gate.h	/^        std::vector<std::vector<IQIndex>> virt_legs_;$/;"	m	class:Trotter_Gate	access:protected
+Up	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
 Up	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
 VERBOSE	build/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/lattice/Makefile	/^VERBOSE = 1$/;"	m
@@ -576,6 +622,7 @@ VERBOSE	build/peps/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/peps_utilities/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/simple_update/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/test/Makefile	/^VERBOSE = 1$/;"	m
+_BOUNDARY_THEORY_	entangle_quantities/boundary_theory.h	3;"	d
 _CGTENSOR_H_	peps_utilities/cgtensor.h	5;"	d
 _LATTICE_H_	lattice/lattice.h	3;"	d
 _PEPS_CLASS_PARAMS_H_	peps_utilities/peps_class_params.h	3;"	d
@@ -589,52 +636,58 @@ _TROTTER_H_	simple_update/trotter_gate.h	3;"	d
 _UTILITIES_H_	peps_utilities/utilities.h	3;"	d
 basis_label	peps_utilities/utilities.h	/^        const std::array<int,3> &basis_label() const$/;"	f	class:Spin_Basis	access:public	signature:() const
 basis_label_	peps_utilities/utilities.h	/^        std::array<int,3> basis_label_;$/;"	m	class:Spin_Basis	access:private
-bond_coord_to_list	lattice/lattice.h	/^        inline const int &bond_coord_to_list(Coordinate bond_coord) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(Coordinate bond_coord) const
-bond_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Torus_Base	access:protected
-bond_end_sites	lattice/lattice.h	/^        inline const int &bond_end_sites(const int &bond_i, const int &j) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &bond_i, const int &j) const
-bond_end_sites	lattice/lattice.h	/^        inline const std::array<int,2> &bond_end_sites(const int &bond_i) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &bond_i) const
-bond_end_sites_	lattice/lattice.h	/^        std::vector<std::array<int,2>> bond_end_sites_;$/;"	m	class:Lattice_Torus_Base	access:protected
-bond_list_to_coord	lattice/lattice.h	/^        inline const Coordinate &bond_list_to_coord(int bond_i) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(int bond_i) const
-bond_list_to_coord_	lattice/lattice.h	/^        std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;$/;"	m	class:Lattice_Torus_Base	access:protected
-bond_tensors	peps/peps.h	/^        TensorT &bond_tensors(int i)$/;"	f	class:PEPSt_Torus	access:public	signature:(int i)
-bond_tensors	peps/peps.h	/^        inline const TensorT &bond_tensors(int i) const$/;"	f	class:PEPSt_Torus	access:public	signature:(int i) const
-bond_tensors	peps/peps.h	/^        inline std::vector<TensorT> &bond_tensors() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
+begin	peps_utilities/singlet_tensor_basis.h	/^        const_iterator begin() const { return singlet_tensors_.begin(); }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
+bond_coord_to_list	lattice/lattice.h	/^        const int &bond_coord_to_list(int x, int y, int subbond) const$/;"	f	class:Lattice_Base	access:public	signature:(int x, int y, int subbond) const
+bond_coord_to_list	lattice/lattice.h	/^        inline const int &bond_coord_to_list(Coordinate bond_coord) const$/;"	f	class:Lattice_Base	access:public	signature:(Coordinate bond_coord) const
+bond_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Base	access:protected
+bond_end_sites	lattice/lattice.h	/^        inline const int &bond_end_sites(const int &bond_i, const int &j) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &bond_i, const int &j) const
+bond_end_sites	lattice/lattice.h	/^        inline const std::array<int,2> &bond_end_sites(const int &bond_i) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &bond_i) const
+bond_end_sites_	lattice/lattice.h	/^        std::vector<std::array<int,2>> bond_end_sites_;$/;"	m	class:Lattice_Base	access:protected
+bond_list_to_coord	lattice/lattice.h	/^        Coordinate bond_list_to_coord(int bond_i) const$/;"	f	class:Lattice_Base	access:public	signature:(int bond_i) const
+bond_list_to_coord_	lattice/lattice.h	/^        std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;$/;"	m	class:Lattice_Base	access:protected
+bond_tensor	simple_update/trotter_gate.h	/^        const IQTensor &bond_tensor() const { return bond_tensor_; }$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:() const
+bond_tensor_	simple_update/trotter_gate.h	/^        IQTensor bond_tensor_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
+bond_tensors	peps/peps.h	/^        TensorT &bond_tensors(int i)$/;"	f	class:PEPSt	access:public	signature:(int i)
+bond_tensors	peps/peps.h	/^        inline const TensorT &bond_tensors(int i) const$/;"	f	class:PEPSt	access:public	signature:(int i) const
+bond_tensors	peps/peps.h	/^        inline const std::vector<TensorT> &bond_tensors() const$/;"	f	class:PEPSt	access:public	signature:() const
 bond_tensors	simple_update/trotter_gate.h	/^        const IQTensor &bond_tensors(int i=0) const { return bond_tensors_[i]; }$/;"	f	class:Trotter_Gate	access:public	signature:(int i=0) const
 bond_tensors	simple_update/trotter_gate.h	/^        const std::vector<IQTensor> &bond_tensors() const { return bond_tensors_; }$/;"	f	class:Trotter_Gate	access:public	signature:() const
-bond_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_; $/;"	m	class:PEPSt_Torus	access:private
+bond_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_; $/;"	m	class:PEPSt	access:private
 bond_tensors_	simple_update/trotter_gate.h	/^        std::vector<IQTensor> bond_tensors_;$/;"	m	class:Trotter_Gate	access:protected
+boundary_tensors_	peps/peps.h	/^        std::vector<std::vector<TensorT>> boundary_tensors_;$/;"	m	class:PEPSt	access:private
 change_time	simple_update/trotter_gate.h	/^        virtual void change_time(double t) = 0;$/;"	p	class:Trotter_Gate	access:public	signature:(double t)
 change_time	simple_update/trotter_gate.h	/^        virtual void change_time(double t)$/;"	f	class:NN_Heisenberg_Trotter_Gate	access:public	signature:(double t)
 chi_T	peps_utilities/peps_class_params.h	/^    static const double chi_T=1;$/;"	m	namespace:Square
 chi_c4	peps_utilities/peps_class_params.h	/^    static const double chi_c4=1;$/;"	m	namespace:Square
-comm_bond	lattice/lattice.h	/^        int comm_bond(int site_A, int site_B) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(int site_A, int site_B) const
-construct_tensor	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)$/;"	f	class:PEPSt_Torus	signature:(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)
-construct_tensor	peps/peps.cc	/^void PEPSt_Torus<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)$/;"	f	class:PEPSt_Torus	signature:(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)
-construct_tensor	peps/peps.h	/^        void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);$/;"	p	class:PEPSt_Torus	access:public	signature:(TensorT &tensor, std::vector<IndexT> &indexset)
-d	peps/peps.h	/^        inline const int &d() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
+comm_bond	lattice/lattice.h	/^        int comm_bond(int site_A, int site_B) const$/;"	f	class:Lattice_Base	access:public	signature:(int site_A, int site_B) const
+construct_tensor	peps/peps.cc	/^void PEPSt<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)$/;"	f	class:PEPSt	signature:(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)
+construct_tensor	peps/peps.cc	/^void PEPSt<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)$/;"	f	class:PEPSt	signature:(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)
+construct_tensor	peps/peps.h	/^        void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);$/;"	p	class:PEPSt	access:public	signature:(TensorT &tensor, std::vector<IndexT> &indexset)
+d	peps/peps.h	/^        inline const int &d() const$/;"	f	class:PEPSt	access:public	signature:() const
 d	peps/peps_indexset.h	/^        inline const int &d() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
-d_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt_Torus	access:private
+d_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt	access:private
 d_	peps/peps_indexset.h	/^        int d_, D_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
 dag	peps_utilities/cgtensor.h	/^        IndexSpin &dag() { sz_legs_.dag(); return *this; }$/;"	f	class:IndexSpin	access:public	signature:()
 deg_configs	peps_utilities/singlet_tensor_basis.h	/^        const std::vector<int> &deg_configs(int i) const { return deg_configs_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
 deg_configs_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<std::vector<int>> deg_configs_;$/;"	m	class:Singlet_Tensor_Basis	access:private
 dim	peps_utilities/singlet_tensor_basis.h	/^        const int dim() const { return singlet_tensors_.size(); }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
 dir	peps_utilities/cgtensor.h	/^        Arrow dir() const { return sz_legs_.dir(); }$/;"	f	class:IndexSpin	access:public	signature:() const
+end	peps_utilities/singlet_tensor_basis.h	/^        const_iterator end() const { return singlet_tensors_.end(); }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
 eta_from_mu	peps_utilities/utilities.cc	/^IQTensor eta_from_mu(double mu, IQIndex eta_leg)$/;"	f	signature:(double mu, IQIndex eta_leg)
 eta_from_mu	peps_utilities/utilities.cc	/^IQTensor eta_from_mu(double mu, const std::vector<int> &spin_deg)$/;"	f	signature:(double mu, const std::vector<int> &spin_deg)
 eta_from_mu	peps_utilities/utilities.cc	/^ITensor eta_from_mu(double mu, Index eta_leg)$/;"	f	signature:(double mu, Index eta_leg)
 eta_from_mu	peps_utilities/utilities.h	/^IQTensor eta_from_mu(double mu, IQIndex eta_leg);$/;"	p	signature:(double mu, IQIndex eta_leg)
 eta_from_mu	peps_utilities/utilities.h	/^IQTensor eta_from_mu(double mu, const std::vector<int> &spin_deg);$/;"	p	signature:(double mu, const std::vector<int> &spin_deg)
 eta_from_mu	peps_utilities/utilities.h	/^ITensor eta_from_mu(double mu, Index eta_leg);$/;"	p	signature:(double mu, Index eta_leg)
-generate_bond_tensors	peps/peps.cc	/^void PEPSt_Torus<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc)$/;"	f	class:PEPSt_Torus	signature:(std::vector<TensorT> bond_tensors_uc)
-generate_bond_tensors	peps/peps.h	/^        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc);$/;"	p	class:PEPSt_Torus	access:public	signature:(std::vector<TensorT> bond_tensors_uc)
-generate_site_tensors	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::generate_site_tensors(std::vector<IQTensor> site_tensors_uc);$/;"	p	class:PEPSt_Torus	file:	signature:(std::vector<IQTensor> site_tensors_uc)
-generate_site_tensors	peps/peps.cc	/^void PEPSt_Torus<ITensor>::generate_site_tensors(std::vector<ITensor> site_tensors_uc);$/;"	p	class:PEPSt_Torus	file:	signature:(std::vector<ITensor> site_tensors_uc)
-generate_site_tensors	peps/peps.cc	/^void PEPSt_Torus<TensorT>::generate_site_tensors(std::vector<TensorT> site_tensors_uc)$/;"	f	class:PEPSt_Torus	signature:(std::vector<TensorT> site_tensors_uc)
-generate_site_tensors	peps/peps.h	/^        void generate_site_tensors(std::vector<TensorT> site_tensors_uc);$/;"	p	class:PEPSt_Torus	access:public	signature:(std::vector<TensorT> site_tensors_uc)
+generate_bond_tensors	peps/peps.cc	/^void PEPSt<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc)$/;"	f	class:PEPSt	signature:(std::vector<TensorT> bond_tensors_uc)
+generate_bond_tensors	peps/peps.h	/^        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc);$/;"	p	class:PEPSt	access:public	signature:(std::vector<TensorT> bond_tensors_uc)
+generate_site_tensors	peps/peps.cc	/^void PEPSt<IQTensor>::generate_site_tensors(std::vector<IQTensor> site_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(std::vector<IQTensor> site_tensors_uc)
+generate_site_tensors	peps/peps.cc	/^void PEPSt<ITensor>::generate_site_tensors(std::vector<ITensor> site_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(std::vector<ITensor> site_tensors_uc)
+generate_site_tensors	peps/peps.cc	/^void PEPSt<TensorT>::generate_site_tensors(std::vector<TensorT> site_tensors_uc)$/;"	f	class:PEPSt	signature:(std::vector<TensorT> site_tensors_uc)
+generate_site_tensors	peps/peps.h	/^        void generate_site_tensors(std::vector<TensorT> site_tensors_uc);$/;"	p	class:PEPSt	access:public	signature:(std::vector<TensorT> site_tensors_uc)
 get_env_tensor	simple_update/simple_update_env.cc	/^void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)$/;"	f	signature:(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
 get_env_tensor	simple_update/simple_update_env.h	/^void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens);$/;"	p	signature:(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
-index_set_	peps/peps.h	/^        const PEPSt_IndexSet_Base<IndexT> &index_set_;$/;"	m	class:PEPSt_Torus	access:private
+index_set_	peps/peps.h	/^        const PEPSt_IndexSet_Base<IndexT> &index_set_;$/;"	m	class:PEPSt	access:private
 indices	peps_utilities/singlet_tensor_basis.h	/^        const IndexSet<IQIndex> &indices() const { return is_; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
 indval	peps_utilities/cgtensor.h	/^        IQIndexVal indval (int sz) const$/;"	f	class:IndexSpin	access:public	signature:(int sz) const
 info_arch	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
@@ -647,6 +700,7 @@ info_version	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	/^char const info_v
 info_version	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_version[] = {$/;"	v
 init	peps_utilities/cgtensor.cc	/^void CGTensors::init()$/;"	f	class:CGTensors	signature:()
 init	peps_utilities/cgtensor.h	/^        void init();$/;"	p	class:CGTensors	access:public	signature:()
+init_bond_tensor	simple_update/trotter_gate.h	/^        void init_bond_tensor()$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:()
 init_bond_tensor	simple_update/trotter_gate.h	/^        void init_bond_tensor();$/;"	p	class:NN_Heisenberg_Trotter_Gate	access:public	signature:()
 init_bond_tensor	simple_update/trotter_gate.h	/^void NN_Heisenberg_Trotter_Gate::init_bond_tensor()$/;"	f	class:NN_Heisenberg_Trotter_Gate	signature:()
 init_phys_legs	peps/peps_indexset.cc	/^void IQPEPS_IndexSet_SpinHalf::init_phys_legs()$/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:()
@@ -655,6 +709,7 @@ init_phys_legs	peps/peps_indexset.h	/^        void init_phys_legs();$/;"	p	class
 init_phys_legs	peps/peps_indexset.h	/^        void init_phys_legs();$/;"	p	class:PEPS_IndexSet	access:public	signature:()
 init_singlet_tensors	peps_utilities/singlet_tensor_basis.cc	/^void Singlet_Tensor_Basis::init_singlet_tensors()$/;"	f	class:Singlet_Tensor_Basis	signature:()
 init_singlet_tensors	peps_utilities/singlet_tensor_basis.h	/^        void init_singlet_tensors();$/;"	p	class:Singlet_Tensor_Basis	access:public	signature:()
+init_site_tensors	simple_update/trotter_gate.h	/^        void init_site_tensors()$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:()
 init_site_tensors	simple_update/trotter_gate.h	/^        void init_site_tensors();$/;"	p	class:NN_Heisenberg_Trotter_Gate	access:public	signature:()
 init_site_tensors	simple_update/trotter_gate.h	/^void NN_Heisenberg_Trotter_Gate::init_site_tensors()$/;"	f	class:NN_Heisenberg_Trotter_Gate	signature:()
 init_spin_deg_and_basis	peps_utilities/singlet_tensor_basis.cc	/^void Singlet_Tensor_Basis::init_spin_deg_and_basis()$/;"	f	class:Singlet_Tensor_Basis	signature:()
@@ -677,8 +732,8 @@ is_	peps_utilities/singlet_tensor_basis.h	/^        IndexSet<IQIndex> is_;$/;"	m
 is_spin_basis_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<std::vector<Spin_Basis>> is_spin_basis_;$/;"	m	class:Singlet_Tensor_Basis	access:private
 is_spin_degs_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<std::vector<int>> is_spin_degs_;$/;"	m	class:Singlet_Tensor_Basis	access:private
 iter_nums	simple_update/trotter_gate.h	/^        int iter_nums;$/;"	m	struct:Evolution_Params	access:public
-lattice	peps/peps.h	/^        inline const Lattice_Torus_Base &lattice() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-lattice_	peps/peps.h	/^        const Lattice_Torus_Base &lattice_;$/;"	m	class:PEPSt_Torus	access:private
+lattice	peps/peps.h	/^        inline const Lattice_Base &lattice() const$/;"	f	class:PEPSt	access:public	signature:() const
+lattice_	peps/peps.h	/^        const Lattice_Base &lattice_;$/;"	m	class:PEPSt	access:private
 leg	peps_utilities/cgtensor.h	/^        const IQIndex &leg() const { return sz_legs_; }$/;"	f	class:IndexSpin	access:public	signature:() const
 list_from_num	peps_utilities/utilities.cc	/^std::vector<int> list_from_num(int num, const std::vector<int> &max_nums)$/;"	f	signature:(int num, const std::vector<int> &max_nums)
 list_from_num	peps_utilities/utilities.h	/^std::vector<int> list_from_num(int num, const std::vector<int> &max_nums);$/;"	p	signature:(int num, const std::vector<int> &max_nums)
@@ -696,36 +751,45 @@ max_spins_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<int> max_
 mu_12	peps_utilities/peps_class_params.h	/^    static const double mu_12=1;$/;"	m	namespace:Square
 mu_t1T	peps_utilities/peps_class_params.h	/^    static const double mu_t1T=1;$/;"	m	namespace:Square
 mu_t2c4	peps_utilities/peps_class_params.h	/^    static const double mu_t2c4=-1;$/;"	m	namespace:Square
-n_bonds_to_one_site	lattice/lattice.h	/^        inline const int &n_bonds_to_one_site() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-n_bonds_to_one_site	peps/peps.h	/^        inline const int &n_bonds_to_one_site() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-n_bonds_to_one_site_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-n_bonds_total	lattice/lattice.h	/^        inline const int &n_bonds_total() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-n_bonds_total	peps/peps.h	/^        inline const int &n_bonds_total() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-n_bonds_total_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-n_bonds_uc	lattice/lattice.h	/^        inline const int &n_bonds_uc() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-n_bonds_uc	peps/peps.h	/^        inline const int &n_bonds_uc() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-n_bonds_uc_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-n_sites_total	lattice/lattice.h	/^        inline const int &n_sites_total() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-n_sites_total	peps/peps.h	/^        inline const int &n_sites_total() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-n_sites_total_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-n_sites_uc	lattice/lattice.h	/^        inline const int &n_sites_uc() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-n_sites_uc	peps/peps.h	/^        inline const int &n_sites_uc() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
-n_sites_uc_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Torus_Base	access:protected
-n_uc	lattice/lattice.h	/^        inline const std::array<int,2> &n_uc() const$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
-n_uc_	lattice/lattice.h	/^        std::array<int,2> n_uc_;$/;"	m	class:Lattice_Torus_Base	access:protected
-name	lattice/lattice.h	/^        const std::string &name() const { return name_; }$/;"	f	class:Lattice_Torus_Base	access:public	signature:() const
+n_bonds_to_one_site	lattice/lattice.h	/^        inline const int &n_bonds_to_one_site() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_bonds_to_one_site	peps/peps.h	/^        inline const int &n_bonds_to_one_site() const$/;"	f	class:PEPSt	access:public	signature:() const
+n_bonds_to_one_site_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+n_bonds_total	lattice/lattice.h	/^        inline const int &n_bonds_total() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_bonds_total	peps/peps.h	/^        inline const int &n_bonds_total() const$/;"	f	class:PEPSt	access:public	signature:() const
+n_bonds_total_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+n_bonds_uc	lattice/lattice.h	/^        inline const int &n_bonds_uc() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_bonds_uc	peps/peps.h	/^        inline const int &n_bonds_uc() const$/;"	f	class:PEPSt	access:public	signature:() const
+n_bonds_uc_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+n_boundary_legs	lattice/lattice.h	/^        virtual int n_boundary_legs() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_boundary_legs	lattice/lattice.h	/^        virtual int n_boundary_legs()$/;"	f	class:Square_Lattice_Cylinder	access:public	signature:()
+n_boundary_legs	peps/peps.h	/^        int n_boundary_legs() const$/;"	f	class:PEPSt	access:public	signature:() const
+n_sites_total	lattice/lattice.h	/^        inline const int &n_sites_total() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_sites_total	peps/peps.h	/^        inline const int &n_sites_total() const$/;"	f	class:PEPSt	access:public	signature:() const
+n_sites_total_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+n_sites_uc	lattice/lattice.h	/^        inline const int &n_sites_uc() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_sites_uc	peps/peps.h	/^        inline const int &n_sites_uc() const$/;"	f	class:PEPSt	access:public	signature:() const
+n_sites_uc_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;$/;"	m	class:Lattice_Base	access:protected
+n_uc	lattice/lattice.h	/^        inline const std::array<int,2> &n_uc() const$/;"	f	class:Lattice_Base	access:public	signature:() const
+n_uc	peps/peps.h	/^        const std::array<int,2> &n_uc() const$/;"	f	class:PEPSt	access:public	signature:() const
+n_uc_	lattice/lattice.h	/^        std::array<int,2> n_uc_;$/;"	m	class:Lattice_Base	access:protected
+name	lattice/lattice.h	/^        const std::string &name() const { return name_; }$/;"	f	class:Lattice_Base	access:public	signature:() const
+name	peps/peps.h	/^        std::string &name() const$/;"	f	class:PEPSt	access:public	signature:() const
 name	peps/peps_indexset.h	/^        const std::string &name() const { return name_; }$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
-name_	lattice/lattice.h	/^        std::string name_;$/;"	m	class:Lattice_Torus_Base	access:protected
-name_	peps/peps.h	/^        std::string name_;$/;"	m	class:PEPSt_Torus	access:private
+name_	lattice/lattice.h	/^        std::string name_;$/;"	m	class:Lattice_Base	access:protected
+name_	peps/peps.h	/^        std::string name_;$/;"	m	class:PEPSt	access:private
 name_	peps/peps_indexset.h	/^        std::string name_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
-new_bond_tensors	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::new_bond_tensors();$/;"	p	class:PEPSt_Torus	file:	signature:()
-new_bond_tensors	peps/peps.cc	/^void PEPSt_Torus<ITensor>::new_bond_tensors();$/;"	p	class:PEPSt_Torus	file:	signature:()
-new_bond_tensors	peps/peps.cc	/^void PEPSt_Torus<TensorT>::new_bond_tensors()$/;"	f	class:PEPSt_Torus	signature:()
-new_bond_tensors	peps/peps.h	/^        void new_bond_tensors();$/;"	p	class:PEPSt_Torus	access:public	signature:()
-new_site_tensors	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::new_site_tensors();$/;"	p	class:PEPSt_Torus	file:	signature:()
-new_site_tensors	peps/peps.cc	/^void PEPSt_Torus<ITensor>::new_site_tensors();$/;"	p	class:PEPSt_Torus	file:	signature:()
-new_site_tensors	peps/peps.cc	/^void PEPSt_Torus<TensorT>::new_site_tensors()$/;"	f	class:PEPSt_Torus	signature:()
-new_site_tensors	peps/peps.h	/^        void new_site_tensors();$/;"	p	class:PEPSt_Torus	access:public	signature:()
+new_bond_tensors	peps/peps.cc	/^void PEPSt<IQTensor>::new_bond_tensors();$/;"	p	class:PEPSt	file:	signature:()
+new_bond_tensors	peps/peps.cc	/^void PEPSt<ITensor>::new_bond_tensors();$/;"	p	class:PEPSt	file:	signature:()
+new_bond_tensors	peps/peps.cc	/^void PEPSt<TensorT>::new_bond_tensors()$/;"	f	class:PEPSt	signature:()
+new_bond_tensors	peps/peps.h	/^        void new_bond_tensors();$/;"	p	class:PEPSt	access:public	signature:()
+new_boundary_tensors	peps/peps.cc	/^void PEPSt<IQTensor>::new_boundary_tensors();$/;"	p	class:PEPSt	file:	signature:()
+new_boundary_tensors	peps/peps.cc	/^void PEPSt<ITensor>::new_boundary_tensors();$/;"	p	class:PEPSt	file:	signature:()
+new_boundary_tensors	peps/peps.cc	/^void PEPSt<TensorT>::new_boundary_tensors()$/;"	f	class:PEPSt	signature:()
+new_boundary_tensors	peps/peps.h	/^        void new_boundary_tensors();$/;"	p	class:PEPSt	access:public	signature:()
+new_site_tensors	peps/peps.cc	/^void PEPSt<IQTensor>::new_site_tensors();$/;"	p	class:PEPSt	file:	signature:()
+new_site_tensors	peps/peps.cc	/^void PEPSt<ITensor>::new_site_tensors();$/;"	p	class:PEPSt	file:	signature:()
+new_site_tensors	peps/peps.cc	/^void PEPSt<TensorT>::new_site_tensors()$/;"	f	class:PEPSt	signature:()
+new_site_tensors	peps/peps.h	/^        void new_site_tensors();$/;"	p	class:PEPSt	access:public	signature:()
 nondeg_spin_sym_env_updated	simple_update/simple_update_env.cc	/^std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQTensor &tens_B)$/;"	f	signature:(const IQTensor &tens_A, const IQTensor &tens_B)
 nondeg_spin_sym_env_updated	simple_update/simple_update_env.h	/^std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQTensor &tens_B);$/;"	p	signature:(const IQTensor &tens_A, const IQTensor &tens_B)
 num_from_list	peps_utilities/utilities.cc	/^int num_from_list(const std::vector<int> &list, const std::vector<int> &max_nums)$/;"	f	signature:(const std::vector<int> &list, const std::vector<int> &max_nums)
@@ -734,11 +798,12 @@ obtain_CG	peps_utilities/cgtensor.cc	/^IQTensor CGTensors::obtain_CG(const Index
 obtain_CG	peps_utilities/cgtensor.h	/^        IQTensor obtain_CG(const IndexSpin &S1, const IndexSpin &S2, const IndexSpin &S3);$/;"	p	class:CGTensors	access:public	signature:(const IndexSpin &S1, const IndexSpin &S2, const IndexSpin &S3)
 obtain_K	peps_utilities/cgtensor.cc	/^bool CGTensors::obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std::vector<IndexSpin> &in_spin_legs, std::vector<IQTensor> &K)$/;"	f	class:CGTensors	signature:(const std::vector<IndexSpin> &out_spin_legs, const std::vector<IndexSpin> &in_spin_legs, std::vector<IQTensor> &K)
 obtain_K	peps_utilities/cgtensor.h	/^        bool obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std::vector<IndexSpin> &in_spin_legs, std::vector<IQTensor> &K);$/;"	p	class:CGTensors	access:public	signature:(const std::vector<IndexSpin> &out_spin_legs, const std::vector<IndexSpin> &in_spin_legs, std::vector<IQTensor> &K)
+obtain_boundary_theory_iterative	entangle_quantities/boundary_theory.h	/^void obtain_boundary_theory_iterative();$/;"	p	signature:()
 obtain_singlet_tensor_params	peps_utilities/singlet_tensor_basis.cc	/^void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params)$/;"	f	signature:(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params)
 obtain_singlet_tensor_params	peps_utilities/singlet_tensor_basis.cc	/^void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params)$/;"	f	signature:(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params)
 obtain_singlet_tensor_params	peps_utilities/singlet_tensor_basis.h	/^void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params);$/;"	p	signature:(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params)
 obtain_singlet_tensor_params	peps_utilities/singlet_tensor_basis.h	/^void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params);$/;"	p	signature:(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params)
-obtain_spin_sym_leg_gates_params	simple_update/simple_update.cc	/^void obtain_spin_sym_leg_gates_params(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)$/;"	f	signature:(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
+obtain_spin_sym_leg_gates_params	simple_update/simple_update.cc	/^void obtain_spin_sym_leg_gates_params(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &evolve_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)$/;"	f	signature:(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &evolve_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
 obtain_spin_sym_leg_gates_params	simple_update/simple_update.h	/^void obtain_spin_sym_leg_gates_params(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);$/;"	p	signature:(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
 operator ()	peps_utilities/cgtensor.h	/^        IQIndexVal operator()(int n) const$/;"	f	class:IndexSpin	access:public	signature:(int n) const
 operator ()	peps_utilities/singlet_tensor_basis.h	/^        const IQTensor &operator()(int i) const { return singlet_tensors_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
@@ -750,15 +815,18 @@ operator <<	peps_utilities/utilities.h	/^inline std::ostream &operator<<(std::os
 operator <<	peps_utilities/utilities.h	/^inline std::ostream &operator<<(std::ostream &s, const std::vector<int> &ivec)$/;"	f	signature:(std::ostream &s, const std::vector<int> &ivec)
 operator ==	peps_utilities/utilities.h	/^        bool operator==(const Spin_Basis &other)$/;"	f	class:Spin_Basis	access:public	signature:(const Spin_Basis &other)
 operator []	peps_utilities/singlet_tensor_basis.h	/^        const IQTensor &operator[](int i) const { return singlet_tensors_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
-phys_legs	peps/peps.h	/^        inline const IndexT &phys_legs(const int &site_i) const$/;"	f	class:PEPSt_Torus	access:public	signature:(const int &site_i) const
+phys_legs	peps/peps.h	/^        inline const IndexT &phys_legs(const int &site_i) const$/;"	f	class:PEPSt	access:public	signature:(const int &site_i) const
 phys_legs	peps/peps_indexset.h	/^        inline const IndexT &phys_legs(const int &site_i) const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:(const int &site_i) const
 phys_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
+phys_legs_	simple_update/trotter_gate.h	/^        std::array<std::array<IQIndex,2>,2> phys_legs_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
 phys_legs_	simple_update/trotter_gate.h	/^        std::vector<std::array<IQIndex,2>> phys_legs_;$/;"	m	class:Trotter_Gate	access:protected
+print_lattice_inf	lattice/lattice.cc	/^void Square_Lattice_Cylinder::print_lattice_inf()$/;"	f	class:Square_Lattice_Cylinder	signature:()
 print_lattice_inf	lattice/lattice.cc	/^void Square_Lattice_Torus::print_lattice_inf()$/;"	f	class:Square_Lattice_Torus	signature:()
+print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf();$/;"	p	class:Square_Lattice_Cylinder	access:public	signature:()
 print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf();$/;"	p	class:Square_Lattice_Torus	access:public	signature:()
-print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf()=0;$/;"	p	class:Lattice_Torus_Base	access:public	signature:()
-randomize_spin_sym_square_peps	peps/peps.cc	/^void randomize_spin_sym_square_peps(IQPEPS_Torus &spin_peps)$/;"	f	signature:(IQPEPS_Torus &spin_peps)
-randomize_spin_sym_square_peps	peps/peps.h	/^void randomize_spin_sym_square_peps(IQPEPS_Torus &square_peps);$/;"	p	signature:(IQPEPS_Torus &square_peps)
+print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf()=0;$/;"	p	class:Lattice_Base	access:public	signature:()
+randomize_spin_sym_square_peps	peps/peps.cc	/^void randomize_spin_sym_square_peps(IQPEPS &spin_peps)$/;"	f	signature:(IQPEPS &spin_peps)
+randomize_spin_sym_square_peps	peps/peps.h	/^void randomize_spin_sym_square_peps(IQPEPS &square_peps);$/;"	p	signature:(IQPEPS &square_peps)
 singlet_tensor_from_basis_params	peps_utilities/singlet_tensor_basis.cc	/^IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const arma::Col<double> &params)$/;"	f	signature:(const Singlet_Tensor_Basis &tensor_basis, const arma::Col<double> &params)
 singlet_tensor_from_basis_params	peps_utilities/singlet_tensor_basis.cc	/^IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<Complex> &params)$/;"	f	signature:(const Singlet_Tensor_Basis &tensor_basis, const std::vector<Complex> &params)
 singlet_tensor_from_basis_params	peps_utilities/singlet_tensor_basis.cc	/^IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<double> &params)$/;"	f	signature:(const Singlet_Tensor_Basis &tensor_basis, const std::vector<double> &params)
@@ -766,21 +834,24 @@ singlet_tensor_from_basis_params	peps_utilities/singlet_tensor_basis.h	/^IQTenso
 singlet_tensor_from_basis_params	peps_utilities/singlet_tensor_basis.h	/^IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<Complex> &params);$/;"	p	signature:(const Singlet_Tensor_Basis &tensor_basis, const std::vector<Complex> &params)
 singlet_tensor_from_basis_params	peps_utilities/singlet_tensor_basis.h	/^IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<double> &params);$/;"	p	signature:(const Singlet_Tensor_Basis &tensor_basis, const std::vector<double> &params)
 singlet_tensors_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<IQTensor> singlet_tensors_;$/;"	m	class:Singlet_Tensor_Basis	access:private
-site_coord_to_list	lattice/lattice.h	/^        inline const int &site_coord_to_list(Coordinate site_coord) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(Coordinate site_coord) const
-site_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Torus_Base	access:protected
-site_list_to_coord	lattice/lattice.h	/^        inline const Coordinate &site_list_to_coord(int site_i) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(int site_i) const
-site_list_to_coord_	lattice/lattice.h	/^        std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;$/;"	m	class:Lattice_Torus_Base	access:protected
-site_neighbour_bonds	lattice/lattice.h	/^        inline const int &site_neighbour_bonds(const int &site_i, const int &j) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &site_i, const int &j) const
-site_neighbour_bonds	lattice/lattice.h	/^        inline const std::vector<int> &site_neighbour_bonds(const int &site_i) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &site_i) const
-site_neighbour_bonds_	lattice/lattice.h	/^        std::vector<std::vector<int>> site_neighbour_sites_, site_neighbour_bonds_;$/;"	m	class:Lattice_Torus_Base	access:protected
-site_neighbour_sites	lattice/lattice.h	/^        inline const int &site_neighbour_sites(const int &site_i, const int &j) const$/;"	f	class:Lattice_Torus_Base	access:public	signature:(const int &site_i, const int &j) const
-site_neighbour_sites_	lattice/lattice.h	/^        std::vector<std::vector<int>> site_neighbour_sites_, site_neighbour_bonds_;$/;"	m	class:Lattice_Torus_Base	access:protected
-site_tensors	peps/peps.h	/^        TensorT &site_tensors(int i)$/;"	f	class:PEPSt_Torus	access:public	signature:(int i)
-site_tensors	peps/peps.h	/^        inline const TensorT &site_tensors(int i) const$/;"	f	class:PEPSt_Torus	access:public	signature:(int i) const
-site_tensors	peps/peps.h	/^        inline const std::vector<TensorT> &site_tensors() const$/;"	f	class:PEPSt_Torus	access:public	signature:() const
+site_coord_to_list	lattice/lattice.h	/^        const int &site_coord_to_list(int x, int y, int subsite) const$/;"	f	class:Lattice_Base	access:public	signature:(int x, int y, int subsite) const
+site_coord_to_list	lattice/lattice.h	/^        inline const int &site_coord_to_list(Coordinate site_coord) const$/;"	f	class:Lattice_Base	access:public	signature:(Coordinate site_coord) const
+site_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Base	access:protected
+site_list_to_coord	lattice/lattice.h	/^        Coordinate site_list_to_coord(int site_i) const$/;"	f	class:Lattice_Base	access:public	signature:(int site_i) const
+site_list_to_coord_	lattice/lattice.h	/^        std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;$/;"	m	class:Lattice_Base	access:protected
+site_neighbour_bonds	lattice/lattice.h	/^        inline const int &site_neighbour_bonds(const int &site_i, const int &j) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &site_i, const int &j) const
+site_neighbour_bonds	lattice/lattice.h	/^        inline const std::vector<int> &site_neighbour_bonds(const int &site_i) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &site_i) const
+site_neighbour_bonds_	lattice/lattice.h	/^        std::vector<std::vector<int>> site_neighbour_sites_, site_neighbour_bonds_;$/;"	m	class:Lattice_Base	access:protected
+site_neighbour_sites	lattice/lattice.h	/^        inline const int &site_neighbour_sites(const int &site_i, const int &j) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &site_i, const int &j) const
+site_neighbour_sites_	lattice/lattice.h	/^        std::vector<std::vector<int>> site_neighbour_sites_, site_neighbour_bonds_;$/;"	m	class:Lattice_Base	access:protected
+site_tensors	peps/peps.h	/^        TensorT &site_tensors(int i)$/;"	f	class:PEPSt	access:public	signature:(int i)
+site_tensors	peps/peps.h	/^        inline const TensorT &site_tensors(int i) const$/;"	f	class:PEPSt	access:public	signature:(int i) const
+site_tensors	peps/peps.h	/^        inline const std::vector<TensorT> &site_tensors() const$/;"	f	class:PEPSt	access:public	signature:() const
+site_tensors	simple_update/trotter_gate.h	/^        const IQTensor &site_tensors(int i) const { return site_tensors_[i]; }$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:(int i) const
 site_tensors	simple_update/trotter_gate.h	/^        const IQTensor &site_tensors(int i) const { return site_tensors_[i]; }$/;"	f	class:Trotter_Gate	access:public	signature:(int i) const
 site_tensors	simple_update/trotter_gate.h	/^        const std::vector<IQTensor> &site_tensors() const { return site_tensors_; }$/;"	f	class:Trotter_Gate	access:public	signature:() const
-site_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_; $/;"	m	class:PEPSt_Torus	access:private
+site_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_; $/;"	m	class:PEPSt	access:private
+site_tensors_	simple_update/trotter_gate.h	/^        std::array<IQTensor,2> site_tensors_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
 site_tensors_	simple_update/trotter_gate.h	/^        std::vector<IQTensor> site_tensors_;$/;"	m	class:Trotter_Gate	access:protected
 spin_	peps_utilities/cgtensor.h	/^        int spin_;$/;"	m	class:IndexSpin	access:private
 spin_configs	peps_utilities/singlet_tensor_basis.h	/^        const std::vector<int> &spin_configs(int i) const { return spin_configs_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
@@ -791,8 +862,8 @@ spin_degs	peps_utilities/singlet_tensor_basis.h	/^        const std::vector<int>
 spin_indices	peps_utilities/cgtensor.h	/^        const std::vector<IndexSpin> &spin_indices() const { return spin_legs_; }$/;"	f	class:CGTensors	access:public	signature:() const
 spin_legs_	peps_utilities/cgtensor.h	/^        std::vector<IndexSpin> spin_legs_;$/;"	m	class:CGTensors	access:private
 spin_qn	peps_utilities/cgtensor.h	/^        int spin_qn() const { return spin_; }$/;"	f	class:IndexSpin	access:public	signature:() const
-spin_square_peps_simple_update	simple_update/simple_update.cc	/^void spin_square_peps_simple_update(IQPEPS_Torus &square_peps, const Evolution_Params &square_su_params)$/;"	f	signature:(IQPEPS_Torus &square_peps, const Evolution_Params &square_su_params)
-spin_square_peps_simple_update	simple_update/simple_update.h	/^void spin_square_peps_simple_update(IQPEPS_Torus &square_peps, const Evolution_Params &square_su_params);$/;"	p	signature:(IQPEPS_Torus &square_peps, const Evolution_Params &square_su_params)
+spin_square_peps_simple_update	simple_update/simple_update.cc	/^void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params)$/;"	f	signature:(IQPEPS &square_peps, const Evolution_Params &square_su_params)
+spin_square_peps_simple_update	simple_update/simple_update.h	/^void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params);$/;"	p	signature:(IQPEPS &square_peps, const Evolution_Params &square_su_params)
 spin_to_sz	peps_utilities/utilities.cc	/^void spin_to_sz(const std::vector<int> &spin_deg, std::vector<int> &sz_deg)$/;"	f	signature:(const std::vector<int> &spin_deg, std::vector<int> &sz_deg)
 spin_to_sz	peps_utilities/utilities.h	/^void spin_to_sz(const std::vector<int> &spin_deg, std::vector<int> &sz_deg);$/;"	p	signature:(const std::vector<int> &spin_deg, std::vector<int> &sz_deg)
 steps_nums	simple_update/trotter_gate.h	/^        std::vector<int> steps_nums;$/;"	m	struct:Evolution_Params	access:public
@@ -803,16 +874,17 @@ t	peps_utilities/utilities.h	/^        int t() const { return basis_label_[2]; }
 t	simple_update/trotter_gate.h	/^        double t() { return t_; }$/;"	f	class:Trotter_Gate	access:public	signature:()
 t_	simple_update/trotter_gate.h	/^        double t_;$/;"	m	class:Trotter_Gate	access:protected
 tensor	peps_utilities/singlet_tensor_basis.h	/^        const IQTensor &tensor(int i) const { return singlet_tensors_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
-tensor_assignment	peps/peps.cc	/^void PEPSt_Torus<IQTensor>::tensor_assignment(IQTensor &TA, const IQTensor &TB);$/;"	p	class:PEPSt_Torus	file:	signature:(IQTensor &TA, const IQTensor &TB)
-tensor_assignment	peps/peps.cc	/^void PEPSt_Torus<ITensor>::tensor_assignment(ITensor &TA, const ITensor &TB);$/;"	p	class:PEPSt_Torus	file:	signature:(ITensor &TA, const ITensor &TB)
-tensor_assignment	peps/peps.cc	/^void PEPSt_Torus<TensorT>::tensor_assignment(TensorT &TA, const TensorT &TB)$/;"	f	class:PEPSt_Torus	signature:(TensorT &TA, const TensorT &TB)
-tensor_assignment	peps/peps.h	/^        void tensor_assignment(TensorT &TA, const TensorT &TB);$/;"	p	class:PEPSt_Torus	access:public	signature:(TensorT &TA, const TensorT &TB)
+tensor_assignment	peps/peps.cc	/^void PEPSt<IQTensor>::tensor_assignment(IQTensor &TA, const IQTensor &TB);$/;"	p	class:PEPSt	file:	signature:(IQTensor &TA, const IQTensor &TB)
+tensor_assignment	peps/peps.cc	/^void PEPSt<ITensor>::tensor_assignment(ITensor &TA, const ITensor &TB);$/;"	p	class:PEPSt	file:	signature:(ITensor &TA, const ITensor &TB)
+tensor_assignment	peps/peps.cc	/^void PEPSt<TensorT>::tensor_assignment(TensorT &TA, const TensorT &TB)$/;"	f	class:PEPSt	signature:(TensorT &TA, const TensorT &TB)
+tensor_assignment	peps/peps.h	/^        void tensor_assignment(TensorT &TA, const TensorT &TB);$/;"	p	class:PEPSt	access:public	signature:(TensorT &TA, const TensorT &TB)
 tensors	peps_utilities/singlet_tensor_basis.h	/^        const std::vector<IQTensor> &tensors() const { return singlet_tensors_; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
 ts	simple_update/trotter_gate.h	/^        std::vector<double> ts;$/;"	m	struct:Evolution_Params	access:public
 valid	peps_utilities/cgtensor.h	/^        bool valid() { return valid_; }$/;"	f	class:CGTensors	access:public	signature:()
 valid	peps_utilities/cgtensor.h	/^        bool valid()$/;"	f	class:IndexSpin	access:public	signature:()
 valid_	peps_utilities/cgtensor.h	/^        bool valid_;$/;"	m	class:CGTensors	access:private
-virt_legs	peps/peps.h	/^        inline const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt_Torus	access:public	signature:(const int &leg_i) const
+virt_legs	peps/peps.h	/^        inline const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt	access:public	signature:(const int &leg_i) const
 virt_legs	peps/peps_indexset.h	/^        inline const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:(const int &leg_i) const
 virt_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
+virt_legs_	simple_update/trotter_gate.h	/^        std::array<IQIndex,2> virt_legs_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
 virt_legs_	simple_update/trotter_gate.h	/^        std::vector<std::vector<IQIndex>> virt_legs_;$/;"	m	class:Trotter_Gate	access:protected

@@ -2,22 +2,26 @@
 #include "peps_indexset.h"
 
 template<class IndexT>
-PEPSt_IndexSet_Base<IndexT>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site): 
+PEPSt_IndexSet_Base<IndexT>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs): 
     d_(d), 
     D_(D),
     phys_legs_(n_sites_total),
-    virt_legs_(n_bonds_to_one_site*n_sites_total)
-{ }
+    //notice for we only add 1/2 boundary legs to virtual legs, which belongs to boundary bond virtual legs, since the other 1/2 boundary legs has been counted in boundary site virtual legs
+    virt_legs_(n_bonds_to_one_site*n_sites_total+n_boundary_legs/2)
+{ 
+    //cout << n_boundary_legs << endl;
+    //cout << virt_legs_.size() << endl;
+}
 template 
-PEPSt_IndexSet_Base<Index>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);
+PEPSt_IndexSet_Base<Index>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);
 template 
-PEPSt_IndexSet_Base<IQIndex>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site);
+PEPSt_IndexSet_Base<IQIndex>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);
 
 
 //
 //PEPS_IndexSet
 //
-PEPS_IndexSet::PEPS_IndexSet(const int &d, const int &D, const Lattice_Base &lattice): PEPSt_IndexSet_Base<Index>(d,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site())
+PEPS_IndexSet::PEPS_IndexSet(const int &d, const int &D, const Lattice_Base &lattice): PEPSt_IndexSet_Base<Index>(d,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site(),lattice.n_boundary_legs())
 {
     init_phys_legs();
     init_virt_legs();
@@ -52,7 +56,7 @@ void PEPS_IndexSet::init_virt_legs()
 //IQPEPS_IndexSet_SpinHalf
 //
 IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Base &lattice): 
-    PEPSt_IndexSet_Base<IQIndex>(2,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site())
+    PEPSt_IndexSet_Base<IQIndex>(2,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site(),lattice.n_boundary_legs())
 {
     //construct physical legs
     init_phys_legs();
@@ -89,7 +93,7 @@ IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_B
 }
 
 IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice): 
-    PEPSt_IndexSet_Base<IQIndex>(2,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site())
+    PEPSt_IndexSet_Base<IQIndex>(2,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site(),lattice.n_boundary_legs())
 {
     //Check the input of D
     int Dprime=0;
@@ -163,5 +167,6 @@ void IQPEPS_IndexSet_SpinHalf::init_virt_legs(const int &spin_dim, const std::ve
         leg=IQIndex(nameint("virt_leg ",leg_i),virt_indqn);
 
         leg_i++;
+
     }
 }

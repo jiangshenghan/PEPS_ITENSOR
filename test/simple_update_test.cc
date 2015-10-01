@@ -12,7 +12,7 @@ int main()
    
 
     IQPEPS_IndexSet_SpinHalf index_set(3,square_lattice);
-    IQPEPS_Torus square_peps(square_lattice,index_set);
+    IQPEPS square_peps(square_lattice,index_set);
     
     randomize_spin_sym_square_peps(square_peps);
 

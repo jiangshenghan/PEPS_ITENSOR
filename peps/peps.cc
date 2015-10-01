@@ -2,14 +2,14 @@
 #include "peps.h"
 
 //
-//class PEPSt_Torus
+//class PEPSt
 //
 
 //
 //Constructors
 //
 template <class TensorT>
-PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):
+PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_(lattice),
@@ -18,17 +18,25 @@ PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_Index
     bond_tensors_(lattice.n_bonds_total()),
     name_(lattice.name()+index_set.name())
 {
+    //set two col of boundary tensors if cylinder geometry (left and right boundary)
+    //each col contains n_uc_[1] tensors
+    if (name_.find("cylinder")!=std::string::npos)
+    {
+        boundary_tensors_=std::vector<std::vector<TensorT>>{std::vector<TensorT>(n_boundary_legs()/2),std::vector<TensorT>(n_boundary_legs()/2)};
+    }
+
     new_site_tensors();
     new_bond_tensors();
+    new_boundary_tensors();
     //random_site_tensors();
 }
 template
-PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);
+PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);
 template
-PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
+PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
 
 template <class TensorT>
-PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc):
+PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_(lattice),
@@ -37,8 +45,16 @@ PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_Index
     bond_tensors_(lattice.n_bonds_total()),
     name_(lattice.name()+index_set.name())
 {
+    //set two col of boundary tensors if cylinder geometry (left and right boundary)
+    //each col contains n_uc_[1] tensors
+    if (name_.find("cylinder")!=std::string::npos)
+    {
+        boundary_tensors_=std::vector<std::vector<TensorT>>{std::vector<TensorT>(n_uc()[1]),std::vector<TensorT>(n_uc()[1])};
+    }
+
     new_site_tensors();
     new_bond_tensors();
+    new_boundary_tensors();
 
     generate_site_tensors(site_tensors_uc);
     generate_bond_tensors(bond_tensors_uc);
@@ -46,13 +62,13 @@ PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_Index
 
 }
 template
-PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc);
+PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc);
 template
-PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc);
+PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc);
 
 
 template<class TensorT>
-void PEPSt_Torus<TensorT>::generate_site_tensors(std::vector<TensorT> site_tensors_uc)
+void PEPSt<TensorT>::generate_site_tensors(std::vector<TensorT> site_tensors_uc)
 {
     for (int site_i=0; site_i<n_sites_total(); site_i++)
     {
@@ -61,13 +77,13 @@ void PEPSt_Torus<TensorT>::generate_site_tensors(std::vector<TensorT> site_tenso
     }
 }
 template
-void PEPSt_Torus<ITensor>::generate_site_tensors(std::vector<ITensor> site_tensors_uc);
+void PEPSt<ITensor>::generate_site_tensors(std::vector<ITensor> site_tensors_uc);
 template
-void PEPSt_Torus<IQTensor>::generate_site_tensors(std::vector<IQTensor> site_tensors_uc);
+void PEPSt<IQTensor>::generate_site_tensors(std::vector<IQTensor> site_tensors_uc);
 
 
 template<class TensorT>
-void PEPSt_Torus<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc)
+void PEPSt<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc)
 {
     //for symmetric peps with half spin per site, we have 
     //B_{(x,y,i)}=\eta_{12}^{x}B_i, if B_i connect site with different y coordinate
@@ -103,7 +119,7 @@ void PEPSt_Torus<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tenso
 
 
 template<class TensorT>
-void PEPSt_Torus<TensorT>::tensor_assignment(TensorT &TA, const TensorT &TB)
+void PEPSt<TensorT>::tensor_assignment(TensorT &TA, const TensorT &TB)
 {
     TensorT tensor_tmp=TB;
 
@@ -115,19 +131,19 @@ void PEPSt_Torus<TensorT>::tensor_assignment(TensorT &TA, const TensorT &TB)
     return;
 }
 template
-void PEPSt_Torus<ITensor>::tensor_assignment(ITensor &TA, const ITensor &TB);
+void PEPSt<ITensor>::tensor_assignment(ITensor &TA, const ITensor &TB);
 template
-void PEPSt_Torus<IQTensor>::tensor_assignment(IQTensor &TA, const IQTensor &TB);
+void PEPSt<IQTensor>::tensor_assignment(IQTensor &TA, const IQTensor &TB);
 
 //According to the library, ITensor is constructed by IndexSet<Index>(indexset), while IQTensor is constructed by indexset directly
 template <>
-void PEPSt_Torus<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)
+void PEPSt<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)
 {
     tensor=ITensor(IndexSet<Index>(indexset));
     return;
 }
 template<>
-void PEPSt_Torus<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)
+void PEPSt<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)
 {
     tensor=IQTensor(indexset);
     return;
@@ -135,7 +151,7 @@ void PEPSt_Torus<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTen
 
 
 template <class TensorT>
-void PEPSt_Torus<TensorT>::new_site_tensors()
+void PEPSt<TensorT>::new_site_tensors()
 {
     int site_i=0;
     for(auto &tensor : site_tensors_)
@@ -158,15 +174,16 @@ void PEPSt_Torus<TensorT>::new_site_tensors()
     return;
 }
 template
-void PEPSt_Torus<ITensor>::new_site_tensors();
+void PEPSt<ITensor>::new_site_tensors();
 template
-void PEPSt_Torus<IQTensor>::new_site_tensors();
+void PEPSt<IQTensor>::new_site_tensors();
 
 
 template <class TensorT>
-void PEPSt_Torus<TensorT>::new_bond_tensors()
+void PEPSt<TensorT>::new_bond_tensors()
 {
     int bond_i=0;
+    int boundary_legs_no=0;
 
     for (auto &tensor : bond_tensors_)
     {
@@ -174,8 +191,19 @@ void PEPSt_Torus<TensorT>::new_bond_tensors()
 
         for (int endi=0; endi<2; endi++)
         {
-            auto endi_site=lattice_.bond_end_sites(bond_i,endi);
-            auto endi_site_neigh=lattice_.site_neighbour_bonds(endi_site);
+            int endi_site=lattice_.bond_end_sites(bond_i,endi);
+
+            //consider the boundary bonds case separetely
+            if (endi_site<0)
+            {
+                IndexT endi_index=index_set_.virt_legs(n_sites_total()*n_bonds_to_one_site()+boundary_legs_no);
+                endi_index.dag();
+                tensor_indices.push_back(endi_index);
+                boundary_legs_no++;
+                continue;
+            }
+            
+            std::vector<int> endi_site_neigh=lattice_.site_neighbour_bonds(endi_site);
             int legi=std::find(endi_site_neigh.begin(),endi_site_neigh.end(),bond_i)-endi_site_neigh.begin();
             assert(legi<n_bonds_to_one_site());
 
@@ -199,12 +227,67 @@ void PEPSt_Torus<TensorT>::new_bond_tensors()
     }
 }
 template
-void PEPSt_Torus<ITensor>::new_bond_tensors();
+void PEPSt<ITensor>::new_bond_tensors();
 template
-void PEPSt_Torus<IQTensor>::new_bond_tensors();
+void PEPSt<IQTensor>::new_bond_tensors();
+
+template <class TensorT>
+void PEPSt<TensorT>::new_boundary_tensors()
+{
+    if (name_.find("torus")!=std::string::npos) return;
+
+    if (name_.find("cylinder")!=std::string::npos)
+    {
+        //left boundary legs are associated with sites, labeled as -1
+        //right boundary legs are associated with bonds, labeled as -2
+        int left_boundary_no=0;
+        for (int sitei=0; sitei<n_sites_total(); sitei++)
+        {
+            std::vector<int> neighbour_bonds=lattice_.site_neighbour_bonds(sitei);
+            auto begin_iter=neighbour_bonds.begin();
+            //sitei may have many boundary legs
+            while (begin_iter!=neighbour_bonds.end())
+            {
+                auto found_iter=std::find(begin_iter,neighbour_bonds.end(),-1);
+                if (found_iter==neighbour_bonds.end()) break;
+
+                int neigh_bond_no=found_iter-begin_iter;
+                boundary_tensors_[0][left_boundary_no]=TensorT(dag(index_set_.virt_legs(sitei*n_bonds_to_one_site()+neigh_bond_no)));
+
+                //cout << boundary_tensors_[0][left_boundary_no];
+
+                found_iter++;
+                begin_iter=found_iter;
+                left_boundary_no++;
+            }
+        }
+
+
+        int right_boundary_no=0;
+        for (int bondi=0; bondi<n_bonds_total(); bondi++)
+        {
+            for (int legi=0; legi<2; legi++)
+            {
+                if (lattice_.bond_end_sites(bondi,legi)==-2)
+                {
+                    boundary_tensors_[1][right_boundary_no]=TensorT(dag(bond_tensors_[bondi].indices()[legi]));
+
+                    //cout << boundary_tensors_[1][right_boundary_no];
+
+                    right_boundary_no++;
+                }
+            }
+        }
+    }
+}
+template
+void PEPSt<ITensor>::new_boundary_tensors();
+template 
+void PEPSt<IQTensor>::new_boundary_tensors();
+
 
 //template <class TensorT>
-//void PEPSt_Torus<TensorT>::random_site_tensors()
+//void PEPSt<TensorT>::random_site_tensors()
 //{
 //    new_site_tensors();
 //    for(auto& tensor : site_tensors_)
@@ -213,13 +296,13 @@ void PEPSt_Torus<IQTensor>::new_bond_tensors();
 //    }
 //}
 //template
-//void PEPSt_Torus<ITensor>::random_site_tensors();
+//void PEPSt<ITensor>::random_site_tensors();
 //template
-//void PEPSt_Torus<IQTensor>::random_site_tensors();
+//void PEPSt<IQTensor>::random_site_tensors();
 
 
 
-void randomize_spin_sym_square_peps(IQPEPS_Torus &spin_peps)
+void randomize_spin_sym_square_peps(IQPEPS &spin_peps)
 {
     //generate site tensors by random parameters
     //random number generator

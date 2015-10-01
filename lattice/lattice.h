@@ -6,7 +6,9 @@
 
 //
 //Lattice_Base
-//
+//generate various lattices, which can be defined on torus, cylinder and open boundary
+//For torus, there is no boundary
+//For cylinder, there are left boundary (labeled as -1) and right boundary (labelede as -2)
 
 class Lattice_Base
 {
@@ -49,7 +51,12 @@ class Lattice_Base
         inline const std::array<int,2> &n_uc() const
         {
             return n_uc_;
-        };
+        }
+
+        virtual int n_boundary_legs() const
+        {
+            return 0;
+        }
 
         //get jth neighbour site of site_i
         inline const int &site_neighbour_sites(const int &site_i, const int &j) const
@@ -83,7 +90,7 @@ class Lattice_Base
         {
             if (name_.find("cylinder")!=std::string::npos && (site_i<0 || site_i>n_sites_total_))
             {
-                return Coordinate{-1,-1,-1};
+                return Coordinate{site_i,site_i,site_i};
             }
             
             //ensure 0<=site_i<n_sites_total_ for torus
@@ -95,7 +102,7 @@ class Lattice_Base
         {
             if (name_.find("cylinder")!=std::string::npos && (bond_i<0 || bond_i>n_bonds_total_))
             {
-                return Coordinate{-1,-1,-1};
+                return Coordinate{bond_i,bond_i,bond_i};
             }
 
             bond_i=(bond_i%n_bonds_total_+n_bonds_total_)%n_bonds_total_;
@@ -108,12 +115,22 @@ class Lattice_Base
             site_coord[1]=(site_coord[1]%n_uc_[1]+n_uc_[1])%n_uc_[1];
             return site_coord_to_list_[site_coord[0]][site_coord[1]][site_coord[2]];
         }
+        
+        const int &site_coord_to_list(int x, int y, int subsite) const
+        {
+            return site_coord_to_list(Coordinate{x,y,subsite});
+        }
 
         inline const int &bond_coord_to_list(Coordinate bond_coord) const
         {
             bond_coord[0]=(bond_coord[0]%n_uc_[0]+n_uc_[0])%n_uc_[0];
             bond_coord[1]=(bond_coord[1]%n_uc_[1]+n_uc_[1])%n_uc_[1];
             return bond_coord_to_list_[bond_coord[0]][bond_coord[1]][bond_coord[2]];
+        }
+
+        const int &bond_coord_to_list(int x, int y, int subbond) const
+        {
+            return bond_coord_to_list(Coordinate{x,y,subbond});
         }
 
         const std::string &name() const { return name_; }
@@ -199,6 +216,11 @@ class Square_Lattice_Cylinder : public Lattice_Base
         Square_Lattice_Cylinder(const std::array<int,2> &n_uc);
 
         enum Neighbour {Left=0, Up=1, Right=2, Down=3};
+
+        virtual int n_boundary_legs() const
+        {
+            return n_uc_[1]*2;
+        }
 
         virtual void print_lattice_inf();
 };

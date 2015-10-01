@@ -14,7 +14,7 @@
 //
 //this is for square peps without extra deg in virtual bonds
 //we use site 0 and site 1 to update
-void spin_square_peps_simple_update(IQPEPS_Torus &square_peps, const Evolution_Params &square_su_params);
+void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params);
 
 //Obtain the leg gate u,v to approximate trotter gate using iterative method
 //Notice, we already include the environment in the site_tensors

@@ -2,7 +2,7 @@
 #include "simple_update.h"
 
 
-void spin_square_peps_simple_update(IQPEPS_Torus &square_peps, const Evolution_Params &square_su_params)
+void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params)
 {
     //Initialize trotter gate
     std::array<IQIndex,2> site01_legs{{square_peps.phys_legs(0),square_peps.phys_legs(1)}};
