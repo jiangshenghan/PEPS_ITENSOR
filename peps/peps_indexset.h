@@ -62,7 +62,7 @@ class PEPS_IndexSet : public PEPSt_IndexSet_Base<Index>
         //Constructor
         //
         PEPS_IndexSet() {}
-        PEPS_IndexSet(const int &d, const int &D, const Lattice_Torus_Base &lattice);
+        PEPS_IndexSet(const int &d, const int &D, const Lattice_Base &lattice);
 
         //
         //Constructor Helper
@@ -84,11 +84,11 @@ class IQPEPS_IndexSet_SpinHalf : public PEPSt_IndexSet_Base<IQIndex>
         IQPEPS_IndexSet_SpinHalf() {}
         //D=sum_{i=0}^{n}{2*i/2+1}. Namely, a virtual leg is formed by
         //0\circplus 1/2\circplus 1 ...
-        IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Torus_Base &lattice);
+        IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Base &lattice);
         //specify the quantum number in virt_leg_spin: 
         //virt_leg_spin[i] = # of spin i/2
         //should be translated to Sz quantum number
-        IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Torus_Base &lattice);
+        IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice);
 
         //
         //Constructor Helpers

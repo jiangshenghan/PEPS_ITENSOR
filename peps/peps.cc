@@ -9,7 +9,7 @@
 //Constructors
 //
 template <class TensorT>
-PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):
+PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_(lattice),
@@ -23,12 +23,12 @@ PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt
     //random_site_tensors();
 }
 template
-PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);
+PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);
 template
-PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
+PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
 
 template <class TensorT>
-PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc):
+PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_(lattice),
@@ -46,9 +46,9 @@ PEPSt_Torus<TensorT>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt
 
 }
 template
-PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc);
+PEPSt_Torus<ITensor>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc);
 template
-PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc);
+PEPSt_Torus<IQTensor>::PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc);
 
 
 template<class TensorT>

@@ -5,18 +5,18 @@
 #include "utilities.h"
 
 //
-//Lattice_Torus_Base
+//Lattice_Base
 //
 
-class Lattice_Torus_Base
+class Lattice_Base
 {
     public:
         //
         //Constructors
         //
-        Lattice_Torus_Base() {}
+        Lattice_Base() {}
 
-        Lattice_Torus_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc);
+        Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc);
 
         //
         //Accessor Methods
@@ -79,15 +79,25 @@ class Lattice_Torus_Base
             return bond_end_sites_[bond_i];
         }
 
-        inline const Coordinate &site_list_to_coord(int site_i) const
+        Coordinate site_list_to_coord(int site_i) const
         {
-            //ensure 0<=site_i<n_sites_total_
+            if (name_.find("cylinder")!=std::string::npos && (site_i<0 || site_i>n_sites_total_))
+            {
+                return Coordinate{-1,-1,-1};
+            }
+            
+            //ensure 0<=site_i<n_sites_total_ for torus
             site_i=(site_i%n_sites_total_+n_sites_total_)%n_sites_total_;
             return site_list_to_coord_[site_i];
         }
 
-        inline const Coordinate &bond_list_to_coord(int bond_i) const
+        Coordinate bond_list_to_coord(int bond_i) const
         {
+            if (name_.find("cylinder")!=std::string::npos && (bond_i<0 || bond_i>n_bonds_total_))
+            {
+                return Coordinate{-1,-1,-1};
+            }
+
             bond_i=(bond_i%n_bonds_total_+n_bonds_total_)%n_bonds_total_;
             return bond_list_to_coord_[bond_i];
         }
@@ -159,7 +169,7 @@ class Lattice_Torus_Base
 //     -a-1-
 //      | 
 //
-class Square_Lattice_Torus : public Lattice_Torus_Base
+class Square_Lattice_Torus : public Lattice_Base
 {
     public:
         //
@@ -177,6 +187,20 @@ class Square_Lattice_Torus : public Lattice_Torus_Base
         //
 };
 
+//
+//square lattice on cylinder (open boundary in x direction and periodic boundary on y direction)
+//
+class Square_Lattice_Cylinder : public Lattice_Base
+{
+    public:
+        //
+        //Constructor
+        //
+        Square_Lattice_Cylinder(const std::array<int,2> &n_uc);
 
+        enum Neighbour {Left=0, Up=1, Right=2, Down=3};
+
+        virtual void print_lattice_inf();
+};
 
 #endif

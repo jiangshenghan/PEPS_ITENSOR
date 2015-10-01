@@ -50,6 +50,7 @@ void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std:
 
 std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQTensor &tens_B)
 {
+    //TODO: it seems commonIndex has do not distinguish direction, need to modify
     IQIndex comm_leg_A=commonIndex(tens_A,dag(tens_B)),
             comm_leg_B=dag(comm_leg_A);
 

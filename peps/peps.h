@@ -26,11 +26,11 @@ class PEPSt_Torus
         //
         PEPSt_Torus() {}
         //Assign site tensors with random values
-        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);
+        PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);
 
         //Initialize site tensors by tensor data in one unit cell.
         //Thus, the PEPS is translationally invariant.
-        PEPSt_Torus(const Lattice_Torus_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);
+        PEPSt_Torus(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);
 
         //
         //Access Methods
@@ -70,7 +70,7 @@ class PEPSt_Torus
             return lattice_.n_bonds_total();
         }
 
-        inline const Lattice_Torus_Base &lattice() const
+        inline const Lattice_Base &lattice() const
         {
             return lattice_;
         }
@@ -148,7 +148,7 @@ class PEPSt_Torus
         //d_ is physical index dimension while D_ is virtual leg dim.
         int d_, D_;
 
-        const Lattice_Torus_Base &lattice_;
+        const Lattice_Base &lattice_;
 
         const PEPSt_IndexSet_Base<IndexT> &index_set_;
 
