@@ -1,16 +1,19 @@
 
 #include "lattice.h"
 
-Lattice_Base::Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc):
+Lattice_Base::Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc, const int &n_boundary_legs):
     n_sites_uc_(n_sites_uc),
     n_bonds_uc_(n_bonds_uc),
     n_bonds_to_one_site_(2*n_bonds_uc/n_sites_uc),
     n_sites_total_(n_sites_uc*n_uc[0]*n_uc[1]),
     n_bonds_total_(n_bonds_uc*n_uc[0]*n_uc[1]),
+    n_boundary_legs_(n_boundary_legs),
     n_uc_(n_uc),
     site_neighbour_sites_(n_sites_total_,std::vector<int>(n_bonds_to_one_site_)),
     site_neighbour_bonds_(n_sites_total_,std::vector<int>(n_bonds_to_one_site_)),
     bond_end_sites_(n_bonds_total_),
+    boundary_end_site_(n_boundary_legs_),
+    site_neighbour_boundary_(n_sites_total_),
     site_list_to_coord_(n_sites_total_),
     bond_list_to_coord_(n_bonds_total_),
     site_coord_to_list_(n_uc[0],std::vector<std::vector<int>>(n_uc[1],std::vector<int>(n_sites_uc))),
@@ -130,7 +133,7 @@ void Square_Lattice_Torus::print_lattice_inf()
 
 
 
-Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc)
+Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc,n_uc[1]*2)
 {
     name_="square lattice on cylinder";
 
@@ -152,11 +155,13 @@ Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc):
 
         for (int j=0; j<n_bonds_to_one_site_; j++)
         {
-            //site_i is at leftmost, then, we set the left neigh site and bond to be -1
+            //site_i is at leftmost, then, we set the left neighbour site and bond to be -1
             if (neigh_sites_coord[j][0]<0) 
             {
                 site_neighbour_sites_[site_i][j]=-1;
                 site_neighbour_bonds_[site_i][j]=-1;
+                boundary_end_site_[site_i_coord[1]]=site_i;
+                site_neighbour_boundary_[site_i].push_back(site_i_coord[1]);
                 continue;
             }
 
@@ -165,6 +170,8 @@ Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc):
             {
                 site_neighbour_sites_[site_i][j]=-2;
                 site_neighbour_bonds_[site_i][j]=bond_coord_to_list(neigh_bonds_coord[j]);
+                boundary_end_site_[n_uc_[1]+site_i_coord[1]]=site_i;
+                site_neighbour_boundary_[site_i].push_back(n_uc_[1]+site_i_coord[1]);
                 continue;
             }
 
@@ -229,6 +236,16 @@ void Square_Lattice_Cylinder::print_lattice_inf()
     }
     cout << endl;
 
+    cout << "Check neighbouring boundary legs: " << endl << endl;
+    for (int site_i=0; site_i<n_sites_total_; site_i++)
+    {
+        for (auto boundary_i : site_neighbour_boundary_[site_i])
+        {
+            cout << "Site " << site_i << " connects to boundary " << boundary_i << endl;
+        }
+    }
+    cout << endl;
+
     cout << "Check end sites of bonds: " << endl << endl;
     for (int bond_i=0; bond_i<n_bonds_total_; bond_i++)
     {
@@ -236,4 +253,13 @@ void Square_Lattice_Cylinder::print_lattice_inf()
         cout << "The two end sites of bond " << bond_i << " are site " << bond_end_sites(bond_i,0) << " and site " << bond_end_sites(bond_i,1) <<endl;
     }
     cout << endl;
+
+    cout << "Check end site of boundary: " << endl << endl;
+    for (int boundary_i=0; boundary_i<n_boundary_legs_; boundary_i++)
+    {
+        cout << "Boundary " << boundary_i << " connects to site " << boundary_end_site_[boundary_i] << endl;
+    }
+    cout << endl;
+
+    cout << "Finish printing lattice information!" << endl << endl;
 }

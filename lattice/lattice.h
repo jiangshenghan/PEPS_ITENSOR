@@ -18,7 +18,7 @@ class Lattice_Base
         //
         Lattice_Base() {}
 
-        Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc);
+        Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const std::array<int,2> &n_uc, const int &n_boundary_legs=0);
 
         //
         //Accessor Methods
@@ -53,15 +53,20 @@ class Lattice_Base
             return n_uc_;
         }
 
-        virtual int n_boundary_legs() const
+        int n_boundary_legs() const
         {
-            return 0;
+            return n_boundary_legs_;
         }
 
         //get jth neighbour site of site_i
-        inline const int &site_neighbour_sites(const int &site_i, const int &j) const
+        const int &site_neighbour_sites(const int &site_i, const int &j) const
         {
             return site_neighbour_sites_[site_i][j];
+        }
+
+        const std::vector<int> &site_neighbour_sites(int site_i) const
+        {
+            return site_neighbour_sites_[site_i];
         }
 
         //get jth bond connected to site_i
@@ -84,6 +89,21 @@ class Lattice_Base
         inline const std::array<int,2> &bond_end_sites(const int &bond_i) const
         {
             return bond_end_sites_[bond_i];
+        }
+
+        int boundary_end_site(int boundary_i) const
+        {
+            return boundary_end_site_[boundary_i];
+        }
+
+        int site_neighbour_boundary(int site_i, int j) const
+        {
+            return site_neighbour_boundary_[site_i][j];
+        }
+
+        const std::vector<int> &site_neighbour_boundary(int site_i) const
+        {
+            return site_neighbour_boundary_[site_i];
         }
 
         Coordinate site_list_to_coord(int site_i) const
@@ -159,7 +179,7 @@ class Lattice_Base
         //
         //Data member
         //
-        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_;
+        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_total_, n_bonds_total_, n_boundary_legs_;
         std::array<int,2> n_uc_;
 
         //site_neighbour_sites_[i] stores the list of neighbouring sites to site i;
@@ -168,6 +188,9 @@ class Lattice_Base
         //bond_end_sites_[i] stores the coordinate of two end sites to bond i 
         //this also defines the flow of quantum number: from bond_end_sites_[0] to bond_end_sites_[1]
         std::vector<std::array<int,2>> bond_end_sites_;
+        //boundary_end_site not only stores boundary sites but also stores site connect to boundary bonds
+        std::vector<int> boundary_end_site_;
+        std::vector<std::vector<int>> site_neighbour_boundary_;
 
         //translate between coordinates and list(number)
         //site/bond_list_to_coord_[i]=(x,y,i')
@@ -216,11 +239,6 @@ class Square_Lattice_Cylinder : public Lattice_Base
         Square_Lattice_Cylinder(const std::array<int,2> &n_uc);
 
         enum Neighbour {Left=0, Up=1, Right=2, Down=3};
-
-        virtual int n_boundary_legs() const
-        {
-            return n_uc_[1]*2;
-        }
 
         virtual void print_lattice_inf();
 };

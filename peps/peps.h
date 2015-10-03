@@ -36,12 +36,12 @@ class PEPSt
         //
         //Access Methods
         //
-        inline const int &d() const
+        int d() const
         {
             return d_;
         }
 
-        inline int &D() const
+        int D() const
         {
             return D_;
         }
@@ -126,17 +126,17 @@ class PEPSt
             return bond_tensors_;
         }
 
-        const TensorT &boundary_tensors(int i, int j) const
+        const TensorT &boundary_tensors(int i) const
         {
-            return boundary_tensors_[i][j];
+            return boundary_tensors_[i];
         }
 
-        TensorT &boundary_tensors(int i, int j)
+        TensorT &boundary_tensors(int i)
         {
-            return boundary_tensors_[i][j];
+            return boundary_tensors_[i];
         }
 
-        const std::vector<std::vector<TensorT>> &boundary_tensors() const
+        const std::vector<TensorT> &boundary_tensors() const
         {
             return boundary_tensors_;
         }
@@ -188,7 +188,7 @@ class PEPSt
 
         //using for boundary condition
         //TODO:replaced by vector of MPS?
-        std::vector<std::vector<TensorT>> boundary_tensors_;
+        std::vector<TensorT> boundary_tensors_;
 
 
         //name stores information about lattice, spin symmetry, extra degenerate
