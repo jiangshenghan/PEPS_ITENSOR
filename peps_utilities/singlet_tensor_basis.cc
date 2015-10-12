@@ -63,7 +63,7 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
         max_spins_.push_back(spin_deg.size());
     }
 
-    spin_deg_list_to_num_=std::vector<std::vector<int>>(total_spin_sets_num);
+    spin_deg_list_to_num_=std::vector<std::vector<std::vector<int>>>(total_spin_sets_num);
 
     //iqinds is used to initialize IQTensors
     std::vector<IQIndex> iqinds;
@@ -102,7 +102,7 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
             total_deg*=deg;
             total_sz_sets_num*=spin_list[i]+1;
         }
-        spin_deg_list_to_num_[spin_seti]=std::vector<int>(total_deg,-1);
+        spin_deg_list_to_num_[spin_seti]=std::vector<std::vector<int>>(total_deg);
 
         if (!valid_spins) continue;
 
@@ -161,7 +161,8 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
                 singlet_tensors_.push_back(singlet_tensor);
                 spin_configs_.push_back(spin_list);
                 deg_configs_.push_back(deg_list);
-                spin_deg_list_to_num_[spin_seti][degs_num]=singlet_tensors_.size()-1;
+                spin_deg_list_to_num_[spin_seti][degs_num].push_back(singlet_tensors_.size()-1);
+                fusion_channel_.push_back(spin_deg_list_to_num_[spin_seti][degs_num].size()-1);
 
                 //PrintDat(singlet_tensor);
 

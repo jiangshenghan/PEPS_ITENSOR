@@ -31,7 +31,7 @@ class PEPSt
 
         //Initialize site tensors by tensor data in one unit cell.
         //Thus, the PEPS is translationally invariant.
-        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc);
+        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc);
 
         //
         //Access Methods
@@ -141,6 +141,11 @@ class PEPSt
             return boundary_tensors_;
         }
 
+        std::vector<TensorT> &boundary_tensors()
+        {
+            return boundary_tensors_;
+        }
+
         const std::string &name() const
         {
             return name_;
@@ -150,18 +155,16 @@ class PEPSt
         //Methods
         //
         //given tensors in one uc, generate all translation related tensors
+        //this function requires order for indices of given tensors must match those in peps
         void generate_site_tensors(std::vector<TensorT> site_tensors_uc);
         void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc);
+        //void generate_boundary_tensors(TensorT single_boundary_tensor);
 
 
         //
         //Constructor Helpers
         //
 
-        //Assign value of tensor TB to tensor TA without changing the index.
-        //Hilbert space of TB should be morphism to that of TA
-        //For IQTensor, arrows should also match
-        void tensor_assignment(TensorT &TA, const TensorT &TB);
         //According to the itensor library, ITensor is constructed by IndexSet<Index>(indexset), while IQTensor is constructed by indexset directly
         void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);
         //construct new tensors
@@ -194,10 +197,8 @@ class PEPSt
         //name stores information about lattice, spin symmetry, extra degenerate
         std::string name_;
 
-        //divergence of each site tensors
-        //used for IQPEPS
-        //default setting to 0
-        //std::vector<QN> tensors_div_;
+        friend void tensor_assignment(ITensor &TA, ITensor &TB);
+        friend void tensor_assignment(IQTensor &TA, IQTensor &TB);
 };
 using PEPS=PEPSt<ITensor>;
 using IQPEPS=PEPSt<IQTensor>;

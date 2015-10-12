@@ -111,4 +111,25 @@ class IQPEPS_IndexSet_SpinHalf : public PEPSt_IndexSet_Base<IQIndex>
 
 };
 
+//
+//Indices for spin symmetric PEPS
+//
+class IQPEPS_IndexSet_Spin_Sym : public PEPSt_IndexSet_Base<IQIndex>
+{
+    public:
+        //
+        //Constructor
+        //
+        IQPEPS_IndexSet_Spin_Sym() {}
+        //specify the quantum number for both phys_leg and virt_leg
+        //qn_order specify the way to stores IndexQN in IQIndex
+        IQPEPS_IndexSet_Spin_Sym(int d, int D, const std::vector<int> &phys_leg_spin_deg, const std::vector<int> &virt_leg_spin_deg, const Lattice_Base &lattice, int phys_legs_qn_order=-1, int virt_legs_qn_order=-1);
+
+        //
+        //Constructor Helpers
+        //
+        void init_phys_legs(const std::vector<int> &phys_leg_spin_deg, int phys_legs_qn_order);
+        void init_virt_legs(const std::vector<int> &virt_leg_spin_deg, int virt_legs_qn_order);
+};
+
 #endif

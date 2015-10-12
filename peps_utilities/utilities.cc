@@ -1,7 +1,7 @@
 
 #include "utilities.h"
 
-IQIndex Spin_leg(const std::vector<int> &spin_deg, const std::string &iqind_name, Arrow dir)
+IQIndex Spin_leg(const std::vector<int> &spin_deg, const std::string &iqind_name, Arrow dir, IndexType it, int qn_order)
 {
     //spin_dim=2S+1, where S is the largest spin #
     int spin_dim=spin_deg.size();
@@ -23,7 +23,16 @@ IQIndex Spin_leg(const std::vector<int> &spin_deg, const std::string &iqind_name
     {
         if (sz_deg[qn]==0) continue;
 
-        indqn.push_back(IndexQN(Index(nameint("2Sz=",spin_dim-qn-1),sz_deg[qn]),QN(spin_dim-qn-1,0)));
+        //stores indqn from high sz to low sz
+        if (qn_order==-1)
+        {
+            indqn.push_back(IndexQN(Index(nameint("2Sz=",spin_dim-qn-1),sz_deg[qn],it),QN(spin_dim-qn-1,0)));
+        }
+        //stores indqn from low sz to high sz
+        if (qn_order==1)
+        {
+            indqn.push_back(IndexQN(Index(nameint("2Sz=",-spin_dim+qn+1),sz_deg[qn],it),QN(-spin_dim+qn+1,0)));
+        }
         
         //cout << indqn[qn] << endl;
     }
@@ -152,11 +161,26 @@ std::vector<int> list_from_num(int num, const std::vector<int> &max_nums)
 
     }
 
+    if (num>0)
+    {
+        cout << "Invalid num!" << endl;
+        exit (EXIT_FAILURE);
+    }
+
     return list;
 }
 
 int num_from_list(const std::vector<int> &list, const std::vector<int> &max_nums)
 {
+    for (int i=0; i<list.size(); i++)
+    {
+        if (list[i]>=max_nums[i])
+        {
+            cout << "Invalid list!" << endl;
+            exit (EXIT_FAILURE);
+        }
+    }
+
     int num=list[0];
 
     for (int i=1; i<list.size(); i++)
@@ -232,3 +256,59 @@ ITensor eta_from_mu(double mu, Index eta_leg)
     }
     return eta;
 }
+
+
+Index isomorphic_legs(const Index &old_leg, const std::string &new_leg_name)
+{
+    return Index(new_leg_name,old_leg.m(),old_leg.type(),old_leg.primeLevel());
+}
+
+IQIndex isomorphic_legs(const IQIndex &old_leg, const std::string &new_leg_name)
+{
+    auto indices_qn=old_leg.indices();
+    return IQIndex(new_leg_name,indices_qn,old_leg.dir(),old_leg.primeLevel());
+}
+
+
+void tensor_assignment(ITensor &TA, const ITensor &TB)
+{
+    ITensor tensor_tmp=TB;
+
+    for (int leg_i=0; leg_i<TA.r(); leg_i++)
+    {
+        auto oind=tensor_tmp.indices()[leg_i],
+             nind=TA.indices()[leg_i];
+        tensor_tmp.replaceIndex(oind,nind);
+    }
+    TA=tensor_tmp;
+
+    return;
+}
+
+void tensor_assignment(IQTensor &TA, const IQTensor &TB)
+{
+    //cout << Global::args() << endl;
+    IQTensor tensor_tmp=TB;
+
+    //cout << TB.indices() << endl;
+    //cout << TA.indices();
+    for (int leg_i=0; leg_i<TA.r(); leg_i++)
+    {
+        auto oind=tensor_tmp.indices()[leg_i],
+             nind=TA.indices()[leg_i];
+        tensor_tmp.replaceIndex(oind,nind);
+        //cout << tensor_tmp.indices() << endl;
+    }
+    TA=tensor_tmp;
+
+
+    //cout << "Check for tensor_assignment" << endl;
+    //cout << "old tensor:" << endl; 
+    //PrintDat(TB);
+    //cout << "new tensor:" << endl;
+    //PrintDat(TA);
+    
+    return;
+}
+
+

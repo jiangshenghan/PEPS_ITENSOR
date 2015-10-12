@@ -170,3 +170,53 @@ void IQPEPS_IndexSet_SpinHalf::init_virt_legs(const int &spin_dim, const std::ve
 
     }
 }
+
+
+IQPEPS_IndexSet_Spin_Sym::IQPEPS_IndexSet_Spin_Sym(int d, int D, const std::vector<int> &phys_leg_spin_deg, const std::vector<int> &virt_leg_spin_deg, const Lattice_Base &lattice, int phys_legs_qn_order, int virt_legs_qn_order):
+    PEPSt_IndexSet_Base<IQIndex>(d,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site(),lattice.n_boundary_legs())
+{
+    name_="spin symmetric, ";
+
+    init_phys_legs(phys_leg_spin_deg,phys_legs_qn_order);
+    init_virt_legs(virt_leg_spin_deg,virt_legs_qn_order);
+}
+
+
+void IQPEPS_IndexSet_Spin_Sym::init_phys_legs(const std::vector<int> &phys_leg_spin_deg, int phys_legs_qn_order)
+{
+    int d_prime=0;
+    int spini=0;
+    for (int deg : phys_leg_spin_deg)
+    {
+        d_prime+=deg*(spini+1);
+        spini++;
+    }
+    assert(d_prime==d_);
+
+    int sitei=0;
+    for (auto &leg : phys_legs_)
+    {
+        leg=Spin_leg(phys_leg_spin_deg,nameint("phys_leg ",sitei),Out,Site,phys_legs_qn_order);
+        sitei++;
+    }
+}
+
+void IQPEPS_IndexSet_Spin_Sym::init_virt_legs(const std::vector<int> &virt_leg_spin_deg, int virt_legs_qn_order)
+{
+    int D_prime=0;
+    int spini=0;
+    for (int deg : virt_leg_spin_deg)
+    {
+        D_prime+=deg*(spini+1);
+        spini++;
+    }
+    assert(D_prime==D);
+
+    int linki=0;
+    for (auto &leg : virt_legs_)
+    {
+        leg=Spin_leg(virt_leg_spin_deg,nameint("virt_leg ",linki),Out,Link,virt_legs_qn_order);
+        linki++;
+    }
+}
+

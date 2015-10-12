@@ -15,16 +15,18 @@ SET(WIGNERSYMBOL_INCLUDE_DIR "/home/jiangsb/lib/wignerSymbols/include")
 SET(WIGNERSYMBOL_LIB_DIR "/home/jiangsb/lib/wignerSymbols/lib")
 
 #include directories storing head files
-INCLUDE_DIRECTORIES(peps lattice peps_utilities simple_update ${ITENSOR_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR} ${WIGNERSYMBOL_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(peps lattice peps_utilities simple_update boundary_theory ${ITENSOR_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR} ${WIGNERSYMBOL_INCLUDE_DIR})
 
 #add directories for source file generate libraries
 ADD_SUBDIRECTORY(lattice)
 ADD_SUBDIRECTORY(peps)
 ADD_SUBDIRECTORY(peps_utilities)
 ADD_SUBDIRECTORY(simple_update)
+ADD_SUBDIRECTORY(boundary_theory)
 
 #include directories for library
-LINK_DIRECTORIES(peps lattice peps_utilities simple_update ${ITENSOR_LIB_DIR} ${LAPACK_LIB_DIR} ${BLAS_LIB_DIR} ${WIGNERSYMBOL_LIB_DIR})
+LINK_DIRECTORIES(peps lattice peps_utilities simple_update boundary_theory ${ITENSOR_LIB_DIR} ${LAPACK_LIB_DIR} ${BLAS_LIB_DIR} ${WIGNERSYMBOL_LIB_DIR})
 
 #add directories for source file generating executable file
 ADD_SUBDIRECTORY(test)
+ADD_SUBDIRECTORY(execute)

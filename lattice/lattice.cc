@@ -213,7 +213,7 @@ void Square_Lattice_Cylinder::print_lattice_inf()
     cout << "Check neighbouring sites: " << endl << endl;
     for (int site_i=0; site_i<n_sites_total_; site_i++)
     {
-        cout << "Neighbour sites of site " << site_list_to_coord(site_i) << " are:" << endl;
+        cout << "Neighbour sites of site " << site_i << " are:" << endl;
         cout << site_neighbour_sites_[site_i] << endl;
         //for (auto j : site_neighbour_sites_[site_i])
         //{

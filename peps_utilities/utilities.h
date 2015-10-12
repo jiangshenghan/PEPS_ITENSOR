@@ -66,7 +66,10 @@ void spin_to_sz(const std::vector<int> &spin_deg, std::vector<int> &sz_deg);
 
 //Given spin_deg this function creates an IQIndex leg,
 //where the leg accommodates rep of spin_qn with deg equals to spin_deg[spin_qn] 
-IQIndex Spin_leg(const std::vector<int> &spin_deg, const std::string &iqind_name, Arrow dir=Out);
+//qn_order denotes the way to store IndexQN in IQIndex
+//qn_order=-1 means from high sz to low sz
+//while qn_order=1 means from low sz to high sz
+IQIndex Spin_leg(const std::vector<int> &spin_deg, const std::string &iqind_name, Arrow dir=Out, IndexType it=Link, int qn_order=-1);
 
 //Given an IQIndex (with sz quantum number), this function determines the corresponding SU(2) rep
 //spin_deg[n] stores extra deg for spin n/2
@@ -85,5 +88,28 @@ IQTensor eta_from_mu(double mu, const std::vector<int> &spin_deg);
 IQTensor eta_from_mu(double mu, IQIndex eta_leg);
 //define the function for Index for convience
 ITensor eta_from_mu(double mu, Index eta_leg);
+
+
+//This function creates isomorphic leg, which share the same prime level
+Index isomorphic_legs(const Index &old_leg, const std::string &new_leg_name);
+IQIndex isomorphic_legs(const IQIndex &old_leg, const std::string &new_leg_name);
+
+
+//Assign value of tensor TB to tensor TA without changing the index.
+//Hilbert space of TB should be morphism to that of TA 
+void tensor_assignment(ITensor &TA, const ITensor &TB);
+//For IQTensor, arrows should also match
+//IMPORTANT: to replace iqindex, we should also make sure the order of indexqn is the same.
+void tensor_assignment(IQTensor &TA, const IQTensor &TB);
+
+
+//these two functions can solve the inconsistent interface to get left_[i] of Combiner and IQCombiner
+inline Index left_leg_of_combiners(const Combiner &combiner, int i) { return combiner.left(i); }
+inline IQIndex left_leg_of_combiners(const IQCombiner &combiner, int i) { return combiner.left()[i]; }
+
+
+//these two functions solve inconsistent interface to get qn preserve block of iqtensor
+inline void clean(ITensor &tensor) {}
+inline void clean(IQTensor &tensor) {return tensor.clean(); }
 
 #endif

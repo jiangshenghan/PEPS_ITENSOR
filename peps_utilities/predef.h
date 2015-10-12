@@ -10,6 +10,7 @@
 #include <array>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 #include <initializer_list>
 #include <ctime>
 #include <chrono>
@@ -33,7 +34,7 @@ using Complex=std::complex<double>;
 //coordinate for both sites and bonds, expressed as (x,y,s/b)
 using Coordinate=std::array<int,3>;
 
-static const double EPSILON=1E-10;
+static const double EPSILON=1E-15;
 //static const Complex I()
 
 #endif

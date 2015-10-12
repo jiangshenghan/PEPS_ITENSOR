@@ -39,6 +39,7 @@ class Singlet_Tensor_Basis
 
         const std::vector<int> &spin_configs(int i) const { return spin_configs_[i]; }
         const std::vector<int> &deg_configs(int i) const { return deg_configs_[i]; }
+        int fusion_channel(int i) const { return fusion_channel_[i]; }
 
         const std::vector<int> &spin_degs(int legi) const { return is_spin_degs_[legi]; }
 
@@ -46,7 +47,7 @@ class Singlet_Tensor_Basis
         const IQTensor &operator[](int i) const { return singlet_tensors_[i]; }
 
         //Given a spin_list as well as deg_list, get the correpsonding No. of base
-        int spin_deg_list_to_num(const std::vector<int> &spin_list, const std::vector<int> &deg_list)
+        int spin_deg_list_to_basis_no(const std::vector<int> &spin_list, const std::vector<int> &deg_list, int fusion_channel=0)
         {
             std::vector<int> spin_set_degs;
             int total_leg_num=is_.r();
@@ -60,7 +61,7 @@ class Singlet_Tensor_Basis
             int spin_list_num=num_from_list(spin_list,max_spins_),
                 deg_list_num=num_from_list(deg_list,spin_set_degs);
 
-            return spin_deg_list_to_num_[spin_list_num][deg_list_num];
+            return spin_deg_list_to_num_[spin_list_num][deg_list_num][fusion_channel];
         }
 
         //
@@ -82,9 +83,11 @@ class Singlet_Tensor_Basis
         std::vector<std::vector<int>> spin_configs_;
         //deg_configs stores the deg_list for every singlet_tensors_
         std::vector<std::vector<int>> deg_configs_;
-        //spin_deg_list_to_num_ translate a particular spin_list and deg_list to the no. of tensor basis
-        //spin_list and deg_list are encoded as two numbers
-        std::vector<std::vector<int>> spin_deg_list_to_num_;
+        //for identical spin and deg configs, there may still be choice of different fusion_channels
+        std::vector<int> fusion_channel_;
+        //spin_deg_list_to_num_ translate a particular spin_list, deg_list and fusion channel to the no. of tensor basis
+        //spin_list, deg_list and fusion channel are encoded as three numbers
+        std::vector<std::vector<std::vector<int>>> spin_deg_list_to_num_;
 
 
         std::vector<IQTensor> singlet_tensors_;

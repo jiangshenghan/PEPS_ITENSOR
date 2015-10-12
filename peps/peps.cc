@@ -26,7 +26,7 @@ template
 PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
 
 template <class TensorT>
-PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> &site_tensors_uc, std::vector<TensorT> &bond_tensors_uc):
+PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_(lattice),
@@ -43,15 +43,22 @@ PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<Ind
     new_bond_tensors();
     new_boundary_tensors();
 
+    //for (const auto &tensor : site_tensors_) cout << tensor;
+    //for (const auto &tensor : bond_tensors_) cout << tensor;
+    //for (const auto &tensor : boundary_tensors_) cout << tensor;
+
+    //for (const auto &tensor : site_tensors_uc) PrintDat(tensor);
+    //for (const auto &tensor : bond_tensors_uc) PrintDat(tensor);
+
     generate_site_tensors(site_tensors_uc);
     generate_bond_tensors(bond_tensors_uc);
 
 
 }
 template
-PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> &site_tensors_uc, std::vector<ITensor> &bond_tensors_uc);
+PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> site_tensors_uc, std::vector<ITensor> bond_tensors_uc);
 template
-PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> &site_tensors_uc, std::vector<IQTensor> &bond_tensors_uc);
+PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> site_tensors_uc, std::vector<IQTensor> bond_tensors_uc);
 
 
 template<class TensorT>
@@ -61,6 +68,8 @@ void PEPSt<TensorT>::generate_site_tensors(std::vector<TensorT> site_tensors_uc)
     {
         auto sublattice_i=lattice_.site_list_to_coord(site_i).at(2);
         tensor_assignment(site_tensors_[site_i],site_tensors_uc[sublattice_i]);
+
+        //PrintDat(site_tensors_[site_i]);
     }
 }
 template
@@ -105,23 +114,6 @@ void PEPSt<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc)
 }
 
 
-template<class TensorT>
-void PEPSt<TensorT>::tensor_assignment(TensorT &TA, const TensorT &TB)
-{
-    TensorT tensor_tmp=TB;
-
-    for (int leg_i=0; leg_i<TA.r(); leg_i++)
-    {
-        tensor_tmp.replaceIndex(tensor_tmp.indices()[leg_i],TA.indices()[leg_i]);
-    }
-    TA=tensor_tmp;
-    return;
-}
-template
-void PEPSt<ITensor>::tensor_assignment(ITensor &TA, const ITensor &TB);
-template
-void PEPSt<IQTensor>::tensor_assignment(IQTensor &TA, const IQTensor &TB);
-
 //According to the library, ITensor is constructed by IndexSet<Index>(indexset), while IQTensor is constructed by indexset directly
 template <>
 void PEPSt<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)
@@ -129,7 +121,7 @@ void PEPSt<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::Inde
     tensor=ITensor(IndexSet<Index>(indexset));
     return;
 }
-template<>
+template <>
 void PEPSt<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)
 {
     tensor=IQTensor(indexset);
@@ -238,8 +230,7 @@ void PEPSt<TensorT>::new_boundary_tensors()
             auto begin_iter=neighbour_sites.begin();
             for (const auto &boundary_id : lattice_.site_neighbour_boundary(site_i))
             {
-                auto neighbour_boundary_iter=std::find_if(begin_iter,neighbour_sites.end(),
-                        [](int i){ return (i<0); });
+                auto neighbour_boundary_iter=std::find_if(begin_iter,neighbour_sites.end(), [](int i){ return (i<0); });
                 int neighbour_boundary_no=neighbour_boundary_iter-begin_iter;
 
                 //left boundary, which connects to site tensor
@@ -369,6 +360,7 @@ void randomize_spin_sym_square_peps(IQPEPS &spin_peps)
 
         auto spin_list=site0_tensor_basis.spin_configs(i);
         auto deg_list=site0_tensor_basis.deg_configs(i);
+        int fusion_channel=site0_tensor_basis.fusion_channel(i);
         site0_tensor_params[i]=rand_param();
 
         cout << "Spins: " << spin_list << endl
@@ -414,7 +406,7 @@ void randomize_spin_sym_square_peps(IQPEPS &spin_peps)
             cout << "Spins: " << spin_list << endl
                 << "Colors: " << deg_list << endl;
 
-            auto rotate_basis_no=site0_tensor_basis.spin_deg_list_to_num(spin_list,deg_list);
+            auto rotate_basis_no=site0_tensor_basis.spin_deg_list_to_basis_no(spin_list,deg_list,fusion_channel);
             //mark the rotated basis as visited.
             if (site0_basis_visited[rotate_basis_no]) continue;
             site0_basis_visited[rotate_basis_no]=true;
@@ -507,7 +499,7 @@ void randomize_spin_sym_square_peps(IQPEPS &spin_peps)
     spin_peps.bond_tensors(0)=singlet_tensor_from_basis_params(bond0_tensor_basis,bond0_tensor_params);
 
     //generate the horizontal bond B_1 by vertical bond B_0
-    spin_peps.tensor_assignment(spin_peps.bond_tensors(1),spin_peps.bond_tensors(0));
+    tensor_assignment(spin_peps.bond_tensors(1),spin_peps.bond_tensors(0));
     spin_peps.bond_tensors(1)*=chi_c4;
 
     //generate all translational related bond tensors
