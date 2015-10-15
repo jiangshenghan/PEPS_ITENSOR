@@ -1,4 +1,4 @@
 
 ADD_EXECUTABLE(featureless_honeycomb_peps.exe featureless_honeycomb_peps.cc)
 
-TARGET_LINK_LIBRARIES(featureless_honeycomb_peps.exe boundary_theory peps lattice peps_utilities wignerSymbols itensor matrix utilities lapack blas)
+TARGET_LINK_LIBRARIES(featureless_honeycomb_peps.exe peps_ansatz peps lattice peps_utilities wignerSymbols itensor matrix utilities lapack blas)

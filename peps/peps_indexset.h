@@ -53,6 +53,10 @@ class PEPSt_IndexSet_Base
 
         const std::string &name() const { return name_; }
 
+        //read/write from/to file
+        void read(std::istream &s);
+        void write(std::ostream &s) const;
+
     protected:
         //dimension of single physical/virtual leg.
         int d_, D_;

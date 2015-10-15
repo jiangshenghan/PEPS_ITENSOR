@@ -5,7 +5,7 @@
 #include "double_layer_peps.h"
 
 
-//we obtain the boundary theory \sigma_b=\sqrt{\sigma_L}\cdot\sigma_R\cdot\sqrt{\sigma_L}
+//we obtain the boundary theory for long cylinder: \sigma_b=\sqrt{\sigma_L}\cdot\sigma_R\cdot\sqrt{\sigma_L}
 //where \sigma_{L/R} is obtained via contraction the left/right part of double layer PEPS on cylinder
 //and \sqrt{\sigma_L}=U_L\cdot\sqrt(\lambda_L)\cdot V_L, where \lambda_L is the singular value of \sigma_L
 //Here, we focus on square lattice on cylinder, other lattice should be transfer to square first
@@ -24,18 +24,21 @@ class Boundary_Theory
         //Constructor
         //
         Boundary_Theory() {}
-        Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col=-1, const std::string &method="iterative");
+        Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col=-1);
 
         //
         //Acess Method
         //
+        const std::array<TensorT,2> &sigma_lr() const { return sigma_lr_; }
+
         const std::vector<double> &density_mat_spectrum() const { return density_mat_spectrum_; }
 
         //
-        //Method to obtain \sigma_b
+        //Method to obtain sigma
         //
         //using iterative method to obtain boundary theories
         void obtain_boundary_theory_iterative();
+        void obtain_sigma_lr_iterative(int left_cols, int right_cols);
         //snake walking for one bulk or boundary col 
         //vertical_dir==1(-1) denotes walking from left(right) to right(left),
         //horizontal_dir==1(-1) denotes walking from down(up) to up(down)

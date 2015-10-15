@@ -43,6 +43,72 @@ Lattice_Base::Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const s
     }
 }
 
+void Lattice_Base::print_lattice_inf()
+{
+    cout << "\n==============================================\n" << endl;
+    cout << name_ << endl << "lattice size " << n_uc_[0] << "x" << n_uc_[1] << " and " << n_sites_total_ << " sites, " << n_bonds_total_ << " bonds, " << n_boundary_legs() << " boudnary legs." << endl << endl;
+
+    cout << "Check neighbouring sites: " << endl << endl;
+    for (int site_i=0; site_i<n_sites_total_; site_i++)
+    {
+        cout << "Neighbour sites of site " << site_i << " are:" << endl;
+        cout << site_neighbour_sites_[site_i] << endl;
+        //for (auto j : site_neighbour_sites_[site_i])
+        //{
+        //    cout << site_list_to_coord(j) << endl;
+        //}
+        cout << endl;
+    }
+    cout << endl;
+
+    cout << "Check neighbouring bonds: " << endl << endl;
+    for (int site_i=0; site_i<n_sites_total_; site_i++)
+    {
+        //cout << "Bonds connected to site " << site_list_to_coord(site_i) << " are:" << endl;
+        cout << "Bonds connected to site " << site_i << " are:" << endl;
+        for (auto j : site_neighbour_bonds_[site_i])
+        {
+            cout << j << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+
+    if (name_.find("cylinder")!=std::string::npos)
+    {
+        cout << "Check neighbouring boundary legs: " << endl << endl;
+        for (int site_i=0; site_i<n_sites_total_; site_i++)
+        {
+            for (auto boundary_i : site_neighbour_boundary_[site_i])
+            {
+                cout << "Site " << site_i << " connects to boundary " << boundary_i << endl;
+            }
+        }
+        cout << endl;
+    }
+
+    cout << "Check end sites of bonds: " << endl << endl;
+    for (int bond_i=0; bond_i<n_bonds_total_; bond_i++)
+    {
+        //cout << "The two end sites of bond " << bond_list_to_coord(bond_i) << " are site " << site_list_to_coord(bond_end_sites(bond_i,0)) << " and site " << site_list_to_coord(bond_end_sites(bond_i,1)) <<endl;
+        cout << "The two end sites of bond " << bond_i << " are site " << bond_end_sites(bond_i,0) << " and site " << bond_end_sites(bond_i,1) <<endl;
+    }
+    cout << endl;
+
+    if (name_.find("cylinder")!=std::string::npos)
+    {
+        cout << "Check end site of boundary: " << endl << endl;
+        for (int boundary_i=0; boundary_i<n_boundary_legs_; boundary_i++)
+        {
+            cout << "Boundary " << boundary_i << " connects to site " << boundary_end_site_[boundary_i] << endl;
+        }
+        cout << endl;
+    }
+
+    cout << "Finish printing lattice information!" << endl;
+    cout << "\n==============================================\n" << endl;
+}
+
 
 Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc)
 {
@@ -199,67 +265,59 @@ Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc):
 
         bond_end_sites_[bond_i][0]=site_coord_to_list(end_sites_coord[0]);
         bond_end_sites_[bond_i][1]=site_coord_to_list(end_sites_coord[1]);
-        // if the bond is at rightmost, set the end_site_coord[1] to be -1
+        // if the bond is at rightmost, set the end_sites_coord[1] to be -1
         if (end_sites_coord[1][0]>=n_uc_[0])
             bond_end_sites_[bond_i][1]=-2;
     }
 }
 
 
-void Square_Lattice_Cylinder::print_lattice_inf()
+
+//
+//Honeycomb_Lattice_Torus
+//
+Honeycomb_Lattice_Torus::Honeycomb_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(2,3,n_uc)
 {
-    cout << name_ << endl << "lattice size " << n_uc_[0] << "x" << n_uc_[1] << " and " << n_sites_total_ << " sites, " << n_bonds_total_ << " bonds, " << n_boundary_legs() << " boudnary legs." << endl << endl;
+    name_="honeycomb lattice on torus";
 
-    cout << "Check neighbouring sites: " << endl << endl;
-    for (int site_i=0; site_i<n_sites_total_; site_i++)
+    for (int sitei=0; sitei<n_sites_total_; sitei++)
     {
-        cout << "Neighbour sites of site " << site_i << " are:" << endl;
-        cout << site_neighbour_sites_[site_i] << endl;
-        //for (auto j : site_neighbour_sites_[site_i])
-        //{
-        //    cout << site_list_to_coord(j) << endl;
-        //}
-        cout << endl;
-    }
-    cout << endl;
+        Coordinate sitei_coord=site_list_to_coord(sitei);
+        std::vector<Coordinate> neigh_sites_coord(n_bonds_to_one_site_);
+        int sublattice_pm=2*sitei_coord[2]-1;
 
-    cout << "Check neighbouring bonds: " << endl << endl;
-    for (int site_i=0; site_i<n_sites_total_; site_i++)
-    {
-        //cout << "Bonds connected to site " << site_list_to_coord(site_i) << " are:" << endl;
-        cout << "Bonds connected to site " << site_i << " are:" << endl;
-        for (auto j : site_neighbour_bonds_[site_i])
+        neigh_sites_coord[NeighA]=Coordinate{sitei_coord[0]+sublattice_pm,sitei_coord[1]+sublattice_pm,1-sitei_coord[2]};
+        neigh_sites_coord[NeighB]=Coordinate{sitei_coord[0],sitei_coord[1]+sublattice_pm,1-sitei_coord[2]};
+        neigh_sites_coord[NeighC]=Coordinate{sitei_coord[0]+sublattice_pm,sitei_coord[1],1-sitei_coord[2]};
+
+        std::vector<Coordinate> neigh_bonds_coord(n_bonds_to_one_site_);
+        if (sitei_coord[2]==0)
         {
-            cout << j << " ";
+            neigh_bonds_coord[NeighA]=Coordinate{sitei_coord[0],sitei_coord[1],0};
+            neigh_bonds_coord[NeighB]=Coordinate{sitei_coord[0],sitei_coord[1],1};
+            neigh_bonds_coord[NeighC]=Coordinate{sitei_coord[0],sitei_coord[1],2};
         }
-        cout << endl;
-    }
-    cout << endl;
-
-    cout << "Check neighbouring boundary legs: " << endl << endl;
-    for (int site_i=0; site_i<n_sites_total_; site_i++)
-    {
-        for (auto boundary_i : site_neighbour_boundary_[site_i])
+        else //sitei_coord[2]==1
         {
-            cout << "Site " << site_i << " connects to boundary " << boundary_i << endl;
+            neigh_bonds_coord[NeighA]=Coordinate{sitei_coord[0]+1,sitei_coord[1]+1,0};
+            neigh_bonds_coord[NeighB]=Coordinate{sitei_coord[0],sitei_coord[1]+1,1};
+            neigh_bonds_coord[NeighC]=Coordinate{sitei_coord[0]+1,sitei_coord[1],2};
+        }
+
+        for (int j=0; j<n_bonds_to_one_site_; j++)
+        {
+            site_neighbour_sites_[sitei][j]=site_coord_to_list(neigh_sites_coord[j]);
+            site_neighbour_bonds_[sitei][j]=bond_coord_to_list(neigh_bonds_coord[j]);
         }
     }
-    cout << endl;
 
-    cout << "Check end sites of bonds: " << endl << endl;
-    for (int bond_i=0; bond_i<n_bonds_total_; bond_i++)
+    //we assume bond is from subsite 0 to subsite 1
+    for (int bondi=0; bondi<n_bonds_total_; bondi++)
     {
-        //cout << "The two end sites of bond " << bond_list_to_coord(bond_i) << " are site " << site_list_to_coord(bond_end_sites(bond_i,0)) << " and site " << site_list_to_coord(bond_end_sites(bond_i,1)) <<endl;
-        cout << "The two end sites of bond " << bond_i << " are site " << bond_end_sites(bond_i,0) << " and site " << bond_end_sites(bond_i,1) <<endl;
-    }
-    cout << endl;
+        Coordinate bondi_coord=bond_list_to_coord(bondi);
 
-    cout << "Check end site of boundary: " << endl << endl;
-    for (int boundary_i=0; boundary_i<n_boundary_legs_; boundary_i++)
-    {
-        cout << "Boundary " << boundary_i << " connects to site " << boundary_end_site_[boundary_i] << endl;
+        bond_end_sites_[bondi][0]=site_coord_to_list(Coordinate{bondi_coord[0],bondi_coord[1],0});
+        bond_end_sites_[bondi][1]=site_neighbour_sites_[bond_end_sites_[bondi][0]][bondi_coord[2]];
     }
-    cout << endl;
-
-    cout << "Finish printing lattice information!" << endl << endl;
 }
+

@@ -16,17 +16,17 @@ ARCHITECTURE_ID	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	270;"	d	fi
 ARCHITECTURE_ID	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	273;"	d	file:
 ARCHITECTURE_ID	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	276;"	d	file:
 ARCHITECTURE_ID	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	280;"	d	file:
-Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<IQTensor>::Boundary_Theory(const PEPSt<IQTensor> &square_peps, int cutting_col, const std::string &method);$/;"	p	class:Boundary_Theory	file:	signature:(const PEPSt<IQTensor> &square_peps, int cutting_col, const std::string &method)
-Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<ITensor>::Boundary_Theory(const PEPSt<ITensor> &square_peps, int cutting_col, const std::string &method);$/;"	p	class:Boundary_Theory	file:	signature:(const PEPSt<ITensor> &square_peps, int cutting_col, const std::string &method)
-Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<TensorT>::Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col, const std::string &method):$/;"	f	class:Boundary_Theory	signature:(const PEPSt<TensorT> &square_peps, int cutting_col, const std::string &method)
+Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<IQTensor>::Boundary_Theory(const PEPSt<IQTensor> &square_peps, int cutting_col);$/;"	p	class:Boundary_Theory	file:	signature:(const PEPSt<IQTensor> &square_peps, int cutting_col)
+Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<ITensor>::Boundary_Theory(const PEPSt<ITensor> &square_peps, int cutting_col);$/;"	p	class:Boundary_Theory	file:	signature:(const PEPSt<ITensor> &square_peps, int cutting_col)
+Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<TensorT>::Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col):$/;"	f	class:Boundary_Theory	signature:(const PEPSt<TensorT> &square_peps, int cutting_col)
 Boundary_Theory	boundary_theory/boundary_theory.h	/^        Boundary_Theory() {}$/;"	f	class:Boundary_Theory	access:public	signature:()
-Boundary_Theory	boundary_theory/boundary_theory.h	/^        Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col=-1, const std::string &method="iterative");$/;"	p	class:Boundary_Theory	access:public	signature:(const PEPSt<TensorT> &square_peps, int cutting_col=-1, const std::string &method=Ó)
+Boundary_Theory	boundary_theory/boundary_theory.h	/^        Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col=-1);$/;"	p	class:Boundary_Theory	access:public	signature:(const PEPSt<TensorT> &square_peps, int cutting_col=-1)
 Boundary_Theory	boundary_theory/boundary_theory.h	/^class Boundary_Theory$/;"	c
-Boundary_Theory::Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<IQTensor>::Boundary_Theory(const PEPSt<IQTensor> &square_peps, int cutting_col, const std::string &method);$/;"	p	class:Boundary_Theory	file:	signature:(const PEPSt<IQTensor> &square_peps, int cutting_col, const std::string &method)
-Boundary_Theory::Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<ITensor>::Boundary_Theory(const PEPSt<ITensor> &square_peps, int cutting_col, const std::string &method);$/;"	p	class:Boundary_Theory	file:	signature:(const PEPSt<ITensor> &square_peps, int cutting_col, const std::string &method)
-Boundary_Theory::Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<TensorT>::Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col, const std::string &method):$/;"	f	class:Boundary_Theory	signature:(const PEPSt<TensorT> &square_peps, int cutting_col, const std::string &method)
+Boundary_Theory::Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<IQTensor>::Boundary_Theory(const PEPSt<IQTensor> &square_peps, int cutting_col);$/;"	p	class:Boundary_Theory	file:	signature:(const PEPSt<IQTensor> &square_peps, int cutting_col)
+Boundary_Theory::Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<ITensor>::Boundary_Theory(const PEPSt<ITensor> &square_peps, int cutting_col);$/;"	p	class:Boundary_Theory	file:	signature:(const PEPSt<ITensor> &square_peps, int cutting_col)
+Boundary_Theory::Boundary_Theory	boundary_theory/boundary_theory.cc	/^Boundary_Theory<TensorT>::Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col):$/;"	f	class:Boundary_Theory	signature:(const PEPSt<TensorT> &square_peps, int cutting_col)
 Boundary_Theory::Boundary_Theory	boundary_theory/boundary_theory.h	/^        Boundary_Theory() {}$/;"	f	class:Boundary_Theory	access:public	signature:()
-Boundary_Theory::Boundary_Theory	boundary_theory/boundary_theory.h	/^        Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col=-1, const std::string &method="iterative");$/;"	p	class:Boundary_Theory	access:public	signature:(const PEPSt<TensorT> &square_peps, int cutting_col=-1, const std::string &method=Ó)
+Boundary_Theory::Boundary_Theory	boundary_theory/boundary_theory.h	/^        Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col=-1);$/;"	p	class:Boundary_Theory	access:public	signature:(const PEPSt<TensorT> &square_peps, int cutting_col=-1)
 Boundary_Theory::cutting_col_	boundary_theory/boundary_theory.h	/^        int n_rows_, n_cols_, cutting_col_;$/;"	m	class:Boundary_Theory	access:private
 Boundary_Theory::density_mat_spectrum	boundary_theory/boundary_theory.h	/^        const std::vector<double> &density_mat_spectrum() const { return density_mat_spectrum_; }$/;"	f	class:Boundary_Theory	access:public	signature:() const
 Boundary_Theory::density_mat_spectrum_	boundary_theory/boundary_theory.h	/^        std::vector<double> density_mat_spectrum_;$/;"	m	class:Boundary_Theory	access:private
@@ -61,7 +61,16 @@ Boundary_Theory::obtain_density_matrix_spectrum	boundary_theory/boundary_theory.
 Boundary_Theory::obtain_density_matrix_spectrum	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::obtain_density_matrix_spectrum();$/;"	p	class:Boundary_Theory	file:	signature:()
 Boundary_Theory::obtain_density_matrix_spectrum	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::obtain_density_matrix_spectrum()$/;"	f	class:Boundary_Theory	signature:()
 Boundary_Theory::obtain_density_matrix_spectrum	boundary_theory/boundary_theory.h	/^        void obtain_density_matrix_spectrum();$/;"	p	class:Boundary_Theory	access:public	signature:()
+Boundary_Theory::obtain_sigma_lr_iterative	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<IQTensor>::obtain_sigma_lr_iterative(int left_cols, int right_cols);$/;"	p	class:Boundary_Theory	file:	signature:(int left_cols, int right_cols)
+Boundary_Theory::obtain_sigma_lr_iterative	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::obtain_sigma_lr_iterative(int left_cols, int right_cols);$/;"	p	class:Boundary_Theory	file:	signature:(int left_cols, int right_cols)
+Boundary_Theory::obtain_sigma_lr_iterative	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::obtain_sigma_lr_iterative(int left_cols, int right_cols)$/;"	f	class:Boundary_Theory	signature:(int left_cols, int right_cols)
+Boundary_Theory::obtain_sigma_lr_iterative	boundary_theory/boundary_theory.h	/^        void obtain_sigma_lr_iterative(int left_cols, int right_cols);$/;"	p	class:Boundary_Theory	access:public	signature:(int left_cols, int right_cols)
+Boundary_Theory::obtain_transfer_matrix	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<IQTensor>::obtain_transfer_matrix(int coli);$/;"	p	class:Boundary_Theory	file:	signature:(int coli)
+Boundary_Theory::obtain_transfer_matrix	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::obtain_transfer_matrix(int coli);$/;"	p	class:Boundary_Theory	file:	signature:(int coli)
+Boundary_Theory::obtain_transfer_matrix	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::obtain_transfer_matrix(int coli)$/;"	f	class:Boundary_Theory	signature:(int coli)
+Boundary_Theory::obtain_transfer_matrix	boundary_theory/boundary_theory.h	/^        void obtain_transfer_matrix(int coli=1);$/;"	p	class:Boundary_Theory	access:public	signature:(int coli=1)
 Boundary_Theory::sigma_b_	boundary_theory/boundary_theory.h	/^        TensorT sigma_b_;$/;"	m	class:Boundary_Theory	access:private
+Boundary_Theory::sigma_lr	boundary_theory/boundary_theory.h	/^        const std::array<TensorT,2> &sigma_lr() const { return sigma_lr_; }$/;"	f	class:Boundary_Theory	access:public	signature:() const
 Boundary_Theory::sigma_lr_	boundary_theory/boundary_theory.h	/^        std::array<TensorT,2> sigma_lr_;$/;"	m	class:Boundary_Theory	access:private
 Boundary_Theory::snake_walking_boundary_col	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<IQTensor>::snake_walking_boundary_col();$/;"	p	class:Boundary_Theory	file:	signature:()
 Boundary_Theory::snake_walking_boundary_col	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::snake_walking_boundary_col();$/;"	p	class:Boundary_Theory	file:	signature:()
@@ -72,6 +81,7 @@ Boundary_Theory::snake_walking_bulk_col	boundary_theory/boundary_theory.cc	/^voi
 Boundary_Theory::snake_walking_bulk_col	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir)$/;"	f	class:Boundary_Theory	signature:(int coli, int horizontal_dir, int vertical_dir)
 Boundary_Theory::snake_walking_bulk_col	boundary_theory/boundary_theory.h	/^        void snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Boundary_Theory	access:public	signature:(int coli, int horizontal_dir, int vertical_dir)
 Boundary_Theory::square_layered_peps_	boundary_theory/boundary_theory.h	/^        Double_Layer_PEPSt<TensorT> square_layered_peps_;$/;"	m	class:Boundary_Theory	access:private
+Boundary_Theory::transfer_mat_	boundary_theory/boundary_theory.h	/^        TensorT transfer_mat_;$/;"	m	class:Boundary_Theory	access:private
 C4_symmetrized_tensor	simple_update/simple_update.cc	/^void C4_symmetrized_tensor(IQTensor &site_tensor)$/;"	f	signature:(IQTensor &site_tensor)
 C4_symmetrized_tensor	simple_update/simple_update.h	/^void C4_symmetrized_tensor(IQTensor &site_tensor);$/;"	p	signature:(IQTensor &site_tensor)
 CGTensors	peps_utilities/cgtensor.cc	/^CGTensors::CGTensors(const std::vector<IQIndex> &sz_legs): valid_(false)$/;"	f	class:CGTensors	signature:(const std::vector<IQIndex> &sz_legs)
@@ -107,6 +117,7 @@ CMAKE_BINARY_DIR	build/boundary_theory/Makefile	/^CMAKE_BINARY_DIR = \/home\/jia
 CMAKE_BINARY_DIR	build/execute/Makefile	/^CMAKE_BINARY_DIR = \/home\/jiangsb\/code\/peps_itensor\/build$/;"	m
 CMAKE_BINARY_DIR	build/lattice/Makefile	/^CMAKE_BINARY_DIR = \/home\/jiangsb\/code\/peps_itensor\/build$/;"	m
 CMAKE_BINARY_DIR	build/peps/Makefile	/^CMAKE_BINARY_DIR = \/home\/jiangsb\/code\/peps_itensor\/build$/;"	m
+CMAKE_BINARY_DIR	build/peps_ansatz/Makefile	/^CMAKE_BINARY_DIR = \/home\/jiangsb\/code\/peps_itensor\/build$/;"	m
 CMAKE_BINARY_DIR	build/peps_utilities/Makefile	/^CMAKE_BINARY_DIR = \/home\/jiangsb\/code\/peps_itensor\/build$/;"	m
 CMAKE_BINARY_DIR	build/simple_update/Makefile	/^CMAKE_BINARY_DIR = \/home\/jiangsb\/code\/peps_itensor\/build$/;"	m
 CMAKE_BINARY_DIR	build/test/Makefile	/^CMAKE_BINARY_DIR = \/home\/jiangsb\/code\/peps_itensor\/build$/;"	m
@@ -115,6 +126,7 @@ CMAKE_COMMAND	build/boundary_theory/Makefile	/^CMAKE_COMMAND = \/usr\/public\/cm
 CMAKE_COMMAND	build/execute/Makefile	/^CMAKE_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/lattice/Makefile	/^CMAKE_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/peps/Makefile	/^CMAKE_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/cmake$/;"	m
+CMAKE_COMMAND	build/peps_ansatz/Makefile	/^CMAKE_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/peps_utilities/Makefile	/^CMAKE_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/simple_update/Makefile	/^CMAKE_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/test/Makefile	/^CMAKE_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/cmake$/;"	m
@@ -123,6 +135,7 @@ CMAKE_EDIT_COMMAND	build/boundary_theory/Makefile	/^CMAKE_EDIT_COMMAND = \/usr\/
 CMAKE_EDIT_COMMAND	build/execute/Makefile	/^CMAKE_EDIT_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/ccmake$/;"	m
 CMAKE_EDIT_COMMAND	build/lattice/Makefile	/^CMAKE_EDIT_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/ccmake$/;"	m
 CMAKE_EDIT_COMMAND	build/peps/Makefile	/^CMAKE_EDIT_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/ccmake$/;"	m
+CMAKE_EDIT_COMMAND	build/peps_ansatz/Makefile	/^CMAKE_EDIT_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/ccmake$/;"	m
 CMAKE_EDIT_COMMAND	build/peps_utilities/Makefile	/^CMAKE_EDIT_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/ccmake$/;"	m
 CMAKE_EDIT_COMMAND	build/simple_update/Makefile	/^CMAKE_EDIT_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/ccmake$/;"	m
 CMAKE_EDIT_COMMAND	build/test/Makefile	/^CMAKE_EDIT_COMMAND = \/usr\/public\/cmake\/2.8.9\/bin\/ccmake$/;"	m
@@ -131,6 +144,7 @@ CMAKE_SOURCE_DIR	build/boundary_theory/Makefile	/^CMAKE_SOURCE_DIR = \/home\/jia
 CMAKE_SOURCE_DIR	build/execute/Makefile	/^CMAKE_SOURCE_DIR = \/home\/jiangsb\/code\/peps_itensor$/;"	m
 CMAKE_SOURCE_DIR	build/lattice/Makefile	/^CMAKE_SOURCE_DIR = \/home\/jiangsb\/code\/peps_itensor$/;"	m
 CMAKE_SOURCE_DIR	build/peps/Makefile	/^CMAKE_SOURCE_DIR = \/home\/jiangsb\/code\/peps_itensor$/;"	m
+CMAKE_SOURCE_DIR	build/peps_ansatz/Makefile	/^CMAKE_SOURCE_DIR = \/home\/jiangsb\/code\/peps_itensor$/;"	m
 CMAKE_SOURCE_DIR	build/peps_utilities/Makefile	/^CMAKE_SOURCE_DIR = \/home\/jiangsb\/code\/peps_itensor$/;"	m
 CMAKE_SOURCE_DIR	build/simple_update/Makefile	/^CMAKE_SOURCE_DIR = \/home\/jiangsb\/code\/peps_itensor$/;"	m
 CMAKE_SOURCE_DIR	build/test/Makefile	/^CMAKE_SOURCE_DIR = \/home\/jiangsb\/code\/peps_itensor$/;"	m
@@ -269,10 +283,73 @@ COMPILER_VERSION_TWEAK	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	132;"	d	f
 COMPILER_VERSION_TWEAK	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	20;"	d	file:
 COMPILER_VERSION_TWEAK	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	131;"	d	file:
 COMPILER_VERSION_TWEAK	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	22;"	d	file:
+Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Cylinder_Square_Double_Layer_PEPSt<IQTensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<IQTensor> &square_peps, int cutting_col);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(const PEPSt<IQTensor> &square_peps, int cutting_col)
+Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Cylinder_Square_Double_Layer_PEPSt<ITensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<ITensor> &square_peps, int cutting_col);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(const PEPSt<ITensor> &square_peps, int cutting_col)
+Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Cylinder_Square_Double_Layer_PEPSt<TensorT>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col):$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(const PEPSt<TensorT> &square_peps, int cutting_col)
+Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.h	/^        Cylinder_Square_Double_Layer_PEPSt() {}$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
+Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.h	/^        Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col=-1);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(const PEPSt<TensorT> &square_peps, int cutting_col=-1)
+Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.h	/^class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>$/;"	c	inherits:Double_Layer_PEPSt
+Cylinder_Square_Double_Layer_PEPSt::Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Cylinder_Square_Double_Layer_PEPSt<IQTensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<IQTensor> &square_peps, int cutting_col);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(const PEPSt<IQTensor> &square_peps, int cutting_col)
+Cylinder_Square_Double_Layer_PEPSt::Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Cylinder_Square_Double_Layer_PEPSt<ITensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<ITensor> &square_peps, int cutting_col);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(const PEPSt<ITensor> &square_peps, int cutting_col)
+Cylinder_Square_Double_Layer_PEPSt::Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Cylinder_Square_Double_Layer_PEPSt<TensorT>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col):$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(const PEPSt<TensorT> &square_peps, int cutting_col)
+Cylinder_Square_Double_Layer_PEPSt::Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.h	/^        Cylinder_Square_Double_Layer_PEPSt() {}$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
+Cylinder_Square_Double_Layer_PEPSt::Cylinder_Square_Double_Layer_PEPSt	peps/double_layer_peps.h	/^        Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col=-1);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(const PEPSt<TensorT> &square_peps, int cutting_col=-1)
+Cylinder_Square_Double_Layer_PEPSt::col_lr_	peps/double_layer_peps.h	/^        std::array<int,2> col_lr_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
+Cylinder_Square_Double_Layer_PEPSt::cutting_col_	peps/double_layer_peps.h	/^        int cutting_col_; $/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
+Cylinder_Square_Double_Layer_PEPSt::density_mat_spectrum	peps/double_layer_peps.h	/^        const std::vector<double> &density_mat_spectrum() const { return density_mat_spectrum_; }$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:() const
+Cylinder_Square_Double_Layer_PEPSt::density_mat_spectrum_	peps/double_layer_peps.h	/^        std::vector<double> density_mat_spectrum_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
+Cylinder_Square_Double_Layer_PEPSt::entanglement_entropy_Renyi	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<IQTensor>::entanglement_entropy_Renyi(double renyi_n);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(double renyi_n)
+Cylinder_Square_Double_Layer_PEPSt::entanglement_entropy_Renyi	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<ITensor>::entanglement_entropy_Renyi(double renyi_n);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(double renyi_n)
+Cylinder_Square_Double_Layer_PEPSt::entanglement_entropy_Renyi	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_Renyi(double renyi_n)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(double renyi_n)
+Cylinder_Square_Double_Layer_PEPSt::entanglement_entropy_Renyi	peps/double_layer_peps.h	/^        double entanglement_entropy_Renyi(double renyi_n);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(double renyi_n)
+Cylinder_Square_Double_Layer_PEPSt::entanglement_entropy_vN	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<IQTensor>::entanglement_entropy_vN();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::entanglement_entropy_vN	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<ITensor>::entanglement_entropy_vN();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::entanglement_entropy_vN	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_vN()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+Cylinder_Square_Double_Layer_PEPSt::entanglement_entropy_vN	peps/double_layer_peps.h	/^        double entanglement_entropy_vN();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
+Cylinder_Square_Double_Layer_PEPSt::entanglement_spectrum	peps/double_layer_peps.cc	/^std::vector<double> Cylinder_Square_Double_Layer_PEPSt<IQTensor>::entanglement_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::entanglement_spectrum	peps/double_layer_peps.cc	/^std::vector<double> Cylinder_Square_Double_Layer_PEPSt<ITensor>::entanglement_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::entanglement_spectrum	peps/double_layer_peps.cc	/^std::vector<double> Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_spectrum()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+Cylinder_Square_Double_Layer_PEPSt::entanglement_spectrum	peps/double_layer_peps.h	/^        std::vector<double> entanglement_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
+Cylinder_Square_Double_Layer_PEPSt::from_sigma_lr_to_sigma_b	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::from_sigma_lr_to_sigma_b();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::from_sigma_lr_to_sigma_b	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::from_sigma_lr_to_sigma_b();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::from_sigma_lr_to_sigma_b	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::from_sigma_lr_to_sigma_b()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+Cylinder_Square_Double_Layer_PEPSt::from_sigma_lr_to_sigma_b	peps/double_layer_peps.h	/^        void from_sigma_lr_to_sigma_b();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
+Cylinder_Square_Double_Layer_PEPSt::from_sigma_vec_to_mat	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::from_sigma_vec_to_mat();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::from_sigma_vec_to_mat	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::from_sigma_vec_to_mat();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::from_sigma_vec_to_mat	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::from_sigma_vec_to_mat()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+Cylinder_Square_Double_Layer_PEPSt::from_sigma_vec_to_mat	peps/double_layer_peps.h	/^        void from_sigma_vec_to_mat();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
+Cylinder_Square_Double_Layer_PEPSt::iterative_combiners_	peps/double_layer_peps.h	/^        std::array<std::vector<CombinerT>,2> iterative_combiners_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
+Cylinder_Square_Double_Layer_PEPSt::obtain_boundary_theory_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_boundary_theory_iterative();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::obtain_boundary_theory_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_boundary_theory_iterative();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::obtain_boundary_theory_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_boundary_theory_iterative()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+Cylinder_Square_Double_Layer_PEPSt::obtain_boundary_theory_iterative	peps/double_layer_peps.h	/^        void obtain_boundary_theory_iterative();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
+Cylinder_Square_Double_Layer_PEPSt::obtain_density_matrix_spectrum	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_density_matrix_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::obtain_density_matrix_spectrum	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_density_matrix_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::obtain_density_matrix_spectrum	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_density_matrix_spectrum()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+Cylinder_Square_Double_Layer_PEPSt::obtain_density_matrix_spectrum	peps/double_layer_peps.h	/^        void obtain_density_matrix_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
+Cylinder_Square_Double_Layer_PEPSt::obtain_sigma_lr_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col, bool do_decombine);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int left_end_col, int right_end_col, bool do_decombine)
+Cylinder_Square_Double_Layer_PEPSt::obtain_sigma_lr_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col, bool do_decombine);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int left_end_col, int right_end_col, bool do_decombine)
+Cylinder_Square_Double_Layer_PEPSt::obtain_sigma_lr_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col, bool do_decombine)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(int left_end_col, int right_end_col, bool do_decombine)
+Cylinder_Square_Double_Layer_PEPSt::obtain_sigma_lr_iterative	peps/double_layer_peps.h	/^        void obtain_sigma_lr_iterative(int left_end_col, int right_end_col, bool do_decombine=false);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(int left_end_col, int right_end_col, bool do_decombine=false)
+Cylinder_Square_Double_Layer_PEPSt::obtain_transfer_matrix	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_transfer_matrix(int coli);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int coli)
+Cylinder_Square_Double_Layer_PEPSt::obtain_transfer_matrix	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_transfer_matrix(int coli);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int coli)
+Cylinder_Square_Double_Layer_PEPSt::obtain_transfer_matrix	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_transfer_matrix(int coli)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(int coli)
+Cylinder_Square_Double_Layer_PEPSt::obtain_transfer_matrix	peps/double_layer_peps.h	/^        void obtain_transfer_matrix(int coli=1);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(int coli=1)
+Cylinder_Square_Double_Layer_PEPSt::print_vector_nonzero_elem	peps/double_layer_peps.h	/^        void print_vector_nonzero_elem(TensorT vector, int nonzero_elem_num)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(TensorT vector, int nonzero_elem_num)
+Cylinder_Square_Double_Layer_PEPSt::sigma_b_	peps/double_layer_peps.h	/^        TensorT sigma_b_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
+Cylinder_Square_Double_Layer_PEPSt::sigma_lr	peps/double_layer_peps.h	/^        const std::array<TensorT,2> &sigma_lr() const { return sigma_lr_; }$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:() const
+Cylinder_Square_Double_Layer_PEPSt::sigma_lr_	peps/double_layer_peps.h	/^        std::array<TensorT,2> sigma_lr_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
+Cylinder_Square_Double_Layer_PEPSt::snake_walking_boundary_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::snake_walking_boundary_col();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::snake_walking_boundary_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::snake_walking_boundary_col();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+Cylinder_Square_Double_Layer_PEPSt::snake_walking_boundary_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_boundary_col()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+Cylinder_Square_Double_Layer_PEPSt::snake_walking_boundary_col	peps/double_layer_peps.h	/^        void snake_walking_boundary_col();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
+Cylinder_Square_Double_Layer_PEPSt::snake_walking_bulk_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int coli, int horizontal_dir, int vertical_dir)
+Cylinder_Square_Double_Layer_PEPSt::snake_walking_bulk_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int coli, int horizontal_dir, int vertical_dir)
+Cylinder_Square_Double_Layer_PEPSt::snake_walking_bulk_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(int coli, int horizontal_dir, int vertical_dir)
+Cylinder_Square_Double_Layer_PEPSt::snake_walking_bulk_col	peps/double_layer_peps.h	/^        void snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(int coli, int horizontal_dir, int vertical_dir)
+Cylinder_Square_Double_Layer_PEPSt::transfer_mat_	peps/double_layer_peps.h	/^        TensorT transfer_mat_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
 D	peps/peps.h	/^        int D() const$/;"	f	class:PEPSt	access:public	signature:() const
 D	peps/peps_indexset.h	/^        inline const int &D() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
-DD	peps/double_layer_peps.h	/^        int DD() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
-DD_	peps/double_layer_peps.h	/^        int DD_;$/;"	m	class:Double_Layer_PEPSt	access:private
 DEC	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	296;"	d	file:
 DEC	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	284;"	d	file:
 D_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt	access:private
@@ -283,18 +360,15 @@ Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Double_Layer_PEPSt<TensorT>::Doub
 Double_Layer_PEPSt	peps/double_layer_peps.h	/^        Double_Layer_PEPSt() {}$/;"	f	class:Double_Layer_PEPSt	access:public	signature:()
 Double_Layer_PEPSt	peps/double_layer_peps.h	/^        Double_Layer_PEPSt(const PEPSt<TensorT> &peps);$/;"	p	class:Double_Layer_PEPSt	access:public	signature:(const PEPSt<TensorT> &peps)
 Double_Layer_PEPSt	peps/double_layer_peps.h	/^class Double_Layer_PEPSt$/;"	c
-Double_Layer_PEPSt::DD	peps/double_layer_peps.h	/^        int DD() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
-Double_Layer_PEPSt::DD_	peps/double_layer_peps.h	/^        int DD_;$/;"	m	class:Double_Layer_PEPSt	access:private
 Double_Layer_PEPSt::Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Double_Layer_PEPSt<IQTensor>::Double_Layer_PEPSt(const PEPSt<IQTensor> &peps);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const PEPSt<IQTensor> &peps)
 Double_Layer_PEPSt::Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Double_Layer_PEPSt<ITensor>::Double_Layer_PEPSt(const PEPSt<ITensor> &peps);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const PEPSt<ITensor> &peps)
 Double_Layer_PEPSt::Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Double_Layer_PEPSt<TensorT>::Double_Layer_PEPSt(const PEPSt<TensorT> &peps):$/;"	f	class:Double_Layer_PEPSt	signature:(const PEPSt<TensorT> &peps)
 Double_Layer_PEPSt::Double_Layer_PEPSt	peps/double_layer_peps.h	/^        Double_Layer_PEPSt() {}$/;"	f	class:Double_Layer_PEPSt	access:public	signature:()
 Double_Layer_PEPSt::Double_Layer_PEPSt	peps/double_layer_peps.h	/^        Double_Layer_PEPSt(const PEPSt<TensorT> &peps);$/;"	p	class:Double_Layer_PEPSt	access:public	signature:(const PEPSt<TensorT> &peps)
 Double_Layer_PEPSt::lattice	peps/double_layer_peps.h	/^        const Lattice_Base &lattice() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
-Double_Layer_PEPSt::lattice_	peps/double_layer_peps.h	/^        const Lattice_Base &lattice_;$/;"	m	class:Double_Layer_PEPSt	access:private
 Double_Layer_PEPSt::layered_site_tensors	peps/double_layer_peps.h	/^        const TensorT &layered_site_tensors(int sitei) const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:(int sitei) const
 Double_Layer_PEPSt::layered_site_tensors	peps/double_layer_peps.h	/^        const std::vector<TensorT> &layered_site_tensors() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
-Double_Layer_PEPSt::layered_site_tensors_	peps/double_layer_peps.h	/^        std::vector<TensorT> layered_site_tensors_;$/;"	m	class:Double_Layer_PEPSt	access:private
+Double_Layer_PEPSt::layered_site_tensors_	peps/double_layer_peps.h	/^        std::vector<TensorT> layered_site_tensors_;$/;"	m	class:Double_Layer_PEPSt	access:protected
 Double_Layer_PEPSt::obtain_combined_site_tensors	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<IQTensor>::obtain_combined_site_tensors(const PEPSt<IQTensor> &peps, std::vector<IQTensor> &combined_site_tensors);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const PEPSt<IQTensor> &peps, std::vector<IQTensor> &combined_site_tensors)
 Double_Layer_PEPSt::obtain_combined_site_tensors	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<ITensor>::obtain_combined_site_tensors(const PEPSt<ITensor> &peps, std::vector<ITensor> &combined_site_tensors);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const PEPSt<ITensor> &peps, std::vector<ITensor> &combined_site_tensors)
 Double_Layer_PEPSt::obtain_combined_site_tensors	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<TensorT>::obtain_combined_site_tensors(const PEPSt<TensorT> &peps, std::vector<TensorT> &combined_site_tensors)$/;"	f	class:Double_Layer_PEPSt	signature:(const PEPSt<TensorT> &peps, std::vector<TensorT> &combined_site_tensors)
@@ -303,18 +377,20 @@ Double_Layer_PEPSt::obtain_layered_tensors_with_combined_legs	peps/double_layer_
 Double_Layer_PEPSt::obtain_layered_tensors_with_combined_legs	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<ITensor>::obtain_layered_tensors_with_combined_legs(const std::vector<ITensor> &lower_tensors);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const std::vector<ITensor> &lower_tensors)
 Double_Layer_PEPSt::obtain_layered_tensors_with_combined_legs	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<TensorT>::obtain_layered_tensors_with_combined_legs(const std::vector<TensorT> &lower_tensors)$/;"	f	class:Double_Layer_PEPSt	signature:(const std::vector<TensorT> &lower_tensors)
 Double_Layer_PEPSt::obtain_layered_tensors_with_combined_legs	peps/double_layer_peps.h	/^        void obtain_layered_tensors_with_combined_legs(const std::vector<TensorT> &lower_tensors);$/;"	p	class:Double_Layer_PEPSt	access:public	signature:(const std::vector<TensorT> &lower_tensors)
+Double_Layer_PEPSt::single_layer_peps_	peps/double_layer_peps.h	/^        PEPSt<TensorT> single_layer_peps_;$/;"	m	class:Double_Layer_PEPSt	access:protected
 Double_Layer_PEPSt::virt_leg_combiners	peps/double_layer_peps.h	/^        const CombinerT &virt_leg_combiners(int sitei, int j) const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:(int sitei, int j) const
 Double_Layer_PEPSt::virt_leg_combiners	peps/double_layer_peps.h	/^        const std::vector<CombinerT> &virt_leg_combiners(int sitei) const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:(int sitei) const
 Double_Layer_PEPSt::virt_leg_combiners	peps/double_layer_peps.h	/^        const std::vector<std::vector<CombinerT>> &virt_leg_combiners() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
-Double_Layer_PEPSt::virt_leg_combiners_	peps/double_layer_peps.h	/^        std::vector<std::vector<CombinerT>> virt_leg_combiners_;$/;"	m	class:Double_Layer_PEPSt	access:private
+Double_Layer_PEPSt::virt_leg_combiners_	peps/double_layer_peps.h	/^        std::vector<std::vector<CombinerT>> virt_leg_combiners_;$/;"	m	class:Double_Layer_PEPSt	access:protected
 Down	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
 Down	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
-EPSILON	peps_utilities/predef.h	/^static const double EPSILON=1E-10;$/;"	v
+EPSILON	peps_utilities/predef.h	/^static const double EPSILON=1E-15;$/;"	v
 EQUALS	build/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/boundary_theory/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/execute/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/lattice/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/peps/Makefile	/^EQUALS = =$/;"	m
+EQUALS	build/peps_ansatz/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/peps_utilities/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/simple_update/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/test/Makefile	/^EQUALS = =$/;"	m
@@ -324,6 +400,15 @@ Evolution_Params::steps_nums	simple_update/trotter_gate.h	/^        std::vector<
 Evolution_Params::ts	simple_update/trotter_gate.h	/^        std::vector<double> ts;$/;"	m	struct:Evolution_Params	access:public
 HEX	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	307;"	d	file:
 HEX	build/CMakeFiles/CompilerIdCXX/CMakeCXXCompilerId.cpp	295;"	d	file:
+Honeycomb_Lattice_Torus	lattice/lattice.cc	/^Honeycomb_Lattice_Torus::Honeycomb_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(2,3,n_uc)$/;"	f	class:Honeycomb_Lattice_Torus	signature:(const std::array<int,2> &n_uc)
+Honeycomb_Lattice_Torus	lattice/lattice.h	/^        Honeycomb_Lattice_Torus(const std::array<int,2> &n_uc);$/;"	p	class:Honeycomb_Lattice_Torus	access:public	signature:(const std::array<int,2> &n_uc)
+Honeycomb_Lattice_Torus	lattice/lattice.h	/^class Honeycomb_Lattice_Torus : public Lattice_Base$/;"	c	inherits:Lattice_Base
+Honeycomb_Lattice_Torus::Honeycomb_Lattice_Torus	lattice/lattice.cc	/^Honeycomb_Lattice_Torus::Honeycomb_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(2,3,n_uc)$/;"	f	class:Honeycomb_Lattice_Torus	signature:(const std::array<int,2> &n_uc)
+Honeycomb_Lattice_Torus::Honeycomb_Lattice_Torus	lattice/lattice.h	/^        Honeycomb_Lattice_Torus(const std::array<int,2> &n_uc);$/;"	p	class:Honeycomb_Lattice_Torus	access:public	signature:(const std::array<int,2> &n_uc)
+Honeycomb_Lattice_Torus::NeighA	lattice/lattice.h	/^        enum Neighbour {NeighA=0, NeighB=1, NeighC=2};$/;"	e	enum:Honeycomb_Lattice_Torus::Neighbour
+Honeycomb_Lattice_Torus::NeighB	lattice/lattice.h	/^        enum Neighbour {NeighA=0, NeighB=1, NeighC=2};$/;"	e	enum:Honeycomb_Lattice_Torus::Neighbour
+Honeycomb_Lattice_Torus::NeighC	lattice/lattice.h	/^        enum Neighbour {NeighA=0, NeighB=1, NeighC=2};$/;"	e	enum:Honeycomb_Lattice_Torus::Neighbour
+Honeycomb_Lattice_Torus::Neighbour	lattice/lattice.h	/^        enum Neighbour {NeighA=0, NeighB=1, NeighC=2};$/;"	g	class:Honeycomb_Lattice_Torus	access:public
 ID_VOID_MAIN	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	9;"	d	file:
 IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const Lattice_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const Lattice_Base &lattice)
 IQPEPS_IndexSet_SpinHalf	peps/peps_indexset.cc	/^IQPEPS_IndexSet_SpinHalf::IQPEPS_IndexSet_SpinHalf(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice): $/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:(const int &D, const std::vector<int> &virt_leg_spin, const Lattice_Base &lattice)
@@ -408,7 +493,8 @@ Lattice_Base::n_uc	lattice/lattice.h	/^        inline const std::array<int,2> &n
 Lattice_Base::n_uc_	lattice/lattice.h	/^        std::array<int,2> n_uc_;$/;"	m	class:Lattice_Base	access:protected
 Lattice_Base::name	lattice/lattice.h	/^        const std::string &name() const { return name_; }$/;"	f	class:Lattice_Base	access:public	signature:() const
 Lattice_Base::name_	lattice/lattice.h	/^        std::string name_;$/;"	m	class:Lattice_Base	access:protected
-Lattice_Base::print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf()=0;$/;"	p	class:Lattice_Base	access:public	signature:()
+Lattice_Base::print_lattice_inf	lattice/lattice.cc	/^void Lattice_Base::print_lattice_inf()$/;"	f	class:Lattice_Base	signature:()
+Lattice_Base::print_lattice_inf	lattice/lattice.h	/^        void print_lattice_inf();$/;"	p	class:Lattice_Base	access:public	signature:()
 Lattice_Base::site_coord_to_list	lattice/lattice.h	/^        const int &site_coord_to_list(int x, int y, int subsite) const$/;"	f	class:Lattice_Base	access:public	signature:(int x, int y, int subsite) const
 Lattice_Base::site_coord_to_list	lattice/lattice.h	/^        inline const int &site_coord_to_list(Coordinate site_coord) const$/;"	f	class:Lattice_Base	access:public	signature:(Coordinate site_coord) const
 Lattice_Base::site_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Base	access:protected
@@ -450,8 +536,12 @@ NN_Heisenberg_Trotter_Gate::init_bond_tensor	simple_update/trotter_gate.h	/^    
 NN_Heisenberg_Trotter_Gate::init_bond_tensor	simple_update/trotter_gate.h	/^void NN_Heisenberg_Trotter_Gate::init_bond_tensor()$/;"	f	class:NN_Heisenberg_Trotter_Gate	signature:()
 NN_Heisenberg_Trotter_Gate::init_site_tensors	simple_update/trotter_gate.h	/^        void init_site_tensors();$/;"	p	class:NN_Heisenberg_Trotter_Gate	access:public	signature:()
 NN_Heisenberg_Trotter_Gate::init_site_tensors	simple_update/trotter_gate.h	/^void NN_Heisenberg_Trotter_Gate::init_site_tensors()$/;"	f	class:NN_Heisenberg_Trotter_Gate	signature:()
+NeighA	lattice/lattice.h	/^        enum Neighbour {NeighA=0, NeighB=1, NeighC=2};$/;"	e	enum:Honeycomb_Lattice_Torus::Neighbour
+NeighB	lattice/lattice.h	/^        enum Neighbour {NeighA=0, NeighB=1, NeighC=2};$/;"	e	enum:Honeycomb_Lattice_Torus::Neighbour
+NeighC	lattice/lattice.h	/^        enum Neighbour {NeighA=0, NeighB=1, NeighC=2};$/;"	e	enum:Honeycomb_Lattice_Torus::Neighbour
 Neighbour	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	g	class:Square_Lattice_Cylinder	access:public
 Neighbour	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	g	class:Square_Lattice_Torus	access:public
+Neighbour	lattice/lattice.h	/^        enum Neighbour {NeighA=0, NeighB=1, NeighC=2};$/;"	g	class:Honeycomb_Lattice_Torus	access:public
 PEPS_IndexSet	peps/peps_indexset.cc	/^PEPS_IndexSet::PEPS_IndexSet(const int &d, const int &D, const Lattice_Base &lattice): PEPSt_IndexSet_Base<Index>(d,D,lattice.n_sites_total(),lattice.n_bonds_to_one_site(),lattice.n_boundary_legs())$/;"	f	class:PEPS_IndexSet	signature:(const int &d, const int &D, const Lattice_Base &lattice)
 PEPS_IndexSet	peps/peps_indexset.h	/^        PEPS_IndexSet() {}$/;"	f	class:PEPS_IndexSet	access:public	signature:()
 PEPS_IndexSet	peps/peps_indexset.h	/^        PEPS_IndexSet(const int &d, const int &D, const Lattice_Base &lattice);$/;"	p	class:PEPS_IndexSet	access:public	signature:(const int &d, const int &D, const Lattice_Base &lattice)
@@ -556,9 +646,17 @@ PEPSt_IndexSet_Base::name_	peps/peps_indexset.h	/^        std::string name_;$/;"
 PEPSt_IndexSet_Base::phys_legs	peps/peps_indexset.h	/^        const IndexT &phys_legs(const int &site_i) const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:(const int &site_i) const
 PEPSt_IndexSet_Base::phys_legs	peps/peps_indexset.h	/^        const std::vector<IndexT> &phys_legs() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 PEPSt_IndexSet_Base::phys_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
+PEPSt_IndexSet_Base::read	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<IQIndex>::read(std::istream &s);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(std::istream &s)
+PEPSt_IndexSet_Base::read	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<Index>::read(std::istream &s);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(std::istream &s)
+PEPSt_IndexSet_Base::read	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<IndexT>::read(std::istream &s)$/;"	f	class:PEPSt_IndexSet_Base	signature:(std::istream &s)
+PEPSt_IndexSet_Base::read	peps/peps_indexset.h	/^        void read(std::istream &s);$/;"	p	class:PEPSt_IndexSet_Base	access:public	signature:(std::istream &s)
 PEPSt_IndexSet_Base::virt_legs	peps/peps_indexset.h	/^        const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:(const int &leg_i) const
 PEPSt_IndexSet_Base::virt_legs	peps/peps_indexset.h	/^        const std::vector<IndexT> &virt_legs() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 PEPSt_IndexSet_Base::virt_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
+PEPSt_IndexSet_Base::write	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<IQIndex>::write(std::ostream &s) const;$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(std::ostream &s) const
+PEPSt_IndexSet_Base::write	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<Index>::write(std::ostream &s) const;$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(std::ostream &s) const
+PEPSt_IndexSet_Base::write	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<IndexT>::write(std::ostream &s) const$/;"	f	class:PEPSt_IndexSet_Base	signature:(std::ostream &s) const
+PEPSt_IndexSet_Base::write	peps/peps_indexset.h	/^        void write(std::ostream &s) const;$/;"	p	class:PEPSt_IndexSet_Base	access:public	signature:(std::ostream &s) const
 PLATFORM_ID	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	187;"	d	file:
 PLATFORM_ID	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	190;"	d	file:
 PLATFORM_ID	build/CMakeFiles/CompilerIdC/CMakeCCompilerId.c	193;"	d	file:
@@ -616,6 +714,7 @@ RM	build/boundary_theory/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake
 RM	build/execute/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
 RM	build/lattice/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
 RM	build/peps/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
+RM	build/peps_ansatz/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
 RM	build/peps_utilities/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
 RM	build/simple_update/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
 RM	build/test/Makefile	/^RM = \/usr\/public\/cmake\/2.8.9\/bin\/cmake -E remove -f$/;"	m
@@ -627,6 +726,7 @@ SHELL	build/boundary_theory/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/execute/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/lattice/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/peps/Makefile	/^SHELL = \/bin\/sh$/;"	m
+SHELL	build/peps_ansatz/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/peps_utilities/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/simple_update/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/test/Makefile	/^SHELL = \/bin\/sh$/;"	m
@@ -635,6 +735,7 @@ SUFFIXES	build/boundary_theory/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/execute/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/lattice/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/peps/Makefile	/^SUFFIXES =$/;"	m
+SUFFIXES	build/peps_ansatz/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/peps_utilities/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/simple_update/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/test/Makefile	/^SUFFIXES =$/;"	m
@@ -710,8 +811,6 @@ Square_Lattice_Cylinder::Right	lattice/lattice.h	/^        enum Neighbour {Left=
 Square_Lattice_Cylinder::Square_Lattice_Cylinder	lattice/lattice.cc	/^Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc,n_uc[1]*2)$/;"	f	class:Square_Lattice_Cylinder	signature:(const std::array<int,2> &n_uc)
 Square_Lattice_Cylinder::Square_Lattice_Cylinder	lattice/lattice.h	/^        Square_Lattice_Cylinder(const std::array<int,2> &n_uc);$/;"	p	class:Square_Lattice_Cylinder	access:public	signature:(const std::array<int,2> &n_uc)
 Square_Lattice_Cylinder::Up	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Cylinder::Neighbour
-Square_Lattice_Cylinder::print_lattice_inf	lattice/lattice.cc	/^void Square_Lattice_Cylinder::print_lattice_inf()$/;"	f	class:Square_Lattice_Cylinder	signature:()
-Square_Lattice_Cylinder::print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf();$/;"	p	class:Square_Lattice_Cylinder	access:public	signature:()
 Square_Lattice_Torus	lattice/lattice.cc	/^Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc)$/;"	f	class:Square_Lattice_Torus	signature:(const std::array<int,2> &n_uc)
 Square_Lattice_Torus	lattice/lattice.h	/^        Square_Lattice_Torus(const std::array<int,2> &n_uc);$/;"	p	class:Square_Lattice_Torus	access:public	signature:(const std::array<int,2> &n_uc)
 Square_Lattice_Torus	lattice/lattice.h	/^class Square_Lattice_Torus : public Lattice_Base$/;"	c	inherits:Lattice_Base
@@ -748,12 +847,14 @@ VERBOSE	build/boundary_theory/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/execute/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/lattice/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/peps/Makefile	/^VERBOSE = 1$/;"	m
+VERBOSE	build/peps_ansatz/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/peps_utilities/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/simple_update/Makefile	/^VERBOSE = 1$/;"	m
 VERBOSE	build/test/Makefile	/^VERBOSE = 1$/;"	m
 _BOUNDARY_THEORY_	boundary_theory/boundary_theory.h	3;"	d
 _CGTENSOR_H_	peps_utilities/cgtensor.h	5;"	d
 _DOUBLE_LAYER_PEPS_	peps/double_layer_peps.h	3;"	d
+_FEATURELESS_HONEYCOMB_H_	peps_ansatz/featureless_honeycomb.h	3;"	d
 _LATTICE_H_	lattice/lattice.h	3;"	d
 _PEPS_CLASS_PARAMS_H_	peps_utilities/peps_class_params.h	3;"	d
 _PEPS_H_	peps/peps.h	3;"	d
@@ -762,6 +863,7 @@ _PREDEF_H_	peps_utilities/predef.h	3;"	d
 _SIMPLE_UPDATE_ENV_H_	simple_update/simple_update_env.h	3;"	d
 _SIMPLE_UPDATE_H_	simple_update/simple_update.h	3;"	d
 _SINGLET_TENSOR_BASIS_	peps_utilities/singlet_tensor_basis.h	3;"	d
+_TRANSFER_TO_SQUARE_	peps_ansatz/transfer_to_square.h	5;"	d
 _TROTTER_H_	simple_update/trotter_gate.h	3;"	d
 _UTILITIES_H_	peps_utilities/utilities.h	3;"	d
 basis_label	peps_utilities/utilities.h	/^        const std::array<int,3> &basis_label() const$/;"	f	class:Spin_Basis	access:public	signature:() const
@@ -797,11 +899,13 @@ chi_T	peps_utilities/peps_class_params.h	/^    static const double chi_T=1;$/;"	
 chi_c4	peps_utilities/peps_class_params.h	/^    static const double chi_c4=1;$/;"	m	namespace:Square
 clean	peps_utilities/utilities.h	/^inline void clean(IQTensor &tensor) {return tensor.clean(); }$/;"	f	signature:(IQTensor &tensor)
 clean	peps_utilities/utilities.h	/^inline void clean(ITensor &tensor) {}$/;"	f	signature:(ITensor &tensor)
+col_lr_	peps/double_layer_peps.h	/^        std::array<int,2> col_lr_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
 comm_bond	lattice/lattice.h	/^        int comm_bond(int site_A, int site_B) const$/;"	f	class:Lattice_Base	access:public	signature:(int site_A, int site_B) const
 construct_tensor	peps/peps.cc	/^void PEPSt<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)$/;"	f	class:PEPSt	signature:(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)
 construct_tensor	peps/peps.cc	/^void PEPSt<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)$/;"	f	class:PEPSt	signature:(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)
 construct_tensor	peps/peps.h	/^        void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);$/;"	p	class:PEPSt	access:public	signature:(TensorT &tensor, std::vector<IndexT> &indexset)
 cutting_col_	boundary_theory/boundary_theory.h	/^        int n_rows_, n_cols_, cutting_col_;$/;"	m	class:Boundary_Theory	access:private
+cutting_col_	peps/double_layer_peps.h	/^        int cutting_col_; $/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
 d	peps/peps.h	/^        int d() const$/;"	f	class:PEPSt	access:public	signature:() const
 d	peps/peps_indexset.h	/^        inline const int &d() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 d_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt	access:private
@@ -810,7 +914,9 @@ dag	peps_utilities/cgtensor.h	/^        IndexSpin &dag() { sz_legs_.dag(); retur
 deg_configs	peps_utilities/singlet_tensor_basis.h	/^        const std::vector<int> &deg_configs(int i) const { return deg_configs_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
 deg_configs_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<std::vector<int>> deg_configs_;$/;"	m	class:Singlet_Tensor_Basis	access:private
 density_mat_spectrum	boundary_theory/boundary_theory.h	/^        const std::vector<double> &density_mat_spectrum() const { return density_mat_spectrum_; }$/;"	f	class:Boundary_Theory	access:public	signature:() const
+density_mat_spectrum	peps/double_layer_peps.h	/^        const std::vector<double> &density_mat_spectrum() const { return density_mat_spectrum_; }$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:() const
 density_mat_spectrum_	boundary_theory/boundary_theory.h	/^        std::vector<double> density_mat_spectrum_;$/;"	m	class:Boundary_Theory	access:private
+density_mat_spectrum_	peps/double_layer_peps.h	/^        std::vector<double> density_mat_spectrum_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
 dim	peps_utilities/singlet_tensor_basis.h	/^        const int dim() const { return singlet_tensors_.size(); }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
 dir	peps_utilities/cgtensor.h	/^        Arrow dir() const { return sz_legs_.dir(); }$/;"	f	class:IndexSpin	access:public	signature:() const
 end	peps_utilities/singlet_tensor_basis.h	/^        const_iterator end() const { return singlet_tensors_.end(); }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
@@ -818,14 +924,26 @@ entanglement_entropy_Renyi	boundary_theory/boundary_theory.cc	/^double Boundary_
 entanglement_entropy_Renyi	boundary_theory/boundary_theory.cc	/^double Boundary_Theory<ITensor>::entanglement_entropy_Renyi(double renyi_n);$/;"	p	class:Boundary_Theory	file:	signature:(double renyi_n)
 entanglement_entropy_Renyi	boundary_theory/boundary_theory.cc	/^double Boundary_Theory<TensorT>::entanglement_entropy_Renyi(double renyi_n)$/;"	f	class:Boundary_Theory	signature:(double renyi_n)
 entanglement_entropy_Renyi	boundary_theory/boundary_theory.h	/^        double entanglement_entropy_Renyi(double renyi_n);$/;"	p	class:Boundary_Theory	access:public	signature:(double renyi_n)
+entanglement_entropy_Renyi	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<IQTensor>::entanglement_entropy_Renyi(double renyi_n);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(double renyi_n)
+entanglement_entropy_Renyi	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<ITensor>::entanglement_entropy_Renyi(double renyi_n);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(double renyi_n)
+entanglement_entropy_Renyi	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_Renyi(double renyi_n)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(double renyi_n)
+entanglement_entropy_Renyi	peps/double_layer_peps.h	/^        double entanglement_entropy_Renyi(double renyi_n);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(double renyi_n)
 entanglement_entropy_vN	boundary_theory/boundary_theory.cc	/^double Boundary_Theory<IQTensor>::entanglement_entropy_vN();$/;"	p	class:Boundary_Theory	file:	signature:()
 entanglement_entropy_vN	boundary_theory/boundary_theory.cc	/^double Boundary_Theory<ITensor>::entanglement_entropy_vN();$/;"	p	class:Boundary_Theory	file:	signature:()
 entanglement_entropy_vN	boundary_theory/boundary_theory.cc	/^double Boundary_Theory<TensorT>::entanglement_entropy_vN()$/;"	f	class:Boundary_Theory	signature:()
 entanglement_entropy_vN	boundary_theory/boundary_theory.h	/^        double entanglement_entropy_vN();$/;"	p	class:Boundary_Theory	access:public	signature:()
+entanglement_entropy_vN	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<IQTensor>::entanglement_entropy_vN();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+entanglement_entropy_vN	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<ITensor>::entanglement_entropy_vN();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+entanglement_entropy_vN	peps/double_layer_peps.cc	/^double Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_vN()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+entanglement_entropy_vN	peps/double_layer_peps.h	/^        double entanglement_entropy_vN();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
 entanglement_spectrum	boundary_theory/boundary_theory.cc	/^std::vector<double> Boundary_Theory<IQTensor>::entanglement_spectrum();$/;"	p	class:Boundary_Theory	file:	signature:()
 entanglement_spectrum	boundary_theory/boundary_theory.cc	/^std::vector<double> Boundary_Theory<ITensor>::entanglement_spectrum();$/;"	p	class:Boundary_Theory	file:	signature:()
 entanglement_spectrum	boundary_theory/boundary_theory.cc	/^std::vector<double> Boundary_Theory<TensorT>::entanglement_spectrum()$/;"	f	class:Boundary_Theory	signature:()
 entanglement_spectrum	boundary_theory/boundary_theory.h	/^        std::vector<double> entanglement_spectrum();$/;"	p	class:Boundary_Theory	access:public	signature:()
+entanglement_spectrum	peps/double_layer_peps.cc	/^std::vector<double> Cylinder_Square_Double_Layer_PEPSt<IQTensor>::entanglement_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+entanglement_spectrum	peps/double_layer_peps.cc	/^std::vector<double> Cylinder_Square_Double_Layer_PEPSt<ITensor>::entanglement_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+entanglement_spectrum	peps/double_layer_peps.cc	/^std::vector<double> Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_spectrum()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+entanglement_spectrum	peps/double_layer_peps.h	/^        std::vector<double> entanglement_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
 eta_from_mu	peps_utilities/utilities.cc	/^IQTensor eta_from_mu(double mu, IQIndex eta_leg)$/;"	f	signature:(double mu, IQIndex eta_leg)
 eta_from_mu	peps_utilities/utilities.cc	/^IQTensor eta_from_mu(double mu, const std::vector<int> &spin_deg)$/;"	f	signature:(double mu, const std::vector<int> &spin_deg)
 eta_from_mu	peps_utilities/utilities.cc	/^ITensor eta_from_mu(double mu, Index eta_leg)$/;"	f	signature:(double mu, Index eta_leg)
@@ -836,14 +954,23 @@ from_sigma_lr_to_sigma_b	boundary_theory/boundary_theory.cc	/^void Boundary_Theo
 from_sigma_lr_to_sigma_b	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::from_sigma_lr_to_sigma_b();$/;"	p	class:Boundary_Theory	file:	signature:()
 from_sigma_lr_to_sigma_b	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::from_sigma_lr_to_sigma_b()$/;"	f	class:Boundary_Theory	signature:()
 from_sigma_lr_to_sigma_b	boundary_theory/boundary_theory.h	/^        void from_sigma_lr_to_sigma_b();$/;"	p	class:Boundary_Theory	access:public	signature:()
+from_sigma_lr_to_sigma_b	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::from_sigma_lr_to_sigma_b();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+from_sigma_lr_to_sigma_b	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::from_sigma_lr_to_sigma_b();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+from_sigma_lr_to_sigma_b	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::from_sigma_lr_to_sigma_b()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+from_sigma_lr_to_sigma_b	peps/double_layer_peps.h	/^        void from_sigma_lr_to_sigma_b();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
 from_sigma_vec_to_mat	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<IQTensor>::from_sigma_vec_to_mat();$/;"	p	class:Boundary_Theory	file:	signature:()
 from_sigma_vec_to_mat	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::from_sigma_vec_to_mat();$/;"	p	class:Boundary_Theory	file:	signature:()
 from_sigma_vec_to_mat	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::from_sigma_vec_to_mat()$/;"	f	class:Boundary_Theory	signature:()
 from_sigma_vec_to_mat	boundary_theory/boundary_theory.h	/^        void from_sigma_vec_to_mat();$/;"	p	class:Boundary_Theory	access:public	signature:()
+from_sigma_vec_to_mat	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::from_sigma_vec_to_mat();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+from_sigma_vec_to_mat	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::from_sigma_vec_to_mat();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+from_sigma_vec_to_mat	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::from_sigma_vec_to_mat()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+from_sigma_vec_to_mat	peps/double_layer_peps.h	/^        void from_sigma_vec_to_mat();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
 fusion_channel	peps_utilities/singlet_tensor_basis.h	/^        int fusion_channel(int i) const { return fusion_channel_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
 fusion_channel_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<int> fusion_channel_;$/;"	m	class:Singlet_Tensor_Basis	access:private
 generate_bond_tensors	peps/peps.cc	/^void PEPSt<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc)$/;"	f	class:PEPSt	signature:(std::vector<TensorT> bond_tensors_uc)
 generate_bond_tensors	peps/peps.h	/^        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc);$/;"	p	class:PEPSt	access:public	signature:(std::vector<TensorT> bond_tensors_uc)
+generate_featureless_honeycomb_ansatz_uc	peps_ansatz/featureless_honeycomb.h	/^inline void generate_featureless_honeycomb_ansatz_uc(double A1, double A2, std::vector<IQTensor> &honeycomb_site_tensors_uc, std::vector<IQTensor> &honeycomb_bond_tensors_uc)$/;"	f	signature:(double A1, double A2, std::vector<IQTensor> &honeycomb_site_tensors_uc, std::vector<IQTensor> &honeycomb_bond_tensors_uc)
 generate_site_tensors	peps/peps.cc	/^void PEPSt<IQTensor>::generate_site_tensors(std::vector<IQTensor> site_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(std::vector<IQTensor> site_tensors_uc)
 generate_site_tensors	peps/peps.cc	/^void PEPSt<ITensor>::generate_site_tensors(std::vector<ITensor> site_tensors_uc);$/;"	p	class:PEPSt	file:	signature:(std::vector<ITensor> site_tensors_uc)
 generate_site_tensors	peps/peps.cc	/^void PEPSt<TensorT>::generate_site_tensors(std::vector<TensorT> site_tensors_uc)$/;"	f	class:PEPSt	signature:(std::vector<TensorT> site_tensors_uc)
@@ -904,13 +1031,13 @@ isomorphic_legs	peps_utilities/utilities.h	/^IQIndex isomorphic_legs(const IQInd
 isomorphic_legs	peps_utilities/utilities.h	/^Index isomorphic_legs(const Index &old_leg, const std::string &new_leg_name);$/;"	p	signature:(const Index &old_leg, const std::string &new_leg_name)
 iter_nums	simple_update/trotter_gate.h	/^        int iter_nums;$/;"	m	struct:Evolution_Params	access:public
 iterative_combiners_	boundary_theory/boundary_theory.h	/^        std::array<std::vector<CombinerT>,2> iterative_combiners_;$/;"	m	class:Boundary_Theory	access:private
+iterative_combiners_	peps/double_layer_peps.h	/^        std::array<std::vector<CombinerT>,2> iterative_combiners_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
 lattice	peps/double_layer_peps.h	/^        const Lattice_Base &lattice() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
 lattice	peps/peps.h	/^        inline const Lattice_Base &lattice() const$/;"	f	class:PEPSt	access:public	signature:() const
-lattice_	peps/double_layer_peps.h	/^        const Lattice_Base &lattice_;$/;"	m	class:Double_Layer_PEPSt	access:private
 lattice_	peps/peps.h	/^        const Lattice_Base &lattice_;$/;"	m	class:PEPSt	access:private
 layered_site_tensors	peps/double_layer_peps.h	/^        const TensorT &layered_site_tensors(int sitei) const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:(int sitei) const
 layered_site_tensors	peps/double_layer_peps.h	/^        const std::vector<TensorT> &layered_site_tensors() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
-layered_site_tensors_	peps/double_layer_peps.h	/^        std::vector<TensorT> layered_site_tensors_;$/;"	m	class:Double_Layer_PEPSt	access:private
+layered_site_tensors_	peps/double_layer_peps.h	/^        std::vector<TensorT> layered_site_tensors_;$/;"	m	class:Double_Layer_PEPSt	access:protected
 left_leg_of_combiners	peps_utilities/utilities.h	/^inline IQIndex left_leg_of_combiners(const IQCombiner &combiner, int i) { return combiner.left()[i]; }$/;"	f	signature:(const IQCombiner &combiner, int i)
 left_leg_of_combiners	peps_utilities/utilities.h	/^inline Index left_leg_of_combiners(const Combiner &combiner, int i) { return combiner.left(i); }$/;"	f	signature:(const Combiner &combiner, int i)
 leg	peps_utilities/cgtensor.h	/^        const IQIndex &leg() const { return sz_legs_; }$/;"	f	class:IndexSpin	access:public	signature:() const
@@ -984,6 +1111,10 @@ obtain_boundary_theory_iterative	boundary_theory/boundary_theory.cc	/^void Bound
 obtain_boundary_theory_iterative	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::obtain_boundary_theory_iterative();$/;"	p	class:Boundary_Theory	file:	signature:()
 obtain_boundary_theory_iterative	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::obtain_boundary_theory_iterative()$/;"	f	class:Boundary_Theory	signature:()
 obtain_boundary_theory_iterative	boundary_theory/boundary_theory.h	/^        void obtain_boundary_theory_iterative();$/;"	p	class:Boundary_Theory	access:public	signature:()
+obtain_boundary_theory_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_boundary_theory_iterative();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+obtain_boundary_theory_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_boundary_theory_iterative();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+obtain_boundary_theory_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_boundary_theory_iterative()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+obtain_boundary_theory_iterative	peps/double_layer_peps.h	/^        void obtain_boundary_theory_iterative();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
 obtain_combined_site_tensors	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<IQTensor>::obtain_combined_site_tensors(const PEPSt<IQTensor> &peps, std::vector<IQTensor> &combined_site_tensors);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const PEPSt<IQTensor> &peps, std::vector<IQTensor> &combined_site_tensors)
 obtain_combined_site_tensors	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<ITensor>::obtain_combined_site_tensors(const PEPSt<ITensor> &peps, std::vector<ITensor> &combined_site_tensors);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const PEPSt<ITensor> &peps, std::vector<ITensor> &combined_site_tensors)
 obtain_combined_site_tensors	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<TensorT>::obtain_combined_site_tensors(const PEPSt<TensorT> &peps, std::vector<TensorT> &combined_site_tensors)$/;"	f	class:Double_Layer_PEPSt	signature:(const PEPSt<TensorT> &peps, std::vector<TensorT> &combined_site_tensors)
@@ -992,16 +1123,36 @@ obtain_density_matrix_spectrum	boundary_theory/boundary_theory.cc	/^void Boundar
 obtain_density_matrix_spectrum	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::obtain_density_matrix_spectrum();$/;"	p	class:Boundary_Theory	file:	signature:()
 obtain_density_matrix_spectrum	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::obtain_density_matrix_spectrum()$/;"	f	class:Boundary_Theory	signature:()
 obtain_density_matrix_spectrum	boundary_theory/boundary_theory.h	/^        void obtain_density_matrix_spectrum();$/;"	p	class:Boundary_Theory	access:public	signature:()
+obtain_density_matrix_spectrum	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_density_matrix_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+obtain_density_matrix_spectrum	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_density_matrix_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+obtain_density_matrix_spectrum	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_density_matrix_spectrum()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+obtain_density_matrix_spectrum	peps/double_layer_peps.h	/^        void obtain_density_matrix_spectrum();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
 obtain_layered_tensors_with_combined_legs	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<IQTensor>::obtain_layered_tensors_with_combined_legs(const std::vector<IQTensor> &lower_tensors);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const std::vector<IQTensor> &lower_tensors)
 obtain_layered_tensors_with_combined_legs	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<ITensor>::obtain_layered_tensors_with_combined_legs(const std::vector<ITensor> &lower_tensors);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const std::vector<ITensor> &lower_tensors)
 obtain_layered_tensors_with_combined_legs	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<TensorT>::obtain_layered_tensors_with_combined_legs(const std::vector<TensorT> &lower_tensors)$/;"	f	class:Double_Layer_PEPSt	signature:(const std::vector<TensorT> &lower_tensors)
 obtain_layered_tensors_with_combined_legs	peps/double_layer_peps.h	/^        void obtain_layered_tensors_with_combined_legs(const std::vector<TensorT> &lower_tensors);$/;"	p	class:Double_Layer_PEPSt	access:public	signature:(const std::vector<TensorT> &lower_tensors)
+obtain_sigma_lr_iterative	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<IQTensor>::obtain_sigma_lr_iterative(int left_cols, int right_cols);$/;"	p	class:Boundary_Theory	file:	signature:(int left_cols, int right_cols)
+obtain_sigma_lr_iterative	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::obtain_sigma_lr_iterative(int left_cols, int right_cols);$/;"	p	class:Boundary_Theory	file:	signature:(int left_cols, int right_cols)
+obtain_sigma_lr_iterative	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::obtain_sigma_lr_iterative(int left_cols, int right_cols)$/;"	f	class:Boundary_Theory	signature:(int left_cols, int right_cols)
+obtain_sigma_lr_iterative	boundary_theory/boundary_theory.h	/^        void obtain_sigma_lr_iterative(int left_cols, int right_cols);$/;"	p	class:Boundary_Theory	access:public	signature:(int left_cols, int right_cols)
+obtain_sigma_lr_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col, bool do_decombine);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int left_end_col, int right_end_col, bool do_decombine)
+obtain_sigma_lr_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col, bool do_decombine);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int left_end_col, int right_end_col, bool do_decombine)
+obtain_sigma_lr_iterative	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col, bool do_decombine)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(int left_end_col, int right_end_col, bool do_decombine)
+obtain_sigma_lr_iterative	peps/double_layer_peps.h	/^        void obtain_sigma_lr_iterative(int left_end_col, int right_end_col, bool do_decombine=false);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(int left_end_col, int right_end_col, bool do_decombine=false)
 obtain_singlet_tensor_params	peps_utilities/singlet_tensor_basis.cc	/^void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params)$/;"	f	signature:(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params)
 obtain_singlet_tensor_params	peps_utilities/singlet_tensor_basis.cc	/^void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params)$/;"	f	signature:(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params)
 obtain_singlet_tensor_params	peps_utilities/singlet_tensor_basis.h	/^void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params);$/;"	p	signature:(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params)
 obtain_singlet_tensor_params	peps_utilities/singlet_tensor_basis.h	/^void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params);$/;"	p	signature:(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<double> &params)
 obtain_spin_sym_leg_gates_params	simple_update/simple_update.cc	/^void obtain_spin_sym_leg_gates_params(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &evolve_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)$/;"	f	signature:(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &evolve_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
 obtain_spin_sym_leg_gates_params	simple_update/simple_update.h	/^void obtain_spin_sym_leg_gates_params(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);$/;"	p	signature:(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
+obtain_transfer_matrix	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<IQTensor>::obtain_transfer_matrix(int coli);$/;"	p	class:Boundary_Theory	file:	signature:(int coli)
+obtain_transfer_matrix	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::obtain_transfer_matrix(int coli);$/;"	p	class:Boundary_Theory	file:	signature:(int coli)
+obtain_transfer_matrix	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::obtain_transfer_matrix(int coli)$/;"	f	class:Boundary_Theory	signature:(int coli)
+obtain_transfer_matrix	boundary_theory/boundary_theory.h	/^        void obtain_transfer_matrix(int coli=1);$/;"	p	class:Boundary_Theory	access:public	signature:(int coli=1)
+obtain_transfer_matrix	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_transfer_matrix(int coli);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int coli)
+obtain_transfer_matrix	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_transfer_matrix(int coli);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int coli)
+obtain_transfer_matrix	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_transfer_matrix(int coli)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(int coli)
+obtain_transfer_matrix	peps/double_layer_peps.h	/^        void obtain_transfer_matrix(int coli=1);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(int coli=1)
 operator ()	peps_utilities/cgtensor.h	/^        IQIndexVal operator()(int n) const$/;"	f	class:IndexSpin	access:public	signature:(int n) const
 operator ()	peps_utilities/singlet_tensor_basis.h	/^        const IQTensor &operator()(int i) const { return singlet_tensors_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
 operator <<	peps_utilities/cgtensor.h	/^inline std::ostream &operator<<(std::ostream &s, const CGTensors &cg_tensors)$/;"	f	signature:(std::ostream &s, const CGTensors &cg_tensors)
@@ -1018,15 +1169,24 @@ phys_legs	peps/peps_indexset.h	/^        const std::vector<IndexT> &phys_legs() 
 phys_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
 phys_legs_	simple_update/trotter_gate.h	/^        std::array<std::array<IQIndex,2>,2> phys_legs_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
 phys_legs_	simple_update/trotter_gate.h	/^        std::vector<std::array<IQIndex,2>> phys_legs_;$/;"	m	class:Trotter_Gate	access:protected
-print_lattice_inf	lattice/lattice.cc	/^void Square_Lattice_Cylinder::print_lattice_inf()$/;"	f	class:Square_Lattice_Cylinder	signature:()
+print_lattice_inf	lattice/lattice.cc	/^void Lattice_Base::print_lattice_inf()$/;"	f	class:Lattice_Base	signature:()
 print_lattice_inf	lattice/lattice.cc	/^void Square_Lattice_Torus::print_lattice_inf()$/;"	f	class:Square_Lattice_Torus	signature:()
-print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf();$/;"	p	class:Square_Lattice_Cylinder	access:public	signature:()
 print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf();$/;"	p	class:Square_Lattice_Torus	access:public	signature:()
-print_lattice_inf	lattice/lattice.h	/^        virtual void print_lattice_inf()=0;$/;"	p	class:Lattice_Base	access:public	signature:()
+print_lattice_inf	lattice/lattice.h	/^        void print_lattice_inf();$/;"	p	class:Lattice_Base	access:public	signature:()
+print_vector_nonzero_elem	peps/double_layer_peps.h	/^        void print_vector_nonzero_elem(TensorT vector, int nonzero_elem_num)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(TensorT vector, int nonzero_elem_num)
 randomize_spin_sym_square_peps	peps/peps.cc	/^void randomize_spin_sym_square_peps(IQPEPS &spin_peps)$/;"	f	signature:(IQPEPS &spin_peps)
 randomize_spin_sym_square_peps	peps/peps.h	/^void randomize_spin_sym_square_peps(IQPEPS &square_peps);$/;"	p	signature:(IQPEPS &square_peps)
+read	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<IQIndex>::read(std::istream &s);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(std::istream &s)
+read	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<Index>::read(std::istream &s);$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(std::istream &s)
+read	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<IndexT>::read(std::istream &s)$/;"	f	class:PEPSt_IndexSet_Base	signature:(std::istream &s)
+read	peps/peps_indexset.h	/^        void read(std::istream &s);$/;"	p	class:PEPSt_IndexSet_Base	access:public	signature:(std::istream &s)
 sigma_b_	boundary_theory/boundary_theory.h	/^        TensorT sigma_b_;$/;"	m	class:Boundary_Theory	access:private
+sigma_b_	peps/double_layer_peps.h	/^        TensorT sigma_b_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
+sigma_lr	boundary_theory/boundary_theory.h	/^        const std::array<TensorT,2> &sigma_lr() const { return sigma_lr_; }$/;"	f	class:Boundary_Theory	access:public	signature:() const
+sigma_lr	peps/double_layer_peps.h	/^        const std::array<TensorT,2> &sigma_lr() const { return sigma_lr_; }$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:() const
 sigma_lr_	boundary_theory/boundary_theory.h	/^        std::array<TensorT,2> sigma_lr_;$/;"	m	class:Boundary_Theory	access:private
+sigma_lr_	peps/double_layer_peps.h	/^        std::array<TensorT,2> sigma_lr_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
+single_layer_peps_	peps/double_layer_peps.h	/^        PEPSt<TensorT> single_layer_peps_;$/;"	m	class:Double_Layer_PEPSt	access:protected
 singlet_tensor_from_basis_params	peps_utilities/singlet_tensor_basis.cc	/^IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const arma::Col<double> &params)$/;"	f	signature:(const Singlet_Tensor_Basis &tensor_basis, const arma::Col<double> &params)
 singlet_tensor_from_basis_params	peps_utilities/singlet_tensor_basis.cc	/^IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<Complex> &params)$/;"	f	signature:(const Singlet_Tensor_Basis &tensor_basis, const std::vector<Complex> &params)
 singlet_tensor_from_basis_params	peps_utilities/singlet_tensor_basis.cc	/^IQTensor singlet_tensor_from_basis_params(const Singlet_Tensor_Basis &tensor_basis, const std::vector<double> &params)$/;"	f	signature:(const Singlet_Tensor_Basis &tensor_basis, const std::vector<double> &params)
@@ -1061,10 +1221,18 @@ snake_walking_boundary_col	boundary_theory/boundary_theory.cc	/^void Boundary_Th
 snake_walking_boundary_col	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::snake_walking_boundary_col();$/;"	p	class:Boundary_Theory	file:	signature:()
 snake_walking_boundary_col	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::snake_walking_boundary_col()$/;"	f	class:Boundary_Theory	signature:()
 snake_walking_boundary_col	boundary_theory/boundary_theory.h	/^        void snake_walking_boundary_col();$/;"	p	class:Boundary_Theory	access:public	signature:()
+snake_walking_boundary_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::snake_walking_boundary_col();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+snake_walking_boundary_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::snake_walking_boundary_col();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:()
+snake_walking_boundary_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_boundary_col()$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:()
+snake_walking_boundary_col	peps/double_layer_peps.h	/^        void snake_walking_boundary_col();$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:()
 snake_walking_bulk_col	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<IQTensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Boundary_Theory	file:	signature:(int coli, int horizontal_dir, int vertical_dir)
 snake_walking_bulk_col	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<ITensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Boundary_Theory	file:	signature:(int coli, int horizontal_dir, int vertical_dir)
 snake_walking_bulk_col	boundary_theory/boundary_theory.cc	/^void Boundary_Theory<TensorT>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir)$/;"	f	class:Boundary_Theory	signature:(int coli, int horizontal_dir, int vertical_dir)
 snake_walking_bulk_col	boundary_theory/boundary_theory.h	/^        void snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Boundary_Theory	access:public	signature:(int coli, int horizontal_dir, int vertical_dir)
+snake_walking_bulk_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int coli, int horizontal_dir, int vertical_dir)
+snake_walking_bulk_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<ITensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	file:	signature:(int coli, int horizontal_dir, int vertical_dir)
+snake_walking_bulk_col	peps/double_layer_peps.cc	/^void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir)$/;"	f	class:Cylinder_Square_Double_Layer_PEPSt	signature:(int coli, int horizontal_dir, int vertical_dir)
+snake_walking_bulk_col	peps/double_layer_peps.h	/^        void snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);$/;"	p	class:Cylinder_Square_Double_Layer_PEPSt	access:public	signature:(int coli, int horizontal_dir, int vertical_dir)
 spin_	peps_utilities/cgtensor.h	/^        int spin_;$/;"	m	class:IndexSpin	access:private
 spin_configs	peps_utilities/singlet_tensor_basis.h	/^        const std::vector<int> &spin_configs(int i) const { return spin_configs_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
 spin_configs_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<std::vector<int>> spin_configs_;$/;"	m	class:Singlet_Tensor_Basis	access:private
@@ -1076,6 +1244,8 @@ spin_legs_	peps_utilities/cgtensor.h	/^        std::vector<IndexSpin> spin_legs_
 spin_qn	peps_utilities/cgtensor.h	/^        int spin_qn() const { return spin_; }$/;"	f	class:IndexSpin	access:public	signature:() const
 spin_square_peps_simple_update	simple_update/simple_update.cc	/^void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params)$/;"	f	signature:(IQPEPS &square_peps, const Evolution_Params &square_su_params)
 spin_square_peps_simple_update	simple_update/simple_update.h	/^void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params);$/;"	p	signature:(IQPEPS &square_peps, const Evolution_Params &square_su_params)
+spin_sym_square_peps_from_honeycomb_tensor_uc	peps_ansatz/transfer_to_square.cc	/^IQPEPS spin_sym_square_peps_from_honeycomb_tensor_uc(const std::vector<IQTensor> &honeycomb_site_tensors_uc, const std::vector<IQTensor> &honeycomb_bond_tensors_uc, const Lattice_Base &square_lattice)$/;"	f	signature:(const std::vector<IQTensor> &honeycomb_site_tensors_uc, const std::vector<IQTensor> &honeycomb_bond_tensors_uc, const Lattice_Base &square_lattice)
+spin_sym_square_peps_from_honeycomb_tensor_uc	peps_ansatz/transfer_to_square.h	/^IQPEPS spin_sym_square_peps_from_honeycomb_tensor_uc(const std::vector<IQTensor> &honeycomb_site_tensors_uc, const std::vector<IQTensor> &honeycomb_bond_tensors_uc, const Lattice_Base &square_lattice);$/;"	p	signature:(const std::vector<IQTensor> &honeycomb_site_tensors_uc, const std::vector<IQTensor> &honeycomb_bond_tensors_uc, const Lattice_Base &square_lattice)
 spin_to_sz	peps_utilities/utilities.cc	/^void spin_to_sz(const std::vector<int> &spin_deg, std::vector<int> &sz_deg)$/;"	f	signature:(const std::vector<int> &spin_deg, std::vector<int> &sz_deg)
 spin_to_sz	peps_utilities/utilities.h	/^void spin_to_sz(const std::vector<int> &spin_deg, std::vector<int> &sz_deg);$/;"	p	signature:(const std::vector<int> &spin_deg, std::vector<int> &sz_deg)
 square_layered_peps_	boundary_theory/boundary_theory.h	/^        Double_Layer_PEPSt<TensorT> square_layered_peps_;$/;"	m	class:Boundary_Theory	access:private
@@ -1094,6 +1264,8 @@ tensor_assignment	peps_utilities/utilities.cc	/^void tensor_assignment(ITensor &
 tensor_assignment	peps_utilities/utilities.h	/^void tensor_assignment(IQTensor &TA, const IQTensor &TB);$/;"	p	signature:(IQTensor &TA, const IQTensor &TB)
 tensor_assignment	peps_utilities/utilities.h	/^void tensor_assignment(ITensor &TA, const ITensor &TB);$/;"	p	signature:(ITensor &TA, const ITensor &TB)
 tensors	peps_utilities/singlet_tensor_basis.h	/^        const std::vector<IQTensor> &tensors() const { return singlet_tensors_; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:() const
+transfer_mat_	boundary_theory/boundary_theory.h	/^        TensorT transfer_mat_;$/;"	m	class:Boundary_Theory	access:private
+transfer_mat_	peps/double_layer_peps.h	/^        TensorT transfer_mat_;$/;"	m	class:Cylinder_Square_Double_Layer_PEPSt	access:private
 ts	simple_update/trotter_gate.h	/^        std::vector<double> ts;$/;"	m	struct:Evolution_Params	access:public
 valid	peps_utilities/cgtensor.h	/^        bool valid() { return valid_; }$/;"	f	class:CGTensors	access:public	signature:()
 valid	peps_utilities/cgtensor.h	/^        bool valid()$/;"	f	class:IndexSpin	access:public	signature:()
@@ -1101,10 +1273,14 @@ valid_	peps_utilities/cgtensor.h	/^        bool valid_;$/;"	m	class:CGTensors	ac
 virt_leg_combiners	peps/double_layer_peps.h	/^        const CombinerT &virt_leg_combiners(int sitei, int j) const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:(int sitei, int j) const
 virt_leg_combiners	peps/double_layer_peps.h	/^        const std::vector<CombinerT> &virt_leg_combiners(int sitei) const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:(int sitei) const
 virt_leg_combiners	peps/double_layer_peps.h	/^        const std::vector<std::vector<CombinerT>> &virt_leg_combiners() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
-virt_leg_combiners_	peps/double_layer_peps.h	/^        std::vector<std::vector<CombinerT>> virt_leg_combiners_;$/;"	m	class:Double_Layer_PEPSt	access:private
+virt_leg_combiners_	peps/double_layer_peps.h	/^        std::vector<std::vector<CombinerT>> virt_leg_combiners_;$/;"	m	class:Double_Layer_PEPSt	access:protected
 virt_legs	peps/peps.h	/^        inline const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt	access:public	signature:(const int &leg_i) const
 virt_legs	peps/peps_indexset.h	/^        const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:(const int &leg_i) const
 virt_legs	peps/peps_indexset.h	/^        const std::vector<IndexT> &virt_legs() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 virt_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
 virt_legs_	simple_update/trotter_gate.h	/^        std::array<IQIndex,2> virt_legs_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
 virt_legs_	simple_update/trotter_gate.h	/^        std::vector<std::vector<IQIndex>> virt_legs_;$/;"	m	class:Trotter_Gate	access:protected
+write	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<IQIndex>::write(std::ostream &s) const;$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(std::ostream &s) const
+write	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<Index>::write(std::ostream &s) const;$/;"	p	class:PEPSt_IndexSet_Base	file:	signature:(std::ostream &s) const
+write	peps/peps_indexset.cc	/^void PEPSt_IndexSet_Base<IndexT>::write(std::ostream &s) const$/;"	f	class:PEPSt_IndexSet_Base	signature:(std::ostream &s) const
+write	peps/peps_indexset.h	/^        void write(std::ostream &s) const;$/;"	p	class:PEPSt_IndexSet_Base	access:public	signature:(std::ostream &s) const

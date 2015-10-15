@@ -3,6 +3,7 @@
 #define _PREDEF_H_
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <complex>
 #include <cmath>

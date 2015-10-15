@@ -173,7 +173,7 @@ class Lattice_Base
         }
 
 
-        virtual void print_lattice_inf()=0;
+        void print_lattice_inf();
 
     protected:
         //
@@ -233,14 +233,22 @@ class Square_Lattice_Torus : public Lattice_Base
 class Square_Lattice_Cylinder : public Lattice_Base
 {
     public:
-        //
-        //Constructor
-        //
         Square_Lattice_Cylinder(const std::array<int,2> &n_uc);
 
         enum Neighbour {Left=0, Up=1, Right=2, Down=3};
+};
 
-        virtual void print_lattice_inf();
+//
+//Honeycomb lattice on torus
+//The convention follows fig on honeycomb_peps_notes.pdf
+//three bonds (x,y,i) are connected with (x,y,0)
+//
+class Honeycomb_Lattice_Torus : public Lattice_Base
+{
+    public:
+        Honeycomb_Lattice_Torus(const std::array<int,2> &n_uc);
+
+        enum Neighbour {NeighA=0, NeighB=1, NeighC=2};
 };
 
 #endif

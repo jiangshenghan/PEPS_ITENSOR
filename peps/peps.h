@@ -27,11 +27,12 @@ class PEPSt
         //Constructors
         //
         PEPSt() {}
-        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);
+        PEPSt(const Lattice_Base &lattice);
+        PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set);
 
         //Initialize site tensors by tensor data in one unit cell.
         //Thus, the PEPS is translationally invariant.
-        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc);
+        PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc);
 
         //
         //Access Methods
@@ -88,12 +89,12 @@ class PEPSt
 
         inline const IndexT &phys_legs(const int &site_i) const
         {
-            return index_set_.phys_legs(site_i);
+            return indexset_ptr_->phys_legs(site_i);
         }
 
         inline const IndexT &virt_legs(const int &leg_i) const
         {
-            return index_set_.virt_legs_(leg_i);
+            return indexset_ptr_->virt_legs_(leg_i);
         }
 
         inline const TensorT &site_tensors(int i) const
@@ -175,6 +176,9 @@ class PEPSt
         //for IQTensor we need to make sure at least one block is created
         //void random_site_tensors();
 
+        //read/write from/to file
+        void read(std::istream &s);
+        void write(std::ostream &s) const;
 
     private:
         //
@@ -185,7 +189,7 @@ class PEPSt
 
         const Lattice_Base &lattice_;
 
-        const PEPSt_IndexSet_Base<IndexT> &index_set_;
+        std::shared_ptr<PEPSt_IndexSet_Base<IndexT>> indexset_ptr_;
 
         std::vector<TensorT> site_tensors_, bond_tensors_; 
 
@@ -196,9 +200,6 @@ class PEPSt
 
         //name stores information about lattice, spin symmetry, extra degenerate
         std::string name_;
-
-        friend void tensor_assignment(ITensor &TA, ITensor &TB);
-        friend void tensor_assignment(IQTensor &TA, IQTensor &TB);
 };
 using PEPS=PEPSt<ITensor>;
 using IQPEPS=PEPSt<IQTensor>;

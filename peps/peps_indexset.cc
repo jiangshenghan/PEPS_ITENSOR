@@ -18,6 +18,57 @@ template
 PEPSt_IndexSet_Base<IQIndex>::PEPSt_IndexSet_Base(const int &d, const int &D, const int &n_sites_total, const int &n_bonds_to_one_site, const int &n_boundary_legs);
 
 
+template <class IndexT>
+void PEPSt_IndexSet_Base<IndexT>::read(std::istream &s)
+{
+    int phys_leg_num;
+    s.read((char*)&phys_leg_num,sizeof(phys_leg_num));
+    phys_legs_.resize(phys_leg_num);
+    for (auto &leg : phys_legs_) leg.read(s); 
+    
+    int virt_leg_num;
+    s.read((char*)&virt_leg_num,sizeof(virt_leg_num));
+    virt_legs_.resize(virt_leg_num);
+    for (auto &leg : virt_legs_) leg.read(s);
+    
+    s.read((char*)&d_,sizeof(d_));
+    s.read((char*)&D_,sizeof(D_));
+
+    int nlength;
+    s.read((char*)&nlength,sizeof(nlength));
+    auto newname=std::unique_ptr<char[]>(new char[nlength+1]);
+    s.read(newname.get(),nlength+1);
+    name_=std::string(newname.get());
+}
+template
+void PEPSt_IndexSet_Base<Index>::read(std::istream &s);
+template
+void PEPSt_IndexSet_Base<IQIndex>::read(std::istream &s);
+
+template <class IndexT>
+void PEPSt_IndexSet_Base<IndexT>::write(std::ostream &s) const
+{
+    const int phys_leg_num=phys_legs_.size();
+    s.write((char*)&phys_leg_num,sizeof(phys_leg_num));
+    for (const auto &leg : phys_legs_) leg.write(s); 
+
+    const int virt_leg_num=virt_legs_.size();
+    s.write((char*)&virt_leg_num,sizeof(virt_leg_num));
+    for (const auto &leg : virt_legs_) leg.write(s);
+    
+    s.write((char*)&d_,sizeof(d_));
+    s.write((char*)&D_,sizeof(D_));
+
+    const int nlength=name_.length();
+    s.write((char*)&nlength,sizeof(nlength));
+    s.write(name_.c_str(),nlength+1);
+}
+template 
+void PEPSt_IndexSet_Base<Index>::write(std::ostream &s) const;
+template
+void PEPSt_IndexSet_Base<IQIndex>::write(std::ostream &s) const;
+
+
 //
 //PEPS_IndexSet
 //

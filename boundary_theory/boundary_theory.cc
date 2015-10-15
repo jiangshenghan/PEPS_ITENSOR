@@ -2,7 +2,7 @@
 #include "boundary_theory.h"
 
 template <class TensorT>
-Boundary_Theory<TensorT>::Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col, const std::string &method):
+Boundary_Theory<TensorT>::Boundary_Theory(const PEPSt<TensorT> &square_peps, int cutting_col):
     n_rows_(square_peps.n_uc()[1]),
     n_cols_(square_peps.n_uc()[0]),
     cutting_col_(cutting_col),
@@ -11,24 +11,32 @@ Boundary_Theory<TensorT>::Boundary_Theory(const PEPSt<TensorT> &square_peps, int
 {
     if (cutting_col_==-1) 
         cutting_col_=n_cols_/2;
-
-    //obtain_transfer_matrix();
-
-    if (method.find("iterative")!=std::string::npos) 
-        obtain_boundary_theory_iterative();
-
 }
 template
-Boundary_Theory<ITensor>::Boundary_Theory(const PEPSt<ITensor> &square_peps, int cutting_col, const std::string &method);
+Boundary_Theory<ITensor>::Boundary_Theory(const PEPSt<ITensor> &square_peps, int cutting_col);
 template
-Boundary_Theory<IQTensor>::Boundary_Theory(const PEPSt<IQTensor> &square_peps, int cutting_col, const std::string &method);
+Boundary_Theory<IQTensor>::Boundary_Theory(const PEPSt<IQTensor> &square_peps, int cutting_col);
 
 template <class TensorT>
 void Boundary_Theory<TensorT>::obtain_boundary_theory_iterative()
 {
+    obtain_sigma_lr_iterative(cutting_col_,cutting_col_);
+
+    from_sigma_vec_to_mat();
+    from_sigma_lr_to_sigma_b();
+    obtain_density_matrix_spectrum();
+}
+template
+void Boundary_Theory<ITensor>::obtain_boundary_theory_iterative();
+template 
+void Boundary_Theory<IQTensor>::obtain_boundary_theory_iterative();
+
+template <class TensorT>
+void Boundary_Theory<TensorT>::obtain_sigma_lr_iterative(int left_cols, int right_cols)
+{
     snake_walking_boundary_col();
 
-    for (int lcoli=1; lcoli<cutting_col_; )
+    for (int lcoli=1; lcoli<left_cols; )
     {
         snake_walking_bulk_col(lcoli,1,-1);
         lcoli++;
@@ -42,7 +50,7 @@ void Boundary_Theory<TensorT>::obtain_boundary_theory_iterative()
         lcoli++;
     }
 
-    for (int rcoli=n_cols_-2; rcoli>=cutting_col_; )
+    for (int rcoli=n_cols_-2; rcoli>=right_cols; )
     {
         snake_walking_bulk_col(rcoli,-1,1);
         rcoli--;
@@ -56,14 +64,11 @@ void Boundary_Theory<TensorT>::obtain_boundary_theory_iterative()
         rcoli--;
     }
 
-    from_sigma_vec_to_mat();
-    from_sigma_lr_to_sigma_b();
-    obtain_density_matrix_spectrum();
 }
 template
-void Boundary_Theory<ITensor>::obtain_boundary_theory_iterative();
-template 
-void Boundary_Theory<IQTensor>::obtain_boundary_theory_iterative();
+void Boundary_Theory<ITensor>::obtain_sigma_lr_iterative(int left_cols, int right_cols);
+template
+void Boundary_Theory<IQTensor>::obtain_sigma_lr_iterative(int left_cols, int right_cols);
 
 
 template <class TensorT>
@@ -106,17 +111,18 @@ void Boundary_Theory<TensorT>::snake_walking_boundary_col()
         clean(sigma);
     }
 
-    cout << "\n----------------------------\n" << endl;
-    cout << "Contraction for boundary cols:" << endl;
+    cout << "\n========================================\n" << endl;
+    //cout << "Contraction for boundary cols:" << endl;
     //cout << "iterative combiners for left part:" << endl;
     //for (const auto &combiner : iterative_combiners_[0]) cout << combiner;
     //cout << "iterative combiners for right part:" << endl;
     //for (const auto &combiner : iterative_combiners_[1]) cout << combiner;
-    cout << "sigma left:" << endl;
-    PrintDat(sigma_lr_[0]);
-    cout << "sigma right:" << endl;
-    PrintDat(sigma_lr_[1]);
-    cout << "\n----------------------------\n" << endl;
+    //cout << "sigma left:" << endl;
+    //PrintDat(sigma_lr_[0]);
+    //cout << "sigma right:" << endl;
+    //PrintDat(sigma_lr_[1]);
+    cout << "Finishing contracting for boundary_cols!" << endl;
+    cout << "\n========================================\n" << endl;
 
 }
 template
@@ -156,14 +162,14 @@ void Boundary_Theory<TensorT>::snake_walking_bulk_col(int coli, int horizontal_d
     sigma_lr_[lr_no]/=sigma_lr_[lr_no].norm();
     clean(sigma_lr_[lr_no]);
 
-    cout << "\n----------------------------\n" << endl;
+    cout << "\n========================================\n" << endl;
     cout << "Iterative contraction for bulk col:" << endl;
     cout << "Horizontal Direction: " << horizontal_dir << endl
          << "Vertical Direction: " << vertical_dir << endl
          << "Col: " << coli << endl << endl;
     //for (const auto &combiner : iterative_combiners_[lr_no]) cout << combiner;
-    PrintDat(sigma_lr_[lr_no]);
-    cout << "\n----------------------------\n" << endl;
+    //PrintDat(sigma_lr_[lr_no]);
+    cout << "\n========================================\n" << endl;
 
 }
 template
@@ -245,23 +251,23 @@ void Boundary_Theory<TensorT>::from_sigma_vec_to_mat()
         clean(sigma);
     }
 
-    cout << "\n----------------------------\n" << endl;
-    cout << "Output for sigma_l and sigma_r:" << endl;
+    //cout << "\n========================================\n" << endl;
+    //cout << "Output for sigma_l and sigma_r:" << endl;
     //cout << "left part:" << endl;
     //for (int rowi=0; rowi<n_rows_; rowi++)
     //{
     //    cout << lower_combiners[0][rowi];
     //    cout << upper_combiners[0][rowi];
     //}
-    PrintDat(sigma_lr_[0]);
+    //PrintDat(sigma_lr_[0]);
     //cout << "right part:" << endl;
     //for (int rowi=0; rowi<n_rows_; rowi++)
     //{
     //    cout << lower_combiners[1][rowi];
     //    cout << upper_combiners[1][rowi];
     //}
-    PrintDat(sigma_lr_[1]);
-    cout << "\n----------------------------\n" << endl;
+    //PrintDat(sigma_lr_[1]);
+    //cout << "\n========================================\n" << endl;
 }
 template
 void Boundary_Theory<ITensor>::from_sigma_vec_to_mat();
@@ -279,8 +285,8 @@ void Boundary_Theory<TensorT>::from_sigma_lr_to_sigma_b()
     TensorT U_l, D_l;
     diagHermitian(sigma_lr_[0],U_l,D_l);
 
-    cout << "sigma_l singular value:" << endl;
-    PrintDat(D_l);
+    //cout << "sigma_l singular value:" << endl;
+    //PrintDat(D_l);
 
     auto Dl_legs=D_l.indices();
     
@@ -296,10 +302,10 @@ void Boundary_Theory<TensorT>::from_sigma_lr_to_sigma_b()
 
     auto sqrt_sigma_l=dag(U_l)*D_l*prime(U_l);
 
-    cout << "sqrt of sigma_l singular value:" << endl;
-    PrintDat(D_l);
-    cout << "sqrt of sigma_l:" << endl;
-    PrintDat(sqrt_sigma_l);
+    //cout << "sqrt of sigma_l singular value:" << endl;
+    //PrintDat(D_l);
+    //cout << "sqrt of sigma_l:" << endl;
+    //PrintDat(sqrt_sigma_l);
 
     //obtain sigma_b_, sigma_b_ shares the same index as sigma_l
     sigma_b_=sigma_lr_[1];
@@ -317,9 +323,9 @@ void Boundary_Theory<TensorT>::from_sigma_lr_to_sigma_b()
         }
     }
 
-    cout << "\n---------------------------------\n" << endl;
-    PrintDat(sigma_b_);
-    cout << "\n---------------------------------\n" << endl;
+    //cout << "\n==============================\n" << endl;
+    //PrintDat(sigma_b_);
+    //cout << "\n==============================\n" << endl;
 }
 template
 void Boundary_Theory<ITensor>::from_sigma_lr_to_sigma_b();

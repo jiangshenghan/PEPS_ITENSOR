@@ -2,11 +2,25 @@
 #include "peps.h"
 
 template <class TensorT>
-PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):
+PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice):
+    lattice_(lattice),
+    indexset_ptr_(new PEPSt_IndexSet_Base<IndexT>),
+    site_tensors_(lattice.n_sites_total()),
+    bond_tensors_(lattice.n_bonds_total()),
+    boundary_tensors_(lattice.n_boundary_legs()),
+    name_(lattice.name()+' ')
+{}
+template
+PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice);
+template
+PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice);
+
+template <class TensorT>
+PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_(lattice),
-    index_set_(index_set),
+    indexset_ptr_(new PEPSt_IndexSet_Base<IndexT>(index_set)),
     site_tensors_(lattice.n_sites_total()),
     bond_tensors_(lattice.n_bonds_total()),
     boundary_tensors_(lattice.n_boundary_legs()),
@@ -21,16 +35,16 @@ PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<Ind
     //random_site_tensors();
 }
 template
-PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);
+PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);
 template
-PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
+PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
 
 template <class TensorT>
-PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc):
+PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_(lattice),
-    index_set_(index_set),
+    indexset_ptr_(new PEPSt_IndexSet_Base<IndexT>(index_set)),
     site_tensors_(lattice.n_sites_total()),
     bond_tensors_(lattice.n_bonds_total()),
     boundary_tensors_(lattice.n_boundary_legs()),
@@ -56,9 +70,9 @@ PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<Ind
 
 }
 template
-PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> site_tensors_uc, std::vector<ITensor> bond_tensors_uc);
+PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> site_tensors_uc, std::vector<ITensor> bond_tensors_uc);
 template
-PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> site_tensors_uc, std::vector<IQTensor> bond_tensors_uc);
+PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> site_tensors_uc, std::vector<IQTensor> bond_tensors_uc);
 
 
 template<class TensorT>
@@ -137,11 +151,11 @@ void PEPSt<TensorT>::new_site_tensors()
     {
         //tensor_indices stores both physical legs and virtual legs for site_tensors_[site_i]
         std::vector<IndexT> tensor_indices;
-        tensor_indices.push_back(index_set_.phys_legs(site_i));
+        tensor_indices.push_back(indexset_ptr_->phys_legs(site_i));
 
         for (int j=0; j<n_bonds_to_one_site(); j++)
         {
-            IndexT neigh_virt_ind=index_set_.virt_legs(j+site_i*n_bonds_to_one_site());
+            IndexT neigh_virt_ind=indexset_ptr_->virt_legs(j+site_i*n_bonds_to_one_site());
             tensor_indices.push_back(neigh_virt_ind);
         }
 
@@ -175,7 +189,7 @@ void PEPSt<TensorT>::new_bond_tensors()
             //consider the boundary bonds case separetely
             if (endi_site<0)
             {
-                IndexT endi_index=index_set_.virt_legs(n_sites_total()*n_bonds_to_one_site()+boundary_legs_no);
+                IndexT endi_index=indexset_ptr_->virt_legs(n_sites_total()*n_bonds_to_one_site()+boundary_legs_no);
                 endi_index.dag();
                 tensor_indices.push_back(endi_index);
                 boundary_legs_no++;
@@ -186,7 +200,7 @@ void PEPSt<TensorT>::new_bond_tensors()
             int legi=std::find(endi_site_neigh.begin(),endi_site_neigh.end(),bond_i)-endi_site_neigh.begin();
             assert(legi<n_bonds_to_one_site());
 
-            IndexT endi_index=index_set_.virt_legs(endi_site*n_bonds_to_one_site()+legi);
+            IndexT endi_index=indexset_ptr_->virt_legs(endi_site*n_bonds_to_one_site()+legi);
             endi_index.dag();
 
 
@@ -236,7 +250,7 @@ void PEPSt<TensorT>::new_boundary_tensors()
                 //left boundary, which connects to site tensor
                 if (*neighbour_boundary_iter==-1)
                 {
-                    auto boundary_leg=dag(index_set_.virt_legs(site_i*n_bonds_to_one_site()+neighbour_boundary_no));
+                    auto boundary_leg=dag(indexset_ptr_->virt_legs(site_i*n_bonds_to_one_site()+neighbour_boundary_no));
                     boundary_tensors_[boundary_id]=TensorT(boundary_leg);
                 }
 
@@ -269,7 +283,7 @@ void PEPSt<TensorT>::new_boundary_tensors()
         //        if (found_iter==neighbour_bonds.end()) break;
 
         //        int neigh_bond_no=found_iter-begin_iter;
-        //        boundary_tensors_[boundary_no]=TensorT(dag(index_set_.virt_legs(sitei*n_bonds_to_one_site()+neigh_bond_no)));
+        //        boundary_tensors_[boundary_no]=TensorT(dag(indexset_ptr_->virt_legs(sitei*n_bonds_to_one_site()+neigh_bond_no)));
 
         //        //cout << boundary_tensors_[0][boundary_no];
 
@@ -302,20 +316,47 @@ template
 void PEPSt<IQTensor>::new_boundary_tensors();
 
 
-//template <class TensorT>
-//void PEPSt<TensorT>::random_site_tensors()
-//{
-//    new_site_tensors();
-//    for(auto& tensor : site_tensors_)
-//    {
-//        tensor.randomize();
-//    }
-//}
-//template
-//void PEPSt<ITensor>::random_site_tensors();
-//template
-//void PEPSt<IQTensor>::random_site_tensors();
+//before reading, we should init PEPSt use lattice
+template <class TensorT>
+void PEPSt<TensorT>::read(std::istream &s)
+{
+    indexset_ptr_->read(s);
 
+    for (auto &tensor : site_tensors_) tensor.read(s);
+    for (auto &tensor : bond_tensors_) tensor.read(s);
+    for (auto &tensor : boundary_tensors_) tensor.read(s);
+
+    int nlength;
+    s.read((char*)&nlength,sizeof(nlength));
+    auto newname=std::unique_ptr<char[]>(new char[nlength+1]);
+    s.read(newname.get(),nlength+1);
+    name_=std::string(newname.get());
+
+    d_=indexset_ptr_->d();
+    D_=indexset_ptr_->D();
+}
+template
+void PEPSt<ITensor>::read(std::istream &s);
+template
+void PEPSt<IQTensor>::read(std::istream &s);
+
+template <class TensorT>
+void PEPSt<TensorT>::write(std::ostream &s) const
+{
+    indexset_ptr_->write(s);
+
+    for (const auto &tensor : site_tensors_) tensor.write(s);
+    for (const auto &tensor : bond_tensors_) tensor.write(s);
+    for (const auto &tensor : boundary_tensors_) tensor.write(s);
+
+    const int nlength=name_.length();
+    s.write((char*)&nlength,sizeof(nlength));
+    s.write(name_.c_str(),nlength+1);
+}
+template
+void PEPSt<ITensor>::write(std::ostream &s) const;
+template
+void PEPSt<IQTensor>::write(std::ostream &s) const;
 
 
 void randomize_spin_sym_square_peps(IQPEPS &spin_peps)
