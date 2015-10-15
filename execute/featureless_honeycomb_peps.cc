@@ -14,7 +14,7 @@ int main()
     std::vector<IQTensor> honeycomb_site_tensors_uc, honeycomb_bond_tensors_uc;
     generate_featureless_honeycomb_ansatz_uc(A1,A2,honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc);
 
-    Square_Lattice_Cylinder square_cylinder(std::array<int,2>{38,3});
+    Square_Lattice_Cylinder square_cylinder(std::array<int,2>{38,2});
     auto square_peps=spin_sym_square_peps_from_honeycomb_tensor_uc(honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc,square_cylinder);
 
     //set boundary tensors
@@ -40,22 +40,39 @@ int main()
     }
 
     //calculate entanglement entropy and related quantities
-    Cylinder_Square_Double_Layer_PEPSt<IQTensor> square_layered_peps(square_peps);
+    Cylinder_Square_Double_Layer_PEPSt<IQTensor> square_double_layer_peps(square_peps);
 
-    //square_layered_peps.obtain_boundary_theory_iterative();
+    square_double_layer_peps.obtain_sigma_lr_iterative(17,24);
+    //we should always decombine sigma_lr_ before writing to file
+    cout << "\n========================================\n" << endl;
+    cout << "Data for original double layer PEPS:" << endl;
+    cout << "col_left=" << square_double_layer_peps.col_lr(0) << ", col_right=" << square_double_layer_peps.col_lr(1) << endl;
+    PrintDat(square_double_layer_peps.sigma_lr(0));
+    PrintDat(square_double_layer_peps.sigma_lr(1));
+    cout << "\n========================================\n" << endl;
 
+    square_double_layer_peps.decombine_sigma_lr();
+    writeToFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",square_double_layer_peps);
+    Cylinder_Square_Double_Layer_PEPSt<IQTensor> double_layer_peps_from_file(square_cylinder);
+    readFromFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",double_layer_peps_from_file);
+
+    cout << "\n========================================\n" << endl;
+    cout << "Data for double layer PEPS reading from file:" << endl;
+    cout << "col_left=" << double_layer_peps_from_file.col_lr(0) << ", col_right=" << double_layer_peps_from_file.col_lr(1) << endl;
+    PrintDat(double_layer_peps_from_file.sigma_lr(0));
+    PrintDat(double_layer_peps_from_file.sigma_lr(1));
+    cout << "\n========================================\n" << endl;
+
+
+    //square_double_layer_peps.obtain_boundary_theory_iterative();
     //cout << "\n========================================\n" << endl;
     //cout << "Square lattice with Lx=" << square_cylinder.n_uc()[0] << " and Ly=" << square_cylinder.n_uc()[1] << " cylinder " << endl;
     //cout << "Density Matrix spectrum: " << endl; 
-    //for (double eigval : square_layered_peps.density_mat_spectrum()) cout << eigval << " ";
+    //for (double eigval : square_double_layer_peps.density_mat_spectrum()) cout << eigval << " ";
     //cout << endl;
-    //cout << "Entanglement entropy: " << square_layered_peps.entanglement_entropy_vN() << endl;
+    //cout << "Entanglement entropy: " << square_double_layer_peps.entanglement_entropy_vN() << endl;
     //cout << "\n========================================\n" << endl;
 
-    square_layered_peps.obtain_sigma_lr_iterative(16,24,true);
-    auto sigma_lr=square_layered_peps.sigma_lr();
-    writeToFile("/home/jiangsb/code/peps_itensor/result/test/sigma_left.txt",sigma_lr[0]);
-    writeToFile("/home/jiangsb/code/peps_itensor/result/test/sigma_right.txt",sigma_lr[1]);
 
     return 0;
 }
@@ -220,11 +237,11 @@ int main()
 //    //for (const auto &tensor : square_peps.boundary_tensors()) PrintDat(tensor);
 //
 //
-//    //Double_Layer_PEPSt<IQTensor> square_layered_peps(square_peps);
+//    //Double_Layer_PEPSt<IQTensor> square_double_layer_peps(square_peps);
 //    //cout << "\n---------------------------------\n" << endl;
 //    //cout << "double layer tensors of suqare lattice: " << endl;
-//    //for (const auto &tensor: square_layered_peps.layered_site_tensors()) PrintDat(tensor);
-//    //cout << div(square_layered_peps.layered_site_tensors(0));
+//    //for (const auto &tensor: square_double_layer_peps.layered_site_tensors()) PrintDat(tensor);
+//    //cout << div(square_double_layer_peps.layered_site_tensors(0));
 //    //cout << "\n---------------------------------\n" << endl;
 //    //return 0;
 //

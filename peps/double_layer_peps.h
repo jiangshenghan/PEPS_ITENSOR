@@ -24,6 +24,9 @@ class Double_Layer_PEPSt
         //Constructors
         //
         Double_Layer_PEPSt() {}
+
+        Double_Layer_PEPSt(const Lattice_Base &lattice);  
+
         Double_Layer_PEPSt(const PEPSt<TensorT> &peps);
 
         //
@@ -34,13 +37,13 @@ class Double_Layer_PEPSt
             return single_layer_peps_.lattice();
         }
 
-        const TensorT &layered_site_tensors(int sitei) const
+        const TensorT &double_layer_tensors(int sitei) const
         {
-            return layered_site_tensors_[sitei];
+            return double_layer_tensors_[sitei];
         }
-        const std::vector<TensorT> &layered_site_tensors() const
+        const std::vector<TensorT> &double_layer_tensors() const
         {
-            return layered_site_tensors_;
+            return double_layer_tensors_;
         }
 
         const CombinerT &virt_leg_combiners(int sitei, int j) const
@@ -60,17 +63,25 @@ class Double_Layer_PEPSt
         //Constructor Helpers
         //
         //Absorb bond tensors and boundary tensors to site tensors
-        void obtain_combined_site_tensors(const PEPSt<TensorT> &peps, std::vector<TensorT> &combined_site_tensors);
+        void obtain_single_layer_tensors();
         //from lower_tensors to layered_tensors with all pairs of virtual legs combined
-        void obtain_layered_tensors_with_combined_legs(const std::vector<TensorT> &lower_tensors);
+        void obtain_layered_tensors_with_combined_legs();
 
+        //read/write from/to file
+        //Notice we need to reconstruct double_layer_tensors_ and virt_leg_combiners_ after reading from file
+        void read(std::istream &s);
+        void write(std::ostream &s) const;
 
     protected:
-        //const Lattice_Base &lattice_;
         PEPSt<TensorT> single_layer_peps_;
-        std::vector<TensorT> layered_site_tensors_;
+        //single layer tensors absorb bond tensors and boundary tensors to nearby site tensors
+        std::vector<TensorT> single_layer_tensors_;
+        //double_layer_tensors obtained from contracting physical legs of single_layer_tensors_ and combine pairs of virtual legs
+        std::vector<TensorT> double_layer_tensors_;
         //Notice there is no order in virt_leg_combiners_[sitei]. To combine/decombine a special leg, we should use hasindex() to select the particular combiner we want
         std::vector<std::vector<CombinerT>> virt_leg_combiners_;
+
+        //bool double_layer_initted_;
         
 };
 using Double_Layer_PEPS=Double_Layer_PEPSt<ITensor>;
@@ -96,12 +107,15 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //Constructor
         //
         Cylinder_Square_Double_Layer_PEPSt() {}
+        Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
         Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col=-1);
 
         //
         //Acess Method
         //
+        int col_lr(int i) const { return col_lr_[i]; }
         const std::array<TensorT,2> &sigma_lr() const { return sigma_lr_; }
+        const TensorT &sigma_lr(int i) const { return sigma_lr_[i]; }
 
         const std::vector<double> &density_mat_spectrum() const { return density_mat_spectrum_; }
 
@@ -111,7 +125,14 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //using iterative method to obtain boundary theories
         //when do_decombine==true, we will expand indices of sigma_lr_
         void obtain_boundary_theory_iterative();
-        void obtain_sigma_lr_iterative(int left_end_col, int right_end_col, bool do_decombine=false);
+        void obtain_sigma_lr_iterative(int left_end_col, int right_end_col);
+
+        //decombine/recombine sigma_lr_, where the decombined sigma_lr_ shares the same indices as double_layer_tensors_
+        void decombine_sigma_lr();
+        void recombine_sigma_lr();
+        //match indices of current decombined sigma_lr_ and double_layer_tensors_
+        void match_indices_sigma_lr();
+
         //snake walking for one bulk or boundary col 
         //vertical_dir==1(-1) denotes walking from left(right) to right(left),
         //horizontal_dir==1(-1) denotes walking from down(up) to up(down)
@@ -130,7 +151,7 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         double entanglement_entropy_vN();
         double entanglement_entropy_Renyi(double renyi_n);
 
-        void obtain_transfer_matrix(int coli=1);
+        //void obtain_transfer_matrix(int coli=1);
 
         //print first several nonzero elems of vector
         void print_vector_nonzero_elem(TensorT vector, int nonzero_elem_num)
@@ -156,9 +177,11 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         }
 
         //Method to read/write from/to file
-        //we will access elem sigma_lr_, iterative_combiners_
-        //void read(std::istream &s);
-        //void write(std::ostream &s) const;
+        //Before writing simga_lr_ to file, we should decombine their index. (vector -> tensor)
+        //After reading sigma_lr_, we should to replace their index since virt_leg_combiners_ have been reconstructed.
+        //We should also reconstruct iterative_combiners_
+        void read(std::istream &s);
+        void write(std::ostream &s) const;
 
     private:
         //cutting_col_ is used to obtain boundary theory
@@ -174,7 +197,7 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         TensorT sigma_b_;
         std::vector<double> density_mat_spectrum_;
 
-        TensorT transfer_mat_;
+        //TensorT transfer_mat_;
 };
 
 

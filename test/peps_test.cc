@@ -51,76 +51,105 @@ int main()
 
     IQPEPS peps_test(square_lattice,index_set);
 
-    cout << "\n========================================\n" << endl;
-    cout << "Original PEPS:" << endl;
-    cout << peps_test.name() << endl << endl;
+    //cout << "\n========================================\n" << endl;
+    //cout << "Original PEPS:" << endl;
+    //cout << peps_test.name() << endl << endl;
 
-    cout << "Site Tensors: " << endl;
-    for (const auto &tensor : peps_test.site_tensors())
-    {
-        cout << tensor << endl;
-    }
-
-    cout << "Bond Tensors: " << endl;
-    for (const auto &tensor : peps_test.bond_tensors())
-    {
-        cout << tensor << endl;
-    }
-
-    cout << "Boundary Tensors: " << endl;
-    for (const auto &tensor : peps_test.boundary_tensors())
-    {
-        cout << tensor << endl;
-    }
-    cout << "\n========================================\n" << endl;
-
-    writeToFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",peps_test);
-    IQPEPS peps_from_file(square_lattice);
-    readFromFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",peps_from_file);
-
-    cout << "\n========================================\n" << endl;
-    cout << "PEPS reading from file:" << endl;
-    cout << peps_test.name() << endl << endl;
-
-    cout << "Site Tensors: " << endl;
-    for (const auto &tensor : peps_test.site_tensors())
-    {
-        cout << tensor << endl;
-    }
-
-    cout << "Bond Tensors: " << endl;
-    for (const auto &tensor : peps_test.bond_tensors())
-    {
-        cout << tensor << endl;
-    }
-
-    cout << "Boundary Tensors: " << endl;
-    for (const auto &tensor : peps_test.boundary_tensors())
-    {
-        cout << tensor << endl;
-    }
-    cout << "\n========================================\n" << endl;
-
-    //Double_Layer_IQPEPS layered_peps_test(peps_test);
-
-    //cout << "Virtual Leg Combiners:" << endl;
-    //int sitei=0;
-    //for (const auto &site_combiners : layered_peps_test.virt_leg_combiners())
-    //{
-    //    cout << "Cominers for virtual legs of site " << sitei << endl;
-    //    for (const auto &combiner : site_combiners)
-    //    {
-    //        cout << combiner;
-    //    }
-    //    cout << endl;
-    //    sitei++;
-    //}
-
-    //cout << "Layered Tensors:" << endl;
-    //for (const auto &tensor : layered_peps_test.layered_site_tensors())
+    //cout << "Site Tensors: " << endl;
+    //for (const auto &tensor : peps_test.site_tensors())
     //{
     //    cout << tensor << endl;
     //}
+
+    //cout << "Bond Tensors: " << endl;
+    //for (const auto &tensor : peps_test.bond_tensors())
+    //{
+    //    cout << tensor << endl;
+    //}
+
+    //cout << "Boundary Tensors: " << endl;
+    //for (const auto &tensor : peps_test.boundary_tensors())
+    //{
+    //    cout << tensor << endl;
+    //}
+    //cout << "\n========================================\n" << endl;
+
+    //writeToFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",peps_test);
+    //IQPEPS peps_from_file(square_lattice);
+    //readFromFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",peps_from_file);
+
+    //cout << "\n========================================\n" << endl;
+    //cout << "PEPS reading from file:" << endl;
+    //cout << peps_from_file.name() << endl << endl;
+
+    //cout << "Site Tensors: " << endl;
+    //for (const auto &tensor : peps_from_file.site_tensors())
+    //{
+    //    cout << tensor << endl;
+    //}
+
+    //cout << "Bond Tensors: " << endl;
+    //for (const auto &tensor : peps_from_file.bond_tensors())
+    //{
+    //    cout << tensor << endl;
+    //}
+
+    //cout << "Boundary Tensors: " << endl;
+    //for (const auto &tensor : peps_from_file.boundary_tensors())
+    //{
+    //    cout << tensor << endl;
+    //}
+    //cout << "\n========================================\n" << endl;
+
+    Double_Layer_IQPEPS layered_peps_test(peps_test);
+
+    cout << "\n========================================\n" << endl;
+    cout << "Original double layer PEPS:" << endl;
+    cout << "Virtual Leg Combiners:" << endl;
+    int sitei=0;
+    for (const auto &site_combiners : layered_peps_test.virt_leg_combiners())
+    {
+        cout << "Cominers for virtual legs of site " << sitei << endl;
+        for (const auto &combiner : site_combiners)
+        {
+            cout << combiner;
+        }
+        cout << endl;
+        sitei++;
+    }
+
+    cout << "Layered Tensors:" << endl;
+    for (const auto &tensor : layered_peps_test.double_layer_tensors())
+    {
+        cout << tensor << endl;
+    }
+    cout << "\n========================================\n" << endl;
+
+    writeToFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",layered_peps_test);
+    Double_Layer_IQPEPS layered_peps_from_file(square_lattice);
+    readFromFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",layered_peps_from_file);
+
+    cout << "\n========================================\n" << endl;
+    cout << "Double layer PEPS reading from file:" << endl;
+    cout << "Virtual Leg Combiners:" << endl;
+    sitei=0;
+    for (const auto &site_combiners : layered_peps_from_file.virt_leg_combiners())
+    {
+        cout << "Cominers for virtual legs of site " << sitei << endl;
+        for (const auto &combiner : site_combiners)
+        {
+            cout << combiner;
+        }
+        cout << endl;
+        sitei++;
+    }
+
+    cout << "Layered Tensors:" << endl;
+    for (const auto &tensor : layered_peps_from_file.double_layer_tensors())
+    {
+        cout << tensor << endl;
+    }
+    cout << "\n========================================\n" << endl;
 
     return 0;
 }
