@@ -51,19 +51,19 @@ inline void generate_featureless_honeycomb_ansatz_uc(double A1, double A2, std::
     }
 
 
-    cout << "\n========================================\n" << endl;
-    cout << "parameters= " << A1 << " " << A2 << endl << endl;
-    cout << "honeycomb site tensor:" << endl;
-    for (const auto &tensor : honeycomb_site_tensors_uc)
-    {
-        PrintDat(tensor);
-    }
-    cout << "honeycomb bond tensor:" << endl;
-    for (const auto &tensor : honeycomb_bond_tensors_uc)
-    {
-        PrintDat(tensor);
-    }
-    cout << "\n========================================\n" << endl;
+    //cout << "\n========================================\n" << endl;
+    //cout << "parameters= " << A1 << " " << A2 << endl << endl;
+    //cout << "honeycomb site tensor:" << endl;
+    //for (const auto &tensor : honeycomb_site_tensors_uc)
+    //{
+    //    PrintDat(tensor);
+    //}
+    //cout << "honeycomb bond tensor:" << endl;
+    //for (const auto &tensor : honeycomb_bond_tensors_uc)
+    //{
+    //    PrintDat(tensor);
+    //}
+    //cout << "\n========================================\n" << endl;
 
 }
 

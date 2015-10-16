@@ -32,7 +32,7 @@ class Singlet_Tensor_Basis
         const_iterator end() const { return singlet_tensors_.end(); }
 
         //number of basis
-        const int dim() const { return singlet_tensors_.size(); }
+        int dim() const { return singlet_tensors_.size(); }
 
         const std::vector<IQTensor> &tensors() const { return singlet_tensors_; }
         const IQTensor &tensor(int i) const { return singlet_tensors_[i]; }

@@ -59,6 +59,18 @@ class Double_Layer_PEPSt
             return virt_leg_combiners_;
         }
 
+        const IndexT &phys_leg(int sitei) const
+        {
+            return single_layer_peps_.phys_legs(sitei);
+        }
+
+        //
+        //Other Methods
+        //
+        //Sandwich operators between double layer PEPS
+        //Insert direct product operators: the operator is formed by two indices, one with prime and one without prime
+        void obtain_tensor_sandwich_single_site_operators(std::vector<TensorT> single_site_operators, const std::vector<int> &acting_sites, std::vector<TensorT>& sandwiched_tensors);
+
         //
         //Constructor Helpers
         //
@@ -107,7 +119,7 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //Constructor
         //
         Cylinder_Square_Double_Layer_PEPSt() {}
-        Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
+        explicit Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
         Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col=-1);
 
         //
@@ -127,12 +139,6 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         void obtain_boundary_theory_iterative();
         void obtain_sigma_lr_iterative(int left_end_col, int right_end_col);
 
-        //decombine/recombine sigma_lr_, where the decombined sigma_lr_ shares the same indices as double_layer_tensors_
-        void decombine_sigma_lr();
-        void recombine_sigma_lr();
-        //match indices of current decombined sigma_lr_ and double_layer_tensors_
-        void match_indices_sigma_lr();
-
         //snake walking for one bulk or boundary col 
         //vertical_dir==1(-1) denotes walking from left(right) to right(left),
         //horizontal_dir==1(-1) denotes walking from down(up) to up(down)
@@ -145,13 +151,33 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         void from_sigma_lr_to_sigma_b();
         //get spectrum of density matrix, which is identical to that of sigma_b (normalized)
         void obtain_density_matrix_spectrum();
-        
-        //Other Methods
+
+
+        //Methods relate to entanglement properties
         std::vector<double> entanglement_spectrum();
         double entanglement_entropy_vN();
         double entanglement_entropy_Renyi(double renyi_n);
-
         //void obtain_transfer_matrix(int coli=1);
+
+        //
+        //get value of <O>=\langle\psi|\hat{O}|\psi\rangle iteratively //where <O> is obtained by contracting sandwiched_tensors
+        //we will start from col_lr, where data outside col_lr are stored in sigma_lr(decombined)
+        //horizontal_dir is the contraction direction
+        //
+        double sandwiched_peps_norm(const std::vector<TensorT> &sandwiched_tensors, int horizontal_dir=1);
+
+        
+        //
+        //Other Methods
+        //
+        //decombine/recombine sigma_lr_, where the decombined sigma_lr_ shares the same indices as double_layer_tensors_
+        void decombine_sigma_lr();
+        void recombine_sigma_lr();
+        //match indices of current decombined sigma_lr_ and double_layer_tensors_
+        void match_indices_sigma_lr();
+        //move the converged sigma_lr_ to specific cols by replacing indices
+        void move_sigma_lr(const std::array<int,2> &new_col_lr);
+
 
         //print first several nonzero elems of vector
         void print_vector_nonzero_elem(TensorT vector, int nonzero_elem_num)
@@ -176,6 +202,7 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
             cout << endl << endl;
         }
 
+
         //Method to read/write from/to file
         //Before writing simga_lr_ to file, we should decombine their index. (vector -> tensor)
         //After reading sigma_lr_, we should to replace their index since virt_leg_combiners_ have been reconstructed.
@@ -199,6 +226,11 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
 
         //TensorT transfer_mat_;
 };
+
+
+//calculate Sz correlation, notice square_cylinder_double_peps should provide converged sigma_lr
+double honeycomb_cylinder_SzSz_correlator(const std::array<Coordinate,2> &acting_sites_coord, Cylinder_Square_Double_Layer_PEPSt<IQTensor> &square_cylinder_double_peps);
+
 
 
 #endif
