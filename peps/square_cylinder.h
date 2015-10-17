@@ -23,21 +23,8 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //Constructor
         //
         //Cylinder_Square_Double_Layer_PEPSt() {}
-        Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder): 
-            Parent(square_cylinder), 
-            col_lr_{{0,square_cylinder.n_uc()[0]-1}}, 
-            iterative_combiners_{{std::vector<CombinerT>(square_cylinder.n_uc()[1]),std::vector<CombinerT>(square_cylinder.n_uc()[1])}} 
-        {}
-
-        Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col=-1):
-            Double_Layer_PEPSt<TensorT>(square_peps),
-            cutting_col_(cutting_col), 
-            col_lr_{{0,square_peps.lattice().n_uc()[0]-1}},
-            iterative_combiners_{{std::vector<CombinerT>(square_peps.lattice().n_uc()[1]),std::vector<CombinerT>(square_peps.lattice().n_uc()[1])}}
-        {
-            if (cutting_col_==-1) 
-                cutting_col_=this->lattice().n_uc()[0]/2;
-        }
+        Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
+        Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col=-1);
 
         //
         //Acess Method

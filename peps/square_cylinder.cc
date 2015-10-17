@@ -5,36 +5,35 @@
 //
 //class Cylinder_Square_Double_Layer_PEPSt
 //
-//template <class TensorT>
-//Cylinder_Square_Double_Layer_PEPSt<TensorT>::Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder):
-//    //Double_Layer_PEPSt<TensorT>(square_cylinder),
-//    Parent(square_cylinder),
-//    col_lr_{{0,square_cylinder.n_uc()[0]-1}},
-//    iterative_combiners_{{std::vector<CombinerT>(square_cylinder.n_uc()[1]),std::vector<CombinerT>(square_cylinder.n_uc()[1])}}
-//{
-//    //assert(square_cylinder.name().find("cylinder")!=std::string::npos);
-//
-//    cutting_col_=this->lattice().n_uc()[0]/2;
-//}
-//template
-//Cylinder_Square_Double_Layer_PEPSt<ITensor>::Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
-//template
-//Cylinder_Square_Double_Layer_PEPSt<IQTensor>::Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
+template <class TensorT>
+Cylinder_Square_Double_Layer_PEPSt<TensorT>::Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder):
+    Double_Layer_PEPSt<TensorT>(square_cylinder),
+    col_lr_{{0,square_cylinder.n_uc()[0]-1}},
+    iterative_combiners_{{std::vector<CombinerT>(square_cylinder.n_uc()[1]),std::vector<CombinerT>(square_cylinder.n_uc()[1])}}
+{
+    //assert(square_cylinder.name().find("cylinder")!=std::string::npos);
 
-//template <class TensorT>
-//Cylinder_Square_Double_Layer_PEPSt<TensorT>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col):
-//    Double_Layer_PEPSt<TensorT>(square_peps),
-//    cutting_col_(cutting_col),
-//    col_lr_{{0,square_peps.lattice().n_uc()[0]-1}},
-//    iterative_combiners_{{std::vector<CombinerT>(square_peps.lattice().n_uc()[1]),std::vector<CombinerT>(square_peps.lattice().n_uc()[1])}}
-//{
-//    if (cutting_col_==-1) 
-//        cutting_col_=this->lattice().n_uc()[0]/2;
-//}
-//template
-//Cylinder_Square_Double_Layer_PEPSt<ITensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<ITensor> &square_peps, int cutting_col);
-//template
-//Cylinder_Square_Double_Layer_PEPSt<IQTensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<IQTensor> &square_peps, int cutting_col);
+    cutting_col_=this->lattice().n_uc()[0]/2;
+}
+template
+Cylinder_Square_Double_Layer_PEPSt<ITensor>::Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
+template
+Cylinder_Square_Double_Layer_PEPSt<IQTensor>::Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
+
+template <class TensorT>
+Cylinder_Square_Double_Layer_PEPSt<TensorT>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col):
+    Double_Layer_PEPSt<TensorT>(square_peps),
+    cutting_col_(cutting_col),
+    col_lr_{{0,square_peps.lattice().n_uc()[0]-1}},
+    iterative_combiners_{{std::vector<CombinerT>(square_peps.lattice().n_uc()[1]),std::vector<CombinerT>(square_peps.lattice().n_uc()[1])}}
+{
+    if (cutting_col_==-1) 
+        cutting_col_=this->lattice().n_uc()[0]/2;
+}
+template
+Cylinder_Square_Double_Layer_PEPSt<ITensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<ITensor> &square_peps, int cutting_col);
+template
+Cylinder_Square_Double_Layer_PEPSt<IQTensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<IQTensor> &square_peps, int cutting_col);
 
 template <class TensorT>
 void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_boundary_theory_iterative()
