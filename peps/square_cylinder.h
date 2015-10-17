@@ -48,9 +48,9 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //horizontal_dir==1(-1) denotes walking from down(up) to up(down)
         void snake_walking_boundary_col();
         void snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);
-        //turn a one indice tensor (vector) to a two indices (upper leg and lower leg) matrix
-        //we need to decombine the index, and recombine the upper ones and lower ones separetely
-        void from_sigma_vec_to_mat();
+        //make indices of (meeting) sigma_lr_ match each other, so their multiplication gives wavefunction norm
+        //keep sigma_lr_[1-lr_no] invariant, while change sigma_lr_[lr_no]
+        void match_sigma_left_right(int lr_no=1);
         //sigma_b=\sqrt(\sigma_l).\sigma_r.sqrt(sigma_l)
         void from_sigma_lr_to_sigma_b();
         //get spectrum of density matrix, which is identical to that of sigma_b (normalized)
@@ -64,6 +64,9 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //void obtain_transfer_matrix(int coli=1);
 
         //
+        //calculate correlators on square cylinder notice square_cylinder_double_peps should provide converged sigma_lr
+        //this function only applies to those operators can be written as direct product form. Each operator is a Tensor formed by two Site indices (noprimed and primed)
+        double obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<TensorT> direct_prod_operators);
         //get value of <O>=\langle\psi|\hat{O}|\psi\rangle iteratively //where <O> is obtained by contracting sandwiched_tensors
         //we will start from col_lr, where data outside col_lr are stored in sigma_lr(decombined)
         //horizontal_dir is the contraction direction
@@ -74,11 +77,12 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //
         //Other Methods
         //
-        //decombine/recombine sigma_lr_, where the decombined sigma_lr_ shares the same indices as double_layer_tensors_
+        //decombine/recombine sigma_lr_ from/to matrix, where the decombined sigma_lr_ shares the same indices as double_layer_tensors_
+        void decombine_sigma_lr(int lr_no);
         void decombine_sigma_lr();
         void recombine_sigma_lr();
         //match indices of current decombined sigma_lr_ and double_layer_tensors_
-        void match_indices_sigma_lr();
+        void match_sigma_lr_double_peps();
         //move the converged sigma_lr_ to specific cols by replacing indices
         void move_sigma_lr(const std::array<int,2> &new_col_lr);
 
@@ -121,8 +125,9 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         std::array<int,2> col_lr_;
         //sigma_lr_[0(1)] stores sigma_left(right)
         std::array<TensorT,2> sigma_lr_;
-        //iterative_combiners_ is used to contract cols to a big tensor
-        std::array<std::vector<CombinerT>,2> iterative_combiners_;
+        //upper_combiners_ and lower_combiners_ are used to combine sigma_lr_ from tensor to matrix
+        //upper_combiners_=prime(dag(lower_combiners_))
+        std::array<std::vector<CombinerT>,2> lower_combiners_, upper_combiners_; ;
 
         //eigval of sigma_b_ is identical to those of RDM
         TensorT sigma_b_;
@@ -131,9 +136,6 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //TensorT transfer_mat_;
 };
 
-
-//calculate Sz correlation, notice square_cylinder_double_peps should provide converged sigma_lr
-double honeycomb_cylinder_SzSz_correlator(const std::array<Coordinate,2> &acting_sites_coord, Cylinder_Square_Double_Layer_PEPSt<IQTensor> &square_cylinder_double_peps);
 
 
 #endif

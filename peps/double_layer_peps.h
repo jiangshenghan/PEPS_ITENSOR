@@ -50,6 +50,15 @@ class Double_Layer_PEPSt
         {
             return virt_leg_combiners_[sitei][j];
         }
+        const CombinerT &virt_leg_combiners(int sitei, const IndexT &double_virt_ind) const
+        {
+            for (const auto &combiner : virt_leg_combiners_[sitei])
+            {
+                if (combiner.right()==double_virt_ind) return combiner;
+            }
+            cout << "Fail to find combiner!" << endl;
+            exit(EXIT_FAILURE);
+        }
         const std::vector<CombinerT> &virt_leg_combiners(int sitei) const
         { 
             return virt_leg_combiners_[sitei]; 
@@ -67,9 +76,11 @@ class Double_Layer_PEPSt
         //
         //Other Methods
         //
+        //get the original lower_indice of virt_ind of sitei. upper_indic=dag(prime(lower_indice))
+        CombinerT decombine_double_virt_indice(int sitei, const IndexT &double_virt_ind, IndexT &lower_ind);
         //Sandwich operators between double layer PEPS
         //Insert direct product operators: the operator is formed by two indices, one with prime and one without prime
-        void obtain_tensor_sandwich_single_site_operators(std::vector<TensorT> single_site_operators, const std::vector<int> &acting_sites, std::vector<TensorT>& sandwiched_tensors);
+        void obtain_peps_sandwich_single_site_operators(std::vector<TensorT> single_site_operators, const std::vector<int> &acting_sites, std::vector<TensorT>& sandwiched_tensors);
 
         //
         //Constructor Helpers

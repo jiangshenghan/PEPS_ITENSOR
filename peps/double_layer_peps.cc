@@ -31,7 +31,32 @@ Double_Layer_PEPSt<IQTensor>::Double_Layer_PEPSt(const PEPSt<IQTensor> &peps);
 
 
 template <class TensorT>
-void Double_Layer_PEPSt<TensorT>::obtain_tensor_sandwich_single_site_operators(std::vector<TensorT> single_site_operators, const std::vector<int> &acting_sites, std::vector<TensorT>& sandwiched_tensors)
+typename TensorT::CombinerT Double_Layer_PEPSt<TensorT>::decombine_double_virt_indice(int sitei, const IndexT &double_virt_ind, IndexT &lower_ind)
+{
+    assert(hasindex(double_layer_tensors_[sitei],double_virt_ind));
+
+    for (const auto &combiner : virt_leg_combiners_[sitei])
+    {
+        if (combiner.right()==double_virt_ind)
+        {
+            if (left_leg_of_combiners(combiner,0).primeLevel()==0) lower_ind=left_leg_of_combiners(combiner,0);
+            if (left_leg_of_combiners(combiner,1).primeLevel()==0) lower_ind=left_leg_of_combiners(combiner,1);
+
+            return combiner;
+        }
+    }
+
+    cout << "Fail to find lower tensor on site " << sitei << endl;
+    exit(EXIT_FAILURE);
+}
+template
+typename ITensor::CombinerT Double_Layer_PEPSt<ITensor>::decombine_double_virt_indice(int sitei, const ITensor::IndexT &double_virt_ind, ITensor::IndexT &lower_ind);
+template
+typename IQTensor::CombinerT Double_Layer_PEPSt<IQTensor>::decombine_double_virt_indice(int sitei, const IQTensor::IndexT &double_virt_ind, IQTensor::IndexT &lower_ind);
+
+
+template <class TensorT>
+void Double_Layer_PEPSt<TensorT>::obtain_peps_sandwich_single_site_operators(std::vector<TensorT> single_site_operators, const std::vector<int> &acting_sites, std::vector<TensorT>& sandwiched_tensors)
 {
     //auto sandwiched_tensors=double_layer_tensors_;
 
@@ -65,9 +90,9 @@ void Double_Layer_PEPSt<TensorT>::obtain_tensor_sandwich_single_site_operators(s
     }
 }
 template
-void Double_Layer_PEPSt<ITensor>::obtain_tensor_sandwich_single_site_operators(std::vector<ITensor> single_site_operators, const std::vector<int> &acting_sites, std::vector<ITensor>& sandwiched_tensors);
+void Double_Layer_PEPSt<ITensor>::obtain_peps_sandwich_single_site_operators(std::vector<ITensor> single_site_operators, const std::vector<int> &acting_sites, std::vector<ITensor>& sandwiched_tensors);
 template
-void Double_Layer_PEPSt<IQTensor>::obtain_tensor_sandwich_single_site_operators(std::vector<IQTensor> single_site_operators, const std::vector<int> &acting_sites, std::vector<IQTensor>& sandwiched_tensors);
+void Double_Layer_PEPSt<IQTensor>::obtain_peps_sandwich_single_site_operators(std::vector<IQTensor> single_site_operators, const std::vector<int> &acting_sites, std::vector<IQTensor>& sandwiched_tensors);
 
 
 template <class TensorT>
