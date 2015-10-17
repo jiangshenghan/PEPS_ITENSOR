@@ -39,8 +39,8 @@ typename TensorT::CombinerT Double_Layer_PEPSt<TensorT>::decombine_double_virt_i
     {
         if (combiner.right()==double_virt_ind)
         {
-            if (left_leg_of_combiners(combiner,0).primeLevel()==0) lower_ind=left_leg_of_combiners(combiner,0);
-            if (left_leg_of_combiners(combiner,1).primeLevel()==0) lower_ind=left_leg_of_combiners(combiner,1);
+            if (left_leg_of_combiners(combiner,0).primeLevel()==0) lower_ind=dag(left_leg_of_combiners(combiner,0));
+            if (left_leg_of_combiners(combiner,1).primeLevel()==0) lower_ind=dag(left_leg_of_combiners(combiner,1));
 
             return combiner;
         }

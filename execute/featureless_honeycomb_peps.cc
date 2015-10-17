@@ -5,14 +5,14 @@
 int main()
 {
     //system size
-    int Ly=4,Lx=12*Ly;
+    int Ly=4,Lx=16*Ly;
 
     //tunable parameter for wavefunctions
     //std::default_random_engine generator(std::time(0));
     //std::uniform_real_distribution<double> distribution(-1,1);
     //auto rand_gen = std::bind(distribution,generator);
     //double A1=rand_gen(), A2=rand_gen();
-    double A1=1, A2=2;
+    double A1=1, A2=-2;
 
     //Output file name for double_layer_peps
     std::stringstream ss;
@@ -57,15 +57,10 @@ int main()
     }
 
 
-    //calculate sigma_lr_ until they converge 
     Cylinder_Square_Double_Layer_PEPSt<IQTensor> square_double_layer_peps(square_peps);
 
+    //calculate sigma_lr_ until they converge 
     square_double_layer_peps.obtain_sigma_lr_iterative(Lx/2-1,Lx/2);
-
-    //we should always decombine sigma_lr_ before writing to file
-    square_double_layer_peps.decombine_sigma_lr();
-    writeToFile(file_name,square_double_layer_peps);
-
 
     //cout << "\n========================================\n" << endl;
     //cout << "Data for original double layer PEPS:" << endl;
@@ -73,6 +68,10 @@ int main()
     //PrintDat(square_double_layer_peps.sigma_lr(0));
     //PrintDat(square_double_layer_peps.sigma_lr(1));
     //cout << "\n========================================\n" << endl;
+
+    //we should always decombine sigma_lr_ before writing to file
+    square_double_layer_peps.decombine_sigma_lr();
+    writeToFile(file_name,square_double_layer_peps);
 
     //Cylinder_Square_Double_Layer_PEPSt<IQTensor> double_layer_peps_from_file(square_cylinder);
     //readFromFile(file_name,double_layer_peps_from_file);
@@ -85,14 +84,14 @@ int main()
     //cout << "\n========================================\n" << endl;
 
 
-    //square_double_layer_peps.obtain_boundary_theory_iterative();
-    //cout << "\n========================================\n" << endl;
-    //cout << "Square lattice with Lx=" << square_cylinder.n_uc()[0] << " and Ly=" << square_cylinder.n_uc()[1] << " cylinder " << endl;
-    //cout << "Density Matrix spectrum: " << endl; 
-    //for (double eigval : square_double_layer_peps.density_mat_spectrum()) cout << eigval << " ";
-    //cout << endl;
-    //cout << "Entanglement entropy: " << square_double_layer_peps.entanglement_entropy_vN() << endl;
-    //cout << "\n========================================\n" << endl;
+    square_double_layer_peps.obtain_boundary_theory_iterative();
+    cout << "\n========================================\n" << endl;
+    cout << "Square lattice with Lx=" << square_cylinder.n_uc()[0] << " and Ly=" << square_cylinder.n_uc()[1] << " cylinder " << endl;
+    cout << "Density Matrix spectrum: " << endl; 
+    for (double eigval : square_double_layer_peps.density_mat_spectrum()) cout << eigval << " ";
+    cout << endl;
+    cout << "Entanglement entropy: " << square_double_layer_peps.entanglement_entropy_vN() << endl;
+    cout << "\n========================================\n" << endl;
 
     cout << "Finish Successfully!" << endl;
     return 0;

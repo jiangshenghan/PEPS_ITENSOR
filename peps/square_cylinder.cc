@@ -104,6 +104,12 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_boundary_col()
     auto double_virt_leg_combiner=this->decombine_double_virt_indice(sitei,double_virt_ind,lower_ind);
     lower_combiners_[0][0]=CombinerT(lower_ind);
     upper_combiners_[0][0]=prime(dag(lower_combiners_[0][0]));
+
+    //Print(lower_ind);
+    //Print(lower_combiners_[0][0]);
+    //Print(upper_combiners_[0][0]);
+    //Print(double_virt_leg_combiner);
+
     sigma_lr_[0]=this->double_layer_tensors_[sitei]*dag(double_virt_leg_combiner)*lower_combiners_[0][0]*upper_combiners_[0][0];
     clean(sigma_lr_[0]);
 
@@ -181,15 +187,16 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int col
     {
         int sitei=this->lattice().site_coord_to_list(coli,rowi,0);
 
-        //cout << "Col" << coli << " Row " << rowi << endl;
+        //cout << "Col " << coli << " Row " << rowi << endl;
         //Print(sigma_lr_[lr_no]);
-        //Print(iterative_combiners_[lr_no][rowi]);
-        //Print(sigma_lr_[lr_no]*dag(iterative_combiners_[lr_no][rowi]));
-        //Print(this->double_layer_tensors_[sitei]);
+        //Print(lower_combiners_[lr_no][rowi]);
+        //Print(upper_combiners_[lr_no][rowi]);
+        //Print(sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]));
 
         //decombine indice to be multiplied, and then mutiply a new tensor
         sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]);
         auto double_virt_ind_precede=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei-horizontal_dir]));
+        //Print(this->double_layer_tensors_[sitei]*dag(this->virt_leg_combiners(sitei,double_virt_ind_precede)));
         sigma_lr_[lr_no]*=this->double_layer_tensors_[sitei]*dag(this->virt_leg_combiners(sitei,double_virt_ind_precede));
 
 
@@ -207,7 +214,8 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int col
             lower_combiners_[lr_no][rowi]=CombinerT(lower_combiners_[lr_no][rowi-vertical_dir].right(),lower_ind);
             upper_combiners_[lr_no][rowi]=prime(dag(lower_combiners_[lr_no][rowi]));
         }
-        sigma_lr_[lr_no]=sigma_lr_[lr_no]*double_virt_leg_combiner*lower_combiners_[lr_no][rowi]*upper_combiners_[lr_no][rowi];
+        //PrintDat(sigma_lr_[lr_no]);
+        sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(double_virt_leg_combiner)*lower_combiners_[lr_no][rowi]*upper_combiners_[lr_no][rowi];
 
         rowi+=vertical_dir;
     }
@@ -246,6 +254,7 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::match_sigma_left_right(int lr_
     //decombine sigma_lr_(lr_no) and then recombine it use combiners of (1-lr_no)
     //we can handle up to Ly=6 case
     decombine_sigma_lr(lr_no);
+    //Print(sigma_lr_[lr_no]);
 
     int n_rows=this->lattice().n_uc()[1];
     int start_row;
@@ -268,15 +277,18 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::match_sigma_left_right(int lr_
         int sitei=this->lattice().site_coord_to_list(col_lr_[lr_no],rowi,0);
         auto double_virt_ind=commonIndex(this->double_layer_tensors_[sitei],this->double_layer_tensors_[sitei+horizontal_dir]);
         sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(this->virt_leg_combiners(sitei,double_virt_ind))*dag(lower_combiners_[1-lr_no][rowi])*dag(upper_combiners_[1-lr_no][rowi]);
+        rowi+=vertical_dir;
     }
 
-    //cout << "\n========================================\n" << endl;
+    cout << "\n========================================\n" << endl;
     //cout << "Output for sigma_l and sigma_r:" << endl;
     //cout << "left part:" << endl;
     //PrintDat(sigma_lr_[0]);
     //cout << "right part:" << endl;
     //PrintDat(sigma_lr_[1]);
-    //cout << "\n========================================\n" << endl;
+    cout << "sigma_left and sigma_right matched!" << endl;
+    //PrintDat(sigma_lr_[0]*sigma_lr_[1]);
+    cout << "\n========================================\n" << endl;
 }
 template
 void Cylinder_Square_Double_Layer_PEPSt<ITensor>::match_sigma_left_right(int lr_no);
@@ -333,7 +345,8 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::from_sigma_lr_to_sigma_b()
         sqrt_sigma_l.mapprime(plevel,protect_plevel);
         sigma_b_*=sqrt_sigma_l;
         sqrt_sigma_l.mapprime(protect_plevel,plevel);
-        sigma_b_.mapprime(protect_plevel,plevel);
+        sigma_b_.mapprime(protect_plevel,1-plevel);
+        //Print(sigma_b_);
     }
 
     //cout << "\n==============================\n" << endl;
