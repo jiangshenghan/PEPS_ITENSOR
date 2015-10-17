@@ -165,9 +165,17 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int col
     while (rowi>=0 && rowi<this->lattice().n_uc()[1])
     {
         int sitei=this->lattice().site_coord_to_list(coli,rowi,0);
+
+        cout << "Col" << coli << " Row " << rowi << endl;
+        Print(sigma_lr_[lr_no]);
+        Print(iterative_combiners_[lr_no][rowi]);
+        Print(sigma_lr_[lr_no]*dag(iterative_combiners_[lr_no][rowi]));
+        Print(this->double_layer_tensors_[sitei]);
+
         //decombine indice to be multiplied, and then mutiply a new tensor
         sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(iterative_combiners_[lr_no][rowi]);
         sigma_lr_[lr_no]*=this->double_layer_tensors_[sitei];
+
 
         //combine the indice of new tensor which will be multiplied next time
         auto combining_indice=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei+horizontal_dir]));
@@ -184,7 +192,7 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int col
         rowi+=vertical_dir;
     }
 
-    sigma_lr_[lr_no]/=sigma_lr_[lr_no].norm();
+    //sigma_lr_[lr_no]/=sigma_lr_[lr_no].norm();
     clean(sigma_lr_[lr_no]);
 
     cout << "\n========================================\n" << endl;

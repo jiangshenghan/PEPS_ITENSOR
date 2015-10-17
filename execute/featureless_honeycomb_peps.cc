@@ -12,7 +12,7 @@ int main()
     //std::uniform_real_distribution<double> distribution(-1,1);
     //auto rand_gen = std::bind(distribution,generator);
     //double A1=rand_gen(), A2=rand_gen();
-    double A1=1, A2=0.5;
+    double A1=1, A2=2;
 
     //Output file name for double_layer_peps
     std::stringstream ss;
@@ -94,6 +94,7 @@ int main()
     //cout << "Entanglement entropy: " << square_double_layer_peps.entanglement_entropy_vN() << endl;
     //cout << "\n========================================\n" << endl;
 
+    cout << "Finish Successfully!" << endl;
     return 0;
 }
 
