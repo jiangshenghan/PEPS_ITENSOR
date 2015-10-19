@@ -195,7 +195,7 @@ void PEPSt<TensorT>::new_bond_tensors()
                 boundary_legs_no++;
                 continue;
             }
-            
+
             std::vector<int> endi_site_neigh=lattice_.site_neighbour_bonds(endi_site);
             int legi=std::find(endi_site_neigh.begin(),endi_site_neigh.end(),bond_i)-endi_site_neigh.begin();
             assert(legi<n_bonds_to_one_site());
@@ -229,10 +229,8 @@ void PEPSt<TensorT>::new_boundary_tensors()
 {
     if (name_.find("torus")!=std::string::npos) return;
 
-    if (name_.find("cylinder")!=std::string::npos)
+    if (name_.find("cylinder")!=std::string::npos || name_.find("open")!=std::string::npos)
     {
-        //left boundary legs are associated with sites, labeled as -1
-        //right boundary legs are associated with bonds, labeled as -2
         std::vector<bool> boundary_tensor_created(lattice_.n_boundary_legs(),false);
         for (int boundary_i=0; boundary_i<lattice_.n_boundary_legs(); boundary_i++)
         {
@@ -245,24 +243,48 @@ void PEPSt<TensorT>::new_boundary_tensors()
             for (const auto &boundary_id : lattice_.site_neighbour_boundary(site_i))
             {
                 auto neighbour_boundary_iter=std::find_if(begin_iter,neighbour_sites.end(), [](int i){ return (i<0); });
-                int neighbour_boundary_no=neighbour_boundary_iter-begin_iter;
+                int neighbour_boundary_no=neighbour_boundary_iter-neighbour_sites.begin();
 
-                //left boundary, which connects to site tensor
-                if (*neighbour_boundary_iter==-1)
+                //For cylinder geometry, we get left and right boundaries
+                if (name_.find("cylinder")!=std::string::npos)
                 {
-                    auto boundary_leg=dag(indexset_ptr_->virt_legs(site_i*n_bonds_to_one_site()+neighbour_boundary_no));
-                    boundary_tensors_[boundary_id]=TensorT(boundary_leg);
+                    //left boundary legs are associated with sites, labeled as -1
+                    if (*neighbour_boundary_iter==-1)
+                    {
+                        auto boundary_leg=dag(indexset_ptr_->virt_legs(site_i*n_bonds_to_one_site()+neighbour_boundary_no));
+                        boundary_tensors_[boundary_id]=TensorT(boundary_leg);
+                    }
+                    //right boundary legs are associated with bonds, labeled as -2
+                    if (*neighbour_boundary_iter==-2)
+                    {
+                        int bond_i=lattice_.site_neighbour_bonds(site_i,neighbour_boundary_no);
+                        int bond_boundary_i=(lattice_.bond_end_sites(bond_i,0)==-2 ? 0 : 1);
+                        //if (lattice_.bond_end_sites(bond_i,0)==-2) bond_boundary_i=0;
+                        //if (lattice_.bond_end_sites(bond_i,1)==-2) bond_boundary_i=1;
+                        auto boundary_leg=dag(bond_tensors_[bond_i].indices()[bond_boundary_i]);
+                        boundary_tensors_[boundary_id]=TensorT(boundary_leg);
+                    }
                 }
 
-                //right boundary, which connects to bond tensor
-                if (*neighbour_boundary_iter==-2)
+                //For system with OBC, we get left, up, right and down boundaries
+                if (name_.find("open")!=std::string::npos)
                 {
-                    int bond_i=lattice_.site_neighbour_bonds(site_i,neighbour_boundary_no);
-                    int bond_boundary_i=(lattice_.bond_end_sites(bond_i,0)==-2 ? 0 : 1);
-                    //if (lattice_.bond_end_sites(bond_i,0)==-2) bond_boundary_i=0;
-                    //if (lattice_.bond_end_sites(bond_i,1)==-2) bond_boundary_i=1;
-                    auto boundary_leg=dag(bond_tensors_[bond_i].indices()[bond_boundary_i]);
-                    boundary_tensors_[boundary_id]=TensorT(boundary_leg);
+                    //left boundaries are associated with sites, labeled as -1
+                    //down boundaries are associated with sites, labeled as -4
+                    if (*neighbour_boundary_iter==-1 || *neighbour_boundary_iter==-4)
+                    {
+                        auto boundary_leg=dag(indexset_ptr_->virt_legs(site_i*n_bonds_to_one_site()+neighbour_boundary_no));
+                        boundary_tensors_[boundary_id]=TensorT(boundary_leg);
+                    }
+                    //up boundaries are associated with bonds, labeled as -2
+                    //right boundaries are associated with bonds, labeled as -3
+                    if (*neighbour_boundary_iter==-2 || *neighbour_boundary_iter==-3)
+                    {
+                        int bond_i=lattice_.site_neighbour_bonds(site_i,neighbour_boundary_no);
+                        int bond_boundary_i=(lattice_.bond_end_sites(bond_i,0)<0 ? 0 : 1);
+                        auto boundary_leg=dag(bond_tensors_[bond_i].indices()[bond_boundary_i]);
+                        boundary_tensors_[boundary_id]=TensorT(boundary_leg);
+                    }
                 }
 
                 boundary_tensor_created[boundary_id]=true;
