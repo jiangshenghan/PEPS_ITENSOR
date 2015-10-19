@@ -42,5 +42,5 @@ ADD_SUBDIRECTORY(simple_update)
 LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update ${ITENSOR_LIB_DIR} ${WIGNERSYMBOL_LIB_DIR} ${BLAS_LAPACK_LIB_DIR})
 
 #add directories for source file generating executable file
-#ADD_SUBDIRECTORY(test)
-ADD_SUBDIRECTORY(execute)
+ADD_SUBDIRECTORY(test)
+#ADD_SUBDIRECTORY(execute)

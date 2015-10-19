@@ -74,7 +74,7 @@ void Lattice_Base::print_lattice_inf()
     }
     cout << endl;
 
-    if (name_.find("cylinder")!=std::string::npos)
+    if (name_.find("cylinder")!=std::string::npos || name_.find("open")!=std::string::npos)
     {
         cout << "Check neighbouring boundary legs: " << endl << endl;
         for (int site_i=0; site_i<n_sites_total_; site_i++)
@@ -95,7 +95,7 @@ void Lattice_Base::print_lattice_inf()
     }
     cout << endl;
 
-    if (name_.find("cylinder")!=std::string::npos)
+    if (name_.find("cylinder")!=std::string::npos || name_.find("open")!=std::string::npos)
     {
         cout << "Check end site of boundary: " << endl << endl;
         for (int boundary_i=0; boundary_i<n_boundary_legs_; boundary_i++)
@@ -265,9 +265,103 @@ Square_Lattice_Cylinder::Square_Lattice_Cylinder(const std::array<int,2> &n_uc):
 
         bond_end_sites_[bond_i][0]=site_coord_to_list(end_sites_coord[0]);
         bond_end_sites_[bond_i][1]=site_coord_to_list(end_sites_coord[1]);
-        // if the bond is at rightmost, set the end_sites_coord[1] to be -1
+        // if the bond is at rightmost, set the end_sites_coord[1] to be -2
         if (end_sites_coord[1][0]>=n_uc_[0])
             bond_end_sites_[bond_i][1]=-2;
+    }
+}
+
+
+//
+//Square_Lattice_Open
+//
+Square_Lattice_Open::Square_Lattice_Open(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc,(n_uc[0]+n_uc[1])*2)
+{
+    name_="square lattice with open boundary condition";
+
+    for (int sitei=0; sitei<n_sites_total_; sitei++)
+    {
+        Coordinate sitei_coord=site_list_to_coord(sitei);
+        std::vector<Coordinate> neigh_sites_coord(n_bonds_to_one_site_,sitei_coord);
+        std::vector<Coordinate> neigh_bonds_coord(n_bonds_to_one_site_);
+
+        neigh_sites_coord[Left][0]=sitei_coord[0]-1;
+        neigh_sites_coord[Up][1]=sitei_coord[1]+1;
+        neigh_sites_coord[Right][0]=sitei_coord[0]+1;
+        neigh_sites_coord[Down][1]=sitei_coord[1]-1;
+
+        neigh_bonds_coord[Left]=Coordinate{sitei_coord[0]-1,sitei_coord[1],1};
+        neigh_bonds_coord[Up]=Coordinate{sitei_coord[0],sitei_coord[1],0};
+        neigh_bonds_coord[Right]=Coordinate{sitei_coord[0],sitei_coord[1],1};
+        neigh_bonds_coord[Down]=Coordinate{sitei_coord[0],sitei_coord[1]-1,0};
+
+        for (int j=0; j<n_bonds_to_one_site_; j++)
+        {
+            //sitei is at leftmost. Then we set the left neighbour site and bond to be -1, and set left boundary
+            if (neigh_sites_coord[j][0]<0)
+            {
+                site_neighbour_sites_[sitei][j]=-1;
+                site_neighbour_bonds_[sitei][j]=-1;
+                boundary_end_site_[sitei_coord[1]]=sitei;
+                site_neighbour_boundary_[sitei].push_back(sitei_coord[1]);
+                continue;
+            }
+            //sitei is at upmost. Then we set up neighbour site to be -2, but bonds still exists.
+            if (neigh_sites_coord[j][1]>=n_uc_[1])
+            {
+                site_neighbour_sites_[sitei][j]=-2;
+                site_neighbour_bonds_[sitei][j]=bond_coord_to_list(neigh_bonds_coord[j]);
+                boundary_end_site_[n_uc_[1]+sitei_coord[0]]=sitei;
+                site_neighbour_boundary_[sitei].push_back(n_uc_[1]+sitei_coord[0]);
+                continue;
+            }
+            //sitei is at rightmost. Then, we set right neighbour site, but bond still exists. 
+            if (neigh_sites_coord[j][0]>=n_uc[0])
+            {
+                site_neighbour_sites_[sitei][j]=-3;
+                site_neighbour_bonds_[sitei][j]=bond_coord_to_list(neigh_bonds_coord[j]);
+                boundary_end_site_[n_uc_[0]+n_uc_[1]+sitei_coord[1]]=sitei;
+                site_neighbour_boundary_[sitei].push_back(n_uc_[0]+n_uc_[1]+sitei_coord[1]);
+                continue;
+            }
+            //sitei is at downmost. Then, we set doen neighbour sites and bonds to be -4.
+            if (neigh_sites_coord[j][1]<0)
+            {
+                site_neighbour_sites_[sitei][j]=-4;
+                site_neighbour_bonds_[sitei][j]=-4;
+                boundary_end_site_[n_uc_[0]+2*n_uc_[1]+sitei_coord[0]]=sitei;
+                site_neighbour_boundary_[sitei].push_back(n_uc_[0]+2*n_uc_[1]+sitei_coord[0]);
+                continue;
+            }
+
+            site_neighbour_sites_[sitei][j]=site_coord_to_list(neigh_sites_coord[j]);
+            site_neighbour_bonds_[sitei][j]=bond_coord_to_list(neigh_bonds_coord[j]);
+        }
+
+        for (int bondi=0; bondi<n_bonds_total_; bondi++)
+        {
+            Coordinate bondi_coord=bond_list_to_coord(bondi);
+            std::array<Coordinate,2> end_sites_coord;
+
+            if (bondi_coord[2]==0) //vertical bonds, direction from down to up
+            {
+                end_sites_coord[0]=Coordinate{bondi_coord[0],bondi_coord[1],0};
+                end_sites_coord[1]=Coordinate{bondi_coord[0],bondi_coord[1]+1,0};
+            }
+            if (bondi_coord[2]==1) //horizontal bonds, direction from left to right
+            {
+                end_sites_coord[0]=Coordinate{bondi_coord[0],bondi_coord[1],0};
+                end_sites_coord[1]=Coordinate{bondi_coord[0]+1,bondi_coord[1],0};
+            }
+
+            bond_end_sites_[bondi][0]=site_coord_to_list(end_sites_coord[0]);
+            bond_end_sites_[bondi][1]=site_coord_to_list(end_sites_coord[1]);
+
+            //if the bond is at upmost (rightmost), set the end_sites_coord[1] to be -2 (-3)
+            if (end_sites_coord[1][1]>=n_uc_[1]) bond_end_sites_[bondi][1]=-2;
+            if (end_sites_coord[1][0]>=n_uc_[0]) bond_end_sites_[bondi][1]=-3;
+
+        }
     }
 }
 

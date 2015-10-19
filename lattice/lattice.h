@@ -108,7 +108,7 @@ class Lattice_Base
 
         Coordinate site_list_to_coord(int site_i) const
         {
-            if (name_.find("cylinder")!=std::string::npos && (site_i<0 || site_i>n_sites_total_))
+            if (name_.find("torus")==std::string::npos && (site_i<0 || site_i>n_sites_total_))
             {
                 return Coordinate{site_i,site_i,site_i};
             }
@@ -120,7 +120,7 @@ class Lattice_Base
 
         Coordinate bond_list_to_coord(int bond_i) const
         {
-            if (name_.find("cylinder")!=std::string::npos && (bond_i<0 || bond_i>n_bonds_total_))
+            if (name_.find("torus")==std::string::npos && (bond_i<0 || bond_i>n_bonds_total_))
             {
                 return Coordinate{bond_i,bond_i,bond_i};
             }
@@ -238,6 +238,19 @@ class Square_Lattice_Cylinder : public Lattice_Base
         enum Neighbour {Left=0, Up=1, Right=2, Down=3};
 };
 
+
+//
+//Square lattice with OBC
+//
+class Square_Lattice_Open : public Lattice_Base
+{
+    public:
+        Square_Lattice_Open(const std::array<int,2> &n_uc);
+
+        enum Neighbour {Left=0, Up=1, Right=2, Down=3};
+};
+
+
 //
 //Honeycomb lattice on torus
 //The convention follows fig on honeycomb_peps_notes.pdf
@@ -250,5 +263,6 @@ class Honeycomb_Lattice_Torus : public Lattice_Base
 
         enum Neighbour {NeighA=0, NeighB=1, NeighC=2};
 };
+
 
 #endif
