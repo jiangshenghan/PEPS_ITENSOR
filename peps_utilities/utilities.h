@@ -112,4 +112,9 @@ inline IQIndex left_leg_of_combiners(const IQCombiner &combiner, int i) { return
 inline void clean(ITensor &tensor) {}
 inline void clean(IQTensor &tensor) {return tensor.clean(); }
 
+
+inline ITensor toITensor(const ITensor &tensor) { return tensor; }
+inline ITensor toITensor(const IQTensor &tensor) { return tensor.toITensor(); }
+
+
 #endif

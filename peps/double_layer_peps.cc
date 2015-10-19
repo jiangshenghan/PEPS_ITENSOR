@@ -56,43 +56,48 @@ typename IQTensor::CombinerT Double_Layer_PEPSt<IQTensor>::decombine_double_virt
 
 
 template <class TensorT>
-void Double_Layer_PEPSt<TensorT>::obtain_peps_sandwich_single_site_operators(std::vector<TensorT> single_site_operators, const std::vector<int> &acting_sites, std::vector<TensorT>& sandwiched_tensors)
+void Double_Layer_PEPSt<TensorT>::obtain_peps_sandwich_single_site_operators(std::vector<TensorT> direct_prod_operators, const std::vector<int> &acting_sites_list, std::vector<TensorT>& sandwiched_tensors)
 {
-    //auto sandwiched_tensors=double_layer_tensors_;
+    if (sandwiched_tensors.empty()) sandwiched_tensors=double_layer_tensors_;
 
-    for (auto site_no : acting_sites)
+    for (int i=0; i<direct_prod_operators.size(); i++)
     {
         //get operator act on site_no
         IndexT phys_leg;
+        int site_no=acting_sites_list[i];
         for (const auto &leg : single_layer_tensors_[site_no].indices())
         {
             if (leg.type()==Site)
             {
                 phys_leg=leg;
+                //Print(phys_leg);
                 break;
             }
         }
         for (int legi=0; legi<2; legi++)
         {
-            auto old_leg=single_site_operators[site_no].indices()[legi];
-            if (old_leg.primeLevel()==0) single_site_operators[site_no].replaceIndex(old_leg,dag(phys_leg));
-            if (old_leg.primeLevel()==1) single_site_operators[site_no].replaceIndex(old_leg,prime(phys_leg));
+            auto old_leg=direct_prod_operators[i].indices()[legi];
+            if (old_leg.primeLevel()==0) direct_prod_operators[i].replaceIndex(old_leg,dag(phys_leg));
+            if (old_leg.primeLevel()==1) direct_prod_operators[i].replaceIndex(old_leg,prime(phys_leg));
+
+            //Print(old_leg);
         }
 
         //acting operator and replace the corresponding sandwiched_tensors
         TensorT lower_tensor=single_layer_tensors_[site_no],
                 upper_tensor=prime(dag(lower_tensor));
-        sandwiched_tensors[site_no]=lower_tensor*single_site_operators[site_no]*upper_tensor;
+        sandwiched_tensors[site_no]=lower_tensor*direct_prod_operators[i]*upper_tensor;
         for (const auto &combiner : virt_leg_combiners_[site_no])
         {
             sandwiched_tensors[site_no]=sandwiched_tensors[site_no]*combiner;
         }
+        //PrintDat(sandwiched_tensors[site_no]);
     }
 }
 template
-void Double_Layer_PEPSt<ITensor>::obtain_peps_sandwich_single_site_operators(std::vector<ITensor> single_site_operators, const std::vector<int> &acting_sites, std::vector<ITensor>& sandwiched_tensors);
+void Double_Layer_PEPSt<ITensor>::obtain_peps_sandwich_single_site_operators(std::vector<ITensor> direct_prod_operators, const std::vector<int> &acting_sites_list, std::vector<ITensor>& sandwiched_tensors);
 template
-void Double_Layer_PEPSt<IQTensor>::obtain_peps_sandwich_single_site_operators(std::vector<IQTensor> single_site_operators, const std::vector<int> &acting_sites, std::vector<IQTensor>& sandwiched_tensors);
+void Double_Layer_PEPSt<IQTensor>::obtain_peps_sandwich_single_site_operators(std::vector<IQTensor> direct_prod_operators, const std::vector<int> &acting_sites_list, std::vector<IQTensor>& sandwiched_tensors);
 
 
 template <class TensorT>

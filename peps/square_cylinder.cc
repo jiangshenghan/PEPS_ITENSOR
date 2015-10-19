@@ -56,24 +56,24 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_sigma_lr_iterative(int 
 
     for (col_lr_[0]=1; col_lr_[0]<=left_end_col; )
     {
-        snake_walking_bulk_col(col_lr_[0],1,-1);
+        snake_walking_bulk_col(col_lr_[0],1,-1,true);
         col_lr_[0]++;
 
         if (col_lr_[0]>left_end_col) break;
 
-        snake_walking_bulk_col(col_lr_[0],1,1);
+        snake_walking_bulk_col(col_lr_[0],1,1,true);
         col_lr_[0]++;
     }
     col_lr_[0]=left_end_col;
 
     for (col_lr_[1]=this->lattice().n_uc()[0]-2; col_lr_[1]>=right_end_col; )
     {
-        snake_walking_bulk_col(col_lr_[1],-1,1);
+        snake_walking_bulk_col(col_lr_[1],-1,1,true);
         col_lr_[1]--;
 
         if (col_lr_[1]<right_end_col) break;
 
-        snake_walking_bulk_col(col_lr_[1],-1,-1);
+        snake_walking_bulk_col(col_lr_[1],-1,-1,true);
         col_lr_[1]--;
     }
     col_lr_[1]=right_end_col;
@@ -176,7 +176,7 @@ void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::snake_walking_boundary_col();
 
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir)
+void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize)
 {
     int n_rows=this->lattice().n_uc()[1],
         n_cols=this->lattice().n_uc()[0];
@@ -220,7 +220,11 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int col
         rowi+=vertical_dir;
     }
 
-    sigma_lr_[lr_no]/=sigma_lr_[lr_no].norm();
+    if (do_normalize)
+    {
+        sigma_lr_[lr_no]/=sigma_lr_[lr_no].norm();
+    }
+
     clean(sigma_lr_[lr_no]);
 
     cout << "\n========================================\n" << endl;
@@ -237,9 +241,9 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int col
 
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);
+void Cylinder_Square_Double_Layer_PEPSt<ITensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize);
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);
+void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize);
 
 
 template <class TensorT>
@@ -280,15 +284,15 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::match_sigma_left_right(int lr_
         rowi+=vertical_dir;
     }
 
-    cout << "\n========================================\n" << endl;
+    //cout << "\n========================================\n" << endl;
     //cout << "Output for sigma_l and sigma_r:" << endl;
     //cout << "left part:" << endl;
     //PrintDat(sigma_lr_[0]);
     //cout << "right part:" << endl;
     //PrintDat(sigma_lr_[1]);
-    cout << "sigma_left and sigma_right matched!" << endl;
+    //cout << "sigma_left and sigma_right matched!" << endl;
     //PrintDat(sigma_lr_[0]*sigma_lr_[1]);
-    cout << "\n========================================\n" << endl;
+    //cout << "\n========================================\n" << endl;
 }
 template
 void Cylinder_Square_Double_Layer_PEPSt<ITensor>::match_sigma_left_right(int lr_no);
@@ -312,8 +316,9 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::from_sigma_lr_to_sigma_b()
     
     //PrintDat(sigma_lr_[0]);
     //get eigenvalues of sigma_l
-    TensorT U_l, D_l;
-    diagHermitian(sigma_lr_[0],U_l,D_l);
+    std::array<ITensor,2> sigma_lr_itensor={toITensor(sigma_lr_[0]),toITensor(sigma_lr_[1])};
+    ITensor U_l, D_l;
+    diagHermitian(sigma_lr_itensor[0],U_l,D_l);
 
     //cout << "sigma_l singular value:" << endl;
     //PrintDat(D_l);
@@ -339,7 +344,7 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::from_sigma_lr_to_sigma_b()
 
     //obtain sigma_b_, sigma_b_ shares the same index as sigma_lr_
     int protect_plevel=3;
-    sigma_b_=sigma_lr_[1];
+    sigma_b_=sigma_lr_itensor[1];
     for (int plevel=0; plevel<2; plevel++)
     {
         sqrt_sigma_l.mapprime(plevel,protect_plevel);
@@ -362,8 +367,11 @@ void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::from_sigma_lr_to_sigma_b();
 template <class TensorT>
 void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_density_matrix_spectrum()
 {
-    TensorT U_b, D_b;
+    //TensorT U_b, D_b;
+    //diagHermitian(sigma_b_,U_b,D_b);
 
+    //We use ITensor since sigma_b_ may not have good quantum number
+    ITensor U_b, D_b;
     diagHermitian(sigma_b_,U_b,D_b);
 
     auto Db_legs=D_b.indices();
@@ -502,18 +510,35 @@ double Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std
     {
         auto sitei_coord=this->lattice().site_list_to_coord(sitei);
         if ((sitei_coord[0]-1)<new_col_lr[0]) new_col_lr[0]=sitei_coord[0]-1;
-        if ((sitei_coord[0]+1)>new_col_lr[0]) new_col_lr[1]=sitei_coord[0]+1;
+        if ((sitei_coord[0]+1)>new_col_lr[1]) new_col_lr[1]=sitei_coord[0]+1;
     }
+    //cout << "new cols: " << new_col_lr[0] << " " << new_col_lr[1] << endl;
     //move sigma_lr_ to new_col_lr to reduce contraction time
     move_sigma_lr(new_col_lr);
 
     //calculate wavefunction norm
     auto sandwiched_tensors=this->double_layer_tensors_;
     double wf_norm=sandwiched_peps_norm(sandwiched_tensors);
+
+    cout << "wavefunction norm: " << wf_norm << endl;
     
     //calculate the unnormalized expect_val
     this->obtain_peps_sandwich_single_site_operators(direct_prod_operators,acting_sites_list,sandwiched_tensors);
+
+    //for (int sitei=0; sitei<this->lattice().n_sites_total(); sitei++)
+    //{
+    //    auto diff_tensor=sandwiched_tensors[sitei]-this->double_layer_tensors_[sitei];
+    //    if (diff_tensor.norm()>EPSILON)
+    //    {
+    //        cout << "Tensor at site " << sitei << " has changed!" << endl;
+    //        PrintDat(this->double_layer_tensors_[sitei]);
+    //        PrintDat(sandwiched_tensors[sitei]);
+    //    }
+    //}
+
     double expect_val=this->sandwiched_peps_norm(sandwiched_tensors);
+
+    cout << "unnormalized correlator: " << expect_val << endl;
 
     return expect_val/wf_norm;
     

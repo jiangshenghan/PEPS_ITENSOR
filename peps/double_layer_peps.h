@@ -80,7 +80,7 @@ class Double_Layer_PEPSt
         CombinerT decombine_double_virt_indice(int sitei, const IndexT &double_virt_ind, IndexT &lower_ind);
         //Sandwich operators between double layer PEPS
         //Insert direct product operators: the operator is formed by two indices, one with prime and one without prime
-        void obtain_peps_sandwich_single_site_operators(std::vector<TensorT> single_site_operators, const std::vector<int> &acting_sites, std::vector<TensorT>& sandwiched_tensors);
+        void obtain_peps_sandwich_single_site_operators(std::vector<TensorT> direct_prod_operators, const std::vector<int> &acting_sites_list, std::vector<TensorT>& sandwiched_tensors);
 
         //
         //Constructor Helpers

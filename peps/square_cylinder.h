@@ -47,7 +47,7 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //vertical_dir==1(-1) denotes walking from left(right) to right(left),
         //horizontal_dir==1(-1) denotes walking from down(up) to up(down)
         void snake_walking_boundary_col();
-        void snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir);
+        void snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize=false);
         //make indices of (meeting) sigma_lr_ match each other, so their multiplication gives wavefunction norm
         //keep sigma_lr_[1-lr_no] invariant, while change sigma_lr_[lr_no]
         void match_sigma_left_right(int lr_no=1);
@@ -70,7 +70,6 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //get value of <O>=\langle\psi|\hat{O}|\psi\rangle iteratively //where <O> is obtained by contracting sandwiched_tensors
         //we will start from col_lr, where data outside col_lr are stored in sigma_lr(decombined)
         //horizontal_dir is the contraction direction
-        //
         double sandwiched_peps_norm(const std::vector<TensorT> &sandwiched_tensors, int horizontal_dir=1);
 
         
@@ -130,7 +129,8 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         std::array<std::vector<CombinerT>,2> lower_combiners_, upper_combiners_; ;
 
         //eigval of sigma_b_ is identical to those of RDM
-        TensorT sigma_b_;
+        //we always choose sigma_b_ as ITensor instead
+        ITensor sigma_b_;
         std::vector<double> density_mat_spectrum_;
 
         //TensorT transfer_mat_;
