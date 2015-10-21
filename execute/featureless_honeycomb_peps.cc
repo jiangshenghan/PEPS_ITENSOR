@@ -1,59 +1,102 @@
 
 #include "transfer_to_square.h"
-#include "square_cylinder.h"
+#include "square_double_layer_peps.h"
 
 int main()
 {
     //system size
-    int Ly=6,Lx=50*Ly;
+    int Ly=2,Lx=40*Ly;
 
     //tunable parameter for wavefunctions
     std::default_random_engine generator(std::time(0));
     std::uniform_real_distribution<double> distribution(-1,1);
     auto rand_gen = std::bind(distribution,generator);
     //double A1=rand_gen(), A2=rand_gen();
-    double A1=0.8, A2=1-A1;
+    double A1=0.9, A2=1-A1;
 
     //Output file name for double_layer_peps
     std::stringstream ss;
-    ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_Ly=" << Ly << "/Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
+    //file name for cylinder
+    //ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_Ly=" << Ly << "/Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
+    //file name for ribbon
+    ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_ribbon" << "/Ly=" << Ly << "_Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
     std::string file_name=ss.str();
-
-    cout << "\n========================================\n" << endl;
-    cout << "System Size: " << Lx << "x" << Ly << endl;
-    cout << "Wavefunction Params: " << "A1=" << A1 << ", A2=" << A2 << endl;
-    cout << "Output file: " << endl << file_name << endl;
 
     //Input honeycomb tensor in one uc and transfer to square peps
     std::vector<IQTensor> honeycomb_site_tensors_uc, honeycomb_bond_tensors_uc;
     generate_featureless_honeycomb_ansatz_uc(A1,A2,honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc);
 
-    Square_Lattice_Cylinder square_cylinder(std::array<int,2>{Lx,Ly});
-    auto square_peps=spin_sym_square_peps_from_honeycomb_tensor_uc(honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc,square_cylinder);
+    //peps on square cylinder
+    //Square_Lattice_Cylinder square_cylinder(std::array<int,2>{Lx,Ly});
+    //auto square_peps=spin_sym_square_peps_from_honeycomb_tensor_uc(honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc,square_cylinder);
 
-    //set boundary tensors
-    IQIndex boundary_leg=Spin_leg(std::vector<int>{0,2},"boundary leg",In,Link);
-    IQTensor boundary_tensor(boundary_leg(2));
-    boundary_tensor(boundary_leg(1))=1;
+    //peps on square ribbon
+    Square_Lattice_Open square_ribbon(std::array<int,2>{Lx,Ly});
+    auto square_peps=spin_sym_square_peps_from_honeycomb_tensor_uc(honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc,square_ribbon);
 
-    //cout << "Boundary condition:" << endl;
-    //PrintDat(boundary_tensor);
-    //cout << "========================================\n" << endl;
+    cout << "\n========================================\n" << endl;
+    cout << square_peps.name() << endl;
+    cout << "System Size: " << Lx << "x" << Ly << endl;
+    cout << "Wavefunction Params: " << "A1=" << A1 << ", A2=" << A2 << endl;
+    cout << "Output file: " << endl << file_name << endl;
+    cout << "\n========================================\n" << endl;
 
-    //TODO: div(boundary_tensor) may cause inconsistency for generic boundary condition?
+
+    //set ferromagnet boundary condition
+    //IQIndex boundary_leg=Spin_leg(std::vector<int>{0,2},"boundary leg",In,Link);
+    //IQTensor boundary_tensor(boundary_leg);
+    ////boundary_tensor(boundary_leg(1))=1;
+    //boundary_tensor(boundary_leg(2))=1;
+    ////cout << "Boundary condition:" << endl;
+    ////PrintDat(boundary_tensor);
+    //for (auto &tensor : square_peps.boundary_tensors())
+    //{
+    //    //cout << tensor;
+    //    auto oind=boundary_tensor.indices()[0],
+    //         nind=tensor.indices()[0];
+    //    if (oind.dir()==-nind.dir())
+    //    {
+    //        oind.dag();
+    //        boundary_tensor.dag();
+    //    }
+    //    boundary_tensor.replaceIndex(oind,nind);
+    //    tensor=boundary_tensor;
+    //    //PrintDat(tensor);
+    //}
+
+    //set anti-ferromagnet boundary condition
+    int boundaryi=0;
     for (auto &tensor : square_peps.boundary_tensors())
     {
-        //cout << tensor;
-        auto oind=boundary_tensor.indices()[0],
-             nind=tensor.indices()[0];
-        if (oind.dir()==-nind.dir())
+        IQIndex ind=tensor.indices()[0];
+        if (boundaryi%2==0)
         {
-            oind.dag();
-            boundary_tensor.dag();
+            tensor(ind(1))=1;
+            //tensor(ind(2))=1;
         }
-        boundary_tensor.replaceIndex(oind,nind);
-        tensor=boundary_tensor;
+        else
+        {
+            //tensor(ind(3))=1;
+            tensor(ind(4))=1;
+        }
+        //PrintDat(tensor);
+        boundaryi++;
     }
+
+    //set random boundary condition for short boundary 
+    for (int boundaryi=0; boundaryi<Ly; boundaryi++)
+    {
+        auto &left_tensor=square_peps.boundary_tensors(boundaryi);
+        auto &right_tensor=square_peps.boundary_tensors(Lx+Ly+boundaryi);
+        auto left_ind=left_tensor.indices()[0],
+             right_ind=right_tensor.indices()[0];
+        for (int val=1; val<=left_ind.m(); val++)
+        {
+            left_tensor(left_ind(val))=rand_gen();
+            right_tensor(right_ind(val))=rand_gen();
+        }
+    }
+
     
     //set random boundary condition
     //for (auto &tensor: square_peps.boundary_tensors())
@@ -63,13 +106,21 @@ int main()
     //    {
     //        tensor(ind(val))=rand_gen();
     //    }
-    //    PrintDat(tensor);
+    //    //PrintDat(tensor);
     //}
 
 
-    Cylinder_Square_Double_Layer_PEPSt<IQTensor> square_double_layer_peps(square_peps);
+    Square_Double_Layer_PEPSt<IQTensor> square_double_layer_peps(square_peps);
 
-    //calculate sigma_lr_ until they converge 
+    //check transfer matrix
+    //square_double_layer_peps.obtain_transfer_matrix(3);
+    //auto transfer_mat_eigvals=square_double_layer_peps.transfer_matrix_eigvals();
+    //for (auto &eigval : transfer_mat_eigvals)
+    //    cout << eigval << endl;
+    //cout << endl;
+    //return 0;
+
+    //calculate sigma_lr_
     square_double_layer_peps.obtain_sigma_lr_iterative(Lx/2-1,Lx/2);
 
     //cout << "\n========================================\n" << endl;
@@ -93,7 +144,7 @@ int main()
     cout << endl;
     cout << "Entanglement entropy: " << square_double_layer_peps.entanglement_entropy_vN() << endl;
 
-    //Cylinder_Square_Double_Layer_PEPSt<IQTensor> double_layer_peps_from_file(square_cylinder);
+    //Square_Double_Layer_PEPSt<IQTensor> double_layer_peps_from_file(square_cylinder);
     //readFromFile(file_name,double_layer_peps_from_file);
 
     //cout << "\n========================================\n" << endl;

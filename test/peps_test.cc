@@ -4,7 +4,7 @@
 int main()
 {
     //Square_Lattice_Torus square_lattice{std::array<int,2>{2,2}};
-    Square_Lattice_Open square_lattice{std::array<int,2>{4,3}};
+    Square_Lattice_Open square_lattice{std::array<int,2>{2,2}};
    
     square_lattice.print_lattice_inf();
 
@@ -101,55 +101,55 @@ int main()
     //}
     //cout << "\n========================================\n" << endl;
 
-    //Double_Layer_IQPEPS layered_peps_test(peps_test);
+    Double_Layer_IQPEPS layered_peps_test(peps_test);
 
-    //cout << "\n========================================\n" << endl;
-    //cout << "Original double layer PEPS:" << endl;
-    //cout << "Virtual Leg Combiners:" << endl;
-    //int sitei=0;
-    //for (const auto &site_combiners : layered_peps_test.virt_leg_combiners())
-    //{
-    //    cout << "Cominers for virtual legs of site " << sitei << endl;
-    //    for (const auto &combiner : site_combiners)
-    //    {
-    //        cout << combiner;
-    //    }
-    //    cout << endl;
-    //    sitei++;
-    //}
+    cout << "\n========================================\n" << endl;
+    cout << "Original double layer PEPS:" << endl;
+    cout << "Virtual Leg Combiners:" << endl;
+    int sitei=0;
+    for (const auto &site_combiners : layered_peps_test.virt_leg_combiners())
+    {
+        cout << "Cominers for virtual legs of site " << sitei << endl;
+        for (const auto &combiner : site_combiners)
+        {
+            cout << combiner;
+        }
+        cout << endl;
+        sitei++;
+    }
 
-    //cout << "Layered Tensors:" << endl;
-    //for (const auto &tensor : layered_peps_test.double_layer_tensors())
-    //{
-    //    cout << tensor << endl;
-    //}
-    //cout << "\n========================================\n" << endl;
+    cout << "Layered Tensors:" << endl;
+    for (const auto &tensor : layered_peps_test.double_layer_tensors())
+    {
+        cout << tensor << endl;
+    }
+    cout << "\n========================================\n" << endl;
 
-    //writeToFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",layered_peps_test);
-    //Double_Layer_IQPEPS layered_peps_from_file(square_lattice);
-    //readFromFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",layered_peps_from_file);
+    writeToFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",layered_peps_test);
+    Double_Layer_IQPEPS layered_peps_from_file(square_lattice);
+    readFromFile("/home/jiangsb/code/peps_itensor/result/test/iotest.txt",layered_peps_from_file);
 
-    //cout << "\n========================================\n" << endl;
-    //cout << "Double layer PEPS reading from file:" << endl;
-    //cout << "Virtual Leg Combiners:" << endl;
-    //sitei=0;
-    //for (const auto &site_combiners : layered_peps_from_file.virt_leg_combiners())
-    //{
-    //    cout << "Cominers for virtual legs of site " << sitei << endl;
-    //    for (const auto &combiner : site_combiners)
-    //    {
-    //        cout << combiner;
-    //    }
-    //    cout << endl;
-    //    sitei++;
-    //}
+    cout << "\n========================================\n" << endl;
+    cout << "Double layer PEPS reading from file:" << endl;
+    cout << "Virtual Leg Combiners:" << endl;
+    sitei=0;
+    for (const auto &site_combiners : layered_peps_from_file.virt_leg_combiners())
+    {
+        cout << "Cominers for virtual legs of site " << sitei << endl;
+        for (const auto &combiner : site_combiners)
+        {
+            cout << combiner;
+        }
+        cout << endl;
+        sitei++;
+    }
 
-    //cout << "Layered Tensors:" << endl;
-    //for (const auto &tensor : layered_peps_from_file.double_layer_tensors())
-    //{
-    //    cout << tensor << endl;
-    //}
-    //cout << "\n========================================\n" << endl;
+    cout << "Layered Tensors:" << endl;
+    for (const auto &tensor : layered_peps_from_file.double_layer_tensors())
+    {
+        cout << tensor << endl;
+    }
+    cout << "\n========================================\n" << endl;
 
     return 0;
 }

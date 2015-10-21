@@ -156,7 +156,7 @@ void Double_Layer_PEPSt<TensorT>::obtain_layered_tensors_with_combined_legs()
 
             auto virt_leg_iter=std::find(combined_indices.begin(),combined_indices.end(),virt_leg);
 
-            //if the leg has already been combined, add the combiner to virt_leg_combiners_[sitei], and delete the legs and combiners in combined_indices(_combiners) since each leg only appear twice
+            //if the leg has already been combined, add the combiner to virt_leg_combiners_[sitei]. We also delete the legs and combiners in combined_indices(_combiners) since each leg only appear twice
             if (virt_leg_iter!=combined_indices.end())
             {
                 std::swap(*virt_leg_iter,*(combined_indices.end()-1));

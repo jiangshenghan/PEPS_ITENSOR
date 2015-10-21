@@ -4,11 +4,11 @@
 
 #include "double_layer_peps.h"
 //
-//class for double layered square peps on cylinder geometry
+//class for double layered square peps, where we focus on cylinder or ribbon geometry
 //can be used to obtain entanglement property and measure correlation functions
 //
 template<class TensorT>
-class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
+class Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
 {
     public:
         //
@@ -22,9 +22,9 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         //
         //Constructor
         //
-        //Cylinder_Square_Double_Layer_PEPSt() {}
-        Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
-        Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col=-1);
+        //Square_Double_Layer_PEPSt() {}
+        Square_Double_Layer_PEPSt(const Lattice_Base &square_lattice);
+        Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col=-1);
 
         //
         //Acess Method
@@ -34,6 +34,8 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         const TensorT &sigma_lr(int i) const { return sigma_lr_[i]; }
 
         const std::vector<double> &density_mat_spectrum() const { return density_mat_spectrum_; }
+
+        const TensorT &transfer_mat() const { return transfer_mat_; }
 
         //
         //Method to obtain sigma
@@ -61,7 +63,8 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         std::vector<double> entanglement_spectrum();
         double entanglement_entropy_vN();
         double entanglement_entropy_Renyi(double renyi_n);
-        //void obtain_transfer_matrix(int coli=1);
+        void obtain_transfer_matrix(int coli=1);
+        std::vector<double> transfer_matrix_eigvals();
 
         //
         //calculate correlators on square cylinder notice square_cylinder_double_peps should provide converged sigma_lr
@@ -133,7 +136,7 @@ class Cylinder_Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         ITensor sigma_b_;
         std::vector<double> density_mat_spectrum_;
 
-        //TensorT transfer_mat_;
+        TensorT transfer_mat_;
 };
 
 

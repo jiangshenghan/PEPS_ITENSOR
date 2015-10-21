@@ -1,46 +1,48 @@
 
 #include "transfer_to_square.h"
-#include "square_cylinder.h"
+#include "square_double_layer_peps.h"
 
 int main()
 {
     //system size
-    int Ly=6, Lx=16*Ly;
+    int Ly=2, Lx=40*Ly;
 
     double A1=0.9, A2=1-A1;
 
     //Output file name for double_layer_peps
     std::stringstream ss;
-    ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_Ly=" << Ly << "/Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
+    //file name for cylinder
+    //ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_Ly=" << Ly << "/Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
+    //file name for ribbon
+    ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_ribbon" << "/Ly=" << Ly << "_Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
+
     std::string file_name=ss.str();
 
+    //cylinder geometry peps
+    //Square_Lattice_Cylinder square_cylinder(std::array<int,2>{Lx,Ly});
+    //Square_Double_Layer_PEPSt<IQTensor> square_double_layer_peps(square_cylinder);
+
+    //ribbon geometry peps
+    Square_Lattice_Open square_ribbon(std::array<int,2>{Lx,Ly});
+    Square_Double_Layer_PEPSt<IQTensor> square_double_layer_peps(square_ribbon);
+
+    readFromFile(file_name,square_double_layer_peps);
+    
     cout << "\n========================================\n" << endl;
+    cout << square_double_layer_peps.lattice().name() << endl;
     cout << "System Size: " << Lx << "x" << Ly << endl;
     cout << "Wavefunction Params: " << "A1=" << A1 << ", A2=" << A2 << endl;
     cout << "Input file: " << endl << file_name << endl;
-    cout << "========================================\n" << endl;
 
-    Square_Lattice_Cylinder square_cylinder(std::array<int,2>{Lx,Ly});
-
-    //reading square_cylinder_double_peps
-    Cylinder_Square_Double_Layer_PEPSt<IQTensor> square_cylinder_double_peps(square_cylinder);
-    readFromFile(file_name,square_cylinder_double_peps);
-    
     cout << "Successfully reading from file!" << endl;
+    cout << "========================================\n" << endl;
 
     //cout << "\n========================================\n" << endl;
     //cout << "Data for double layer PEPS reading from file:" << endl;
-    //cout << "col_left=" << square_cylinder_double_peps.col_lr(0) << ", col_right=" << square_cylinder_double_peps.col_lr(1) << endl;
-    //PrintDat(square_cylinder_double_peps.sigma_lr(0));
-    //PrintDat(square_cylinder_double_peps.sigma_lr(1));
+    //cout << "col_left=" << square_double_layer_peps.col_lr(0) << ", col_right=" << square_double_layer_peps.col_lr(1) << endl;
+    //PrintDat(square_double_layer_peps.sigma_lr(0));
+    //PrintDat(square_double_layer_peps.sigma_lr(1));
     //cout << "\n========================================\n" << endl;
-
-    //calculate correlators
-    //std::array<Coordinate,2> acting_sites_coord;
-    //acting_sites_coord[0]=Coordinate{1,0,0};
-    //acting_sites_coord[1]=Coordinate{2,0,0};
-
-    //cout << honeycomb_cylinder_SzSz_correlator(acting_sites_coord,square_cylinder_double_peps) << endl;
 
 
     //construct Si (i=x,y,z) operators of honeycomb lattice and then transfer to square
@@ -101,27 +103,41 @@ int main()
 
     //get correlation function
     //std::vector<int> acting_sites_list={3};
-    //cout << "SxSx correlator: " << square_cylinder_double_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{SxSx}) << endl;
-    //cout << "SySy correlator: " << square_cylinder_double_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{SySy}) << endl;
-    //cout << "SzSz correlator: " << square_cylinder_double_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{SzSz}) << endl;
+    //cout << "SxSx correlator: " << square_double_layer_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{SxSx}) << endl;
+    //cout << "SySy correlator: " << square_double_layer_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{SySy}) << endl;
+    //cout << "SzSz correlator: " << square_double_layer_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{SzSz}) << endl;
 
     //std::vector<int> acting_sites_list={3,3+1};
-    //cout << "SxSx correlator: " << square_cylinder_double_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{IdSx,SxId}) << endl;
-    //cout << "SySy correlator: " << square_cylinder_double_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{IdiSy,-iSyId}) << endl;
-    //cout << "SzSz correlator: " << square_cylinder_double_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{IdSz,SzId}) << endl;
+    //cout << "SxSx correlator: " << square_double_layer_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{IdSx,SxId}) << endl;
+    //cout << "SySy correlator: " << square_double_layer_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{IdiSy,-iSyId}) << endl;
+    //cout << "SzSz correlator: " << square_double_layer_peps.obtain_correlators(acting_sites_list,std::vector<IQTensor>{IdSz,SzId}) << endl;
 
-    cout << "SzSz correlator for bond a (weak bond): " << square_cylinder_double_peps.obtain_correlators(std::vector<int>{3},std::vector<IQTensor>{SzSz}) << endl;
-    cout << "SzSz correlator for bond b (strong bond): " << square_cylinder_double_peps.obtain_correlators(std::vector<int>{3,4},std::vector<IQTensor>{IdSz,SzId}) << endl;
-    cout << "SzSz correlator for bond c (weak bond): " << square_cylinder_double_peps.obtain_correlators(std::vector<int>{3,3+Lx},std::vector<IQTensor>{IdSz,SzId}) << endl;
+    int sitei=2+(Ly-1)/2*Lx;
+    //int sitei=2;
+
+    //single bond correlation
+    //Sx correlators
+    cout << "SxSx correlator for bond a: " << square_double_layer_peps.obtain_correlators(std::vector<int>{sitei},std::vector<IQTensor>{SxSx}) << endl;
+    cout << "SxSx correlator for bond b: " << square_double_layer_peps.obtain_correlators(std::vector<int>{sitei,sitei+1},std::vector<IQTensor>{IdSx,SxId}) << endl;
+    cout << "SxSx correlator for bond c: " << square_double_layer_peps.obtain_correlators(std::vector<int>{sitei,sitei+Lx},std::vector<IQTensor>{IdSx,SxId}) << endl;
+    //Sy correlators
+    cout << "SySy correlator for bond a: " << square_double_layer_peps.obtain_correlators(std::vector<int>{sitei},std::vector<IQTensor>{SySy}) << endl;
+    cout << "SySy correlator for bond b: " << square_double_layer_peps.obtain_correlators(std::vector<int>{sitei,sitei+1},std::vector<IQTensor>{IdiSy,-iSyId}) << endl;
+    cout << "SySy correlator for bond c: " << square_double_layer_peps.obtain_correlators(std::vector<int>{sitei,sitei+Lx},std::vector<IQTensor>{IdiSy,-iSyId}) << endl;
+    //Sz correlators
+    cout << "SzSz correlator for bond a: " << square_double_layer_peps.obtain_correlators(std::vector<int>{sitei},std::vector<IQTensor>{SzSz}) << endl;
+    cout << "SzSz correlator for bond b: " << square_double_layer_peps.obtain_correlators(std::vector<int>{sitei,sitei+1},std::vector<IQTensor>{IdSz,SzId}) << endl;
+    cout << "SzSz correlator for bond c: " << square_double_layer_peps.obtain_correlators(std::vector<int>{sitei,sitei+Lx},std::vector<IQTensor>{IdSz,SzId}) << endl;
+    
 
     //get entanglement property
-    square_cylinder_double_peps.move_sigma_lr({Lx/2-1,Lx/2});
-    square_cylinder_double_peps.from_sigma_lr_to_sigma_b();
-    square_cylinder_double_peps.obtain_density_matrix_spectrum();
+    square_double_layer_peps.move_sigma_lr({Lx/2-1,Lx/2});
+    square_double_layer_peps.from_sigma_lr_to_sigma_b();
+    square_double_layer_peps.obtain_density_matrix_spectrum();
     cout << "Density Matrix spectrum: " << endl; 
-    for (double eigval : square_cylinder_double_peps.density_mat_spectrum()) cout << eigval << " ";
+    for (double eigval : square_double_layer_peps.density_mat_spectrum()) cout << eigval << " ";
     cout << endl;
-    cout << "Entanglement entropy: " << square_cylinder_double_peps.entanglement_entropy_vN() << endl;
+    cout << "Entanglement entropy: " << square_double_layer_peps.entanglement_entropy_vN() << endl;
 
     return 0;
 }

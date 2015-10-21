@@ -1,56 +1,66 @@
 
-#include "square_cylinder.h"
+#include "square_double_layer_peps.h"
 
 
 //
-//class Cylinder_Square_Double_Layer_PEPSt
+//class Square_Double_Layer_PEPSt
 //
 template <class TensorT>
-Cylinder_Square_Double_Layer_PEPSt<TensorT>::Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder):
-    Double_Layer_PEPSt<TensorT>(square_cylinder),
-    col_lr_{{0,square_cylinder.n_uc()[0]-1}},
-    lower_combiners_{{std::vector<CombinerT>(square_cylinder.n_uc()[1]),std::vector<CombinerT>(square_cylinder.n_uc()[1])}},
-    upper_combiners_{{std::vector<CombinerT>(square_cylinder.n_uc()[1]),std::vector<CombinerT>(square_cylinder.n_uc()[1])}}
+Square_Double_Layer_PEPSt<TensorT>::Square_Double_Layer_PEPSt(const Lattice_Base &square_lattice):
+    Double_Layer_PEPSt<TensorT>(square_lattice),
+    col_lr_{{0,square_lattice.n_uc()[0]-1}},
+    lower_combiners_{{std::vector<CombinerT>(square_lattice.n_uc()[1]),std::vector<CombinerT>(square_lattice.n_uc()[1])}},
+    upper_combiners_{{std::vector<CombinerT>(square_lattice.n_uc()[1]),std::vector<CombinerT>(square_lattice.n_uc()[1])}}
 {
-    assert(square_cylinder.name().find("cylinder")!=std::string::npos);
+    //we always focus on long cylinder or ribbon geometry, where Ly is the short direction
+    if (square_lattice.name().find("torus")!=std::string::npos)
+    {
+        cout << "We only focus on cylinder or ribbon!" << endl;
+        exit(EXIT_FAILURE);
+    }
     cutting_col_=this->lattice().n_uc()[0]/2;
 }
 template
-Cylinder_Square_Double_Layer_PEPSt<ITensor>::Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
+Square_Double_Layer_PEPSt<ITensor>::Square_Double_Layer_PEPSt(const Lattice_Base &square_lattice);
 template
-Cylinder_Square_Double_Layer_PEPSt<IQTensor>::Cylinder_Square_Double_Layer_PEPSt(const Lattice_Base &square_cylinder);
+Square_Double_Layer_PEPSt<IQTensor>::Square_Double_Layer_PEPSt(const Lattice_Base &square_lattice);
 
 template <class TensorT>
-Cylinder_Square_Double_Layer_PEPSt<TensorT>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col):
+Square_Double_Layer_PEPSt<TensorT>::Square_Double_Layer_PEPSt(const PEPSt<TensorT> &square_peps, int cutting_col):
     Double_Layer_PEPSt<TensorT>(square_peps),
     cutting_col_(cutting_col),
     col_lr_{{0,square_peps.lattice().n_uc()[0]-1}},
     lower_combiners_{{std::vector<CombinerT>(square_peps.lattice().n_uc()[1]),std::vector<CombinerT>(square_peps.lattice().n_uc()[1])}},
     upper_combiners_{{std::vector<CombinerT>(square_peps.lattice().n_uc()[1]),std::vector<CombinerT>(square_peps.lattice().n_uc()[1])}}
 {
+    //we always focus on long cylinder or ribbon geometry, where Ly is the short direction
+    if (square_peps.name().find("torus")!=std::string::npos)
+    {
+        cout << "We only focus on cylinder or ribbon!" << endl;
+        exit(EXIT_FAILURE);
+    }
     if (cutting_col_==-1) 
         cutting_col_=this->lattice().n_uc()[0]/2;
 }
 template
-Cylinder_Square_Double_Layer_PEPSt<ITensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<ITensor> &square_peps, int cutting_col);
+Square_Double_Layer_PEPSt<ITensor>::Square_Double_Layer_PEPSt(const PEPSt<ITensor> &square_peps, int cutting_col);
 template
-Cylinder_Square_Double_Layer_PEPSt<IQTensor>::Cylinder_Square_Double_Layer_PEPSt(const PEPSt<IQTensor> &square_peps, int cutting_col);
+Square_Double_Layer_PEPSt<IQTensor>::Square_Double_Layer_PEPSt(const PEPSt<IQTensor> &square_peps, int cutting_col);
 
-//TODO: change this function
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_boundary_theory_iterative()
+void Square_Double_Layer_PEPSt<TensorT>::obtain_boundary_theory_iterative()
 {
     obtain_sigma_lr_iterative(cutting_col_-1,cutting_col_);
     from_sigma_lr_to_sigma_b();
     obtain_density_matrix_spectrum();
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_boundary_theory_iterative();
+void Square_Double_Layer_PEPSt<ITensor>::obtain_boundary_theory_iterative();
 template 
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_boundary_theory_iterative();
+void Square_Double_Layer_PEPSt<IQTensor>::obtain_boundary_theory_iterative();
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col)
+void Square_Double_Layer_PEPSt<TensorT>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col)
 {
     snake_walking_boundary_col();
 
@@ -87,13 +97,13 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_sigma_lr_iterative(int 
 
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col);
+void Square_Double_Layer_PEPSt<ITensor>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col);
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col);
+void Square_Double_Layer_PEPSt<IQTensor>::obtain_sigma_lr_iterative(int left_end_col, int right_end_col);
 
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_boundary_col()
+void Square_Double_Layer_PEPSt<TensorT>::snake_walking_boundary_col()
 {
     int n_rows=this->lattice().n_uc()[1], 
         n_cols=this->lattice().n_uc()[0];
@@ -170,13 +180,13 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_boundary_col()
 
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::snake_walking_boundary_col();
+void Square_Double_Layer_PEPSt<ITensor>::snake_walking_boundary_col();
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::snake_walking_boundary_col();
+void Square_Double_Layer_PEPSt<IQTensor>::snake_walking_boundary_col();
 
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize)
+void Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize)
 {
     int n_rows=this->lattice().n_uc()[1],
         n_cols=this->lattice().n_uc()[0];
@@ -241,13 +251,13 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int col
 
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize);
+void Square_Double_Layer_PEPSt<ITensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize);
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize);
+void Square_Double_Layer_PEPSt<IQTensor>::snake_walking_bulk_col(int coli, int horizontal_dir, int vertical_dir, bool do_normalize);
 
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::match_sigma_left_right(int lr_no)
+void Square_Double_Layer_PEPSt<TensorT>::match_sigma_left_right(int lr_no)
 {
     if (col_lr_[0]!=(col_lr_[1]-1))
     {
@@ -295,15 +305,15 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::match_sigma_left_right(int lr_
     //cout << "\n========================================\n" << endl;
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::match_sigma_left_right(int lr_no);
+void Square_Double_Layer_PEPSt<ITensor>::match_sigma_left_right(int lr_no);
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::match_sigma_left_right(int lr_no);
+void Square_Double_Layer_PEPSt<IQTensor>::match_sigma_left_right(int lr_no);
 
 
 //TODO: sigma_lr_'s may not have a good quantum number due to boundary
 //condition? In this case diagHermitian does not work for IQTensor?
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::from_sigma_lr_to_sigma_b()
+void Square_Double_Layer_PEPSt<TensorT>::from_sigma_lr_to_sigma_b()
 {
     if (col_lr_[0]!=(cutting_col_-1) || col_lr_[1]!=cutting_col_)
     {
@@ -359,13 +369,13 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::from_sigma_lr_to_sigma_b()
     //cout << "\n==============================\n" << endl;
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::from_sigma_lr_to_sigma_b();
+void Square_Double_Layer_PEPSt<ITensor>::from_sigma_lr_to_sigma_b();
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::from_sigma_lr_to_sigma_b();
+void Square_Double_Layer_PEPSt<IQTensor>::from_sigma_lr_to_sigma_b();
 
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_density_matrix_spectrum()
+void Square_Double_Layer_PEPSt<TensorT>::obtain_density_matrix_spectrum()
 {
     //TensorT U_b, D_b;
     //diagHermitian(sigma_b_,U_b,D_b);
@@ -385,38 +395,38 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_density_matrix_spectrum
     for (const auto &eigval : density_mat_spectrum_) spectrum_sum+=eigval;
     for (auto &eigval : density_mat_spectrum_)  eigval/=spectrum_sum; 
     std::sort(density_mat_spectrum_.begin(),density_mat_spectrum_.end());
-    auto max_eigval=*(density_mat_spectrum_.end()-1);
-    for (auto &eigval : density_mat_spectrum_)
-    {
-        if (eigval/max_eigval<EPSILON)
-            eigval=0;
-    }
+    //auto max_eigval=*(density_mat_spectrum_.end()-1);
+    //for (auto &eigval : density_mat_spectrum_)
+    //{
+    //    if (eigval/max_eigval<EPSILON)
+    //        eigval=0;
+    //}
 
     //cout << "Spectrum of density matrix: " << endl;
     //for (double eigval : density_mat_spectrum_) cout << eigval << " ";
     //cout << endl;
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_density_matrix_spectrum();
+void Square_Double_Layer_PEPSt<ITensor>::obtain_density_matrix_spectrum();
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_density_matrix_spectrum();
+void Square_Double_Layer_PEPSt<IQTensor>::obtain_density_matrix_spectrum();
 
 
 template <class TensorT>
-std::vector<double> Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_spectrum()
+std::vector<double> Square_Double_Layer_PEPSt<TensorT>::entanglement_spectrum()
 {
     std::vector<double> entanglement_spectrum;
     std::transform(density_mat_spectrum_.begin(),density_mat_spectrum_.end(),entanglement_spectrum.begin(),[](double eigval){ return std::exp(-eigval); });
     return entanglement_spectrum;
 }
 template
-std::vector<double> Cylinder_Square_Double_Layer_PEPSt<ITensor>::entanglement_spectrum();
+std::vector<double> Square_Double_Layer_PEPSt<ITensor>::entanglement_spectrum();
 template
-std::vector<double> Cylinder_Square_Double_Layer_PEPSt<IQTensor>::entanglement_spectrum();
+std::vector<double> Square_Double_Layer_PEPSt<IQTensor>::entanglement_spectrum();
 
 
 template <class TensorT>
-double Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_vN()
+double Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_vN()
 {
     double entanglement_entropy_vN=0;
     for (const auto &eigval : density_mat_spectrum_)
@@ -427,13 +437,13 @@ double Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_vN()
     return entanglement_entropy_vN;
 }
 template
-double Cylinder_Square_Double_Layer_PEPSt<ITensor>::entanglement_entropy_vN();
+double Square_Double_Layer_PEPSt<ITensor>::entanglement_entropy_vN();
 template
-double Cylinder_Square_Double_Layer_PEPSt<IQTensor>::entanglement_entropy_vN();
+double Square_Double_Layer_PEPSt<IQTensor>::entanglement_entropy_vN();
 
 
 template <class TensorT>
-double Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_Renyi(double renyi_n)
+double Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_Renyi(double renyi_n)
 {
     double entanglement_entropy_Renyi=0;
     for (const auto &eigval : density_mat_spectrum_)
@@ -444,65 +454,92 @@ double Cylinder_Square_Double_Layer_PEPSt<TensorT>::entanglement_entropy_Renyi(d
     return entanglement_entropy_Renyi;
 }
 template
-double Cylinder_Square_Double_Layer_PEPSt<ITensor>::entanglement_entropy_Renyi(double renyi_n);
+double Square_Double_Layer_PEPSt<ITensor>::entanglement_entropy_Renyi(double renyi_n);
 template
-double Cylinder_Square_Double_Layer_PEPSt<IQTensor>::entanglement_entropy_Renyi(double renyi_n);
+double Square_Double_Layer_PEPSt<IQTensor>::entanglement_entropy_Renyi(double renyi_n);
 
-
-
-//template <class TensorT>
-//void Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_transfer_matrix(int coli)
-//{
-//    int sitei=this->lattice().site_coord_to_list(coli,0,0);
-//    //leg_combiners[0/1] is for left/right legs of transfer matrix
-//    std::array<std::vector<CombinerT>,2> leg_combiners;
-//    std::array<IndexT,2> lr_legs;
-//
-//    lr_legs[0]=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei-1]));
-//    lr_legs[1]=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei+1]));
-//
-//    leg_combiners[0].push_back(CombinerT(lr_legs[0]));
-//    leg_combiners[1].push_back(CombinerT(lr_legs[1]));
-//    
-//    transfer_mat_=this->double_layer_tensors_[sitei]*leg_combiners[0][0]*leg_combiners[1][0];
-//
-//    for (int rowi=1; rowi<this->lattice().n_uc()[1]; rowi++)
-//    {
-//        sitei+=this->lattice().n_uc()[0];
-//
-//        lr_legs[0]=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei-1]));
-//        lr_legs[1]=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei+1]));
-//
-//        leg_combiners[0].push_back(CombinerT(lr_legs[0],leg_combiners[0][rowi-1].right()));
-//        leg_combiners[1].push_back(CombinerT(lr_legs[1],leg_combiners[1][rowi-1].right()));
-//
-//        transfer_mat_*=this->double_layer_tensors_[sitei];
-//        transfer_mat_=transfer_mat_*leg_combiners[0][rowi]*leg_combiners[1][rowi];
-//    }
-//
-//    //We make transfer_mat_ as matrix --I--mat--I'--
-//    auto oind=leg_combiners[1][this->lattice().n_uc()[1]-1].right(),
-//         nind=prime(leg_combiners[0][this->lattice().n_uc()[1]-1].right());
-//    if ((oind.dir()-nind.dir())!=0) nind.dag();
-//    transfer_mat_.replaceIndex(oind,nind);
-//
-//    transfer_mat_/=transfer_mat_.norm();
-//    clean(transfer_mat_);
-//    
-//
-//    //cout << "\n----------------------------\n" << endl;
-//    //cout << "transfer matrix for col " << coli << ":" << endl;
-//    //PrintDat(transfer_mat_);
-//    //cout << "\n----------------------------\n" << endl;
-//}
-//template
-//void Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_transfer_matrix(int coli);
-//template
-//void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_transfer_matrix(int coli);
 
 
 template <class TensorT>
-double Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<TensorT> direct_prod_operators)
+void Square_Double_Layer_PEPSt<TensorT>::obtain_transfer_matrix(int coli)
+{
+    int sitei=this->lattice().site_coord_to_list(coli,0,0);
+    //leg_combiners[0/1] is for left/right legs of transfer matrix
+    std::array<std::vector<CombinerT>,2> leg_combiners;
+    std::array<IndexT,2> lr_legs;
+
+    lr_legs[0]=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei-1]));
+    lr_legs[1]=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei+1]));
+
+    leg_combiners[0].push_back(CombinerT(lr_legs[0]));
+    leg_combiners[1].push_back(CombinerT(lr_legs[1]));
+    
+    transfer_mat_=this->double_layer_tensors_[sitei]*leg_combiners[0][0]*leg_combiners[1][0];
+
+    for (int rowi=1; rowi<this->lattice().n_uc()[1]; rowi++)
+    {
+        sitei+=this->lattice().n_uc()[0];
+
+        lr_legs[0]=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei-1]));
+        lr_legs[1]=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei+1]));
+
+        leg_combiners[0].push_back(CombinerT(lr_legs[0],leg_combiners[0][rowi-1].right()));
+        leg_combiners[1].push_back(CombinerT(lr_legs[1],leg_combiners[1][rowi-1].right()));
+
+        transfer_mat_*=this->double_layer_tensors_[sitei];
+        transfer_mat_=transfer_mat_*leg_combiners[0][rowi]*leg_combiners[1][rowi];
+    }
+
+    //We make transfer_mat_ as matrix --I--mat--I'--
+    IndexT oind=leg_combiners[1][this->lattice().n_uc()[1]-1].right(),
+           nind=prime(leg_combiners[0][this->lattice().n_uc()[1]-1].right());
+    if ((oind.dir()-nind.dir())!=0) nind.dag();
+    transfer_mat_.replaceIndex(oind,nind);
+
+    transfer_mat_/=transfer_mat_.norm();
+    clean(transfer_mat_);
+    
+
+    //cout << "\n========================================\n" << endl;
+    //cout << "transfer matrix for col " << coli << ":" << endl;
+    //PrintDat(transfer_mat_);
+    //cout << "\n========================================\n" << endl;
+}
+template
+void Square_Double_Layer_PEPSt<ITensor>::obtain_transfer_matrix(int coli);
+template
+void Square_Double_Layer_PEPSt<IQTensor>::obtain_transfer_matrix(int coli);
+
+template <class TensorT>
+std::vector<double> Square_Double_Layer_PEPSt<TensorT>::transfer_matrix_eigvals()
+{
+    TensorT U_transfer, D_transfer;
+    diagHermitian(transfer_mat_,U_transfer,D_transfer);
+    //PrintDat(D_transfer);
+
+    auto D_legs=D_transfer.indices();
+    std::vector<double> eigvals_transfer;
+    for (int val=1; val<=D_legs[0].m(); val++)
+    {
+        eigvals_transfer.push_back(D_transfer(D_legs[0](val),D_legs[1](val)));
+    }
+
+    //sort eigvals_transfer
+    std::sort(eigvals_transfer.begin(),eigvals_transfer.end());
+   // for (auto &eigval : eigvals_transfer)
+   //     cout << eigval << endl;
+
+    return eigvals_transfer;
+}
+template
+std::vector<double> Square_Double_Layer_PEPSt<ITensor>::transfer_matrix_eigvals();
+template
+std::vector<double> Square_Double_Layer_PEPSt<IQTensor>::transfer_matrix_eigvals();
+
+
+
+template <class TensorT>
+double Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<TensorT> direct_prod_operators)
 {
     //new_col stores the closest cols to leftmost and rightmost operators
     std::array<int,2>  new_col_lr={this->lattice().n_uc()[0]-1,0};
@@ -544,13 +581,13 @@ double Cylinder_Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std
     
 }
 template
-double Cylinder_Square_Double_Layer_PEPSt<ITensor>::obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<ITensor> direct_prod_operators);
+double Square_Double_Layer_PEPSt<ITensor>::obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<ITensor> direct_prod_operators);
 template
-double Cylinder_Square_Double_Layer_PEPSt<IQTensor>::obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<IQTensor> direct_prod_operators);
+double Square_Double_Layer_PEPSt<IQTensor>::obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<IQTensor> direct_prod_operators);
 
 
 template <class TensorT>
-double Cylinder_Square_Double_Layer_PEPSt<TensorT>::sandwiched_peps_norm(const std::vector<TensorT> &sandwiched_tensors, int horizontal_dir)
+double Square_Double_Layer_PEPSt<TensorT>::sandwiched_peps_norm(const std::vector<TensorT> &sandwiched_tensors, int horizontal_dir)
 {
     //store the original data
     auto origin_col_lr=col_lr_;
@@ -597,68 +634,96 @@ double Cylinder_Square_Double_Layer_PEPSt<TensorT>::sandwiched_peps_norm(const s
     return expect_value;
 }
 template
-double Cylinder_Square_Double_Layer_PEPSt<ITensor>::sandwiched_peps_norm(const std::vector<ITensor> &sandwiched_tensors, int horizontal_dir);
+double Square_Double_Layer_PEPSt<ITensor>::sandwiched_peps_norm(const std::vector<ITensor> &sandwiched_tensors, int horizontal_dir);
 template
-double Cylinder_Square_Double_Layer_PEPSt<IQTensor>::sandwiched_peps_norm(const std::vector<IQTensor> &sandwiched_tensors, int horizontal_dir);
+double Square_Double_Layer_PEPSt<IQTensor>::sandwiched_peps_norm(const std::vector<IQTensor> &sandwiched_tensors, int horizontal_dir);
 
 
 
+//TODO:during the decombing/recombing process, we can reach at most 6 rows since NMAX=8. We can modify algrithm to handle 8 rows
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::decombine_sigma_lr(int lr_no)
+void Square_Double_Layer_PEPSt<TensorT>::decombine_sigma_lr(int lr_no)
 {
     int n_rows=this->lattice().n_uc()[1],
         n_cols=this->lattice().n_uc()[0];
 
     int horizontal_dir=1-2*lr_no;
-    if (lower_combiners_[lr_no][0].numLeft()==1) //decombine from top to down
+    int vertical_dir;
+    int start_row;
+
+    //decombine from top to down
+    if (lower_combiners_[lr_no][0].numLeft()==1) 
     {
-        int sitei=this->lattice().site_coord_to_list(col_lr_[lr_no],n_rows-1,0);
-        for (int rowi=n_rows-1; rowi>=0; rowi--)
-        {
-            sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]);
-
-            //combine pair of upper and lower indice
-            auto double_virt_ind=commonIndex(this->double_layer_tensors(sitei),dag(this->double_layer_tensors(sitei+horizontal_dir)));
-            sigma_lr_[lr_no]=sigma_lr_[lr_no]*this->virt_leg_combiners(sitei,double_virt_ind);
-
-            sitei-=n_cols;
-        }
+        vertical_dir=-1;
+        start_row=n_rows-1;
+    }
+    //decombine from down to top
+    if (lower_combiners_[lr_no][n_rows-1].numLeft()==1) 
+    {
+        vertical_dir=1;
+        start_row=0;
     }
 
-    if (lower_combiners_[lr_no][n_rows-1].numLeft()==1)//decombine from down to top
+    int rowi=start_row;
+    while (rowi>=0 && rowi<n_rows)
     {
-        int sitei=this->lattice().site_coord_to_list(col_lr_[lr_no],0,0);
-        for (int rowi=0; rowi<n_rows; rowi++)
-        {
-            sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]);
-
-            //combine pair of upper and lower indice
-            auto double_virt_ind=commonIndex(this->double_layer_tensors(sitei),dag(this->double_layer_tensors(sitei+horizontal_dir)));
-            sigma_lr_[lr_no]=sigma_lr_[lr_no]*this->virt_leg_combiners(sitei,double_virt_ind);
-
-            sitei+=n_cols;
-        }
+        int sitei=this->lattice().site_coord_to_list(col_lr_[lr_no],rowi,0);
+        sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]);
+        //combine a pair of upper and lower indice
+        auto double_virt_ind=commonIndex(this->double_layer_tensors(sitei),dag(this->double_layer_tensors(sitei+horizontal_dir)));
+        sigma_lr_[lr_no]=sigma_lr_[lr_no]*this->virt_leg_combiners(sitei,double_virt_ind);
+        rowi+=vertical_dir;
     }
+
+    //if (lower_combiners_[lr_no][0].numLeft()==1) //decombine from top to down
+    //{
+    //    int sitei=this->lattice().site_coord_to_list(col_lr_[lr_no],n_rows-1,0);
+    //    for (int rowi=n_rows-1; rowi>=0; rowi--)
+    //    {
+    //        sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]);
+
+    //        //combine pair of upper and lower indice
+    //        auto double_virt_ind=commonIndex(this->double_layer_tensors(sitei),dag(this->double_layer_tensors(sitei+horizontal_dir)));
+    //        sigma_lr_[lr_no]=sigma_lr_[lr_no]*this->virt_leg_combiners(sitei,double_virt_ind);
+
+    //        sitei-=n_cols;
+    //    }
+    //}
+
+    //if (lower_combiners_[lr_no][n_rows-1].numLeft()==1)//decombine from down to top
+    //{
+    //    int sitei=this->lattice().site_coord_to_list(col_lr_[lr_no],0,0);
+    //    for (int rowi=0; rowi<n_rows; rowi++)
+    //    {
+    //        sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]);
+
+    //        //combine pair of upper and lower indice
+    //        auto double_virt_ind=commonIndex(this->double_layer_tensors(sitei),dag(this->double_layer_tensors(sitei+horizontal_dir)));
+    //        sigma_lr_[lr_no]=sigma_lr_[lr_no]*this->virt_leg_combiners(sitei,double_virt_ind);
+
+    //        sitei+=n_cols;
+    //    }
+    //}
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::decombine_sigma_lr(int lr_no);
+void Square_Double_Layer_PEPSt<ITensor>::decombine_sigma_lr(int lr_no);
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::decombine_sigma_lr(int lr_no);
+void Square_Double_Layer_PEPSt<IQTensor>::decombine_sigma_lr(int lr_no);
 
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::decombine_sigma_lr()
+void Square_Double_Layer_PEPSt<TensorT>::decombine_sigma_lr()
 {
     decombine_sigma_lr(0);
     decombine_sigma_lr(1);
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::decombine_sigma_lr();
+void Square_Double_Layer_PEPSt<ITensor>::decombine_sigma_lr();
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::decombine_sigma_lr();
+void Square_Double_Layer_PEPSt<IQTensor>::decombine_sigma_lr();
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::recombine_sigma_lr()
+void Square_Double_Layer_PEPSt<TensorT>::recombine_sigma_lr()
 {
     int n_cols=this->lattice().n_uc()[0],
         n_rows=this->lattice().n_uc()[1];
@@ -695,12 +760,12 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::recombine_sigma_lr()
 
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::recombine_sigma_lr();
+void Square_Double_Layer_PEPSt<ITensor>::recombine_sigma_lr();
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::recombine_sigma_lr();
+void Square_Double_Layer_PEPSt<IQTensor>::recombine_sigma_lr();
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::match_sigma_lr_double_peps()
+void Square_Double_Layer_PEPSt<TensorT>::match_sigma_lr_double_peps()
 {
     for (int lr_no=0; lr_no<2; lr_no++)
     {
@@ -730,12 +795,12 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::match_sigma_lr_double_peps()
     }
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::match_sigma_lr_double_peps();
+void Square_Double_Layer_PEPSt<ITensor>::match_sigma_lr_double_peps();
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::match_sigma_lr_double_peps();
+void Square_Double_Layer_PEPSt<IQTensor>::match_sigma_lr_double_peps();
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::move_sigma_lr(const std::array<int,2> &new_col_lr)
+void Square_Double_Layer_PEPSt<TensorT>::move_sigma_lr(const std::array<int,2> &new_col_lr)
 {
     int n_rows=this->lattice().n_uc()[1];
         
@@ -763,13 +828,13 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::move_sigma_lr(const std::array
     recombine_sigma_lr();
 }
 template 
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::move_sigma_lr(const std::array<int,2> &new_col_lr);
+void Square_Double_Layer_PEPSt<ITensor>::move_sigma_lr(const std::array<int,2> &new_col_lr);
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::move_sigma_lr(const std::array<int,2> &new_col_lr);
+void Square_Double_Layer_PEPSt<IQTensor>::move_sigma_lr(const std::array<int,2> &new_col_lr);
 
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::read(std::istream &s)
+void Square_Double_Layer_PEPSt<TensorT>::read(std::istream &s)
 {
     Double_Layer_PEPSt<TensorT>::read(s);
     //for (const auto &tensor : this->double_layer_tensors()) Print(tensor);
@@ -791,13 +856,13 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::read(std::istream &s)
     for (auto eigval : density_mat_spectrum_) s.read((char*)&eigval,sizeof(eigval));
 }
 template 
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::read(std::istream &s);
+void Square_Double_Layer_PEPSt<ITensor>::read(std::istream &s);
 template 
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::read(std::istream &s);
+void Square_Double_Layer_PEPSt<IQTensor>::read(std::istream &s);
 
 
 template <class TensorT>
-void Cylinder_Square_Double_Layer_PEPSt<TensorT>::write(std::ostream &s) const
+void Square_Double_Layer_PEPSt<TensorT>::write(std::ostream &s) const
 {
     Double_Layer_PEPSt<TensorT>::write(s);
 
@@ -812,13 +877,13 @@ void Cylinder_Square_Double_Layer_PEPSt<TensorT>::write(std::ostream &s) const
     for (auto eigval : density_mat_spectrum_) s.write((char*)&eigval,sizeof(eigval));
 }
 template
-void Cylinder_Square_Double_Layer_PEPSt<ITensor>::write(std::ostream &s) const;
+void Square_Double_Layer_PEPSt<ITensor>::write(std::ostream &s) const;
 template
-void Cylinder_Square_Double_Layer_PEPSt<IQTensor>::write(std::ostream &s) const;
+void Square_Double_Layer_PEPSt<IQTensor>::write(std::ostream &s) const;
 
 
 
-//double honeycomb_cylinder_multiple_Sz_correlator(const std::array<Coordinate,2> &acting_sites_coord, Cylinder_Square_Double_Layer_PEPSt<IQTensor> &square_cylinder_double_peps)
+//double honeycomb_cylinder_multiple_Sz_correlator(const std::array<Coordinate,2> &acting_sites_coord, Square_Double_Layer_PEPSt<IQTensor> &square_cylinder_double_peps)
 //{
 //    //we create Sz operator for honeycomb sites, and then transfer it to square lattice
 //    std::vector<IQTensor> square_Sz_operators;
