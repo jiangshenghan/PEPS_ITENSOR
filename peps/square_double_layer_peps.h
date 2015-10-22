@@ -64,12 +64,14 @@ class Square_Double_Layer_PEPSt : public Double_Layer_PEPSt<TensorT>
         double entanglement_entropy_vN();
         double entanglement_entropy_Renyi(double renyi_n);
         void obtain_transfer_matrix(int coli=1);
-        std::vector<double> transfer_matrix_eigvals();
+        std::vector<Complex> transfer_matrix_eigvals();
 
         //
         //calculate correlators on square cylinder notice square_cylinder_double_peps should provide converged sigma_lr
         //this function only applies to those operators can be written as direct product form. Each operator is a Tensor formed by two Site indices (noprimed and primed)
-        double obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<TensorT> direct_prod_operators);
+        double obtain_correlators(const std::vector<int> &acting_sites_list, const std::vector<TensorT> &direct_prod_operators);
+        //this function applies to correlators of TPOs,
+        double obtain_correlators(const std::vector<std::vector<int>> &acting_sites_list, const std::vector<TPOt<TensorT>> &tensor_prod_operators);
         //get value of <O>=\langle\psi|\hat{O}|\psi\rangle iteratively //where <O> is obtained by contracting sandwiched_tensors
         //we will start from col_lr, where data outside col_lr are stored in sigma_lr(decombined)
         //horizontal_dir is the contraction direction

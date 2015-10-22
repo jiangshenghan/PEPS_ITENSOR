@@ -5,7 +5,7 @@
 int main()
 {
     //system size
-    int Ly=2,Lx=40*Ly;
+    int Ly=3,Lx=24*Ly;
 
     //tunable parameter for wavefunctions
     std::default_random_engine generator(std::time(0));
@@ -17,9 +17,9 @@ int main()
     //Output file name for double_layer_peps
     std::stringstream ss;
     //file name for cylinder
-    //ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_Ly=" << Ly << "/Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
+    ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_Ly=" << Ly << "/Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
     //file name for ribbon
-    ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_ribbon" << "/Ly=" << Ly << "_Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
+    //ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_ribbon" << "/Ly=" << Ly << "_Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
     std::string file_name=ss.str();
 
     //Input honeycomb tensor in one uc and transfer to square peps
@@ -27,12 +27,12 @@ int main()
     generate_featureless_honeycomb_ansatz_uc(A1,A2,honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc);
 
     //peps on square cylinder
-    //Square_Lattice_Cylinder square_cylinder(std::array<int,2>{Lx,Ly});
-    //auto square_peps=spin_sym_square_peps_from_honeycomb_tensor_uc(honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc,square_cylinder);
+    Square_Lattice_Cylinder square_cylinder(std::array<int,2>{Lx,Ly});
+    auto square_peps=spin_sym_square_peps_from_honeycomb_tensor_uc(honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc,square_cylinder);
 
     //peps on square ribbon
-    Square_Lattice_Open square_ribbon(std::array<int,2>{Lx,Ly});
-    auto square_peps=spin_sym_square_peps_from_honeycomb_tensor_uc(honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc,square_ribbon);
+    //Square_Lattice_Open square_ribbon(std::array<int,2>{Lx,Ly});
+    //auto square_peps=spin_sym_square_peps_from_honeycomb_tensor_uc(honeycomb_site_tensors_uc,honeycomb_bond_tensors_uc,square_ribbon);
 
     cout << "\n========================================\n" << endl;
     cout << square_peps.name() << endl;
@@ -43,59 +43,61 @@ int main()
 
 
     //set ferromagnet boundary condition
-    //IQIndex boundary_leg=Spin_leg(std::vector<int>{0,2},"boundary leg",In,Link);
-    //IQTensor boundary_tensor(boundary_leg);
-    ////boundary_tensor(boundary_leg(1))=1;
-    //boundary_tensor(boundary_leg(2))=1;
-    ////cout << "Boundary condition:" << endl;
-    ////PrintDat(boundary_tensor);
-    //for (auto &tensor : square_peps.boundary_tensors())
-    //{
-    //    //cout << tensor;
-    //    auto oind=boundary_tensor.indices()[0],
-    //         nind=tensor.indices()[0];
-    //    if (oind.dir()==-nind.dir())
-    //    {
-    //        oind.dag();
-    //        boundary_tensor.dag();
-    //    }
-    //    boundary_tensor.replaceIndex(oind,nind);
-    //    tensor=boundary_tensor;
-    //    //PrintDat(tensor);
-    //}
-
-    //set anti-ferromagnet boundary condition
-    int boundaryi=0;
+    IQIndex boundary_leg=Spin_leg(std::vector<int>{0,2},"boundary leg",In,Link);
+    IQTensor boundary_tensor(boundary_leg);
+    boundary_tensor(boundary_leg(1))=1;
+    boundary_tensor(boundary_leg(2))=1-boundary_tensor(boundary_leg(1));
+    //boundary_tensor(boundary_leg(3))=rand_gen();
+    //boundary_tensor(boundary_leg(4))=rand_gen();
+    cout << "Boundary condition:" << endl;
+    PrintDat(boundary_tensor);
     for (auto &tensor : square_peps.boundary_tensors())
     {
-        IQIndex ind=tensor.indices()[0];
-        if (boundaryi%2==0)
+        //cout << tensor;
+        auto oind=boundary_tensor.indices()[0],
+             nind=tensor.indices()[0];
+        if (oind.dir()==-nind.dir())
         {
-            tensor(ind(1))=1;
-            //tensor(ind(2))=1;
+            oind.dag();
+            boundary_tensor.dag();
         }
-        else
-        {
-            //tensor(ind(3))=1;
-            tensor(ind(4))=1;
-        }
+        boundary_tensor.replaceIndex(oind,nind);
+        tensor=boundary_tensor;
         //PrintDat(tensor);
-        boundaryi++;
     }
 
-    //set random boundary condition for short boundary 
-    for (int boundaryi=0; boundaryi<Ly; boundaryi++)
-    {
-        auto &left_tensor=square_peps.boundary_tensors(boundaryi);
-        auto &right_tensor=square_peps.boundary_tensors(Lx+Ly+boundaryi);
-        auto left_ind=left_tensor.indices()[0],
-             right_ind=right_tensor.indices()[0];
-        for (int val=1; val<=left_ind.m(); val++)
-        {
-            left_tensor(left_ind(val))=rand_gen();
-            right_tensor(right_ind(val))=rand_gen();
-        }
-    }
+    //set anti-ferromagnet boundary condition
+    //int boundaryi=0;
+    //for (auto &tensor : square_peps.boundary_tensors())
+    //{
+    //    IQIndex ind=tensor.indices()[0];
+    //    if (boundaryi%2==0)
+    //    {
+    //        tensor(ind(1))=1;
+    //        tensor(ind(2))=1;
+    //    }
+    //    else
+    //    {
+    //        tensor(ind(3))=1;
+    //        tensor(ind(4))=1;
+    //    }
+    //    //PrintDat(tensor);
+    //    boundaryi++;
+    //}
+
+    //set random boundary condition for short boundary for ribbon geometry
+    //for (int boundaryi=0; boundaryi<Ly; boundaryi++)
+    //{
+    //    auto &left_tensor=square_peps.boundary_tensors(boundaryi);
+    //    auto &right_tensor=square_peps.boundary_tensors(Lx+Ly+boundaryi);
+    //    auto left_ind=left_tensor.indices()[0],
+    //         right_ind=right_tensor.indices()[0];
+    //    for (int val=1; val<=left_ind.m(); val++)
+    //    {
+    //        left_tensor(left_ind(val))=rand_gen();
+    //        right_tensor(right_ind(val))=rand_gen();
+    //    }
+    //}
 
     
     //set random boundary condition
@@ -113,10 +115,10 @@ int main()
     Square_Double_Layer_PEPSt<IQTensor> square_double_layer_peps(square_peps);
 
     //check transfer matrix
-    //square_double_layer_peps.obtain_transfer_matrix(3);
+    //square_double_layer_peps.obtain_transfer_matrix(2);
     //auto transfer_mat_eigvals=square_double_layer_peps.transfer_matrix_eigvals();
     //for (auto &eigval : transfer_mat_eigvals)
-    //    cout << eigval << endl;
+    //    cout << eigval << " ";
     //cout << endl;
     //return 0;
 
@@ -139,9 +141,9 @@ int main()
     square_double_layer_peps.move_sigma_lr({Lx/2-1,Lx/2});
     square_double_layer_peps.from_sigma_lr_to_sigma_b();
     square_double_layer_peps.obtain_density_matrix_spectrum();
-    cout << "Density Matrix spectrum: " << endl; 
-    for (double eigval : square_double_layer_peps.density_mat_spectrum()) cout << eigval << " ";
-    cout << endl;
+    //cout << "Density Matrix spectrum: " << endl; 
+    //for (double eigval : square_double_layer_peps.density_mat_spectrum()) cout << eigval << " ";
+    //cout << endl;
     cout << "Entanglement entropy: " << square_double_layer_peps.entanglement_entropy_vN() << endl;
 
     //Square_Double_Layer_PEPSt<IQTensor> double_layer_peps_from_file(square_cylinder);

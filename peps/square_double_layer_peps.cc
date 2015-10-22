@@ -205,15 +205,12 @@ void Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int ho
 
         //decombine indice to be multiplied, and then mutiply a new tensor
         sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]);
-        auto double_virt_ind_precede=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei-horizontal_dir]));
-        //Print(this->double_layer_tensors_[sitei]*dag(this->virt_leg_combiners(sitei,double_virt_ind_precede)));
-        sigma_lr_[lr_no]*=this->double_layer_tensors_[sitei]*dag(this->virt_leg_combiners(sitei,double_virt_ind_precede));
+        sigma_lr_[lr_no]*=this->double_layer_tensors_[sitei]*dag(this->virt_leg_combiners({sitei,sitei-horizontal_dir}));
 
 
         //combine the indice of new tensor which will be multiplied next time
-        auto double_virt_ind=commonIndex(this->double_layer_tensors_[sitei],dag(this->double_layer_tensors_[sitei+horizontal_dir]));
         IndexT lower_ind;
-        auto double_virt_leg_combiner=decombine_double_virt_indice(sitei,double_virt_ind,lower_ind);
+        auto double_virt_leg_combiner=decombine_double_virt_indice({sitei,sitei+horizontal_dir},lower_ind);
         if (rowi==start_row) 
         {
             lower_combiners_[lr_no][rowi]=CombinerT(lower_ind);
@@ -237,17 +234,17 @@ void Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int ho
 
     clean(sigma_lr_[lr_no]);
 
-    cout << "\n========================================\n" << endl;
-    cout << "Iterative contraction for bulk col:" << endl;
-    cout << "Horizontal Direction: " << horizontal_dir << endl
-         << "Vertical Direction: " << vertical_dir << endl
-         << "Col: " << coli << endl << endl;
+    //cout << "\n========================================\n" << endl;
+    //cout << "Iterative contraction for bulk col:" << endl;
+    //cout << "Horizontal Direction: " << horizontal_dir << endl
+    //     << "Vertical Direction: " << vertical_dir << endl
+    //     << "Col: " << coli << endl << endl;
     //for (const auto &combiner : iterative_combiners_[lr_no]) cout << combiner;
     //PrintDat(sigma_lr_[lr_no]);
     //print the first ten nonzero elems
     //cout << "First ten elems of sigma_lr[" << lr_no << "] are" << endl;
     //print_vector_nonzero_elem(sigma_lr_[lr_no],10);
-    cout << "\n========================================\n" << endl;
+    //cout << "\n========================================\n" << endl;
 
 }
 template
@@ -496,7 +493,7 @@ void Square_Double_Layer_PEPSt<TensorT>::obtain_transfer_matrix(int coli)
     if ((oind.dir()-nind.dir())!=0) nind.dag();
     transfer_mat_.replaceIndex(oind,nind);
 
-    transfer_mat_/=transfer_mat_.norm();
+    //transfer_mat_/=transfer_mat_.norm();
     clean(transfer_mat_);
     
 
@@ -511,35 +508,56 @@ template
 void Square_Double_Layer_PEPSt<IQTensor>::obtain_transfer_matrix(int coli);
 
 template <class TensorT>
-std::vector<double> Square_Double_Layer_PEPSt<TensorT>::transfer_matrix_eigvals()
+std::vector<Complex> Square_Double_Layer_PEPSt<TensorT>::transfer_matrix_eigvals()
 {
-    TensorT U_transfer, D_transfer;
-    diagHermitian(transfer_mat_,U_transfer,D_transfer);
-    //PrintDat(D_transfer);
-
-    auto D_legs=D_transfer.indices();
-    std::vector<double> eigvals_transfer;
-    for (int val=1; val<=D_legs[0].m(); val++)
+    //transfer matrix may not be hermitian
+    auto transfer_mat_legs=transfer_mat_.indices();
+    arma::mat transfer_mat_temp(transfer_mat_legs[0].m(),transfer_mat_legs[1].m());
+    for (int val0=1; val0<=transfer_mat_legs[0].m(); val0++)
     {
-        eigvals_transfer.push_back(D_transfer(D_legs[0](val),D_legs[1](val)));
+        for (int val1=1; val1<=transfer_mat_legs[1].m(); val1++)
+        {
+            transfer_mat_temp(val0-1,val1-1)=transfer_mat_(transfer_mat_legs[0](val0),transfer_mat_legs[1](val1));
+        }
     }
+    //arma::cx_vec eigvals_transfer_cx=arma::eig_gen(transfer_mat_temp);
+    arma::cx_vec eigvals_transfer_temp;
+    arma::cx_mat eigvecs_transfer_temp;
+    arma::eig_gen(eigvals_transfer_temp,eigvecs_transfer_temp,transfer_mat_temp);
+    eigvals_transfer_temp=arma::sort(eigvals_transfer_temp);
+    //cout << eigvals_transfer_temp << endl;
 
-    //sort eigvals_transfer
-    std::sort(eigvals_transfer.begin(),eigvals_transfer.end());
-   // for (auto &eigval : eigvals_transfer)
-   //     cout << eigval << endl;
-
+    std::vector<Complex> eigvals_transfer=arma::conv_to<std::vector<Complex>>::from(eigvals_transfer_temp);
+    //std::sort(eigvals_transfer.begin(),eigvals_transfer.end(),[](Complex eigval1, Complex eigval2){ return std::norm(eigval1)<std::norm(eigval2); });
     return eigvals_transfer;
+
+    //TensorT U_transfer, D_transfer;
+    //diagHermitian(transfer_mat_,U_transfer,D_transfer);
+    ////PrintDat(D_transfer);
+
+    //auto D_legs=D_transfer.indices();
+    //std::vector<double> eigvals_transfer;
+    //for (int val=1; val<=D_legs[0].m(); val++)
+    //{
+    //    eigvals_transfer.push_back(D_transfer(D_legs[0](val),D_legs[1](val)));
+    //}
+
+    ////sort eigvals_transfer
+    //std::sort(eigvals_transfer.begin(),eigvals_transfer.end());
+   //// for (auto &eigval : eigvals_transfer)
+   ////     cout << eigval << endl;
+
+    //return eigvals_transfer;
 }
 template
-std::vector<double> Square_Double_Layer_PEPSt<ITensor>::transfer_matrix_eigvals();
+std::vector<Complex> Square_Double_Layer_PEPSt<ITensor>::transfer_matrix_eigvals();
 template
-std::vector<double> Square_Double_Layer_PEPSt<IQTensor>::transfer_matrix_eigvals();
+std::vector<Complex> Square_Double_Layer_PEPSt<IQTensor>::transfer_matrix_eigvals();
 
 
 
 template <class TensorT>
-double Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<TensorT> direct_prod_operators)
+double Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std::vector<int> &acting_sites_list, const std::vector<TensorT> &direct_prod_operators)
 {
     //new_col stores the closest cols to leftmost and rightmost operators
     std::array<int,2>  new_col_lr={this->lattice().n_uc()[0]-1,0};
@@ -557,7 +575,7 @@ double Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std::vector<
     auto sandwiched_tensors=this->double_layer_tensors_;
     double wf_norm=sandwiched_peps_norm(sandwiched_tensors);
 
-    cout << "wavefunction norm: " << wf_norm << endl;
+    //cout << "wavefunction norm: " << wf_norm << endl;
     
     //calculate the unnormalized expect_val
     this->obtain_peps_sandwich_single_site_operators(direct_prod_operators,acting_sites_list,sandwiched_tensors);
@@ -575,15 +593,53 @@ double Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std::vector<
 
     double expect_val=this->sandwiched_peps_norm(sandwiched_tensors);
 
-    cout << "unnormalized correlator: " << expect_val << endl;
+    //cout << "unnormalized correlator: " << expect_val << endl;
 
     return expect_val/wf_norm;
-    
 }
 template
-double Square_Double_Layer_PEPSt<ITensor>::obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<ITensor> direct_prod_operators);
+double Square_Double_Layer_PEPSt<ITensor>::obtain_correlators(const std::vector<int> &acting_sites_list, const std::vector<ITensor> &direct_prod_operators);
 template
-double Square_Double_Layer_PEPSt<IQTensor>::obtain_correlators(const std::vector<int> &acting_sites_list, std::vector<IQTensor> direct_prod_operators);
+double Square_Double_Layer_PEPSt<IQTensor>::obtain_correlators(const std::vector<int> &acting_sites_list, const std::vector<IQTensor> &direct_prod_operators);
+
+template <class TensorT>
+double Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std::vector<std::vector<int>> &acting_sites_list, const std::vector<TPOt<TensorT>> &tensor_prod_operators)
+{
+    //new_col stores the closest cols to leftmost and rightmost operators
+    std::array<int,2> new_col_lr={this->lattice().n_uc()[0]-1,0};
+    for (const auto &acting_sites : acting_sites_list)
+    {
+        for (auto sitei : acting_sites)
+        {
+            auto sitei_coord=this->lattice().site_list_to_coord(sitei);
+            if ((sitei_coord[0]-1)<new_col_lr[0]) new_col_lr[0]=sitei_coord[0]-1;
+            if ((sitei_coord[0]+1)>new_col_lr[1]) new_col_lr[1]=sitei_coord[0]+1;
+        }
+    }
+    //cout << "new cols: " << new_col_lr[0] << " " << new_col_lr[1] << endl;
+    //move sigma_lr_ to new_col_lr to reduce contraction time
+    move_sigma_lr(new_col_lr);
+
+    //calculate wavefunction norm
+    auto sandwiched_tensors=this->double_layer_tensors_;
+    double wf_norm=sandwiched_peps_norm(sandwiched_tensors);
+
+    //cout << "wavefunction norm: " << wf_norm << endl;
+    
+    //calculate the unnormalized expect_val
+    this->obtain_peps_sandwich_tensor_prod_operators(tensor_prod_operators,acting_sites_list,sandwiched_tensors);
+
+    double expect_val=this->sandwiched_peps_norm(sandwiched_tensors);
+
+    //cout << "unnormalized correlator: " << expect_val << endl;
+
+    return expect_val/wf_norm;
+}
+template
+double Square_Double_Layer_PEPSt<ITensor>::obtain_correlators(const std::vector<std::vector<int>> &acting_sites_list, const std::vector<TPOt<ITensor>> &tensor_prod_operators);
+template
+double Square_Double_Layer_PEPSt<IQTensor>::obtain_correlators(const std::vector<std::vector<int>> &acting_sites_list, const std::vector<TPOt<IQTensor>> &tensor_prod_operators);
+
 
 
 template <class TensorT>
@@ -637,7 +693,6 @@ template
 double Square_Double_Layer_PEPSt<ITensor>::sandwiched_peps_norm(const std::vector<ITensor> &sandwiched_tensors, int horizontal_dir);
 template
 double Square_Double_Layer_PEPSt<IQTensor>::sandwiched_peps_norm(const std::vector<IQTensor> &sandwiched_tensors, int horizontal_dir);
-
 
 
 //TODO:during the decombing/recombing process, we can reach at most 6 rows since NMAX=8. We can modify algrithm to handle 8 rows

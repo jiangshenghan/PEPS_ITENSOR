@@ -50,11 +50,26 @@ class Double_Layer_PEPSt
         {
             return virt_leg_combiners_[sitei][j];
         }
+        //return combiner at sitei with right index equal to double_virt_ind
         const CombinerT &virt_leg_combiners(int sitei, const IndexT &double_virt_ind) const
         {
             for (const auto &combiner : virt_leg_combiners_[sitei])
             {
                 if (combiner.right()==double_virt_ind) return combiner;
+            }
+            cout << "Fail to find combiner!" << endl;
+            exit(EXIT_FAILURE);
+        }
+        //return combiner shared by double layer tensors at sitei and sitej
+        //if they share more than one combiners, return arbitrary one
+        const CombinerT &virt_leg_combiners(const std::array<int,2> &sites_no) const
+        {
+            for (const auto &combineri : virt_leg_combiners_[sites_no[0]])
+            {
+                for (const auto &combinerj : virt_leg_combiners_[sites_no[1]])
+                {
+                    if (combineri.right()==combinerj.right()) return combineri;
+                }
             }
             cout << "Fail to find combiner!" << endl;
             exit(EXIT_FAILURE);
@@ -78,9 +93,12 @@ class Double_Layer_PEPSt
         //
         //get the original lower_indice of virt_ind of sitei. upper_indic=dag(prime(lower_indice))
         CombinerT decombine_double_virt_indice(int sitei, const IndexT &double_virt_ind, IndexT &lower_ind);
+        CombinerT decombine_double_virt_indice(std::array<int,2> sites_no, IndexT &lower_ind);
         //Sandwich operators between double layer PEPS
         //Insert direct product operators: the operator is formed by two indices, one with prime and one without prime
-        void obtain_peps_sandwich_single_site_operators(std::vector<TensorT> direct_prod_operators, const std::vector<int> &acting_sites_list, std::vector<TensorT>& sandwiched_tensors);
+        void obtain_peps_sandwich_single_site_operators(std::vector<TensorT> direct_prod_operators, const std::vector<int> &acting_sites_list, std::vector<TensorT> &sandwiched_tensors);
+        //Insert tensor product operators
+        void obtain_peps_sandwich_tensor_prod_operators(std::vector<TPOt<TensorT>> tensor_prod_operators, const std::vector<std::vector<int>> &acting_sites_list, std::vector<TensorT> &sandwiched_tensors);
 
         //
         //Constructor Helpers

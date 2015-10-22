@@ -54,6 +54,32 @@ typename ITensor::CombinerT Double_Layer_PEPSt<ITensor>::decombine_double_virt_i
 template
 typename IQTensor::CombinerT Double_Layer_PEPSt<IQTensor>::decombine_double_virt_indice(int sitei, const IQTensor::IndexT &double_virt_ind, IQTensor::IndexT &lower_ind);
 
+template <class TensorT>
+typename TensorT::CombinerT Double_Layer_PEPSt<TensorT>::decombine_double_virt_indice(std::array<int,2> sites_no, IndexT &lower_ind)
+{
+    for (const auto &combineri : virt_leg_combiners_[sites_no[0]])
+    {
+        for (const auto &combinerj : virt_leg_combiners_[sites_no[1]])
+        {
+            if (combineri.right()==combinerj.right())
+            {
+                if (left_leg_of_combiners(combineri,0).primeLevel()==0) lower_ind=dag(left_leg_of_combiners(combineri,0));
+                if (left_leg_of_combiners(combineri,1).primeLevel()==0) lower_ind=dag(left_leg_of_combiners(combineri,1));
+
+                return combineri;
+            }
+        }
+    }
+
+    cout << "Fail to find lower tensor on site " << sites_no[0] << endl;
+    exit(EXIT_FAILURE);
+}
+template
+typename ITensor::CombinerT Double_Layer_PEPSt<ITensor>::decombine_double_virt_indice(std::array<int,2> sites_no, ITensor::IndexT &lower_ind);
+template
+typename IQTensor::CombinerT Double_Layer_PEPSt<IQTensor>::decombine_double_virt_indice(std::array<int,2> sites_no, IQTensor::IndexT &lower_ind);
+
+
 
 template <class TensorT>
 void Double_Layer_PEPSt<TensorT>::obtain_peps_sandwich_single_site_operators(std::vector<TensorT> direct_prod_operators, const std::vector<int> &acting_sites_list, std::vector<TensorT>& sandwiched_tensors)
@@ -98,6 +124,41 @@ template
 void Double_Layer_PEPSt<ITensor>::obtain_peps_sandwich_single_site_operators(std::vector<ITensor> direct_prod_operators, const std::vector<int> &acting_sites_list, std::vector<ITensor>& sandwiched_tensors);
 template
 void Double_Layer_PEPSt<IQTensor>::obtain_peps_sandwich_single_site_operators(std::vector<IQTensor> direct_prod_operators, const std::vector<int> &acting_sites_list, std::vector<IQTensor>& sandwiched_tensors);
+
+template <class TensorT>
+void Double_Layer_PEPSt<TensorT>::obtain_peps_sandwich_tensor_prod_operators(std::vector<TPOt<TensorT>> tensor_prod_operators, const std::vector<std::vector<int>> &acting_sites_list, std::vector<TensorT> &sandwiched_tensors)
+{
+    if (sandwiched_tensors.empty()) sandwiched_tensors=double_layer_tensors_;
+
+    for (int opi=0; opi<tensor_prod_operators.size(); opi++)
+    {
+        std::vector<int> acting_sites=acting_sites_list[opi];
+        for (int j=0; j<acting_sites.size(); j++)
+        {
+            IndexT phys_leg=findtype(single_layer_tensors_[acting_sites[j]],Site);
+
+            auto old_leg=tensor_prod_operators[opi].phys_legs(j);
+            tensor_prod_operators[opi].site_tensors(j).replaceIndex(old_leg,dag(phys_leg));
+            tensor_prod_operators[opi].site_tensors(j).replaceIndex(dag(prime(old_leg)),prime(phys_leg));
+
+            //sandwich tensor_prod_operators
+            TensorT lower_tensor=single_layer_tensors_[acting_sites[j]],
+                    upper_tensor=prime(dag(lower_tensor));
+            sandwiched_tensors[acting_sites[j]]=lower_tensor*tensor_prod_operators[opi].site_tensors(j)*upper_tensor;
+            //we left with uncombined virtual legs of tensor operator
+            for (const auto &combiner : virt_leg_combiners_[acting_sites[j]])
+            {
+                sandwiched_tensors[acting_sites[j]]=sandwiched_tensors[acting_sites[j]]*combiner;
+            }
+            //PrintDat(sandwiched_tensors[acting_sites[j]]);
+        }
+    }
+
+}
+template
+void Double_Layer_PEPSt<ITensor>::obtain_peps_sandwich_tensor_prod_operators(std::vector<TPOt<ITensor>> tensor_prod_operators, const std::vector<std::vector<int>> &acting_sites_list, std::vector<ITensor> &sandwiched_tensors);
+template
+void Double_Layer_PEPSt<IQTensor>::obtain_peps_sandwich_tensor_prod_operators(std::vector<TPOt<IQTensor>> tensor_prod_operators, const std::vector<std::vector<int>> &acting_sites_list, std::vector<IQTensor> &sandwiched_tensors);
 
 
 template <class TensorT>
