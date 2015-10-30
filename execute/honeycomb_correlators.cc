@@ -5,7 +5,7 @@
 int main()
 {
     //system size
-    int Ly=6, Lx=30*Ly;
+    int Ly=3, Lx=24*Ly;
 
     double A1=0.9, A2=1-A1;
 
@@ -71,6 +71,32 @@ int main()
 
     //return 0;
 
+    //test for TPO correlators
+    IQTPO SdotS_honeycomb=SpinSpin();
+    IQCombiner phys_legs_combiner(SdotS_honeycomb.phys_legs(0),SdotS_honeycomb.phys_legs(1));
+    phys_legs_combiner.init("honeycomb_uc_legs_to_square", Site,Out);
+    IQTensor SdotS_square_site=SdotS_honeycomb.site_tensors(0)*SdotS_honeycomb.bond_tensors(0)*SdotS_honeycomb.site_tensors(1)*dag(phys_legs_combiner)*prime(phys_legs_combiner);
+    PrintDat(SdotS_square_site);
+    cout << "test for S.S correlator on square site: " << square_double_layer_peps.obtain_correlators({2},{SdotS_square_site}) << endl;
+
+    std::array<IQIndex,2> Id_legs{Spin_leg({0,1},"leg 0",Out,Site),Spin_leg({0,1},"leg 1",Out,Site)};
+    std::array<IQTensor,2> Id_tensors{IQTensor(dag(Id_legs[0])(1),prime(Id_legs[0])(1)),IQTensor(dag(Id_legs[1])(1),prime(Id_legs[1](1)))};
+    for (int i=0; i<2; i++)
+    {
+        Id_tensors[i](dag(Id_legs[i])(2),prime(Id_legs[i])(2))=1;
+    }
+    std::array<IQCombiner,2> legs_combiners{IQCombiner(Id_legs[0],SdotS_honeycomb.phys_legs(0)),IQCombiner(SdotS_honeycomb.phys_legs(1),Id_legs[1])};
+    legs_combiners[0].init("honeycomb_uc_legs_to_square0",Site,Out);
+    legs_combiners[1].init("honeycomb_uc_legs_to_square1",Site,Out);
+    IQTPO SdotS_square_bond(2,0);
+    SdotS_square_bond.site_tensors(0)=SdotS_honeycomb.site_tensors(0)*Id_tensors[0]*dag(legs_combiners[0])*prime(legs_combiners[0]);
+    PrintDat(SdotS_square_bond.site_tensors(0));
+    SdotS_square_bond.site_tensors(1)=SdotS_honeycomb.site_tensors(1)*SdotS_honeycomb.bond_tensors(0)*Id_tensors[1]*dag(legs_combiners[1])*prime(legs_combiners[1]);
+    PrintDat(SdotS_square_bond.site_tensors(1));
+    cout << "test for S.S correlator on square bond: " << square_double_layer_peps.obtain_correlators({{2,3}},{SdotS_square_bond}) << endl;
+
+    return 0;
+
     //construct Si (i=x,y,z) operators of honeycomb lattice and then transfer to square
     //there are three cases: SiId, IdSi, SiSi
     std::array<IQIndex,2> honeycomb_legs={Spin_leg(std::vector<int>{0,1}, "honeycomb_leg 0", Out, Site), Spin_leg(std::vector<int>{0,1},"honeycomb_leg 1",Out,Site)};
@@ -96,10 +122,6 @@ int main()
         iSy_honeycomb_uc[sitei]/=2;
         Sz_honeycomb_uc[sitei]/=2;
 
-        //PrintDat(Id_honeycomb_uc[sitei]);
-        //PrintDat(Sx_honeycomb_uc[sitei]);
-        //PrintDat(iSy_honeycomb_uc[sitei]);
-        //PrintDat(Sz_honeycomb_uc[sitei]);
     }
 
     IQCombiner honeycomb_legs_combiner(honeycomb_legs[0],honeycomb_legs[1]);
@@ -115,17 +137,6 @@ int main()
              SzId=Sz_honeycomb_uc[0]*Id_honeycomb_uc[1]*dag(honeycomb_legs_combiner)*prime(honeycomb_legs_combiner),
              IdSz=Id_honeycomb_uc[0]*Sz_honeycomb_uc[1]*dag(honeycomb_legs_combiner)*prime(honeycomb_legs_combiner),
              SzSz=Sz_honeycomb_uc[0]*Sz_honeycomb_uc[1]*dag(honeycomb_legs_combiner)*prime(honeycomb_legs_combiner);
-
-    //PrintDat(IdId);
-    //PrintDat(SxId);
-    //PrintDat(IdSx);
-    //PrintDat(SxSx);
-    //PrintDat(iSyId);
-    //PrintDat(IdiSy);
-    //PrintDat(SySy);
-    //PrintDat(SzId);
-    //PrintDat(IdSz);
-    //PrintDat(SzSz);
 
     //single bond correlation
     //int sitei=2+(Ly-1)/2*Lx;

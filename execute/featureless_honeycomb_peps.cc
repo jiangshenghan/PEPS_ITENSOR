@@ -5,9 +5,10 @@
 int main()
 {
     //system size
-    int Ly=3,Lx=24*Ly;
+    int Ly=3,Lx=16*Ly;
 
     //tunable parameter for wavefunctions
+    srand(time(NULL));
     std::default_random_engine generator(std::time(0));
     std::uniform_real_distribution<double> distribution(-1,1);
     auto rand_gen = std::bind(distribution,generator);
@@ -43,28 +44,28 @@ int main()
 
 
     //set ferromagnet boundary condition
-    IQIndex boundary_leg=Spin_leg(std::vector<int>{0,2},"boundary leg",In,Link);
-    IQTensor boundary_tensor(boundary_leg);
-    boundary_tensor(boundary_leg(1))=1;
-    boundary_tensor(boundary_leg(2))=1-boundary_tensor(boundary_leg(1));
-    //boundary_tensor(boundary_leg(3))=rand_gen();
-    //boundary_tensor(boundary_leg(4))=rand_gen();
-    cout << "Boundary condition:" << endl;
-    PrintDat(boundary_tensor);
-    for (auto &tensor : square_peps.boundary_tensors())
-    {
-        //cout << tensor;
-        auto oind=boundary_tensor.indices()[0],
-             nind=tensor.indices()[0];
-        if (oind.dir()==-nind.dir())
-        {
-            oind.dag();
-            boundary_tensor.dag();
-        }
-        boundary_tensor.replaceIndex(oind,nind);
-        tensor=boundary_tensor;
-        //PrintDat(tensor);
-    }
+    //IQIndex boundary_leg=Spin_leg(std::vector<int>{0,2},"boundary leg",In,Link);
+    //IQTensor boundary_tensor(boundary_leg);
+    //boundary_tensor(boundary_leg(1))=rand_gen();
+    //boundary_tensor(boundary_leg(2))=rand_gen();
+    //boundary_tensor(boundary_leg(3))=1-boundary_tensor(boundary_leg(1));
+    //boundary_tensor(boundary_leg(4))=1-boundary_tensor(boundary_leg(2));
+    //cout << "Boundary condition:" << endl;
+    //PrintDat(boundary_tensor);
+    //for (auto &tensor : square_peps.boundary_tensors())
+    //{
+    //    //cout << tensor;
+    //    auto oind=boundary_tensor.indices()[0],
+    //         nind=tensor.indices()[0];
+    //    if (oind.dir()==-nind.dir())
+    //    {
+    //        oind.dag();
+    //        boundary_tensor.dag();
+    //    }
+    //    boundary_tensor.replaceIndex(oind,nind);
+    //    tensor=boundary_tensor;
+    //    //PrintDat(tensor);
+    //}
 
     //set anti-ferromagnet boundary condition
     //int boundaryi=0;
@@ -100,16 +101,35 @@ int main()
     //}
 
     
-    //set random boundary condition
-    //for (auto &tensor: square_peps.boundary_tensors())
-    //{
-    //    IQIndex ind=tensor.indices()[0];
-    //    for (int val=1; val<=ind.m(); val++)
-    //    {
-    //        tensor(ind(val))=rand_gen();
-    //    }
-    //    //PrintDat(tensor);
-    //}
+    //set random boundary condition, we choose left (up) and right (down) boundary the same
+    int boundaryi=0;
+    for (auto &tensor: square_peps.boundary_tensors())
+    {
+        if (boundaryi<square_peps.n_boundary_legs()/2)
+        {
+            //choose boundary condition provide fixed Z2 charge
+            IQIndex ind=tensor.indices()[0];
+            int flavor=rand()%2+1;
+            tensor(ind(flavor))=rand_gen();
+            //tensor(ind(flavor+2))=1-tensor(ind(flavor));
+        }
+        if (boundaryi>=square_peps.n_boundary_legs()/2)
+        {
+            auto &eq_tensor=square_peps.boundary_tensors(boundaryi-square_peps.n_boundary_legs()/2);
+            IQIndex oind=eq_tensor.indices()[0],
+                    nind=tensor.indices()[0];
+            tensor=dag(eq_tensor);
+            tensor.replaceIndex(dag(oind),nind);
+        }
+
+        //for (int val=1; val<=ind.m(); val++)
+        //{
+        //    tensor(ind(val))=rand_gen();
+        //}
+        
+        PrintDat(tensor);
+        boundaryi++;
+    }
 
 
     Square_Double_Layer_PEPSt<IQTensor> square_double_layer_peps(square_peps);
@@ -141,9 +161,9 @@ int main()
     square_double_layer_peps.move_sigma_lr({Lx/2-1,Lx/2});
     square_double_layer_peps.from_sigma_lr_to_sigma_b();
     square_double_layer_peps.obtain_density_matrix_spectrum();
-    //cout << "Density Matrix spectrum: " << endl; 
-    //for (double eigval : square_double_layer_peps.density_mat_spectrum()) cout << eigval << " ";
-    //cout << endl;
+    cout << "Density Matrix spectrum: " << endl; 
+    for (double eigval : square_double_layer_peps.density_mat_spectrum()) cout << eigval << " ";
+    cout << endl;
     cout << "Entanglement entropy: " << square_double_layer_peps.entanglement_entropy_vN() << endl;
 
     //Square_Double_Layer_PEPSt<IQTensor> double_layer_peps_from_file(square_cylinder);

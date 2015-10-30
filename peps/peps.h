@@ -2,7 +2,7 @@
 #ifndef _PEPS_H_
 #define _PEPS_H_
 
-#include "singlet_tensor_basis.h"
+#include "TPO.h"
 #include "peps_indexset.h"
 
 //

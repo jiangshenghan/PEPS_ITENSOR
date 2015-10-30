@@ -2,7 +2,7 @@
 #ifndef _TENSOR_PRODUCT_OPERATOR_H_
 #define _TENSOR_PRODUCT_OPERATOR_H_
 
-#include "predef.h"
+#include "singlet_tensor_basis.h"
 
 //class for tensor product operator
 template <class TensorT>
@@ -38,11 +38,12 @@ class TPOt
         TensorT &bond_tensors(int i) { return bond_tensors_[i]; }
         const std::vector<TensorT> &bond_tensors() const { return bond_tensors_; }
 
-        //return phys_legs with no prime
+        //return phys_legs with no prime and point Out if IQIndex
         IndexT phys_legs(int i)
         {
             IndexT leg=findtype(site_tensors_[i],Site);
-            if (leg.primeLevel()!=0) leg.noprime().dag();
+            if (leg.primeLevel()!=0) leg.noprime();
+            if (leg.dir()==In) leg.dag();
             return leg;
         }
 
@@ -53,5 +54,32 @@ class TPOt
 };
 using TPO=TPOt<ITensor>;
 using IQTPO=TPOt<IQTensor>;
+
+//
+//various correlator for half spins
+//
+//SpinSpin correlator
+IQTPO SpinSpin(); 
+IQTPO SpinSpin(const std::array<IQIndex,2> &phys_legs);
+
+//\epsilon_{ijk}S_iS_jS_k
+//IQTPO scalarSpinChirality();
+
+//\epsilon_{ijk}S_jS_k
+//This operator breaks Sz rotation symmetry, so strictly speaking, we should use ITensor instead of IQTensor
+std::array<IQTPO,3> vectorSpinChirality();
+std::array<IQTPO,3> vectorSpinChirality(const std::array<IQIndex,2> &phys_legs);
+
+
+template <class TensorT>
+std::ostream &operator<<(std::ostream &s, const TPOt<TensorT> &T)
+{
+    s << "n_sites=" << T.n_sites() << ", n_bonds=" << T.n_bonds() << endl;
+    s << "site tensors:" << endl;
+    for (int i=0; i<T.n_sites(); i++) s << T.site_tensors(i) << endl;
+    s << "bond tensors:" << endl;
+    for (int i=0; i<T.n_bonds(); i++) s << T.bond_tensors(i) << endl;
+    return s;
+}
 
 #endif

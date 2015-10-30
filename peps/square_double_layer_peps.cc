@@ -204,6 +204,7 @@ void Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int ho
         //Print(sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]));
 
         //decombine indice to be multiplied, and then mutiply a new tensor
+        //TODO: we should reduce # of legs when performing combine-decombine procedure, especially when TPO involved case.
         sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(lower_combiners_[lr_no][rowi])*dag(upper_combiners_[lr_no][rowi]);
         sigma_lr_[lr_no]*=this->double_layer_tensors_[sitei]*dag(this->virt_leg_combiners({sitei,sitei-horizontal_dir}));
 
@@ -221,8 +222,9 @@ void Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int ho
             lower_combiners_[lr_no][rowi]=CombinerT(lower_combiners_[lr_no][rowi-vertical_dir].right(),lower_ind);
             upper_combiners_[lr_no][rowi]=prime(dag(lower_combiners_[lr_no][rowi]));
         }
-        //PrintDat(sigma_lr_[lr_no]);
         sigma_lr_[lr_no]=sigma_lr_[lr_no]*dag(double_virt_leg_combiner)*lower_combiners_[lr_no][rowi]*upper_combiners_[lr_no][rowi];
+
+        //PrintDat(sigma_lr_[lr_no]);
 
         rowi+=vertical_dir;
     }
@@ -361,6 +363,8 @@ void Square_Double_Layer_PEPSt<TensorT>::from_sigma_lr_to_sigma_b()
         //Print(sigma_b_);
     }
 
+    //recombine_sigma_lr for future use
+    //recombine_sigma_lr();
     //cout << "\n==============================\n" << endl;
     //PrintDat(sigma_b_);
     //cout << "\n==============================\n" << endl;
@@ -520,14 +524,27 @@ std::vector<Complex> Square_Double_Layer_PEPSt<TensorT>::transfer_matrix_eigvals
             transfer_mat_temp(val0-1,val1-1)=transfer_mat_(transfer_mat_legs[0](val0),transfer_mat_legs[1](val1));
         }
     }
-    //arma::cx_vec eigvals_transfer_cx=arma::eig_gen(transfer_mat_temp);
     arma::cx_vec eigvals_transfer_temp;
     arma::cx_mat eigvecs_transfer_temp;
     arma::eig_gen(eigvals_transfer_temp,eigvecs_transfer_temp,transfer_mat_temp);
-    eigvals_transfer_temp=arma::sort(eigvals_transfer_temp);
-    //cout << eigvals_transfer_temp << endl;
+    //eigvals_transfer_temp=arma::sort(eigvals_transfer_temp);
+    //std::sort(eigvals_transfer_temp.begin(),eigvals_transfer_temp.end(),[](Complex eigval1, Complex eigval2){ return std::norm(eigval1)<std::norm(eigval2); });
+    std::vector<int> sorted_index(eigvals_transfer_temp.n_elem);
+    for (int ind=0; ind<sorted_index.size(); ind++) sorted_index[ind]=ind;
+    std::sort(sorted_index.begin(),sorted_index.end(),
+            [&eigvals_transfer_temp](int ind1, int ind2){ return std::norm(eigvals_transfer_temp(ind1))<std::norm(eigvals_transfer_temp(ind2));} );
+    arma::cx_vec eigvals_transfer_sorted(eigvals_transfer_temp.n_elem);
+    arma::cx_mat eigvecs_transfer_sorted(eigvecs_transfer_temp.n_rows,eigvecs_transfer_temp.n_cols);
+    for (int ind=0; ind<sorted_index.size(); ind++)
+    {
+        eigvals_transfer_sorted(ind)=eigvals_transfer_temp(sorted_index[ind]);
+        eigvecs_transfer_sorted.col(ind)=eigvecs_transfer_temp.col(sorted_index[ind]);
+    }
+    //cout << arma::norm(transfer_mat_temp*eigvecs_transfer_sorted.col(0)-eigvecs_transfer_sorted.col(0)*eigvals_transfer_sorted(0),2) << endl;
+    //for (int rowi=0; rowi<eigvecs_transfer_sorted.n_rows; rowi++) cout << eigvecs_transfer_sorted(rowi,0) << " ";
+    //cout << endl;
 
-    std::vector<Complex> eigvals_transfer=arma::conv_to<std::vector<Complex>>::from(eigvals_transfer_temp);
+    std::vector<Complex> eigvals_transfer=arma::conv_to<std::vector<Complex>>::from(eigvals_transfer_sorted);
     //std::sort(eigvals_transfer.begin(),eigvals_transfer.end(),[](Complex eigval1, Complex eigval2){ return std::norm(eigval1)<std::norm(eigval2); });
     return eigvals_transfer;
 
@@ -591,7 +608,7 @@ double Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std::vector<
     //    }
     //}
 
-    double expect_val=this->sandwiched_peps_norm(sandwiched_tensors);
+    auto expect_val=this->sandwiched_peps_norm(sandwiched_tensors);
 
     //cout << "unnormalized correlator: " << expect_val << endl;
 
@@ -624,7 +641,7 @@ double Square_Double_Layer_PEPSt<TensorT>::obtain_correlators(const std::vector<
     auto sandwiched_tensors=this->double_layer_tensors_;
     double wf_norm=sandwiched_peps_norm(sandwiched_tensors);
 
-    //cout << "wavefunction norm: " << wf_norm << endl;
+    cout << "wavefunction norm: " << wf_norm << endl;
     
     //calculate the unnormalized expect_val
     this->obtain_peps_sandwich_tensor_prod_operators(tensor_prod_operators,acting_sites_list,sandwiched_tensors);
@@ -677,6 +694,7 @@ double Square_Double_Layer_PEPSt<TensorT>::sandwiched_peps_norm(const std::vecto
     col_lr_[lr_no]-=horizontal_dir;
     decombine_sigma_lr();
 
+    //cout << "Check complex: " << (sigma_lr_[0]*sigma_lr_[1]).toComplex() << endl;
     double expect_value=(sigma_lr_[0]*sigma_lr_[1]).toReal();
     
 

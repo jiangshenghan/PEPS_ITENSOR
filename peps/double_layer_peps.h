@@ -107,6 +107,9 @@ class Double_Layer_PEPSt
         void obtain_single_layer_tensors();
         //from lower_tensors to layered_tensors with all pairs of virtual legs combined
         void obtain_layered_tensors_with_combined_legs();
+        //when combine to double layered tensors, the number of legs may exceed NMAX, so we need to first combine virtual legs in one layer and then decombine and recombine in pairs
+        //we do not require phys leg to contract
+        TensorT double_layer_tensor_from_lower_upper_tensors(TensorT lower_tensor, TensorT upper_tensor, const std::vector<CombinerT> &pair_combiners);
 
         //read/write from/to file
         //Notice we need to reconstruct double_layer_tensors_ and virt_leg_combiners_ after reading from file

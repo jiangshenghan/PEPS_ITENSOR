@@ -3,7 +3,6 @@
 #define _UTILITIES_H_
 
 #include "peps_class_params.h"
-#include "TPO.h"
 
 class Spin_Basis
 {

@@ -141,16 +141,16 @@ void Double_Layer_PEPSt<TensorT>::obtain_peps_sandwich_tensor_prod_operators(std
             tensor_prod_operators[opi].site_tensors(j).replaceIndex(old_leg,dag(phys_leg));
             tensor_prod_operators[opi].site_tensors(j).replaceIndex(dag(prime(old_leg)),prime(phys_leg));
 
+            PrintDat(tensor_prod_operators[opi].site_tensors(j));
+
             //sandwich tensor_prod_operators
             TensorT lower_tensor=single_layer_tensors_[acting_sites[j]],
                     upper_tensor=prime(dag(lower_tensor));
-            sandwiched_tensors[acting_sites[j]]=lower_tensor*tensor_prod_operators[opi].site_tensors(j)*upper_tensor;
-            //we left with uncombined virtual legs of tensor operator
-            for (const auto &combiner : virt_leg_combiners_[acting_sites[j]])
-            {
-                sandwiched_tensors[acting_sites[j]]=sandwiched_tensors[acting_sites[j]]*combiner;
-            }
-            //PrintDat(sandwiched_tensors[acting_sites[j]]);
+
+            //Print(double_layer_tensor_from_lower_upper_tensors(lower_tensor,upper_tensor,virt_leg_combiners_[acting_sites[j]]));
+
+            sandwiched_tensors[acting_sites[j]]=double_layer_tensor_from_lower_upper_tensors(lower_tensor,upper_tensor,virt_leg_combiners_[acting_sites[j]])*tensor_prod_operators[opi].site_tensors(j);
+            //Print(sandwiched_tensors[acting_sites[j]]);
         }
     }
 
@@ -276,6 +276,56 @@ template
 void Double_Layer_PEPSt<ITensor>::obtain_layered_tensors_with_combined_legs();
 template
 void Double_Layer_PEPSt<IQTensor>::obtain_layered_tensors_with_combined_legs();
+
+template <class TensorT>
+TensorT Double_Layer_PEPSt<TensorT>::double_layer_tensor_from_lower_upper_tensors(TensorT lower_tensor, TensorT upper_tensor, const std::vector<CombinerT> &pair_combiners)
+{
+    //combine virtual legs of lower(upper) tensor
+    std::vector<CombinerT> leg_combiners;
+    auto indset=lower_tensor.indices();
+    for (const auto &leg : indset)
+    {
+        if (leg.type()==Site) continue;
+        if (leg_combiners.empty()) 
+        {
+            leg_combiners.push_back(CombinerT(leg));
+        }
+        else
+        {
+            leg_combiners.push_back(CombinerT(leg,leg_combiners.back().right()));
+        }
+
+        //Print(lower_tensor);
+        //Print(upper_tensor);
+        //Print(leg_combiners.back());
+
+        lower_tensor=lower_tensor*leg_combiners.back();
+        upper_tensor=upper_tensor*prime(dag(leg_combiners.back()));
+    }
+
+    //decombine vitual legs one by one and recombine pairs of them
+    auto combined_tensor=lower_tensor*upper_tensor;
+    while (leg_combiners.empty()==false)
+    {
+        auto combiner=leg_combiners.back();
+        combined_tensor=combined_tensor*dag(combiner)*prime(combiner);
+        for (const auto pair_combiner : pair_combiners)
+        {
+            if (hasindex(combined_tensor.indices(),left_leg_of_combiners(pair_combiner,0)))
+            {
+                combined_tensor=combined_tensor*pair_combiner;
+                break;
+            }
+        }
+        leg_combiners.pop_back();
+    }
+    return combined_tensor;
+}
+template 
+ITensor Double_Layer_PEPSt<ITensor>::double_layer_tensor_from_lower_upper_tensors(ITensor lower_tensor, ITensor upper_tensor, const std::vector<ITensor::CombinerT> &pair_combiners);
+template 
+IQTensor Double_Layer_PEPSt<IQTensor>::double_layer_tensor_from_lower_upper_tensors(IQTensor lower_tensor, IQTensor upper_tensor, const std::vector<IQTensor::CombinerT> &pair_combiners);
+
 
 
 template <class TensorT>
