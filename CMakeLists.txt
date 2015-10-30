@@ -26,9 +26,11 @@ SET(ITENSOR_INCLUDE_DIR "/home/jiangsb/lib/itensor/include")
 SET(ITENSOR_LIB_DIR "/home/jiangsb/lib/itensor/lib")
 SET(WIGNERSYMBOL_INCLUDE_DIR "/home/jiangsb/lib/wignerSymbols/include")
 SET(WIGNERSYMBOL_LIB_DIR "/home/jiangsb/lib/wignerSymbols/lib")
+SET(ITPP_INCLUDE_DIR "/home/jiangsb/opt/itpp_intel/include")
+SET(ITPP_LIB_DIR "/home/jiangsb/opt/itpp_intel/lib")
 
 #include directories storing head files
-INCLUDE_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update ${ITENSOR_INCLUDE_DIR} ${WIGNERSYMBOL_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update ${ITPP_INCLUDE_DIR} ${ITENSOR_INCLUDE_DIR} ${WIGNERSYMBOL_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR})
 
 #add directories for source file generate libraries
 ADD_SUBDIRECTORY(lattice)
@@ -39,7 +41,7 @@ ADD_SUBDIRECTORY(simple_update)
 #ADD_SUBDIRECTORY(boundary_theory)
 
 #include directories for library
-LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update ${ITENSOR_LIB_DIR} ${WIGNERSYMBOL_LIB_DIR} ${BLAS_LAPACK_LIB_DIR})
+LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update ${ITPP_LIB_DIR} ${ITENSOR_LIB_DIR} ${WIGNERSYMBOL_LIB_DIR} ${BLAS_LAPACK_LIB_DIR})
 
 #add directories for source file generating executable file
 ADD_SUBDIRECTORY(test)

@@ -161,6 +161,9 @@ class PEPSt
         void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc);
         //void generate_boundary_tensors(TensorT single_boundary_tensor);
 
+        //this function returns site tensors that absorb the neighbour bond tensors and boundary tensors
+        std::vector<TensorT> combined_site_tensors();
+
 
         //
         //Constructor Helpers

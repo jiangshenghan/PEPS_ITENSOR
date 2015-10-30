@@ -3,6 +3,7 @@
 #define _UTILITIES_H_
 
 #include "peps_class_params.h"
+#include "tnetwork_storage.h"
 
 class Spin_Basis
 {

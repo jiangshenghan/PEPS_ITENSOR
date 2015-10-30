@@ -106,9 +106,13 @@ class Singlet_Tensor_Basis
 
 inline std::ostream &operator<<(std::ostream &s, const Singlet_Tensor_Basis &tensor_basis)
 {
-    for (const auto &tensor : tensor_basis.tensors())
+    for (int i=0; i<tensor_basis.dim(); i++)
     {
-        s << tensor << endl;
+        s << "Basis no: " << i << endl;
+        s << "Spin config: " << tensor_basis.spin_configs(i) << endl;
+        s << "Deg config: " << tensor_basis.deg_configs(i) << endl;
+        s << "Fusion channel: " << tensor_basis.fusion_channel(i) << endl;
+        s << tensor_basis(i);
     }
 
     return s;

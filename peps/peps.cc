@@ -338,6 +338,47 @@ template
 void PEPSt<IQTensor>::new_boundary_tensors();
 
 
+template <class TensorT>
+std::vector<TensorT> PEPSt<TensorT>::combined_site_tensors()
+{
+    std::vector<TensorT> combined_site_tensors;
+    for (int sitei=0; sitei<this->n_sites_total(); sitei++)
+    {
+        auto site_tensor=this->site_tensors(sitei);
+
+        //multiply neighbouring bond tensors 
+        for (int neighi=0; neighi<this->lattice().n_bonds_to_one_site(); neighi++)
+        {
+            int bond_no=this->lattice().site_neighbour_bonds(sitei,neighi);
+            if (bond_no<0) continue;
+            //For bulk bond, we only multiply those start from the site to avoid double counting. Namely bond_end_sites(bond_no,0)==sitei
+            //For boundary bond, we will always absorb to the bond
+            if (this->lattice().bond_end_sites(bond_no,0)==sitei ||
+                this->lattice().bond_end_sites(bond_no,0)<0)
+            {
+                site_tensor*=this->bond_tensors(bond_no);
+            }
+        }
+        //multiply neighbouring boundary tensors
+        for (const auto &boundary_no : this->lattice().site_neighbour_boundary(sitei))
+        {
+            site_tensor*=this->boundary_tensors(boundary_no);
+        }
+        clean(site_tensor);
+
+        combined_site_tensors.push_back(site_tensor);
+
+        //cout << "Single layer tensor " << sitei << endl << site_tensor << endl;
+    }
+
+    return combined_site_tensors;
+}
+template
+std::vector<ITensor> PEPSt<ITensor>::combined_site_tensors();
+template
+std::vector<IQTensor> PEPSt<IQTensor>::combined_site_tensors();
+
+
 //before reading, we should init PEPSt use lattice
 template <class TensorT>
 void PEPSt<TensorT>::read(std::istream &s)
