@@ -3,6 +3,31 @@
 
 using namespace square_psg;
 
+IQPEPS square_srvb_peps(int Lx, int Ly)
+{
+    Square_Lattice_Torus square_torus({Lx,Ly});
+    IQPEPS_IndexSet_SpinHalf indexset(3,square_torus);
+    IQPEPS square_srvb(square_torus,indexset);
+
+    //input sqaure srvb ansatz
+    Singlet_Tensor_Basis site_tensor_basis(square_srvb.site_tensors(0).indices()),
+                         bond_tensor_basis(square_srvb.bond_tensors(0).indices());
+
+    std::vector<double> site_tensor_params(site_tensor_basis.dim()),
+                        bond_tensor_params={1,sqrt(2)};
+    site_tensor_params[0]=sqrt(2);
+    site_tensor_params[1]=sqrt(2);
+    site_tensor_params[2]=sqrt(2);
+    site_tensor_params[5]=sqrt(2);
+    IQTensor site_tensor=singlet_tensor_from_basis_params(site_tensor_basis,site_tensor_params),
+             bond_tensor=singlet_tensor_from_basis_params(bond_tensor_basis,bond_tensor_params);
+    square_srvb.generate_site_tensors({site_tensor});
+    square_srvb.generate_bond_tensors({bond_tensor,bond_tensor},mu_12);
+
+    return square_srvb;
+}
+
+
 void random_init_square_rvb_peps(IQPEPS &square_rvb)
 {
     random_init_square_rvb_site_tensors(square_rvb);

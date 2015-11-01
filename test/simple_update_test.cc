@@ -4,18 +4,20 @@
 
 
 #include "square_rvb.h"
+#include "simple_update_env.h"
 
 int main()
 {
     //Check for simple_update_env
-    Square_Lattice_Torus square_lattice({2,2});
-   
+    int Lx=4, Ly=4;
 
-    IQPEPS_IndexSet_SpinHalf index_set(3,square_lattice);
-    IQPEPS square_peps(square_lattice,index_set);
+    //Square_Lattice_Torus square_lattice({Lx,Ly});
+    //IQPEPS_IndexSet_SpinHalf index_set(3,square_lattice);
+    //IQPEPS square_peps(square_lattice,index_set);
+    //random_init_square_rvb_peps(square_peps);
+
+    IQPES square_peps=square_srvb_peps(Lx,Ly);
     
-    random_init_square_rvb_peps(square_peps);
-
     //for (const auto &tensor : square_peps.site_tensors())
     //{
     //    PrintDat(tensor);
@@ -25,6 +27,12 @@ int main()
     //{
     //    PrintDat(tensor);
     //}
+
+    //Check environment update
+    std::array<std::vector<IQTensor>,2> env_tensors;
+    auto site_tensorA=square_peps.site_tensors(0)*square_peps.bond_tensors(1),
+         site_tensorB=square_peps.site_tensors(1);
+    get_env_tensor(site_tensorA,site_tensorB);
     
     //Check for Hamiltonian
     //std::array<IQIndex,2> sites{{Spin_leg({0,1},"site1",Out),Spin_leg({0,1},"site2",Out)}};

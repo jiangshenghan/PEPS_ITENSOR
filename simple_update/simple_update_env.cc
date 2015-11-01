@@ -3,16 +3,35 @@
 
 void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
 {
-    int n_leg=env_tens[0].size();
-    std::array<std::vector<IndexSet<IQIndex>>,2> env_tens_indices;
-
-    for (int i=0; i<2; i++)
+    //init env_tens
+    if (env_tens[0].empty())
     {
-        for (const auto &tensor:env_tens[i])
+        auto comm_leg=commonIndex(site_tensA,site_tensB);
+        for (const auto &leg : site_tensA.indices())
         {
-            env_tens_indices[i].push_back(tensor.indices());
+            if (leg.type()==Site) continue;
+            if (leg==comm_leg) continue;
+            IQIndex temp_tens(dag(leg),prime(leg));
+            for (int val=1; val<=leg.m(); val++) temp_tens(dag(leg)(val),prime(leg)(val))=1.;
+            env_tens[0].push_back(temp_tens);
         }
     }
+
+    if (env_tens[1].empty())
+    {
+        auto comm_leg=commonIndex(site_tensA,site_tensB);
+        for (const auto &leg : site_tensB.indices())
+        {
+            if (leg.type()==Site) continue;
+            if (leg==comm_leg) continue;
+            IQIndex temp_tens(dag(leg),prime(leg));
+            for (int val=1; val<=leg.m(); val++) temp_tens(dag(leg)(val),prime(leg)(val))=1.;
+            env_tens[1].push_back(temp_tens);
+        }
+    }
+
+    int n_out_legs=env_tens[0].size();
+    assert(n_out_legs==env_tens[1].size());
 
     //get env_mat iteratively
     int iter=0, max_iter=10;
@@ -20,28 +39,33 @@ void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std:
     {
         IQTensor site_env_tensA=site_tensA,
                  site_env_tensB=site_tensB;
-        for (int i=0; i<n_leg; i++)
+        for (int legi=0; legi<n_out_legs; legi++)
         {
-            site_env_tensA*=env_tens[0][i];
-            site_env_tensB*=env_tens[1][i];
+            site_env_tensA*=env_tens[0][legi];
+            site_env_tensB*=env_tens[1][legi];
         }
         site_env_tensA.noprime();
         site_env_tensB.noprime();
 
         auto env_tens_diag=nondeg_spin_sym_env_updated(site_env_tensA,site_env_tensB);
+        IndexSet<IQIndex> new_env_indset=env_tens[0][0].indices();
+        IQTensor new_env_tensor(new_env_indset[0],new_env_indset[1]);
 
-        int leg_dim=env_tens_diag.size();
-        for (int i=0; i<2; i++)
+        for (int val=0; val<env_tens_diag.size(); val++)
         {
-            for (int j=0; j<n_leg; j++)
-            {
-                for (int k=0; k<leg_dim; k++)
-                {
-                    env_tens[i][j](env_tens_indices[i][j][0](k+1),env_tens_indices[i][j][1](k+1))=env_tens_diag[k];
-                }
-            }
+            new_env_tensor(new_env_indset[0](val+1),new_env_indset[1](val+1))=env_tens_diag[val];
         }
-        
+
+        Print(iter);
+        PrintDat(new_env_tensor);
+        Print((new_env_tensor-env_tens[0][0]).norm());
+
+        for (int legi=0; legi<n_out_legs; legi++)
+        {
+            tensor_assignment(env_tens[0][legi],new_env_tensor);
+            tensor_assignment(env_tens[1][legi],new_env_tensor);
+        }
+
         iter++;
     }
 
@@ -50,43 +74,33 @@ void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std:
 
 std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQTensor &tens_B)
 {
-    //TODO: it seems commonIndex has do not distinguish direction, need to modify
     IQIndex comm_leg_A=commonIndex(tens_A,dag(tens_B)),
             comm_leg_B=dag(comm_leg_A);
 
-       assert(comm_leg_A!=IQIndex::Null());
+    assert(comm_leg_A!=IQIndex::Null());
 
-    IQCombiner iqcomb_A, iqcomb_B;
+    IQTensor tens_A_dag=dag(tens_A).prime(dag(comm_leg_A)),
+             tens_B_dag=dag(tens_B).prime(dag(comm_leg_B));
 
-
-    IQTensor tens_A_dag=dag(tens_A).prime(dag(comm_leg_A),1),
-             tens_B_dag=dag(tens_B).prime(dag(comm_leg_B),2);
-
-    //env_tens_square equals to square root of norm_A*norm_B
-    IQTensor env_tens_square=tens_A_dag*tens_A*tens_B*tens_B_dag;
-    IQIndex env_leg1=prime(dag(comm_leg_A),1),
-            env_leg2=prime(dag(comm_leg_B),2);
+    IQTensor tens_A_norm_square=(tens_A_dag*tens_A).takeRealPart(),
+             tens_B_norm_square=(tens_B_dag*tens_B).takeRealPart();
 
     std::vector<double> env_diag;
 
-    for (int i=1; i<comm_leg_A.m(); i++)
+    for (int i=1; i<=comm_leg_A.m(); i++)
     {
-
-#ifndef NDEBUG
-        //check for off-diagonal elements
-        for(int j=1; j<comm_leg_A.m(); j++)
-        {
-            auto elem=env_tens_square(env_leg1(i),env_leg2(j));
-            if (i!=j) 
-            {
-                assert(std::abs(elem)<EPSILON);
-                continue;
-            }
-        }
-#endif
-
-        env_diag.push_back(std::sqrt(env_tens_square(env_leg1(i),env_leg2(i))));
+        double normA=sqrt(tens_A_norm_square(comm_leg_A(i),dag(prime(comm_leg_A(i))))),
+               normB=sqrt(tens_B_norm_square(comm_leg_B(i),dag(prime(comm_leg_B(i)))));
+        env_diag.push_back(normA*normB);
     }
+
+    //we fix the norm of env_tens_diag to be sqrt(dim)
+    double env_norm=0;
+    std::accumulate(env_diag.begin(),env_diag.end(),env_norm,
+            [](double norm, double elem){norm+=elem*elem});
+    env_norm=sqrt(env_norm);
+    double env_amp=sqrt(env_diag.size()*1.)/env_norm;
+    for (auto &elem : env_diag) elem*=env_amp;
 
     return env_diag;
 }

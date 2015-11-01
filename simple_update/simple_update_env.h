@@ -3,9 +3,10 @@
 #define _SIMPLE_UPDATE_ENV_H_
 
 #include "peps.h"
+//#include "square_rvb.h"
 
 //function to solve the env tensor for simple update
-//1. input tensors and initial env_tensor
+//1. input tensors and initial env_tensor, env_tensor are tensors with two indices (s,s')
 //2. multiply them, get combined tensors
 //3. using combined tensors to obtain new env tensor
 //4. view preivous steps as a function with input tensors as params, diag elements of env_tensor as auguments and f=updated_env-env, solve f=0
