@@ -20,18 +20,18 @@ void Singlet_Tensor_Basis::init_spin_deg_and_basis()
 {
     for (const auto &sz_leg : is_)
     {
-        std::vector<int> spin_deg;
+        std::vector<int> flavor_deg;
         std::vector<Spin_Basis> spin_basis;
 
-        bool spin_rep=iqind_spin_rep(sz_leg,spin_deg);
-        iqind_to_spin_basis(sz_leg,spin_deg,spin_basis);
+        bool spin_rep=iqind_spin_rep(sz_leg,flavor_deg);
+        iqind_to_spin_basis(sz_leg,flavor_deg,spin_basis);
         assert(spin_rep);
 
-        is_spin_degs_.push_back(spin_deg);
+        is_flavor_deg_.push_back(flavor_deg);
         is_spin_basis_.push_back(spin_basis);
 
-        //cout << "spin_deg:" << endl;
-        //for (const auto &deg : spin_deg) cout << deg << " ";
+        //cout << "flavor_deg:" << endl;
+        //for (const auto &flavor : flavor_deg) cout << flavor << " ";
         //cout << endl;
 
         //cout << "spin_basis: " << endl;
@@ -57,13 +57,13 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
     
     int total_spin_sets_num=1;
 
-    for (const auto &spin_deg : is_spin_degs_)
+    for (const auto &flavor_deg : is_flavor_deg_)
     {
-        total_spin_sets_num*=spin_deg.size();
-        max_spins_.push_back(spin_deg.size());
+        total_spin_sets_num*=flavor_deg.size();
+        max_spins_.push_back(flavor_deg.size());
     }
 
-    spin_deg_list_to_num_=std::vector<std::vector<std::vector<int>>>(total_spin_sets_num);
+    spin_flavor_list_to_num_=std::vector<std::vector<std::vector<int>>>(total_spin_sets_num);
 
     //iqinds is used to initialize IQTensors
     std::vector<IQIndex> iqinds;
@@ -80,29 +80,29 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
         spin_list=list_from_num(spin_seti,max_spins_);
 
 
-        //spin_set_degs stores degeneracy for this particualr spin set
+        //spin_set_flavors stores degeneracy for this particualr spin set
         //max_sz_nums stores # of different sz's for this particular spin set
-        //total_deg=\prod(every index deg of this spin_list)
+        //total_flavors=\prod(every index flavor_deg of this spin_list)
         //total_sz_sets_num=\prod(# of sz qn of every leg for this spin_list)
         //We should avoid the case where this spin set are not occur in the indexset
-        std::vector<int> spin_set_degs, max_sz_nums;
-        int total_deg=1, total_sz_sets_num=1;
+        std::vector<int> spin_set_flavors, max_sz_nums;
+        int total_flavors=1, total_sz_sets_num=1;
         bool valid_spins=true;
         for (int i=0; i<total_leg_num; i++)
         {
-            int deg=is_spin_degs_[i][spin_list[i]];
-            if (deg==0)
+            int flavor_deg=is_flavor_deg_[i][spin_list[i]];
+            if (flavor_deg==0)
             {
                 valid_spins=false;
                 break;
             }
-            spin_set_degs.push_back(deg);
+            spin_set_flavors.push_back(flavor_deg);
             max_sz_nums.push_back(spin_list[i]+1);
 
-            total_deg*=deg;
+            total_flavors*=flavor_deg;
             total_sz_sets_num*=spin_list[i]+1;
         }
-        spin_deg_list_to_num_[spin_seti]=std::vector<std::vector<int>>(total_deg);
+        spin_flavor_list_to_num_[spin_seti]=std::vector<std::vector<int>>(total_flavors);
 
         if (!valid_spins) continue;
 
@@ -116,10 +116,10 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
         {
             //PrintDat(cg_tensor);
 
-            for (int degs_num=0; degs_num<total_deg; degs_num++)
+            for (int degs_num=0; degs_num<total_flavors; degs_num++)
             {
-                std::vector<int> deg_list=list_from_num(degs_num,spin_set_degs);
-                //cout << "deg_list: " << deg_list << endl;
+                std::vector<int> flavor_list=list_from_num(degs_num,spin_set_flavors);
+                //cout << "flavor_list: " << flavor_list << endl;
 
                 IQTensor singlet_tensor(iqinds);
 
@@ -143,11 +143,11 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
                     //for (const auto &cg_val : cg_vals) cout << cg_val;
                     //cout << "sz_list: " << sz_list << endl << elem << endl;
 
-                    //obtain the IQIndexVal from spin_list, cg_val_list and deg_list
+                    //obtain the IQIndexVal from spin_list, cg_val_list and flavor_list
                     std::vector<IQIndexVal> singlet_vals(NMAX,IQIndexVal::Null());
                     for (int legi=0; legi<is_.r(); legi++)
                     {
-                        int S=spin_list[legi], m=sz_list[legi], t=deg_list[legi];
+                        int S=spin_list[legi], m=sz_list[legi], t=flavor_list[legi];
                         Spin_Basis spin_state(S,m,t);
                         auto iter=std::find(is_spin_basis_[legi].begin(),is_spin_basis_[legi].end(),spin_state);
                         int val=iter-is_spin_basis_[legi].begin()+1;
@@ -160,13 +160,13 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
 
                 singlet_tensors_.push_back(singlet_tensor);
                 spin_configs_.push_back(spin_list);
-                deg_configs_.push_back(deg_list);
-                spin_deg_list_to_num_[spin_seti][degs_num].push_back(singlet_tensors_.size()-1);
-                fusion_channel_.push_back(spin_deg_list_to_num_[spin_seti][degs_num].size()-1);
+                flavor_configs_.push_back(flavor_list);
+                spin_flavor_list_to_num_[spin_seti][degs_num].push_back(singlet_tensors_.size()-1);
+                fusion_channel_.push_back(spin_flavor_list_to_num_[spin_seti][degs_num].size()-1);
 
                 //PrintDat(singlet_tensor);
 
-            }//end of for loop for extra deg for the same singlet state
+            }//end of for loop for flavors for the same singlet state
 
         }//end of for loop for different singlet for same spin_list
     }

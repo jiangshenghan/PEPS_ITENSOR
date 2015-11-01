@@ -3,28 +3,28 @@
 //3. check simple_update algorithm
 
 
-#include "simple_update.h"
+#include "square_rvb.h"
 
 int main()
 {
     //Check for simple_update_env
-    Square_Lattice_Torus square_lattice{std::array<int,2>{2,2}};
+    Square_Lattice_Torus square_lattice({2,2});
    
 
     IQPEPS_IndexSet_SpinHalf index_set(3,square_lattice);
     IQPEPS square_peps(square_lattice,index_set);
     
-    randomize_spin_sym_square_peps(square_peps);
+    random_init_square_rvb_peps(square_peps);
 
-    for (const auto &tensor : square_peps.site_tensors())
-    {
-        PrintDat(tensor);
-    }
+    //for (const auto &tensor : square_peps.site_tensors())
+    //{
+    //    PrintDat(tensor);
+    //}
 
-    for (const auto &tensor : square_peps.bond_tensors())
-    {
-        PrintDat(tensor);
-    }
+    //for (const auto &tensor : square_peps.bond_tensors())
+    //{
+    //    PrintDat(tensor);
+    //}
     
     //Check for Hamiltonian
     //std::array<IQIndex,2> sites{{Spin_leg({0,1},"site1",Out),Spin_leg({0,1},"site2",Out)}};

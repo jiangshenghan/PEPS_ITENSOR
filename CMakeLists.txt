@@ -45,4 +45,4 @@ LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update ${ITPP_LI
 
 #add directories for source file generating executable file
 ADD_SUBDIRECTORY(test)
-ADD_SUBDIRECTORY(execute)
+#ADD_SUBDIRECTORY(execute)

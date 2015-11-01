@@ -1,23 +1,23 @@
 
 #include "utilities.h"
 
-IQIndex Spin_leg(const std::vector<int> &spin_deg, const std::string &iqind_name, Arrow dir, IndexType it, int qn_order)
+IQIndex Spin_leg(const std::vector<int> &flavor_deg, const std::string &iqind_name, Arrow dir, IndexType it, int qn_order)
 {
     //spin_dim=2S+1, where S is the largest spin #
-    int spin_dim=spin_deg.size();
-    //while (spin_deg[spin_dim-1]==0) spin_dim--;
+    int spin_dim=flavor_deg.size();
+    //while (flavor_deg[spin_dim-1]==0) spin_dim--;
 
     //sz_deg[qn] stores the degeneracy of Sz=(spin_dim-qn-1)/2
     std::vector<int> sz_deg;
-    spin_to_sz(spin_deg,sz_deg);
+    spin_to_sz(flavor_deg,sz_deg);
     
-    //for (const auto &deg : spin_deg) cout << deg << " ";
+    //for (const auto &deg : flavor_deg) cout << deg << " ";
     //cout << endl;
 
     //for (const auto &deg : sz_deg) cout << deg << " ";
     //cout << endl;
 
-    //init legs support rep of spin rotation with spin_deg
+    //init legs support rep of spin rotation with flavor_deg
     std::vector<IndexQN> indqn;
     for (int qn=0; qn<2*spin_dim-1; qn++)
     {
@@ -43,7 +43,7 @@ IQIndex Spin_leg(const std::vector<int> &spin_deg, const std::string &iqind_name
 }
 
 
-bool iqind_spin_rep(const IQIndex &sz_leg, std::vector<int> &spin_deg)
+bool iqind_spin_rep(const IQIndex &sz_leg, std::vector<int> &flavor_deg)
 {
     //spin_dim=2S_{max}+1
     int spin_dim=0;
@@ -61,14 +61,14 @@ bool iqind_spin_rep(const IQIndex &sz_leg, std::vector<int> &spin_deg)
         sz_deg[spin_dim-indqn.qn.sz()-1]=indqn.m();
     }
 
-    return sz_to_spin(sz_deg,spin_deg);
+    return sz_to_spin(sz_deg,flavor_deg);
 }
 
 
-bool sz_to_spin(const std::vector<int> &sz_deg, std::vector<int> &spin_deg)
+bool sz_to_spin(const std::vector<int> &sz_deg, std::vector<int> &flavor_deg)
 {
     int spin_dim=(sz_deg.size()+1)/2;
-    spin_deg=std::vector<int>(spin_dim,0);
+    flavor_deg=std::vector<int>(spin_dim,0);
 
     //Notice, spin_S and spin_Sz are in the unit of 1/2
     //deg of -Sz must equal to deg of Sz
@@ -81,15 +81,15 @@ bool sz_to_spin(const std::vector<int> &sz_deg, std::vector<int> &spin_deg)
     std::vector<int> sz_deg_prime(sz_deg);
     for (int spin_S=spin_dim-1; spin_S>=0; spin_S--)
     {
-        spin_deg[spin_S]=sz_deg_prime[spin_dim-spin_S-1];
+        flavor_deg[spin_S]=sz_deg_prime[spin_dim-spin_S-1];
 
         for (int spin_Sz=-spin_S; spin_Sz<=spin_S; spin_Sz+=2)
         {
-            sz_deg_prime[spin_dim-spin_Sz-1]-=spin_deg[spin_S];
+            sz_deg_prime[spin_dim-spin_Sz-1]-=flavor_deg[spin_S];
             if (sz_deg_prime[spin_dim-spin_Sz-1]<0) return false;
         }
         
-        //cout << spin_S/2.0 << ": " << spin_deg[spin_S] << endl;
+        //cout << spin_S/2.0 << ": " << flavor_deg[spin_S] << endl;
     }
 
     //all elements of sz_deg_prime must vanish to form a spin rep
@@ -97,23 +97,23 @@ bool sz_to_spin(const std::vector<int> &sz_deg, std::vector<int> &spin_deg)
 
     if (sz_iter!=sz_deg_prime.end())
     {
-        spin_deg=std::vector<int>();
+        flavor_deg=std::vector<int>();
         return false;
     }
     return true;
 }
 
 
-void spin_to_sz(const std::vector<int> &spin_deg, std::vector<int> &sz_deg)
+void spin_to_sz(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg)
 {
-    int spin_dim=spin_deg.size();
+    int spin_dim=flavor_deg.size();
     sz_deg=std::vector<int>(2*spin_dim-1,0);
 
     for (int spin_qn=0; spin_qn<spin_dim; spin_qn++)
     {
         for (int qn=spin_dim-spin_qn-1; qn<=spin_dim+spin_qn-1; qn+=2)
         {
-            sz_deg[qn]+=spin_deg[spin_qn];
+            sz_deg[qn]+=flavor_deg[spin_qn];
         }
     }
 }
@@ -121,21 +121,21 @@ void spin_to_sz(const std::vector<int> &spin_deg, std::vector<int> &sz_deg)
 
 bool iqind_to_spin_basis(const IQIndex &sz_leg, std::vector<Spin_Basis> &spin_basis)
 {
-    std::vector<int> spin_deg;
+    std::vector<int> flavor_deg;
 
-    if (!iqind_spin_rep(sz_leg,spin_deg)) return false;
+    if (!iqind_spin_rep(sz_leg,flavor_deg)) return false;
 
-    return iqind_to_spin_basis(sz_leg,spin_deg,spin_basis);
+    return iqind_to_spin_basis(sz_leg,flavor_deg,spin_basis);
 }
 
-bool iqind_to_spin_basis(const IQIndex &sz_leg, const std::vector<int> &spin_deg, std::vector<Spin_Basis> &spin_basis)
+bool iqind_to_spin_basis(const IQIndex &sz_leg, const std::vector<int> &flavor_deg, std::vector<Spin_Basis> &spin_basis)
 {
     for (const auto &indqn : sz_leg.indices())
     {
         int m=indqn.qn.sz();
-        for (int S=std::abs(m); S<spin_deg.size(); S+=2)
+        for (int S=std::abs(m); S<flavor_deg.size(); S+=2)
         {
-            for (int t=0; t<spin_deg[S]; t++)
+            for (int t=0; t<flavor_deg[S]; t++)
             {
                 spin_basis.push_back(Spin_Basis(S,m,t));
             }
@@ -193,9 +193,9 @@ int num_from_list(const std::vector<int> &list, const std::vector<int> &max_nums
 }
 
 
-IQTensor eta_from_mu(double mu, const std::vector<int> &spin_deg)
+IQTensor eta_from_mu(double mu, const std::vector<int> &flavor_deg)
 {
-    auto eta_leg=Spin_leg(spin_deg,"eta_leg",In),
+    auto eta_leg=Spin_leg(flavor_deg,"eta_leg",In),
          eta_leg_prime=prime(dag(eta_leg));
     auto eta=IQTensor(eta_leg,eta_leg_prime);
 
@@ -209,7 +209,7 @@ IQTensor eta_from_mu(double mu, const std::vector<int> &spin_deg)
     }
 
     std::vector<Spin_Basis> eta_leg_spin_basis;
-    iqind_to_spin_basis(eta_leg,spin_deg,eta_leg_spin_basis);
+    iqind_to_spin_basis(eta_leg,flavor_deg,eta_leg_spin_basis);
 
     for (int val=1; val<=eta_leg.m(); val++)
     {

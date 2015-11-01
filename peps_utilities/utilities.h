@@ -2,7 +2,7 @@
 #ifndef _UTILITIES_H_
 #define _UTILITIES_H_
 
-#include "peps_class_params.h"
+#include "predef.h"
 #include "tnetwork_storage.h"
 
 class Spin_Basis
@@ -59,32 +59,32 @@ int num_from_list(const std::vector<int> &list, const std::vector<int> &max_nums
 
 //Given sz quantum numbers, get corresponding spin representation
 //sz_deg[qn] stores the degeneracy of 2Sz=spin_dim-qn-1
-bool sz_to_spin(const std::vector<int> &sz_deg, std::vector<int> &spin_deg);
+bool sz_to_spin(const std::vector<int> &sz_deg, std::vector<int> &flavor_deg);
 
 //Given spin quantum numbers, get corresponding sz quantum numbers
-void spin_to_sz(const std::vector<int> &spin_deg, std::vector<int> &sz_deg);
+void spin_to_sz(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg);
 
 
-//Given spin_deg this function creates an IQIndex leg,
-//where the leg accommodates rep of spin_qn with deg equals to spin_deg[spin_qn] 
+//Given flavor_deg this function creates an IQIndex leg,
+//where the leg accommodates rep of spin_qn with deg equals to flavor_deg[spin_qn] 
 //qn_order denotes the way to store IndexQN in IQIndex
 //qn_order=-1 means from high sz to low sz
 //while qn_order=1 means from low sz to high sz
-IQIndex Spin_leg(const std::vector<int> &spin_deg, const std::string &iqind_name, Arrow dir=Out, IndexType it=Link, int qn_order=-1);
+IQIndex Spin_leg(const std::vector<int> &flavor_deg, const std::string &iqind_name, Arrow dir=Out, IndexType it=Link, int qn_order=-1);
 
 //Given an IQIndex (with sz quantum number), this function determines the corresponding SU(2) rep
-//spin_deg[n] stores extra deg for spin n/2
-bool iqind_spin_rep(const IQIndex &sz_leg, std::vector<int> &spin_deg);
+//flavor_deg[n] stores extra deg for spin n/2
+bool iqind_spin_rep(const IQIndex &sz_leg, std::vector<int> &flavor_deg);
 
 //Given an IQIndex sz_leg (with sz quantum number) which accommodates SU(2) rep, this function relates integer i (0<=i<sz_leg.m()) and the spin basis (|S,m,t\rangle)
 bool iqind_to_spin_basis(const IQIndex &sz_leg, std::vector<Spin_Basis> &spin_basis);
 
-bool iqind_to_spin_basis(const IQIndex &sz_leg, const std::vector<int> &spin_deg, std::vector<Spin_Basis> &spin_basis);
+bool iqind_to_spin_basis(const IQIndex &sz_leg, const std::vector<int> &flavor_deg, std::vector<Spin_Basis> &spin_basis);
 
 
 //This function construct eta from mu
 //the Out leg has prime while In leg has no prime
-IQTensor eta_from_mu(double mu, const std::vector<int> &spin_deg);
+IQTensor eta_from_mu(double mu, const std::vector<int> &flavor_deg);
 //construct eta by given leg
 IQTensor eta_from_mu(double mu, IQIndex eta_leg);
 //define the function for Index for convience

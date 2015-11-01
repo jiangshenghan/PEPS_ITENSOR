@@ -38,30 +38,30 @@ class Singlet_Tensor_Basis
         const IQTensor &tensor(int i) const { return singlet_tensors_[i]; }
 
         const std::vector<int> &spin_configs(int i) const { return spin_configs_[i]; }
-        const std::vector<int> &deg_configs(int i) const { return deg_configs_[i]; }
+        const std::vector<int> &flavor_configs(int i) const { return flavor_configs_[i]; }
         int fusion_channel(int i) const { return fusion_channel_[i]; }
 
-        const std::vector<int> &spin_degs(int legi) const { return is_spin_degs_[legi]; }
+        const std::vector<int> &flavor_deg(int legi) const { return is_flavor_deg_[legi]; }
 
         const IQTensor &operator()(int i) const { return singlet_tensors_[i]; }
         const IQTensor &operator[](int i) const { return singlet_tensors_[i]; }
 
-        //Given a spin_list as well as deg_list, get the correpsonding No. of base
-        int spin_deg_list_to_basis_no(const std::vector<int> &spin_list, const std::vector<int> &deg_list, int fusion_channel=0)
+        //Given a spin_list as well as flavor_list, get the correpsonding No. of base
+        int spin_flavor_list_to_basis_no(const std::vector<int> &spin_list, const std::vector<int> &flavor_list, int fusion_channel=0) const
         {
             std::vector<int> spin_set_degs;
             int total_leg_num=is_.r();
 
             for (int i=0; i<total_leg_num; i++)
             {
-                int deg=is_spin_degs_[i][spin_list[i]];
+                int deg=is_flavor_deg_[i][spin_list[i]];
                 spin_set_degs.push_back(deg);
             }
 
             int spin_list_num=num_from_list(spin_list,max_spins_),
-                deg_list_num=num_from_list(deg_list,spin_set_degs);
+                flavor_list_num=num_from_list(flavor_list,spin_set_degs);
 
-            return spin_deg_list_to_num_[spin_list_num][deg_list_num][fusion_channel];
+            return spin_flavor_list_to_num_[spin_list_num][flavor_list_num][fusion_channel];
         }
 
         //
@@ -72,8 +72,8 @@ class Singlet_Tensor_Basis
 
     private:
         IndexSet<IQIndex> is_;
-        //is_spin_degs_[i] stores spin deg for IQIndex is_[i]
-        std::vector<std::vector<int>> is_spin_degs_;
+        //is_flavor_deg_[i] stores spin deg for IQIndex is_[i]
+        std::vector<std::vector<int>> is_flavor_deg_;
         //max_spins_ stores max spin for each leg
         std::vector<int> max_spins_;
         //is_spin_basis_[i][j] stores spin basis |S,m,t\rangle for is_[i][j]
@@ -81,13 +81,13 @@ class Singlet_Tensor_Basis
 
         //spin_configs_ stores the spin_list for every singlet_tensors_
         std::vector<std::vector<int>> spin_configs_;
-        //deg_configs stores the deg_list for every singlet_tensors_
-        std::vector<std::vector<int>> deg_configs_;
+        //flavor_configs stores the flavor_list for every singlet_tensors_
+        std::vector<std::vector<int>> flavor_configs_;
         //for identical spin and deg configs, there may still be choice of different fusion_channels
         std::vector<int> fusion_channel_;
-        //spin_deg_list_to_num_ translate a particular spin_list, deg_list and fusion channel to the no. of tensor basis
-        //spin_list, deg_list and fusion channel are encoded as three numbers
-        std::vector<std::vector<std::vector<int>>> spin_deg_list_to_num_;
+        //spin_flavor_list_to_num_ translate a particular spin_list, flavor_list and fusion channel to the no. of tensor basis
+        //spin_list, flavor_list and fusion channel are encoded as three numbers
+        std::vector<std::vector<std::vector<int>>> spin_flavor_list_to_num_;
 
 
         std::vector<IQTensor> singlet_tensors_;
@@ -96,11 +96,11 @@ class Singlet_Tensor_Basis
         //
         //friend functions
         //
-        friend bool iqind_spin_rep(const IQIndex &sz_leg, std::vector<int> &spin_deg);
+        //friend bool iqind_spin_rep(const IQIndex &sz_leg, std::vector<int> &flavor_deg);
 
-        friend bool iqind_to_spin_basis(const IQIndex &sz_leg, std::vector<Spin_Basis> &spin_basis);
+        //friend bool iqind_to_spin_basis(const IQIndex &sz_leg, std::vector<Spin_Basis> &spin_basis);
 
-        friend bool iqind_to_spin_basis(const IQIndex &sz_leg, const std::vector<int> &spin_deg, std::vector<Spin_Basis> &spin_basis);
+        //friend bool iqind_to_spin_basis(const IQIndex &sz_leg, const std::vector<int> &flavor_deg, std::vector<Spin_Basis> &spin_basis);
 
 };
 
@@ -110,8 +110,9 @@ inline std::ostream &operator<<(std::ostream &s, const Singlet_Tensor_Basis &ten
     {
         s << "Basis no: " << i << endl;
         s << "Spin config: " << tensor_basis.spin_configs(i) << endl;
-        s << "Deg config: " << tensor_basis.deg_configs(i) << endl;
+        s << "Deg config: " << tensor_basis.flavor_configs(i) << endl;
         s << "Fusion channel: " << tensor_basis.fusion_channel(i) << endl;
+        s << "Check basis no: " << tensor_basis.spin_flavor_list_to_basis_no(tensor_basis.spin_configs(i),tensor_basis.flavor_configs(i),tensor_basis.fusion_channel(i)) << endl;
         s << tensor_basis(i);
     }
 

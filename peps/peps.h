@@ -158,7 +158,7 @@ class PEPSt
         //given tensors in one uc, generate all translation related tensors
         //this function requires order for indices of given tensors must match those in peps
         void generate_site_tensors(std::vector<TensorT> site_tensors_uc);
-        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc);
+        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc, double mu_12=1);
         //void generate_boundary_tensors(TensorT single_boundary_tensor);
 
         //this function returns site tensors that absorb the neighbour bond tensors and boundary tensors
@@ -208,7 +208,7 @@ using PEPS=PEPSt<ITensor>;
 using IQPEPS=PEPSt<IQTensor>;
 
 
-void randomize_spin_sym_square_peps(IQPEPS &square_peps);
+//void randomize_spin_sym_square_peps(IQPEPS &square_peps);
 
 
 #endif

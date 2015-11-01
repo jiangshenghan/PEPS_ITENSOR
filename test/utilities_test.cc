@@ -4,7 +4,7 @@
 int main()
 {
     //Construct square lattice sRVB
-    int Lx=8, Ly=8;
+    int Lx=16, Ly=16;
     Square_Lattice_Torus square_torus({Lx,Ly});
     IQPEPS_IndexSet_SpinHalf indexset(3,square_torus);
     IQPEPS square_srvb(square_torus,indexset);
@@ -17,6 +17,7 @@ int main()
     //PrintDat(site_tensor_basis);
     //cout << "bond tensor basis:" << endl;
     //PrintDat(bond_tensor_basis);
+    //return 0;
 
     std::vector<double> site_tensor_params(site_tensor_basis.dim()),
                         bond_tensor_params={1,sqrt(2)};
@@ -63,6 +64,10 @@ int main()
     ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_srvb_Lx=" << Lx << "_Ly=" << Ly << ".txt";
     std::string file_name=ss.str();
     writeToFile(file_name,square_srvb_storage);
+
+    //Tnetwork_Storage<IQTensor> square_srvb_from_file;
+    //readFromFile(file_name,square_srvb_from_file);
+    //cout << square_srvb_from_file._Lx << " " << square_srvb_from_file._Ly << endl << square_srvb_from_file._tensor_list << endl;
 
     return 0;
 }
