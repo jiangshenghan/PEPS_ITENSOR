@@ -45,9 +45,10 @@ inline std::ostream &operator<<(std::ostream &s, const Spin_Basis &spin_basis)
     return s << "(" << spin_basis.S()/2.0 << "," << spin_basis.m()/2.0 << "," << spin_basis.t() << ")";
 }
 
-inline std::ostream &operator<<(std::ostream &s, const std::vector<int> &ivec)
+template <class T>
+inline std::ostream &operator<<(std::ostream &s, const std::vector<T> &vec)
 {
-    for (const auto &i : ivec) s<< i << " ";
+    for (const auto &elem : vec) s << elem << " ";
     return s;
 }
 

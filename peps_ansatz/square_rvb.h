@@ -14,7 +14,7 @@ namespace square_psg
     static const Complex Theta_c4=1;
 }
 
-void init_square_srvb_peps(int Lx, int Ly);
+IQPEPS square_srvb_peps(int Lx, int Ly);
 
 void random_init_square_rvb_peps(IQPEPS &square_rvb);
 
@@ -23,6 +23,6 @@ void random_init_square_rvb_site_tensors(IQPEPS &square_rvb);
 void init_square_rvb_bond_tensors(IQPEPS &square_rvb);
 
 void rotation_symmetrize_square_rvb_site_tensor(IQTensor &site_tensor);
-void spin_symmetrize_square_rvb_site_tensor(IQTensor &site_tensor, const Singlet_Tensor_Basis &site_tensor_basis);
+void spin_symmetrize_tensor(IQTensor &site_tensor, const Singlet_Tensor_Basis &site_tensor_basis);
 
 #endif

@@ -38,4 +38,9 @@ using Coordinate=std::array<int,3>;
 static const double EPSILON=1E-15;
 //static const Complex I()
 
+//random number generator between (-1,1)
+static std::default_random_engine generator(std::time(0));
+static std::uniform_real_distribution<double> distribution(-1.0,1.0);
+static auto rand_gen=std::bind(distribution,generator);
+
 #endif

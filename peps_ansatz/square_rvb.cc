@@ -67,13 +67,15 @@ void random_init_square_rvb_site_tensors(IQPEPS &square_rvb)
         //     << "Fusion Channel: " << fusion_channel << endl
         //     << "Params: " << site_tensor_params[basei] << endl;
     }
+    //Print(site_tensor_params);
 
     auto site_tensor=singlet_tensor_from_basis_params(site_tensor_basis,site_tensor_params);
-    rotation_symmetrize_square_rvb_site_tensor(site_tensor);
+    //rotation_symmetrize_square_rvb_site_tensor(site_tensor);
+    //spin_symmetrize_tensor(site_tensor,site_tensor_basis);
 
-    PrintDat(site_tensor);
+    //PrintDat(site_tensor);
     //auto sym_site_tensor=site_tensor;
-    //spin_symmetrize_square_rvb_site_tensor(sym_site_tensor,site_tensor_basis);
+    //spin_symmetrize_tensor(sym_site_tensor,site_tensor_basis);
     //rotation_symmetrize_square_rvb_site_tensor(sym_site_tensor);
     //sym_site_tensor*=0.25;
     //Print((sym_site_tensor-site_tensor).norm());
@@ -174,15 +176,26 @@ void rotation_symmetrize_square_rvb_site_tensor(IQTensor &site_tensor)
     site_tensor.clean();
 }
 
-void spin_symmetrize_square_rvb_site_tensor(IQTensor &site_tensor, const Singlet_Tensor_Basis &site_tensor_basis)
+void spin_symmetrize_tensor(IQTensor &tensor, const Singlet_Tensor_Basis &tensor_basis)
 {
-    std::vector<Complex> site_tensor_params;
+    std::vector<Complex> tensor_params;
     
-    for (const auto &tensor_base : site_tensor_basis)
+    for (const auto &tensor_base : tensor_basis)
     {
-        site_tensor_params.push_back((dag(tensor_base)*site_tensor).toComplex());
-    }
+        auto param=(dag(tensor_base)*tensor).toComplex();
+        tensor_params.push_back(param);
 
-    site_tensor=singlet_tensor_from_basis_params(site_tensor_basis,site_tensor_params);
-    site_tensor.clean();
+        //if (std::abs(param)>EPSILON)
+        //{
+        //    int basei=tensor_params.size()-1;
+        //    Print(tensor_basis.spin_configs(basei));
+        //    Print(tensor_basis.flavor_configs(basei));
+        //    Print(tensor_basis.fusion_channel(basei));
+        //    Print(param);
+        //}
+    }
+    //Print(tensor_params);
+
+    tensor=singlet_tensor_from_basis_params(tensor_basis,tensor_params);
+    tensor.clean();
 }

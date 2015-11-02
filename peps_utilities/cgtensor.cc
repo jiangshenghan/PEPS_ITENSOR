@@ -72,6 +72,9 @@ void CGTensors::init()
     assert(out_spin_legs.size()+in_spin_legs.size()==spin_legs_.size());
 
     valid_=obtain_K(out_spin_legs,in_spin_legs,K_);
+
+    //make tensors with norm 1.
+    for (auto &tensor : K_) tensor/=tensor.norm();
 }
 
 

@@ -30,13 +30,8 @@ void Singlet_Tensor_Basis::init_spin_deg_and_basis()
         is_flavor_deg_.push_back(flavor_deg);
         is_spin_basis_.push_back(spin_basis);
 
-        //cout << "flavor_deg:" << endl;
-        //for (const auto &flavor : flavor_deg) cout << flavor << " ";
-        //cout << endl;
-
-        //cout << "spin_basis: " << endl;
-        //for (const auto &basis : spin_basis) cout << basis << " ";
-        //cout << endl;
+        //Print(flavor_deg);
+        //Print(spin_basis);
     }
 
 }
@@ -94,6 +89,7 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
             if (flavor_deg==0)
             {
                 valid_spins=false;
+                total_flavors=0;
                 break;
             }
             spin_set_flavors.push_back(flavor_deg);
@@ -102,9 +98,9 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
             total_flavors*=flavor_deg;
             total_sz_sets_num*=spin_list[i]+1;
         }
-        spin_flavor_list_to_num_[spin_seti]=std::vector<std::vector<int>>(total_flavors);
-
         if (!valid_spins) continue;
+
+        spin_flavor_list_to_num_[spin_seti]=std::vector<std::vector<int>>(total_flavors);
 
         CGTensors cg_tensors(spin_list,dirs);
 
@@ -226,7 +222,7 @@ void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_
 
     for (const auto &base : tensor_basis.tensors())
     {
-        params.push_back((singlet_tensor*base).toReal());
+        params.push_back((singlet_tensor*dag(base)).toReal());
     }
 
 }
@@ -237,7 +233,7 @@ void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_
 
     for (const auto &base : tensor_basis.tensors())
     {
-        params.push_back((singlet_tensor*base).toComplex());
+        params.push_back((singlet_tensor*dag(base)).toComplex());
     }
 
 }

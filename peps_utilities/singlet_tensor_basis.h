@@ -92,16 +92,6 @@ class Singlet_Tensor_Basis
 
         std::vector<IQTensor> singlet_tensors_;
 
-
-        //
-        //friend functions
-        //
-        //friend bool iqind_spin_rep(const IQIndex &sz_leg, std::vector<int> &flavor_deg);
-
-        //friend bool iqind_to_spin_basis(const IQIndex &sz_leg, std::vector<Spin_Basis> &spin_basis);
-
-        //friend bool iqind_to_spin_basis(const IQIndex &sz_leg, const std::vector<int> &flavor_deg, std::vector<Spin_Basis> &spin_basis);
-
 };
 
 inline std::ostream &operator<<(std::ostream &s, const Singlet_Tensor_Basis &tensor_basis)
