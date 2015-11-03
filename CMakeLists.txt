@@ -24,8 +24,6 @@ SET(BLAS_LAPACK_LIB_DIR "/usr/public/intel/composer_xe_2013_sp1.3.174/mkl/lib/in
 #SET(LAPACK_LIB_DIR "/usr/public/lapack/lapack-3.4.2/lib")
 SET(ITENSOR_INCLUDE_DIR "/home/jiangsb/lib/itensor/include")
 SET(ITENSOR_LIB_DIR "/home/jiangsb/lib/itensor/lib")
-SET(WIGNERSYMBOL_INCLUDE_DIR "/home/jiangsb/lib/wignerSymbols/include")
-SET(WIGNERSYMBOL_LIB_DIR "/home/jiangsb/lib/wignerSymbols/lib")
 SET(ITPP_INCLUDE_DIR "/home/jiangsb/opt/itpp_intel/include")
 SET(ITPP_LIB_DIR "/home/jiangsb/opt/itpp_intel/lib")
 
@@ -42,6 +40,9 @@ ADD_SUBDIRECTORY(simple_update)
 
 #include directories for library
 LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update ${ITPP_LIB_DIR} ${ITENSOR_LIB_DIR} ${WIGNERSYMBOL_LIB_DIR} ${BLAS_LAPACK_LIB_DIR})
+
+SET(ITENSOR_LIB itensor matrix utilities)
+SET(NUMERIC_LIB itpp_static gsl -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_rt -lmkl_core -liomp5 -lpthread)
 
 #add directories for source file generating executable file
 ADD_SUBDIRECTORY(test)

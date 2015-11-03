@@ -18,14 +18,13 @@
 #include <random>
 #include <functional>
 #include <core.h>
-#include <wignerSymbols.h>
 #include <armadillo>
+#include <gsl/gsl_sf_coupling.h>
 
 //#define NDEBUG
 #include <cassert>
 
 using namespace itensor;
-using namespace WignerSymbols;
 //using namespace arma;
 
 using std::cout;

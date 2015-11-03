@@ -119,4 +119,10 @@ inline ITensor toITensor(const ITensor &tensor) { return tensor; }
 inline ITensor toITensor(const IQTensor &tensor) { return tensor.toITensor(); }
 
 
+//given a permuted indices, we obtain a permuted tensor such that
+//(tensor_permute)_{\alpha\beta...}=(tensor)_{P(\alpha)P(\beta)...}
+template <class TensorT>
+TensorT tensor_permutation(const std::vector<int> &permuted_indices, const TensorT &tensor_origin);
+
+
 #endif

@@ -3,7 +3,7 @@
 
 CGTensors::CGTensors(const std::vector<int> &spins, const std::vector<Arrow> &dirs): valid_(false)
 {
-    assert(spins.size()==dirs.size());
+    //assert(spins.size()==dirs.size());
 
     for (int i=0; i<spins.size(); i++)
     {
@@ -74,7 +74,7 @@ void CGTensors::init()
     valid_=obtain_K(out_spin_legs,in_spin_legs,K_);
 
     //make tensors with norm 1.
-    for (auto &tensor : K_) tensor/=tensor.norm();
+    //for (auto &tensor : K_) tensor/=tensor.norm();
 }
 
 
@@ -180,6 +180,11 @@ bool CGTensors::obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std:
                     valid_spin_legs=true;
                     mediate_spin_leg.dag();
                     IQTensor last_K=obtain_CG(mediate_spin_leg,last_out_spin_leg,in_spin_leg);
+
+                    //Print(out_spin_legs_exclude_last);
+                    //Print(mediate_spin_leg);
+                    //PrintDat(K_exclude_last);
+                    //PrintDat(last_K);
 
                     for (auto &tensor_K : K_exclude_last)
                     {
@@ -307,7 +312,7 @@ bool CGTensors::obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std:
 }
 
 
-IQTensor CGTensors::obtain_CG(const IndexSpin &S1, const IndexSpin &S2, const IndexSpin &S3)
+IQTensor obtain_CG(const IndexSpin &S1, const IndexSpin &S2, const IndexSpin &S3)
 {
     IQTensor CG(S1.leg(),S2.leg(),S3.leg());
 
@@ -318,8 +323,9 @@ IQTensor CGTensors::obtain_CG(const IndexSpin &S1, const IndexSpin &S2, const In
             for (auto m3=S3.spin_qn(); m3>=-S3.spin_qn(); m3-=2)
             {
                 if (m1+m2!=m3) continue;
+                int j1=S1.spin_qn(), j2=S2.spin_qn(), j3=S3.spin_qn();
 
-                CG(S1.indval(m1),S2.indval(m2),S3.indval(m3))=clebschGordan(S1.spin_qn()/2.0,S2.spin_qn()/2.0,S3.spin_qn()/2.0,m1/2.0,m2/2.0,m3/2.0);
+                CG(S1.indval(m1),S2.indval(m2),S3.indval(m3))=gsl_sf_coupling_3j(j1,j2,j3,m1,m2,-m3)*sqrt(j3+1.)*pow(-1.,(j1-j2+m3)/2.);
             }
         }
     }
@@ -327,167 +333,4 @@ IQTensor CGTensors::obtain_CG(const IndexSpin &S1, const IndexSpin &S2, const In
     return CG;
 }
 
-
-//bool CGTensors::obtain_mediate_spins(const std::vector<int> &out_spins, const std::vector<int> &in_spins,std::vector<std::vector<int> > &mediate_spins_sets)
-//{
-//    //only out_spins, then consider spin singlet states formed by out_spins
-//    if (in_spins.size()==0)
-//    {
-//        return obtain_mediate_spins(out_spins,std::vector<int>{0},mediate_spins_sets);
-//    }
-//
-//    //only in_spins, then consider spin singlet states formed by out_spins
-//    if (out_spins.size()==0)
-//    {
-//        return obtain_mediate_spins(std::vector<int>{0},in_spins,mediate_spins_sets);
-//    }
-//
-//    //No mediate spins
-//    if ((in_spins.size()==1) && (out_spin.size()==1))
-//    {
-//        if (in_spins==out_spins)
-//            return true;
-//        else
-//            return false;
-//    }
-//
-//    if (in_spins.size()==1)
-//    {
-//        int in_spin=in_spins[0];
-//
-//        //use recursive method to get mediate_spins_sets
-//        if (out_spins.size()>2)
-//        {
-//            int last_out_spin=out_spins.back();
-//            std::vector<int> out_spins_exclude_last=out_spins;
-//            out_spins_exclude_last.pop_back();
-//
-//            //valid_spins=false means one cannot fuse out_spins to in_spin
-//            bool valid_spins=false;
-//
-//            for (int last_mediate_spin=std::abs(in_spin-last_out_spin); last_mediate_spin<=(in_spin+last_out_spin); last_mediate_spin+=2)
-//            {
-//                std::vector<vector<int> > mediate_spins_sets_exclude_last;
-//                if (obtain_mediate_spins(out_spins,vector<int>{last_mediate_spin},mediate_spins_sets_exclude_last))
-//                {
-//                    for (auto &temp_spins : mediate_spins_sets_exclude_last)
-//                    {
-//                        temp_spins.push_back(last_mediate_spin);
-//                    }
-//
-//                    mediate_spins_sets.insert(mediate_spins_sets.end(),mediate_spins_sets_exclude_last.begin(),mediate_spins_sets_exclude_last.end());
-//
-//                    valid_spins=true;
-//                }
-//            }
-//            return valid_spins;
-//        }
-//
-//        if (out_spins.size()==2)
-//        {
-//            if ((in_spin%2==(out_spins[0]+out_spins[1])%2) && 
-//                (in_spin<=out_spins[0]+out_spins[1]) && 
-//                (in_spins>=std::abs(out_spins[0]+out_spins[1])))
-//            {
-//                return true;
-//            }
-//            else
-//            {
-//                return false;
-//            }
-//        }
-//    }
-//
-//    if (out_spins.size()==1)
-//    {
-//        int out_spin=out_spins[0];
-//
-//        if (in_spins.size()>2)
-//        {
-//            int last_in_spin=in_spins.back();
-//            std::vector<int> in_spins_exclude_last=in_spins;
-//            in_spins_exclude_last.pop_back();
-//
-//            //valid_spins=false means one cannot fuse in_spins to out_spin
-//            bool valid_spins=false;
-//            for (int last_mediate_spin=std::abs(out_spin-last_in_spin); last_mediate_spin<=(last_in_spin+out_spin); last_mediate_spin+=2)
-//            {
-//                std::vector<std::vector<int> > mediate_spins_sets_exclude_last;
-//                if (obtain_mediate_spins(std::vector<int>{last_mediate_spin},in_spins,mediate_spins_sets_exclude_last))
-//                {
-//                    for (auto &temp_spin : mediate_spins_sets_exclude_last)
-//                    {
-//                        temp_spin.push_back(last_mediate_spin);
-//                    }
-//
-//                    mediate_spins_sets.insert(mediate_spins_sets.end(),mediate_spins_sets_exclude_last.begin(),mediate_spins_sets_exclude_last.end());
-//
-//                    valid_spins=true;
-//                }
-//            }
-//            return valid_spins;
-//        }
-//
-//        if (in_spins.size()==2)
-//        {
-//            if ((out_spin%2==(in_spins[0]+in_spins[1])%2) && 
-//                (out_spin<=in_spins[0]+in_spins[1]) && 
-//                (out_spins>=std::abs(in_spins[0]+in_spins[1])))
-//            {
-//                return true;
-//            }
-//            else
-//            {
-//                return false;
-//            }
-//        }
-//    }
-//
-//    if ((out_spins.size()>1) && (out_spins.size()>1))
-//    {
-//        int sum_out_spins=0, sum_in_spins=0;
-//
-//        for (const auto &spin : out_spins)
-//        {
-//            sum_out_spins+=spin;
-//        }
-//
-//        for (const auto &spin : in_spins)
-//        {
-//            sum_in_spins+=spin;
-//        }
-//
-//        if (sum_out_spins%2 != sum_in_spins%2) return false;
-//
-//        max_spin=std::min(sum_out_spin,sum_in_spin);
-//
-//        bool valid_spins=false;
-//        
-//        for (int last_mediate_spin=max_spin; last_mediate_spin>=0; last_mediate_spin-=2;)
-//        {
-//            std::vector<std::vector<int> > out_mediate_spins_sets, in_mediate_spins_sets;
-//
-//            if ((obtain_mediate_spins(out_spins,std::vector<int>{last_mediate_spin},out_mediate_spins_sets)) && 
-//                (obtain_mediate_spins(std::vector<int>{last_mediate_spin},in_spins,in_mediate_spins_sets)))
-//            {
-//                for (auto &out_mediate_spins : out_mediate_spins_sets)
-//                {
-//                    for (auto &in_mediate_spins : in_mediate_spins_sets)
-//                    {
-//                        std::vector<int> mediate_spins(out_mediate_spins);
-//                        mediate_spins.insert(mediate_spins.end(),in_mediate_spins.begin(),in_mediate_spins.end());
-//                        mediate_spins.push_back(last_mediate_spin);
-//
-//                        mediate_spins_sets.push_back(mediate_spins);
-//                    }
-//                }
-//
-//                valid_spins=true;
-//            }
-//        }
-//        return valid_spins;
-//    }
-//
-//    return false;
-//}
 

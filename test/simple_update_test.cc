@@ -8,28 +8,11 @@ int main()
     int Lx=4, Ly=4;
 
     Square_Lattice_Torus square_lattice({Lx,Ly});
-    IQPEPS_IndexSet_SpinHalf index_set(6,square_lattice);
+    IQPEPS_IndexSet_SpinHalf index_set(10,square_lattice);
     IQPEPS square_peps(square_lattice,index_set);
-    //random_init_square_rvb_peps(square_peps);
+    random_init_square_rvb_peps(square_peps);
 
     cout << "Check symmetry operation:" << endl;
-    Singlet_Tensor_Basis site_tensor_basis(square_peps.site_tensors(0).indices());
-    //for (int basei=0; basei<site_tensor_basis.dim(); basei++)
-    {
-        int basei=9;
-        Print(basei);
-        Print(site_tensor_basis.spin_configs(basei));
-        Print(site_tensor_basis.flavor_configs(basei));
-        Print(site_tensor_basis.fusion_channel(basei));
-        auto tensor=site_tensor_basis(basei);
-        PrintDat(tensor);
-        Print(tensor.indices());
-        rotation_symmetrize_square_rvb_site_tensor(tensor);
-        spin_symmetrize_tensor(tensor,site_tensor_basis);
-        Print(tensor.norm());
-    }
-
-    return 0;
 
     //IQPEPS square_peps=square_srvb_peps(Lx,Ly);
     

@@ -135,9 +135,6 @@ class CGTensors
         //Here we use recursive method to obtain K
         bool obtain_K(const std::vector<IndexSpin> &out_spin_legs, const std::vector<IndexSpin> &in_spin_legs, std::vector<IQTensor> &K);
 
-        //functions to get tensor K_{S_1S_2}^{S_3}
-        IQTensor obtain_CG(const IndexSpin &S1, const IndexSpin &S2, const IndexSpin &S3);
-
     private:
         std::vector<IndexSpin> spin_legs_;
         //there may be more than one fusion channel
@@ -146,10 +143,13 @@ class CGTensors
         bool valid_;
 };
 
+//functions to get tensor K_{S_1S_2}^{S_3}
+IQTensor obtain_CG(const IndexSpin &S1, const IndexSpin &S2, const IndexSpin &S3);
+
 
 inline std::ostream &operator<<(std::ostream &s, const IndexSpin &indspin)
 {
-    return s << indspin.spin_qn() << indspin.leg();
+    return s << indspin.spin_qn() << endl << indspin.leg();
 }
 
 inline std::ostream &operator<<(std::ostream &s, const CGTensors &cg_tensors)

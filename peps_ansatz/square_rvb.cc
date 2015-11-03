@@ -70,7 +70,7 @@ void random_init_square_rvb_site_tensors(IQPEPS &square_rvb)
     //Print(site_tensor_params);
 
     auto site_tensor=singlet_tensor_from_basis_params(site_tensor_basis,site_tensor_params);
-    //rotation_symmetrize_square_rvb_site_tensor(site_tensor);
+    rotation_symmetrize_square_rvb_site_tensor(site_tensor);
     //spin_symmetrize_tensor(site_tensor,site_tensor_basis);
 
     //PrintDat(site_tensor);
@@ -169,7 +169,7 @@ void rotation_symmetrize_square_rvb_site_tensor(IQTensor &site_tensor)
             std::rotate(val_list_rotated.begin()+1,val_list_rotated.end()-1,val_list_rotated.end());
         }
         if (std::abs(tensor_elem)<EPSILON) continue;
-        site_tensor_sym.set(site_tensor.indices()[0](val_list[0]+1),site_tensor.indices()[1](val_list[1]+1),site_tensor.indices()[2](val_list[2]+1),site_tensor.indices()[3](val_list[3]+1),site_tensor.indices()[4](val_list_rotated[4]+1),tensor_elem);
+        site_tensor_sym.set(site_tensor.indices()[0](val_list[0]+1),site_tensor.indices()[1](val_list[1]+1),site_tensor.indices()[2](val_list[2]+1),site_tensor.indices()[3](val_list[3]+1),site_tensor.indices()[4](val_list[4]+1),tensor_elem);
     }
     
     site_tensor=site_tensor_sym;
@@ -185,14 +185,16 @@ void spin_symmetrize_tensor(IQTensor &tensor, const Singlet_Tensor_Basis &tensor
         auto param=(dag(tensor_base)*tensor).toComplex();
         tensor_params.push_back(param);
 
-        //if (std::abs(param)>EPSILON)
-        //{
-        //    int basei=tensor_params.size()-1;
-        //    Print(tensor_basis.spin_configs(basei));
-        //    Print(tensor_basis.flavor_configs(basei));
-        //    Print(tensor_basis.fusion_channel(basei));
-        //    Print(param);
-        //}
+        if (std::abs(param)>EPSILON)
+        {
+            int basei=tensor_params.size()-1;
+            //cout << "Check spin rotation symmetry: " << endl;
+            //Print(basei);
+            //Print(tensor_basis.spin_configs(basei));
+            //Print(tensor_basis.flavor_configs(basei));
+            //Print(tensor_basis.fusion_channel(basei));
+            //Print(param);
+        }
     }
     //Print(tensor_params);
 

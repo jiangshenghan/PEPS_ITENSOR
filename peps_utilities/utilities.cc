@@ -312,3 +312,39 @@ void tensor_assignment(IQTensor &TA, const IQTensor &TB)
 }
 
 
+template <class TensorT>
+TensorT tensor_permutation(const std::vector<int> &permuted_indices, const TensorT &tensor_origin)
+{
+    using IndexValT=typename TensorT::IndexValT;
+    auto tensor_permutation(tensor_origin);
+    tensor_permutation-=tensor_origin;
+
+    std::vector<int> max_val_list;
+    auto tensor_legs=tensor_origin.indices();
+    for (const auto &leg : tensor_legs) max_val_list.push_back(leg.m());
+    for (int val_num=0; val_num<tensor_legs.dim(); val_num++)
+    {
+        auto val_list=list_from_num(val_num,max_val_list);
+        std::vector<IndexValT> leg_vals(NMAX,IndexValT::Null());
+        for (int legi=0; legi<tensor_legs.r(); legi++) leg_vals[legi]=tensor_legs[legi](val_list[legi]+1);
+        
+        auto elem=tensor_origin(leg_vals[0],leg_vals[1],leg_vals[2],leg_vals[3],leg_vals[4],leg_vals[5],leg_vals[6],leg_vals[7]);
+        if (std::abs(elem)<EPSILON) continue;
+
+        std::vector<int> val_list_permuted(val_list.size());
+        for (int posi=0; posi<val_list.size(); posi++)
+            val_list_permuted[permuted_indices[posi]]=val_list[posi];
+        std::vector<IndexValT> leg_vals_permuted(NMAX,IndexValT::Null());
+        for (int legi=0; legi<tensor_legs.r(); legi++) leg_vals_permuted[legi]=tensor_legs[legi](val_list_permuted[legi]+1);
+
+        //TODO:set complex number?
+        tensor_permutation(leg_vals_permuted[0],leg_vals_permuted[1],leg_vals_permuted[2],leg_vals_permuted[3],leg_vals_permuted[4],leg_vals_permuted[5],leg_vals_permuted[6],leg_vals_permuted[7])=elem;
+    }
+    clean(tensor_permutation);
+
+    return tensor_permutation;
+}
+template
+ITensor tensor_permutation(const std::vector<int> &permuted_indices, const ITensor &tensor_origin);
+template 
+IQTensor tensor_permutation(const std::vector<int> &permuted_indices, const IQTensor &tensor_origin);

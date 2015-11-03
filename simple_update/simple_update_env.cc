@@ -126,8 +126,8 @@ std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQ
     IQTensor tens_A_norm_square=(tens_A_dag*tens_A).takeRealPart(),
              tens_B_norm_square=(tens_B_dag*tens_B).takeRealPart();
 
-    PrintDat(tens_A_norm_square);
-    PrintDat(tens_B_norm_square);
+    //PrintDat(tens_A_norm_square);
+    //PrintDat(tens_B_norm_square);
 
     std::vector<double> env_diag;
 
