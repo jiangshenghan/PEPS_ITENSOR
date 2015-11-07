@@ -46,7 +46,7 @@ int main()
     square_srvb_storage._tensor_list.set_size(square_torus.n_sites_total());
     auto tensor_list=square_srvb.combined_site_tensors();
     //for (const auto &tensor : tensor_list) PrintDat(tensor);
-    for (int sitei=0; sitei<square_torus.n_sites_total();sitei++) square_srvb_storage._tensor_list(sitei)=tensor_list[sitei];
+    for (int sitei=0; sitei<square_torus.n_sites_total(); sitei++) square_srvb_storage._tensor_list(sitei)=tensor_list[sitei];
 
     square_srvb_storage._coor_to_siteind.set_size(Lx,Ly);
     for (int x=0; x<Lx; x++)

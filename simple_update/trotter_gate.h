@@ -72,6 +72,15 @@ class NN_Heisenberg_Hamiltonian
 struct Evolution_Params
 {
     public:
+        Evolution_Params() {}
+        Evolution_Params(int n_iter): iter_nums(n_iter) {}
+        Evolution_Params(int n_iter, std::vector<int> n_steps, std::vector<double> imag_t) : 
+            iter_nums(n_iter), steps_nums(n_steps), ts(imag_t)
+        {
+            assert(n_iter==step_nums.size());
+            assert(n_iter==ts.size());
+        }
+
         int iter_nums;
         std::vector<int> steps_nums;
         std::vector<double> ts;
@@ -160,7 +169,7 @@ class NN_Heisenberg_Trotter_Gate : public Trotter_Gate
         //
 };
 
-NN_Heisenberg_Trotter_Gate::NN_Heisenberg_Trotter_Gate(std::array<IQIndex,2> nn_sites, double t): 
+inline NN_Heisenberg_Trotter_Gate::NN_Heisenberg_Trotter_Gate(std::array<IQIndex,2> nn_sites, double t): 
     Trotter_Gate(2,1,t)
 {
     for (int sitei=0; sitei<2; sitei++)
@@ -182,7 +191,7 @@ NN_Heisenberg_Trotter_Gate::NN_Heisenberg_Trotter_Gate(std::array<IQIndex,2> nn_
 }
 
 
-void NN_Heisenberg_Trotter_Gate::init_site_tensors()
+inline void NN_Heisenberg_Trotter_Gate::init_site_tensors()
 {
     for (auto &tensor : site_tensors_)
     {
@@ -195,7 +204,7 @@ void NN_Heisenberg_Trotter_Gate::init_site_tensors()
 }
 
 
-void NN_Heisenberg_Trotter_Gate::init_bond_tensor()
+inline void NN_Heisenberg_Trotter_Gate::init_bond_tensor()
 {
     Singlet_Tensor_Basis bond_tensor_basis(bond_tensors_[0].indices());
     bond_tensors_[0]=bond_tensor_basis.tensor(0)+t_*std::sqrt(3.)*bond_tensor_basis.tensor(1);

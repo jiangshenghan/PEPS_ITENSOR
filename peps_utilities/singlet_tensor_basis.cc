@@ -166,6 +166,10 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
 
         }//end of for loop for different singlet for same spin_list
     }
+
+    //set norm of singlet_tensors_ to be 1
+    for (auto &tensor :singlet_tensors_)
+        tensor/=tensor.norm();
 }
 
 
@@ -239,3 +243,36 @@ void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_
 }
 
 
+IQTensor singlet_tensor_from_projection(const IQTensor &tensor_project)
+{
+    Singlet_Tensor_Basis tensor_basis(tensor_project.indices());
+    return singlet_tensor_from_projection(tensor_project,tensor_basis);
+}
+
+IQTensor singlet_tensor_from_projection(const IQTensor &tensor_project, const Singlet_Tensor_Basis &tensor_basis)
+{
+    if (tensor_project.isComplex())
+    {
+        std::vector<Complex> params;
+        obtain_singlet_tensor_params(tensor_project,tensor_basis,params);
+        return singlet_tensor_from_basis_params(tensor_basis,params);
+    }
+    else
+    {
+        std::vector<double> params;
+        obtain_singlet_tensor_params(tensor_project,tensor_basis,params);
+        return singlet_tensor_from_basis_params(tensor_basis,params);
+    }
+}
+
+double diff_tensor_and_singlet_projection(const IQTensor &tensor)
+{
+    Singlet_Tensor_Basis tensor_basis(tensor.indices());
+    return diff_tensor_and_singlet_projection(tensor,tensor_basis);
+}
+
+double diff_tensor_and_singlet_projection(const IQTensor &tensor, const Singlet_Tensor_Basis &tensor_basis)
+{
+    auto tensor_singlet=singlet_tensor_from_projection(tensor,tensor_basis);
+    return (tensor-tensor_singlet).norm();
+}

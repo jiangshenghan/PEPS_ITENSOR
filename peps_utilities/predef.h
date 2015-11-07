@@ -20,6 +20,9 @@
 #include <core.h>
 #include <armadillo>
 #include <gsl/gsl_sf_coupling.h>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_deriv.h>
+#include <gsl/gsl_multimin.h>
 
 //#define NDEBUG
 #include <cassert>

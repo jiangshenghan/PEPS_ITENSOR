@@ -124,5 +124,9 @@ inline ITensor toITensor(const IQTensor &tensor) { return tensor.toITensor(); }
 template <class TensorT>
 TensorT tensor_permutation(const std::vector<int> &permuted_indices, const TensorT &tensor_origin);
 
+//given two tensors with the same indices but different ordering, assign TB to TA without changing the order of TA
+template <class TensorT>
+void tensor_assignment_diff_order(TensorT &TA, const TensorT &TB);
+
 
 #endif

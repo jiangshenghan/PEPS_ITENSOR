@@ -343,7 +343,7 @@ void PEPSt<IQTensor>::new_boundary_tensors();
 
 
 template <class TensorT>
-std::vector<TensorT> PEPSt<TensorT>::combined_site_tensors()
+std::vector<TensorT> PEPSt<TensorT>::combined_site_tensors() const
 {
     std::vector<TensorT> combined_site_tensors;
     for (int sitei=0; sitei<this->n_sites_total(); sitei++)
@@ -378,9 +378,9 @@ std::vector<TensorT> PEPSt<TensorT>::combined_site_tensors()
     return combined_site_tensors;
 }
 template
-std::vector<ITensor> PEPSt<ITensor>::combined_site_tensors();
+std::vector<ITensor> PEPSt<ITensor>::combined_site_tensors() const;
 template
-std::vector<IQTensor> PEPSt<IQTensor>::combined_site_tensors();
+std::vector<IQTensor> PEPSt<IQTensor>::combined_site_tensors() const;
 
 
 //before reading, we should init PEPSt use lattice

@@ -122,5 +122,13 @@ void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_
 //this function work for complex tensor
 void obtain_singlet_tensor_params(const IQTensor &singlet_tensor, const Singlet_Tensor_Basis &tensor_basis, std::vector<Complex> &params);
 
+//obtain tensors project to spin singlet sector
+IQTensor singlet_tensor_from_projection(const IQTensor &tensor_project);
+IQTensor singlet_tensor_from_projection(const IQTensor &tensor_project, const Singlet_Tensor_Basis &tensor_basis);
+
+//obtain differ of tensor and its projection to singlet tensors
+double diff_tensor_and_singlet_projection(const IQTensor &tensor);
+double diff_tensor_and_singlet_projection(const IQTensor &tensor, const Singlet_Tensor_Basis &tensor_basis);
+
 
 #endif

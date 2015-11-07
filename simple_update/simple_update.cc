@@ -15,29 +15,9 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 
     int comm_bond=square_peps.lattice().comm_bond(0,1);
     auto comm_bond_tensor=square_peps.bond_tensors(comm_bond);
-    for (int i=0; i<2; i++)
-    {
-        for (const auto &leg : square_peps.site_tensors(i).indices())
-        {
-            if (leg.type()==Site) continue;
-            if (hasindex(comm_bond_tensor,dag(leg))) continue;
-
-            //we set the initial value of env as diagonal matrix
-            auto leg_dag=dag(leg);
-            auto leg_prime=prime(leg);
-            IQTensor leg_tensor(dag(leg),prime(leg));
-            for (int val=1; val<=leg.m(); val++)
-            {
-                leg_tensor(leg_dag(val),leg_prime(val))=1.;
-            }
-
-            env_tens[i].push_back(leg_tensor);
-        }
-    }
-
 
     //leg gates is used to approx evolve_gate, which formed by three indices, two in one out (primed). 
-    //two in legs are contracting to site tensor after applying trotter gate
+    //two in legs are contracting to the site tensor which has applied by trotter gate
     //one out leg is to contract comm bond tensor
     std::array<IndexSet<IQIndex>,2> leg_gates_indices;
     std::array<Singlet_Tensor_Basis,2> leg_gates_basis;
@@ -48,6 +28,8 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
         leg_gates_indices[i].addindex(commonIndex(square_peps.site_tensors(i),dag(comm_bond_tensor)).prime());
 
         leg_gates_basis[i]=Singlet_Tensor_Basis(leg_gates_indices[i]);
+
+        //PrintDat(leg_gates_basis[i]);
     }
 
     //leg_gates_for_site0 is used to update site_tensors[0]
@@ -57,13 +39,16 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
     {
         if (leg_indice.type()==Site) continue;
 
-        std::vector<IQIndex> leg_gates_site0_indices{{dag(leg_indice),indice_from_evolve_gate,prime(leg_indice)}};
+        std::vector<IQIndex> leg_gates_site0_indices{dag(leg_indice),indice_from_evolve_gate,prime(leg_indice)};
 
         leg_gates_site0.push_back(IQTensor(leg_gates_site0_indices));
     }
+    //Print(leg_gates_site0);
 
     //leg_gate_params stores tunable parameters for the leg gate.
-    std::vector<double> leg_gate_params(leg_gates_basis[0].dim(),1);
+    std::vector<double> leg_gate_params(leg_gates_basis[0].dim());
+    for (auto &param : leg_gate_params) param=rand_gen();
+    Print(leg_gate_params);
     
     for (int iter=0; iter<square_su_params.iter_nums; iter++)
     {
@@ -71,6 +56,16 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 
         for (int step=0; step<square_su_params.steps_nums[iter]; step++)
         {
+            std::stringstream ss;
+            ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
+            std::string file_name=ss.str();
+            Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
+            writeToFile(file_name,square_rvb_storage);
+
+            Print(iter);
+            Print(step);
+            Print(square_su_params.ts[iter]);
+
             get_env_tensor(square_peps.site_tensors(0)*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
 
             std::array<IQTensor,2> site_env_tens{{square_peps.site_tensors(0),square_peps.site_tensors(1)}};
@@ -84,28 +79,23 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
                 site_env_tens[sitei].noprime();
             }
 
-            obtain_spin_sym_leg_gates_params(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params);
+            //check wf_distance_f, wf_distance_df
+            //wf_distance_func_check(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params);
 
+            obtain_spin_sym_leg_gates_params_minimization(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params);
 
             //using leg_gate_params to generate all leg gates
             auto leg_gate_sample=singlet_tensor_from_basis_params(leg_gates_basis[0],leg_gate_params);
 
-            for (auto &gate : leg_gates_site0)
+            for (auto &gate : leg_gates_site0) 
             {
-                auto gate_indices=gate.indices();
-                gate=leg_gate_sample;
-
-                int legi=0;
-                for (const auto &sample_indice : leg_gate_sample.indices())
-                {
-                    gate.replaceIndex(sample_indice,gate_indices[legi]);
-                    legi++;
-                }
+                tensor_assignment(gate,leg_gate_sample); 
+                //Print(gate.indices());
             }
 
 
             //updated site_tensors[0]
-            auto &site_tens0=square_peps.site_tensors(0);
+            auto site_tens0=square_peps.site_tensors(0);
 
             int legi=0;
             for (const auto &leg_gate : leg_gates_site0)
@@ -113,18 +103,35 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
                 site_tens0*=evolve_gate.site_tensors(0)*leg_gate;
                 site_tens0.noprime();
                 legi++;
+                //PrintDat(leg_gate);
             }
+            site_tens0*=square_peps.site_tensors(0).norm()/site_tens0.norm();
+            auto site_tens0_ordered_ind=square_peps.site_tensors(0);
+            tensor_assignment_diff_order(site_tens0_ordered_ind,site_tens0);
 
-            //symmetrize site_tens0, and using site_tens0 to generate all site tensors of peps
-            C4_symmetrized_tensor(site_tens0);
-            square_peps.generate_site_tensors({site_tens0});
+            //we should never change order of indices of site tensor
+            //check symmetry of site_tens0
+            //auto sym_site_tens0=site_tens0_ordered_ind;
+            //rotation_symmetrize_square_rvb_site_tensor(sym_site_tens0);
+            //sym_site_tens0*=0.25;
+            //Print(sym_site_tens0.norm());
+            //Print((site_tens0_ordered_ind-sym_site_tens0).norm());
+            //Print(diff_tensor_and_singlet_projection(site_tens0_ordered_ind));
+            //Print(diff_tensor_and_singlet_projection(sym_site_tens0));
+
+            //symmetrize site_tens0_ordered_ind, and using site_tens0_ordered_ind to generate all site tensors of peps
+            rotation_symmetrize_square_rvb_site_tensor(site_tens0_ordered_ind);
+            site_tens0_ordered_ind*=0.25;
+            site_tens0_ordered_ind.clean();
+
+            square_peps.generate_site_tensors({site_tens0_ordered_ind});
 
         }//trotter steps
     }//finish all simple update
 }
 
 
-void obtain_spin_sym_leg_gates_params(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &evolve_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
+void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &evolve_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
 {
     //get time evloved tensors
     std::array<IQTensor,2> site_tensors_evolved(site_tensors);
@@ -134,12 +141,18 @@ void obtain_spin_sym_leg_gates_params(const std::array<IQTensor,2> &site_tensors
     {
         site_tensors_evolved[i]*=evolve_gate.site_tensors(i);
         site_tensors_evolved[i].noprime();
-
+        site_tensors_evolved[i].clean();
     }
-
     bond_tensor_evolved*=evolve_gate.bond_tensors(0);
+    bond_tensor_evolved.clean();
+
+    
+    //Print(diff_tensor_and_singlet_projection(site_tensors_evolved[0]));
+    //Print(diff_tensor_and_singlet_projection(site_tensors_evolved[1]));
+    //Print(diff_tensor_and_singlet_projection(bond_tensor_evolved));
 
     double evolved_tensor_norm=(site_tensors_evolved[0]*bond_tensor_evolved*site_tensors_evolved[1]).norm();
+    //Print(evolved_tensor_norm);
 
 
     //site0_updated_basis[i] stores result of multiplication of site_tensors[0] with each linear basis
@@ -153,139 +166,397 @@ void obtain_spin_sym_leg_gates_params(const std::array<IQTensor,2> &site_tensors
 
         site0_updated_basis.push_back(noprime(temp_tens));
         site0_updated_basis_dag.push_back(dag(temp_tens));
+        //Print(site0_updated_basis.back());
+        //Print(diff_tensor_and_singlet_projection(site0_updated_basis.back()));
     }
 
 
     //fix another gate (gate v), and get updated site1
-    int N_basis=leg_gates_basis[0].dim();
-    arma::Col<double> vec_params(leg_gate_params);
+    int N_leg_basis=leg_gates_basis[0].dim();
+    arma::Col<Complex> vec_params(leg_gate_params.size());
+    for (int i=0; i<leg_gate_params.size(); i++)
+        vec_params(i)=leg_gate_params[i];
     //matN_{ij}=\langle T_i|T_j\rangle
     //vecb_i=\langle T_i|\psi_0\rangle
     //where T_i=site0_updated_basis[i]*bond_tensor*site1_updated
     //\psi_0 is the wavefunction after time evolving
     //Then we get 
     //(abs(|\psi\rangle-|\psi_0\rangle))^2=\sum_{i,j}p_ip_j.matN_{ij}-\sum_ip_i.(vecb_i+vecb_i^*)+\langle\psi_0|\psi_0\rangle
-    arma::Mat<double> matN(N_basis,N_basis);
-    arma::Col<double> vecb(N_basis);
+    arma::Mat<Complex> matN(N_leg_basis,N_leg_basis);
+    arma::Col<Complex> vecb(N_leg_basis);
 
-    int iter=0, max_iter=10;
+    int iter=0, max_iter=30;
     while (iter<max_iter)
     {
-        IQTensor gate_v=singlet_tensor_from_basis_params(leg_gates_basis[1],vec_params);
+        IQTensor gate_v=singlet_tensor_from_basis_params(leg_gates_basis[1],arma::real(vec_params));
         IQTensor site1_updated=site_tensors_evolved[1]*gate_v;
         IQTensor site1_updated_dag=dag(site1_updated);
         site1_updated.noprime();
 
 
-        for (int i=0; i<N_basis; i++)
+        for (int i=0; i<N_leg_basis; i++)
         {
             auto b_i=(site_tensors_evolved[0]*bond_tensor_evolved)*(site0_updated_basis_dag[i]*bond_tensor_dag)*(site_tensors_evolved[1]*site1_updated_dag);
-            //we expect the result is a real number although the tensor is complex
-            vecb(i)=b_i.toComplex().real();
-            for (int j=0; j<N_basis; j++)
+            vecb(i)=b_i.toComplex();
+            for (int j=0; j<N_leg_basis; j++)
             {
                 auto N_ij=(site0_updated_basis_dag[i]*bond_tensor_dag)*(site0_updated_basis[j]*bond_tensor)*(site1_updated_dag*site1_updated);
-                //we expect the result is a real number although the tensor is complex
-                matN(i,j)=N_ij.toComplex().real();
+                matN(i,j)=N_ij.toComplex();
             }
         }
 
-        double diff=std::sqrt(arma::dot(vec_params,matN*vec_params)-2*arma::dot(vec_params,vecb)+evolved_tensor_norm*evolved_tensor_norm);
-
-        cout << "Step " << iter << ": distance of psi and psi_0 is " << diff << endl;
-
+        auto updated_tensor_norm=std::sqrt(arma::dot(vec_params,matN*vec_params).real());
+        //vec_params=vec_params/updated_tensor_norm*evolved_tensor_norm;
+        //updated_tensor_norm=std::sqrt(arma::dot(vec_params,matN*vec_params).real());
+        auto wf_overlap=arma::dot(vec_params,vecb);
+        auto diff_sq=updated_tensor_norm*updated_tensor_norm+evolved_tensor_norm*evolved_tensor_norm-wf_overlap-std::conj(wf_overlap);
+        //auto diff_sq=arma::dot(vec_params,matN*vec_params)-arma::dot(vec_params,vecb)-arma::dot(arma::conj(vecb),vec_params)+evolved_tensor_norm*evolved_tensor_norm;
 
         vec_params=arma::inv(matN)*vecb;
+
+        Print(iter);
+        //Print(arma::norm(arma::imag(matN),2));
+        //Print(arma::real(matN));
+        //Print(arma::real(vecb).t());
+        //Print(arma::real(vec_params).t());
+        Print(evolved_tensor_norm);
+        Print(updated_tensor_norm);
+        Print(wf_overlap/(evolved_tensor_norm*updated_tensor_norm));
+        Print(diff_sq);
 
         iter++;
     }
 
-    for (int i=0; i<N_basis; i++)
+    for (int i=0; i<N_leg_basis; i++)
     {
-        leg_gate_params[i]=vec_params(i);
+        leg_gate_params[i]=vec_params(i).real();
     }
 
 }
 
 
-void C4_symmetrized_tensor(IQTensor &site_tensor)
+void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
 {
-    IQIndex phys_indice;
-    IndexSet<IQIndex> virt_indices;
-    std::vector<int> virt_indices_dim;
+    //get time evloved tensors
+    std::array<IQTensor,2> site_tensors_evolved(site_tensors);
+    IQTensor bond_tensor_evolved(bond_tensor);
 
-    for (const auto &indice : site_tensor.indices())
+    for (int i=0; i<2; i++)
     {
-        if (indice.type()==Site) 
-        {
-            phys_indice=indice;
-            continue;
-        }
-
-        virt_indices.addindex(indice);
-        virt_indices_dim.push_back(indice.m());
+        site_tensors_evolved[i]*=trotter_gate.site_tensors(i);
+        site_tensors_evolved[i].noprime();
+        site_tensors_evolved[i].clean();
     }
+    bond_tensor_evolved*=trotter_gate.bond_tensors(0);
+    bond_tensor_evolved.clean();
 
-    int total_virt_dim=virt_indices.dim(),
-        total_virt_legs_num=virt_indices.r(); //In this case, legs num = 4
+    double evolved_wf_norm=(site_tensors_evolved[0]*bond_tensor_evolved*site_tensors_evolved[1]).norm();
 
-    for (int phys_val_num=0; phys_val_num<phys_indice.m(); phys_val_num++)
+    //Print(site_tensors_evolved[0]);
+    //Print(site_tensors_evolved[1]);
+    //Print(bond_tensor_evolved);
+
+    //site_tensors_updated_basis stores result of applying leg_gates_basis to site_tensors
+    //we always set the inner leg of ket no prime and inner leg of bra primed
+    std::array<std::vector<IQTensor>,2> site_tensors_updated_basis, site_tensors_updated_basis_dag;
+    for (int i=0; i<2; i++)
     {
-        auto phys_indice_val=phys_indice(phys_val_num+1);
-            
-        std::vector<bool> val_finished(total_virt_dim,false);
-
-        for (int virt_val_num=0; virt_val_num<total_virt_dim; virt_val_num++)
+        for (const auto &leg_base : leg_gates_basis[i])
         {
-            std::vector<int> virt_val_list=list_from_num(virt_val_num,virt_indices_dim);
-
-            if (val_finished[virt_val_num]) continue;
-            val_finished[virt_val_num]=true;
-
-            std::vector<IQIndexVal> virt_indices_val{{virt_indices[0](virt_val_list[0]+1),virt_indices[1](virt_val_list[1]+1),virt_indices[2](virt_val_list[2]+1),virt_indices[3](virt_val_list[3]+1)}};
-
-            //check sz quantum number of indval
-            if (div(site_tensor)!=(phys_indice_val.qn()+virt_indices_val[0].qn()+virt_indices_val[1].qn()+virt_indices_val[2].qn()+virt_indices_val[3].qn())) 
-                continue;
-
-            std::vector<Complex> rotation_related_elems(total_virt_legs_num);
-            auto site_tensor_real_part=realPart(site_tensor);
-            auto site_tensor_imag_part=imagPart(site_tensor);
-
-            rotation_related_elems[0]=
-                site_tensor_real_part(phys_indice_val,virt_indices_val[0],virt_indices_val[1],virt_indices_val[2],virt_indices_val[3])+
-                Complex_i*site_tensor_imag_part(phys_indice_val,virt_indices_val[0],virt_indices_val[1],virt_indices_val[2],virt_indices_val[3]);
-            for (int i=1; i<total_virt_legs_num; i++)
-            {
-                std::rotate(virt_val_list.begin(),virt_val_list.begin()+1,virt_val_list.end());
-                val_finished[num_from_list(virt_val_list,virt_indices_dim)]=true;
-
-                rotation_related_elems[i]=
-                    site_tensor_real_part(phys_indice_val,virt_indices_val[0],virt_indices_val[1],virt_indices_val[2],virt_indices_val[3])+
-                    Complex_i*site_tensor_imag_part(phys_indice_val,virt_indices_val[0],virt_indices_val[1],virt_indices_val[2],virt_indices_val[3]);
-                rotation_related_elems[i]/=chi_c4*Theta_c4;
-            }
-            //rotate back to original val_list
-            std::rotate(virt_val_list.begin(),virt_val_list.begin()+1,virt_val_list.end());
-
-            Complex symmetrized_elem=0;
-            for (const auto &elem : rotation_related_elems)
-            {
-                symmetrized_elem+=elem;
-            }
-            symmetrized_elem/=total_virt_legs_num*1.;
-
-
-            for (int i=0; i<total_virt_legs_num; i++)
-            {
-                std::rotate(virt_val_list.begin(),virt_val_list.begin()+1,virt_val_list.end());
-
-                auto ratio=(symmetrized_elem/rotation_related_elems[i]).real();
-
-                site_tensor(phys_indice_val,virt_indices_val[0],virt_indices_val[1],virt_indices_val[2],virt_indices_val[3])*=ratio;
-            }
-
+            IQTensor temp_tens=site_tensors_evolved[i]*leg_base;
+            site_tensors_updated_basis[i].push_back(noprime(temp_tens));
+            site_tensors_updated_basis_dag[i].push_back(dag(temp_tens));
         }
+        //Print(site_tensors_updated_basis[i]);
     }
+    IQTensor bond_tensor_dag=prime(dag(bond_tensor));
+
+    int N_leg_basis=leg_gate_params.size();
+
+    //get M_{ijkl}=\langle\phi_{ij}|\phi_{kl}\rangle, store in a vector
+    int total_base_num=1;
+    std::vector<int> max_base_list;
+    std::vector<double> updated_wf_basis_overlap;
+    for (int i=0; i<4; i++)
+    {
+        total_base_num*=N_leg_basis;
+        max_base_list.push_back(N_leg_basis);
+    }
+    for (int base_num=0; base_num<total_base_num; base_num++)
+    {
+        auto base_list=list_from_num(base_num,max_base_list);
+        auto M_ijkl=(site_tensors_updated_basis_dag[0][base_list[0]]*site_tensors_updated_basis[0][base_list[2]])*bond_tensor_dag*bond_tensor*(site_tensors_updated_basis_dag[1][base_list[1]]*site_tensors_updated_basis[1][base_list[3]]);
+        updated_wf_basis_overlap.push_back(M_ijkl.toComplex().real());
+        //PrintDat(M_ijkl);
+    }
+    //Print(updated_wf_basis_overlap);
+
+    //get w_ij=\langle\phi_{ij}|\psi\rangle+\langle\psi|\phi_{ij}\rangle
+    std::vector<double> updated_wf_basis_evolved_wf_overlap;
+    for (int base_num=0; base_num<N_leg_basis*N_leg_basis; base_num++)
+    {
+        std::array<int,2> base_list={base_num/N_leg_basis,base_num%N_leg_basis};
+        auto w_ij=(site_tensors_updated_basis_dag[0][base_list[0]]*site_tensors_evolved[0])*bond_tensor_dag*bond_tensor_evolved*(site_tensors_updated_basis_dag[1][base_list[1]]*site_tensors_evolved[1]);
+        w_ij+=dag(w_ij);
+        updated_wf_basis_evolved_wf_overlap.push_back(w_ij.toComplex().real());
+    }
+    //Print(updated_wf_basis_evolved_wf_overlap);
+
+    //using conjugate gradient minimization to minimize distance square between updated wf and time evolved wf
+    int find_min_status;
+    int iter=0, max_iter=100;
+
+    const gsl_multimin_fdfminimizer_type *minimize_T;
+    gsl_multimin_fdfminimizer *s;
+
+    Wf_Distance_Params *wf_distance_params=new Wf_Distance_Params(N_leg_basis,evolved_wf_norm,updated_wf_basis_overlap,updated_wf_basis_evolved_wf_overlap);
+
+    gsl_vector *x;
+    gsl_multimin_function_fdf wf_distance_func;
+
+    wf_distance_func.n=leg_gate_params.size();
+    wf_distance_func.f=wf_distance_f;
+    wf_distance_func.df=wf_distance_df;
+    wf_distance_func.fdf=wf_distance_fdf;
+    wf_distance_func.params=wf_distance_params;
+
+    x=gsl_vector_alloc(leg_gate_params.size());
+    for (int i=0; i<leg_gate_params.size(); i++) 
+        gsl_vector_set(x,i,leg_gate_params[i]);
+
+    minimize_T=gsl_multimin_fdfminimizer_conjugate_fr;
+    s=gsl_multimin_fdfminimizer_alloc(minimize_T,leg_gate_params.size());
+
+    gsl_multimin_fdfminimizer_set(s,&wf_distance_func,x,0.1,0.1);
+
+    do
+    {
+        iter++;
+        find_min_status=gsl_multimin_fdfminimizer_iterate(s);
+
+        if (find_min_status) break;
+
+        find_min_status=gsl_multimin_test_gradient(s->gradient,0.1);
+
+        //Print(iter);
+        //Print(s->f);
+
+    }
+    while (find_min_status==GSL_CONTINUE && iter<max_iter);
+
+    Print(iter);
+    Print(s->f);
+    gsl_multimin_fdfminimizer_free (s);
+    gsl_vector_free (x);
+      
+
+    delete wf_distance_params;
 }
 
+
+double wf_distance_f(const gsl_vector *x, void *params)
+{
+    std::vector<double> leg_gate_params;
+    Wf_Distance_Params *wf_distance_params=(Wf_Distance_Params *)params;
+    int N_leg_basis=wf_distance_params->N_leg_basis;
+
+    //Print(N_leg_basis);
+    //Print(wf_distance_params->M);
+    //Print(wf_distance_params->w);
+
+    for (int i=0; i<N_leg_basis; i++)
+        leg_gate_params.push_back(gsl_vector_get(x,i));
+
+    //distance_sq=x_i.x_j.x_k.x_l.M_{ijkl}-x_i.x_j.w_{ij}+evolved_wf_norm^2
+    //=updated_wf_norm^2+evolved_wf_norm^2-wf_overlap
+    int total_base_num=1;
+    std::vector<int> max_base_list;
+    for (int i=0; i<4; i++)
+    {
+        total_base_num*=N_leg_basis;
+        max_base_list.push_back(N_leg_basis);
+    }
+    double updated_wf_norm=0;
+    for (int base_num=0; base_num<total_base_num; base_num++)
+    {
+        auto base_list=list_from_num(base_num,max_base_list);
+        updated_wf_norm+=leg_gate_params[base_list[0]]*leg_gate_params[base_list[1]]*leg_gate_params[base_list[2]]*leg_gate_params[base_list[3]]*wf_distance_params->M[base_num];
+        //distance_sq+=leg_gate_params[base_list[0]]*leg_gate_params[base_list[1]]*leg_gate_params[base_list[2]]*leg_gate_params[base_list[3]]*wf_distance_params->M[base_num];
+    }
+    updated_wf_norm=std::sqrt(updated_wf_norm);
+    
+    double updated_evolved_wf_overlap=0;
+    for (int base_num=0; base_num<N_leg_basis*N_leg_basis; base_num++)
+    {
+        std::array<int,2> base_list={base_num/N_leg_basis,base_num%N_leg_basis};
+        updated_evolved_wf_overlap+=leg_gate_params[base_list[0]]*leg_gate_params[base_list[1]]*wf_distance_params->w[base_num];
+        //distance_sq-=leg_gate_params[base_list[0]]*leg_gate_params[base_list[1]]*wf_distance_params->w[base_num];
+    }
+
+    double distance_sq=std::pow(updated_wf_norm,2)+std::pow(wf_distance_params->evolved_wf_norm,2)-updated_evolved_wf_overlap;
+
+    //Print(wf_distance_params->evolved_wf_norm);
+    //Print(updated_wf_norm);
+    //Print(updated_evolved_wf_overlap);
+    //Print(updated_evolved_wf_overlap/(2.*updated_wf_norm*wf_distance_params->evolved_wf_norm));
+    //Print(std::sqrt(distance_sq));
+
+    return distance_sq;
+}
+
+void wf_distance_df(const gsl_vector *x, void *params, gsl_vector *df)
+{
+    std::vector<double> leg_gate_params;
+    Wf_Distance_Params *wf_distance_params=(Wf_Distance_Params *)params;
+    int N_leg_basis=wf_distance_params->N_leg_basis;
+
+    for (int i=0; i<N_leg_basis; i++)
+        leg_gate_params.push_back(gsl_vector_get(x,i));
+
+    //distance_sq_df[i]=\sum_{jkl}c_j*c_k*c_l*(M_{ijkl}+M_{jikl}+M_{jkil}+M_{jkli})-\sum_jc_j*(w_ij+w_ji)
+    std::vector<double> distance_sq_df(N_leg_basis,0);
+    int total_base_num=1;
+    std::vector<int> max_base_list;
+    for (int i=0; i<4; i++)
+    {
+        total_base_num*=N_leg_basis;
+        max_base_list.push_back(N_leg_basis);
+    }
+    for (int base_num=0; base_num<total_base_num; base_num++)
+    {
+        auto base_list=list_from_num(base_num,max_base_list);
+        auto base_list_rotate=base_list;
+        auto base_num_rotate=base_num;
+        double M_rotate_sum=0;
+        for (int rotatei=0; rotatei<4; rotatei++)
+        {
+            M_rotate_sum+=wf_distance_params->M[base_num_rotate];
+            std::rotate(base_list_rotate.begin(),base_list_rotate.begin()+1,base_list_rotate.end());
+            base_num_rotate=num_from_list(base_list_rotate,max_base_list);
+        }
+        distance_sq_df[base_list[0]]+=leg_gate_params[base_list[1]]*leg_gate_params[base_list[2]]*leg_gate_params[base_list[3]]*M_rotate_sum;
+    }
+    for (int base_num=0; base_num<N_leg_basis*N_leg_basis; base_num++)
+    {
+        std::array<int,2> base_list={base_num/N_leg_basis,base_num%N_leg_basis};
+        int base_num_rotate=base_list[0]+base_list[1]*N_leg_basis;
+        distance_sq_df[base_list[0]]-=leg_gate_params[base_list[1]]*(wf_distance_params->w[base_num]+wf_distance_params->w[base_num_rotate]);
+    }
+
+    for (int i=0; i<N_leg_basis; i++)
+        gsl_vector_set(df,i,distance_sq_df[i]);
+
+}
+
+void wf_distance_fdf(const gsl_vector *x, void *params, double *f, gsl_vector *df)
+{
+    *f=wf_distance_f(x,params);
+    wf_distance_df(x,params,df);
+}
+
+void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
+{
+    //get evolved_wf information
+    std::array<IQTensor,2> site_tensors_evolved(site_tensors);
+    IQTensor bond_tensor_evolved(bond_tensor);
+    for (int i=0; i<2; i++)
+    {
+        site_tensors_evolved[i]*=trotter_gate.site_tensors(i);
+        site_tensors_evolved[i].noprime();
+        site_tensors_evolved[i].clean();
+    }
+    bond_tensor_evolved*=trotter_gate.bond_tensors(0);
+    bond_tensor_evolved.clean();
+    double evolved_wf_norm=(site_tensors_evolved[0]*bond_tensor_evolved*site_tensors_evolved[1]).norm();
+
+    //get updated_wf information
+    std::array<IQTensor,2> leg_gates={singlet_tensor_from_basis_params(leg_gates_basis[0],leg_gate_params),singlet_tensor_from_basis_params(leg_gates_basis[1],leg_gate_params)};
+    std::array<IQTensor,2> site_tensors_updated={(site_tensors_evolved[0]*leg_gates[0]).noprime(),(site_tensors_evolved[1]*leg_gates[1]).noprime()};
+    std::array<IQTensor,2> site_tensors_updated_dag={(site_tensors_evolved[0]*leg_gates[0]).dag(),(site_tensors_evolved[1]*leg_gates[1]).dag()};
+    IQTensor bond_tensor_dag=dag(bond_tensor).prime();
+    double updated_wf_norm=(site_tensors_updated[0]*bond_tensor*site_tensors_updated[1]).norm();
+
+    //get overlap between updated_wf and evolved_wf: langle\phi|\psi\rangle+\langle\psi|\phi|ranlge
+    double wf_overlap=2*((site_tensors_evolved[0]*site_tensors_updated_dag[0])*bond_tensor_evolved*bond_tensor_dag*(site_tensors_evolved[1]*site_tensors_updated_dag[1])).toComplex().real();
+
+
+    //get information from wf_distance_f
+    int N_leg_basis=leg_gate_params.size();
+    //get M_{ijkl}=\langle\phi_{ij}|\phi_{kl}\rangle, store in a vector
+    int total_base_num=1;
+    std::vector<int> max_base_list;
+    std::vector<double> updated_wf_basis_overlap;
+    for (int i=0; i<4; i++)
+    {
+        total_base_num*=N_leg_basis;
+        max_base_list.push_back(N_leg_basis);
+    }
+    //site_tensors_updated_basis stores result of applying leg_gates_basis to site_tensors
+    //we always set the inner leg of ket no prime and inner leg of bra primed
+    std::array<std::vector<IQTensor>,2> site_tensors_updated_basis, site_tensors_updated_basis_dag;
+    for (int i=0; i<2; i++)
+    {
+        for (const auto &leg_base : leg_gates_basis[i])
+        {
+            IQTensor temp_tens=site_tensors_evolved[i]*leg_base;
+            site_tensors_updated_basis[i].push_back(noprime(temp_tens));
+            site_tensors_updated_basis_dag[i].push_back(dag(temp_tens));
+        }
+        //Print(site_tensors_updated_basis[i]);
+    }
+    for (int base_num=0; base_num<total_base_num; base_num++)
+    {
+        auto base_list=list_from_num(base_num,max_base_list);
+        auto M_ijkl=(site_tensors_updated_basis_dag[0][base_list[0]]*site_tensors_updated_basis[0][base_list[2]])*bond_tensor_dag*bond_tensor*(site_tensors_updated_basis_dag[1][base_list[1]]*site_tensors_updated_basis[1][base_list[3]]);
+        updated_wf_basis_overlap.push_back(M_ijkl.toComplex().real());
+    }
+    //get w_ij=\langle\phi_{ij}|\psi\rangle+\langle\psi|\phi_{ij}\rangle
+    std::vector<double> updated_wf_basis_evolved_wf_overlap;
+    for (int base_num=0; base_num<N_leg_basis*N_leg_basis; base_num++)
+    {
+        std::array<int,2> base_list={base_num/N_leg_basis,base_num%N_leg_basis};
+        auto w_ij=(site_tensors_updated_basis_dag[0][base_list[0]]*site_tensors_evolved[0])*bond_tensor_dag*bond_tensor_evolved*(site_tensors_updated_basis_dag[1][base_list[1]]*site_tensors_evolved[1]);
+        w_ij+=dag(w_ij);
+        updated_wf_basis_evolved_wf_overlap.push_back(w_ij.toComplex().real());
+    }
+
+    //params for wf_distance_f, wf_distance_df
+    gsl_vector *x;
+    x=gsl_vector_alloc(leg_gate_params.size());
+    for (int i=0; i<leg_gate_params.size(); i++) 
+        gsl_vector_set(x,i,leg_gate_params[i]);
+    Wf_Distance_Params *wf_distance_params=new Wf_Distance_Params(N_leg_basis,evolved_wf_norm,updated_wf_basis_overlap,updated_wf_basis_evolved_wf_overlap);
+
+    wf_distance_f(x,wf_distance_params);
+
+    //Compare result 
+    cout << "Compare result with direct tensor contraction" << endl;
+    Print(evolved_wf_norm);
+    Print(updated_wf_norm);
+    Print(wf_overlap);
+
+    //Check for wf_distance_df
+    cout << "Compare the reuslt for derivative" << endl;
+    gsl_vector *df;
+    df=gsl_vector_alloc(N_leg_basis);
+    wf_distance_df(x,wf_distance_params,df);
+    for (int i=0; i<N_leg_basis; i++)
+    {
+        Print(i);
+        Print(gsl_vector_get(df,i));
+
+        double dxi=1E-6,
+               x_plus_dxi=gsl_vector_get(x,i)+dxi,
+               origin_x=gsl_vector_get(x,i);
+
+        double f_x=wf_distance_f(x,wf_distance_params);
+        gsl_vector_set(x,i,x_plus_dxi);
+        double f_x_plus_dxi=wf_distance_f(x,wf_distance_params);
+        Print((f_x_plus_dxi-f_x)/dxi);
+        gsl_vector_set(x,i,origin_x);
+    }
+
+    delete wf_distance_params;
+    gsl_vector_free(x);
+    gsl_vector_free(df);
+}

@@ -28,11 +28,8 @@ void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std:
                 }
             }
         }
-        //env_tens_init_diag[0]=1.;
-        //env_tens_init_diag[1]=1.81712;
-        //env_tens_init_diag[2]=1.;
-        Print(virt_leg_spin_basis);
-        Print(env_tens_init_diag);
+        //Print(virt_leg_spin_basis);
+        //Print(env_tens_init_diag);
 
         for (const auto &leg : site_tensA.indices())
         {
@@ -77,7 +74,7 @@ void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std:
 
         auto env_tens_diag=nondeg_spin_sym_env_updated(site_env_tensA,site_env_tensB);
 
-        Print(iter);
+        //Print(iter);
         //PrintDat(site_env_tensA);
         //PrintDat(site_env_tensB);
         //Print(env_tens_diag);
@@ -90,7 +87,7 @@ void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std:
             new_env_tensor(new_env_indset[0](val+1),new_env_indset[1](val+1))=env_tens_diag[val];
         }
 
-        PrintDat(new_env_tensor);
+        //PrintDat(new_env_tensor);
         Print((new_env_tensor-env_tens[0][0]).norm());
 
         if ((new_env_tensor-env_tens[0][0]).norm()<1E-3) break;
@@ -106,8 +103,11 @@ void get_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std:
 
     if (iter==max_iter)
     {
-        cout << "Unable to find good environment by iteration!" << endl;
-        exit(EXIT_FAILURE);
+        cout << "Unable to find good environment by iteration! Redo the iteration!" << endl;
+        //exit(EXIT_FAILURE);
+        for (auto &tensors : env_tens)
+            tensors.clear();
+        get_env_tensor(site_tensA,site_tensB,env_tens);
     }
 
 }

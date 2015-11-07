@@ -315,6 +315,16 @@ void tensor_assignment(IQTensor &TA, const IQTensor &TB)
 template <class TensorT>
 TensorT tensor_permutation(const std::vector<int> &permuted_indices, const TensorT &tensor_origin)
 {
+    if (tensor_origin.isComplex())
+    {
+        TensorT tensor_origin_real=realPart(tensor_origin),
+                tensor_origin_imag=imagPart(tensor_origin);
+        TensorT tensor_permutation_real=tensor_permutation(permuted_indices,tensor_origin_real),
+                tensor_permutation_imag=tensor_permutation(permuted_indices,tensor_origin_imag);
+
+        return (tensor_permutation_real+Complex_i*tensor_permutation_imag);
+    }
+
     using IndexValT=typename TensorT::IndexValT;
     auto tensor_permutation(tensor_origin);
     tensor_permutation-=tensor_origin;
@@ -348,3 +358,42 @@ template
 ITensor tensor_permutation(const std::vector<int> &permuted_indices, const ITensor &tensor_origin);
 template 
 IQTensor tensor_permutation(const std::vector<int> &permuted_indices, const IQTensor &tensor_origin);
+
+
+template <class TensorT>
+void tensor_assignment_diff_order(TensorT &TA, const TensorT &TB)
+{
+    if (TB.isComplex())
+    {
+        TensorT TA_real=realPart(TA), TA_imag=imagPart(TA),
+                TB_real=realPart(TB), TB_imag=imagPart(TB);
+        tensor_assignment_diff_order(TA_real,TB_real);
+        tensor_assignment_diff_order(TA_imag,TB_imag);
+        TA=TA_real+Complex_i*TA_imag;
+        return;
+    }
+
+    using IndexValT=typename TensorT::IndexValT;
+
+    std::vector<int> max_val_list;
+    auto tensor_legs=TA.indices();
+    for (const auto &leg : tensor_legs) max_val_list.push_back(leg.m());
+
+    for (int val_num=0; val_num<tensor_legs.dim(); val_num++)
+    {
+        auto val_list=list_from_num(val_num,max_val_list);
+        std::vector<IndexValT> leg_vals(NMAX,IndexValT::Null());
+        for (int legi=0; legi<tensor_legs.r(); legi++) leg_vals[legi]=tensor_legs[legi](val_list[legi]+1);
+        
+        auto elem=TB(leg_vals[0],leg_vals[1],leg_vals[2],leg_vals[3],leg_vals[4],leg_vals[5],leg_vals[6],leg_vals[7]);
+        if (std::abs(elem)<EPSILON) continue;
+        TA(leg_vals[0],leg_vals[1],leg_vals[2],leg_vals[3],leg_vals[4],leg_vals[5],leg_vals[6],leg_vals[7])=elem;
+        
+    }
+    clean(TA);
+}
+template
+void tensor_assignment_diff_order(ITensor &TA, const ITensor &TB);
+template
+void tensor_assignment_diff_order(IQTensor &TA, const IQTensor &TB);
+
