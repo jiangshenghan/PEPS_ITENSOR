@@ -66,7 +66,8 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
             Print(step);
             Print(square_su_params.ts[iter]);
 
-            get_env_tensor(square_peps.site_tensors(0)*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
+            //get_env_tensor_iterative(square_peps.site_tensors(0)*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
+            get_env_tensor_minimization(square_peps.site_tensors(0)*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
 
             std::array<IQTensor,2> site_env_tens{{square_peps.site_tensors(0),square_peps.site_tensors(1)}};
             
@@ -311,6 +312,7 @@ void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
 
     Wf_Distance_Params *wf_distance_params=new Wf_Distance_Params(N_leg_basis,evolved_wf_norm,updated_wf_basis_overlap,updated_wf_basis_evolved_wf_overlap);
 
+    //x stores coefficient for leg gates
     gsl_vector *x;
     gsl_multimin_function_fdf wf_distance_func;
 
@@ -321,8 +323,7 @@ void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
     wf_distance_func.params=wf_distance_params;
 
     x=gsl_vector_alloc(leg_gate_params.size());
-    for (int i=0; i<leg_gate_params.size(); i++) 
-        gsl_vector_set(x,i,leg_gate_params[i]);
+    for (int i=0; i<leg_gate_params.size(); i++) gsl_vector_set(x,i,leg_gate_params[i]);
 
     minimize_T=gsl_multimin_fdfminimizer_conjugate_fr;
     s=gsl_multimin_fdfminimizer_alloc(minimize_T,leg_gate_params.size());
@@ -333,23 +334,24 @@ void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
     {
         iter++;
         find_min_status=gsl_multimin_fdfminimizer_iterate(s);
-
         if (find_min_status) break;
-
         find_min_status=gsl_multimin_test_gradient(s->gradient,0.1);
 
         //Print(iter);
         //Print(s->f);
-
     }
     while (find_min_status==GSL_CONTINUE && iter<max_iter);
 
     Print(iter);
     Print(s->f);
-    gsl_multimin_fdfminimizer_free (s);
-    gsl_vector_free (x);
-      
+    Print(wf_distance_f(s->x,wf_distance_params));
 
+    for (int i=0; i<leg_gate_params.size(); i++)
+        leg_gate_params[i]=gsl_vector_get(s->x,i);
+    Print(leg_gate_params);
+
+    gsl_multimin_fdfminimizer_free(s);
+    gsl_vector_free(x);
     delete wf_distance_params;
 }
 

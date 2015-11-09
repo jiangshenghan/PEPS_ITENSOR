@@ -7,7 +7,7 @@ int main()
     int Lx=4, Ly=4;
 
     Square_Lattice_Torus square_lattice({Lx,Ly});
-    IQPEPS_IndexSet_SpinHalf index_set(6,square_lattice);
+    IQPEPS_IndexSet_SpinHalf index_set(3,square_lattice);
     IQPEPS square_peps(square_lattice,index_set);
     random_init_square_rvb_peps(square_peps);
 
@@ -27,7 +27,7 @@ int main()
     //std::array<std::vector<IQTensor>,2> env_tensors;
     //auto site_tensorA=square_peps.site_tensors(0)*square_peps.bond_tensors(1),
     //     site_tensorB=square_peps.site_tensors(1);
-    //get_env_tensor(site_tensorA,site_tensorB,env_tensors);
+    //get_env_tensor_minimization(site_tensorA,site_tensorB,env_tensors);
     
     //Check for trotter_gate
     //std::array<IQIndex,2> site_legs{Spin_leg({0,1},"site1",Out),Spin_leg({0,1},"site2",Out)};
@@ -42,8 +42,8 @@ int main()
     //cout << "Imag time: " << evolve_gate.t() << endl;
 
     //Check for optimazation
-    Evolution_Params square_su_params(1,{10},{0.1});
-    spin_square_peps_simple_update(square_peps,square_su_params);
+    //Evolution_Params square_su_params(1,{10},{0.1});
+    //spin_square_peps_simple_update(square_peps,square_su_params);
 
     return 0;
 }
