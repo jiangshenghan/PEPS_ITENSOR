@@ -107,10 +107,10 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
                 //PrintDat(leg_gate);
             }
             site_tens0*=square_peps.site_tensors(0).norm()/site_tens0.norm();
+            //we should never change order of indices of site tensor
             auto site_tens0_ordered_ind=square_peps.site_tensors(0);
             tensor_assignment_diff_order(site_tens0_ordered_ind,site_tens0);
 
-            //we should never change order of indices of site tensor
             //check symmetry of site_tens0
             //auto sym_site_tens0=site_tens0_ordered_ind;
             //rotation_symmetrize_square_rvb_site_tensor(sym_site_tens0);
@@ -132,7 +132,7 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 }
 
 
-void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &evolve_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
+void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &evolve_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
 {
     //get time evloved tensors
     std::array<IQTensor,2> site_tensors_evolved(site_tensors);
@@ -236,8 +236,15 @@ void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &si
 }
 
 
-void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
+void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
 {
+    //init leg_gate_params
+    if (leg_gate_params.empty())
+    {
+        for (int i=0; i<leg_gates_basis[0].dim(); i++)
+            leg_gate_params.push_back(rand_gen());
+    }
+
     //get time evloved tensors
     std::array<IQTensor,2> site_tensors_evolved(site_tensors);
     IQTensor bond_tensor_evolved(bond_tensor);
@@ -345,6 +352,19 @@ void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
     Print(iter);
     Print(s->f);
     Print(wf_distance_f(s->x,wf_distance_params));
+
+    //if the leg_gate is not a good approx of trotter gate, we may be trapped in a local minima, thus, we retry to find leg gate
+    if (s->f>0.1)
+    {
+        cout << "Leg gate is not good enough, may be trapped in local minima!" << endl;
+        gsl_multimin_fdfminimizer_free(s);
+        gsl_vector_free(x);
+        delete wf_distance_params;
+
+        leg_gate_params.clear();
+        obtain_spin_sym_leg_gates_params_minimization(site_tensors,bond_tensor,trotter_gate,leg_gates_basis,leg_gate_params);
+        return;
+    }
 
     for (int i=0; i<leg_gate_params.size(); i++)
         leg_gate_params[i]=gsl_vector_get(s->x,i);
@@ -456,7 +476,7 @@ void wf_distance_fdf(const gsl_vector *x, void *params, double *f, gsl_vector *d
     wf_distance_df(x,params,df);
 }
 
-void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
+void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
 {
     //get evolved_wf information
     std::array<IQTensor,2> site_tensors_evolved(site_tensors);

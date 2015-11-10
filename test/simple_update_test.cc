@@ -42,8 +42,8 @@ int main()
     //cout << "Imag time: " << evolve_gate.t() << endl;
 
     //Check for optimazation
-    //Evolution_Params square_su_params(1,{10},{0.1});
-    //spin_square_peps_simple_update(square_peps,square_su_params);
+    Evolution_Params square_su_params(1,{10},{0.1});
+    spin_square_peps_simple_update(square_peps,square_su_params);
 
     return 0;
 }

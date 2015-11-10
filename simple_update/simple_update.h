@@ -30,16 +30,16 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 
 //Obtain the leg gate u,v to approximate trotter gate using iterative method
 //Notice, we already include the environment in the site_tensors
-void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
+void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
 
 //Obtain the leg gate by miinmizing function d=||\phi-\psi||, where \psi is the evolved two-site wavefunction and \phi is obtained from applying leg gates to site tensors
-void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
+void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
 
 //The following provides f,df,fdf of gsl_minimization
 double wf_distance_f(const gsl_vector *x, void *params);
 void wf_distance_df(const gsl_vector *x, void *params, gsl_vector *df);
 void wf_distance_fdf(const gsl_vector *x, void *params, double *f, gsl_vector *df);
 //check wf_distance_func
-void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
+void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor,const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
 
 #endif
