@@ -49,42 +49,42 @@ class PEPSt
 
         const std::array<int,2> &n_uc() const
         {
-            return lattice_.n_uc();
+            return lattice_ptr_->n_uc();
         }
 
         inline const int &n_sites_uc() const
         {
-            return lattice_.n_sites_uc();
+            return lattice_ptr_->n_sites_uc();
         }
 
         inline const int &n_bonds_uc() const
         {
-            return lattice_.n_bonds_uc();
+            return lattice_ptr_->n_bonds_uc();
         }
 
         inline const int &n_bonds_to_one_site() const
         {
-            return lattice_.n_bonds_to_one_site();
+            return lattice_ptr_->n_bonds_to_one_site();
         }
 
         inline const int &n_sites_total() const
         {
-            return lattice_.n_sites_total();
+            return lattice_ptr_->n_sites_total();
         }
 
         inline const int &n_bonds_total() const
         {
-            return lattice_.n_bonds_total();
+            return lattice_ptr_->n_bonds_total();
         }
 
         int n_boundary_legs() const
         {
-            return lattice_.n_boundary_legs();
+            return lattice_ptr_->n_boundary_legs();
         }
 
         inline const Lattice_Base &lattice() const
         {
-            return lattice_;
+            return *(lattice_ptr_);
         }
 
         inline const IndexT &phys_legs(const int &site_i) const
@@ -190,7 +190,7 @@ class PEPSt
         //d_ is physical index dimension while D_ is virtual leg dim.
         int d_, D_;
 
-        const Lattice_Base &lattice_;
+        std::shared_ptr<Lattice_Base> lattice_ptr_;
 
         std::shared_ptr<PEPSt_IndexSet_Base<IndexT>> indexset_ptr_;
 

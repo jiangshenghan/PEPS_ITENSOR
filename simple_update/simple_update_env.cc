@@ -1,76 +1,6 @@
 
 #include "simple_update_env.h"
 
-void get_env_tensor_iterative(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
-{
-    if (env_tens[0].empty())
-    {
-        init_env_tensor(site_tensA,site_tensB,env_tens);
-    }
-
-    //for (const auto &tensor : env_tens[0]) PrintDat(tensor);
-    //for (const auto &tensor : env_tens[1]) PrintDat(tensor);
-
-    int n_out_legs=env_tens[0].size();
-    //assert(n_out_legs==env_tens[1].size());
-
-    //get env_mat iteratively
-    int iter=0, max_iter=100;
-    while (iter<max_iter)
-    {
-        IQTensor site_env_tensA=site_tensA,
-                 site_env_tensB=site_tensB;
-        for (int legi=0; legi<n_out_legs; legi++)
-        {
-            site_env_tensA*=env_tens[0][legi];
-            site_env_tensB*=env_tens[1][legi];
-        }
-        site_env_tensA.noprime();
-        site_env_tensB.noprime();
-        site_env_tensA.clean();
-        site_env_tensB.clean();
-
-        auto env_tens_diag=nondeg_spin_sym_env_updated(site_env_tensA,site_env_tensB);
-
-        //Print(iter);
-        //PrintDat(site_env_tensA);
-        //PrintDat(site_env_tensB);
-        //Print(env_tens_diag);
-
-        IndexSet<IQIndex> new_env_indset=env_tens[0][0].indices();
-        IQTensor new_env_tensor(new_env_indset[0],new_env_indset[1]);
-
-        for (int val=0; val<env_tens_diag.size(); val++)
-        {
-            new_env_tensor(new_env_indset[0](val+1),new_env_indset[1](val+1))=env_tens_diag[val];
-        }
-
-        //PrintDat(new_env_tensor);
-        Print((new_env_tensor-env_tens[0][0]).norm());
-
-        if ((new_env_tensor-env_tens[0][0]).norm()<1E-3) break;
-
-        for (int legi=0; legi<n_out_legs; legi++)
-        {
-            tensor_assignment(env_tens[0][legi],new_env_tensor);
-            tensor_assignment(env_tens[1][legi],new_env_tensor);
-        }
-
-        iter++;
-    }
-
-    if (iter==max_iter)
-    {
-        cout << "Unable to find good environment by iteration! Redo the iteration!" << endl;
-        //exit(EXIT_FAILURE);
-        for (auto &tensors : env_tens)
-            tensors.clear();
-        get_env_tensor_iterative(site_tensA,site_tensB,env_tens);
-    }
-
-}
-
-
 void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
 {
     if (env_tens[0].empty())
@@ -100,9 +30,9 @@ void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &sit
         flavor_accumulate_deg.push_back(flavor_accumulate_deg[spini-1]+flavor_deg[spini-1]);
     }
 
-    Print(flavor_deg);
-    Print(flavor_accumulate_deg);
-    Print(spin_basis);
+    //Print(flavor_deg);
+    //Print(flavor_accumulate_deg);
+    //Print(spin_basis);
 
     Env_Tens_Params *updated_env_tens_diff_params=new Env_Tens_Params{flavor_deg,flavor_accumulate_deg,spin_basis,{site_tensA,site_tensB},env_tens}; 
 
@@ -141,10 +71,10 @@ void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &sit
     }
     while (find_min_status=GSL_CONTINUE && iter<max_iter);
     
-    Print(iter);
-    Print(s->f);
+    //Print(iter);
+    //Print(s->f);
     //Print(x);
-    //Print(updated_env_tens_diff_f(s->x,updated_env_tens_diff_params));
+    Print(updated_env_tens_diff_f(s->x,updated_env_tens_diff_params));
 
     //if the result is much larger than zero, we will redo the minimization
     if (s->f>1E-3)
@@ -197,7 +127,7 @@ void init_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std
         }
     }
     //Print(virt_leg_spin_basis);
-    Print(env_tens_init_diag);
+    //Print(env_tens_init_diag);
 
     for (const auto &leg : site_tensA.indices())
     {
@@ -292,10 +222,13 @@ void obtain_env_tens_from_env_elems(const std::vector<int> &flavor_accumulate_de
     {
         for (auto &env_tens_one_leg : env_tens_one_side) 
         {
+            if (temp_tensor.indices()[0].dir()!=env_tens_one_leg.indices()[0].dir()) temp_tensor.dag();
+            //Print(env_tens_one_leg.indices());
             tensor_assignment(env_tens_one_leg,temp_tensor); 
             //PrintDat(env_tens_one_leg);
         }
     }
+    //cout << "finish checking obtain_env_tens_from_env_elems!" << endl;
 }
 
 
@@ -378,3 +311,79 @@ void updated_env_tens_diff_fdf(const gsl_vector *x, void *params, double *f, gsl
     *f=updated_env_tens_diff_f(x,params);
     updated_env_tens_diff_df(x,params,df);
 }
+
+
+void get_env_tensor_iterative(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
+{
+    if (env_tens[0].empty())
+    {
+        init_env_tensor(site_tensA,site_tensB,env_tens);
+    }
+
+    //for (const auto &tensor : env_tens[0]) PrintDat(tensor);
+    //for (const auto &tensor : env_tens[1]) PrintDat(tensor);
+
+    int n_out_legs=env_tens[0].size();
+    //assert(n_out_legs==env_tens[1].size());
+
+    //get env_mat iteratively
+    int iter=0, max_iter=100;
+    while (iter<max_iter)
+    {
+        IQTensor site_env_tensA=site_tensA,
+                 site_env_tensB=site_tensB;
+        for (int legi=0; legi<n_out_legs; legi++)
+        {
+            site_env_tensA*=env_tens[0][legi];
+            site_env_tensB*=env_tens[1][legi];
+        }
+        site_env_tensA.noprime();
+        site_env_tensB.noprime();
+        site_env_tensA.clean();
+        site_env_tensB.clean();
+
+        auto env_tens_diag=nondeg_spin_sym_env_updated(site_env_tensA,site_env_tensB);
+
+        //Print(iter);
+        //PrintDat(site_env_tensA);
+        //PrintDat(site_env_tensB);
+        //Print(env_tens_diag);
+
+        IndexSet<IQIndex> new_env_indset=env_tens[0][0].indices();
+        IQTensor new_env_tensor(new_env_indset[0],new_env_indset[1]);
+
+        for (int val=0; val<env_tens_diag.size(); val++)
+        {
+            new_env_tensor(new_env_indset[0](val+1),new_env_indset[1](val+1))=env_tens_diag[val];
+        }
+
+        //PrintDat(new_env_tensor);
+        Print((new_env_tensor-env_tens[0][0]).norm());
+
+        if ((new_env_tensor-env_tens[0][0]).norm()<1E-3) break;
+
+        for (int sitei=0; sitei<2; sitei++)
+        {
+            for (int legi=0; legi<n_out_legs; legi++)
+            {
+                if (new_env_indset[0].dir()==env_tens[sitei][legi].indices()[0].dir()) 
+                    tensor_assignment(env_tens[sitei][legi],new_env_tensor);
+                else
+                    tensor_assignment(env_tens[sitei][legi],dag(new_env_tensor));
+            }
+        }
+
+        iter++;
+    }
+
+    if (iter==max_iter)
+    {
+        cout << "Unable to find good environment by iteration! Redo the iteration!" << endl;
+        //exit(EXIT_FAILURE);
+        for (auto &tensors : env_tens)
+            tensors.clear();
+        get_env_tensor_iterative(site_tensA,site_tensB,env_tens);
+    }
+
+}
+

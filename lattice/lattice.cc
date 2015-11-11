@@ -43,7 +43,7 @@ Lattice_Base::Lattice_Base(const int &n_sites_uc, const int &n_bonds_uc, const s
     }
 }
 
-void Lattice_Base::print_lattice_inf()
+void Lattice_Base::print_lattice_inf() const const
 {
     cout << "\n==============================================\n" << endl;
     cout << name_ << endl << "lattice size " << n_uc_[0] << "x" << n_uc_[1] << " and " << n_sites_total_ << " sites, " << n_bonds_total_ << " bonds, " << n_boundary_legs() << " boudnary legs." << endl << endl;
@@ -159,7 +159,7 @@ Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Latti
     }
 }
 
-void Square_Lattice_Torus::print_lattice_inf()
+void Square_Lattice_Torus::print_lattice_inf() const
 {
     cout << name_ << endl << "lattice size " << n_uc_[0] << "x" << n_uc_[1] << " and " << n_sites_total_ << " sites, " << n_bonds_total_ << " bonds." << endl;
 

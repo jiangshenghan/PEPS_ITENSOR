@@ -3,7 +3,7 @@
 
 template <class TensorT>
 PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice):
-    lattice_(lattice),
+    lattice_ptr_(new Lattice_Base(lattice)),
     indexset_ptr_(new PEPSt_IndexSet_Base<IndexT>),
     site_tensors_(lattice.n_sites_total()),
     bond_tensors_(lattice.n_bonds_total()),
@@ -19,7 +19,7 @@ template <class TensorT>
 PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set):
     d_(index_set.d()),
     D_(index_set.D()),
-    lattice_(lattice),
+    lattice_ptr_(new Lattice_Base(lattice)),
     indexset_ptr_(new PEPSt_IndexSet_Base<IndexT>(index_set)),
     site_tensors_(lattice.n_sites_total()),
     bond_tensors_(lattice.n_bonds_total()),
@@ -43,7 +43,7 @@ template <class TensorT>
 PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc):
     d_(index_set.d()),
     D_(index_set.D()),
-    lattice_(lattice),
+    lattice_ptr_(new Lattice_Base(lattice)),
     indexset_ptr_(new PEPSt_IndexSet_Base<IndexT>(index_set)),
     site_tensors_(lattice.n_sites_total()),
     bond_tensors_(lattice.n_bonds_total()),
@@ -80,7 +80,7 @@ void PEPSt<TensorT>::generate_site_tensors(std::vector<TensorT> site_tensors_uc)
 {
     for (int site_i=0; site_i<n_sites_total(); site_i++)
     {
-        auto sublattice_i=lattice_.site_list_to_coord(site_i).at(2);
+        auto sublattice_i=lattice_ptr_->site_list_to_coord(site_i).at(2);
         tensor_assignment(site_tensors_[site_i],site_tensors_uc[sublattice_i]);
 
         //PrintDat(site_tensors_[site_i]);
@@ -102,12 +102,12 @@ void PEPSt<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc,
     {
         for (int bond_i=0; bond_i<n_bonds_total(); bond_i++)
         {
-            auto sublattice_i=lattice_.bond_list_to_coord(bond_i)[2];
+            auto sublattice_i=lattice_ptr_->bond_list_to_coord(bond_i)[2];
 
             tensor_assignment(bond_tensors_[bond_i],bond_tensors_uc[sublattice_i]);
 
-            auto end_sites=lattice_.bond_end_sites(bond_i);
-            std::array<Coordinate,2> end_sites_coord={lattice_.site_list_to_coord(end_sites[0]), lattice_.site_list_to_coord(end_sites[1])};
+            auto end_sites=lattice_ptr_->bond_end_sites(bond_i);
+            std::array<Coordinate,2> end_sites_coord={lattice_ptr_->site_list_to_coord(end_sites[0]), lattice_ptr_->site_list_to_coord(end_sites[1])};
 
             if (std::abs(end_sites_coord[0][1]-end_sites_coord[1][1])%2==1)
             {
@@ -122,7 +122,7 @@ void PEPSt<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc,
 
     for (int bond_i=0; bond_i<n_bonds_total(); bond_i++)
     {
-        auto sublattice_i=lattice_.bond_list_to_coord(bond_i).at(2);
+        auto sublattice_i=lattice_ptr_->bond_list_to_coord(bond_i).at(2);
         tensor_assignment(bond_tensors_[bond_i],bond_tensors_uc[sublattice_i]);
     }
 }
@@ -188,7 +188,7 @@ void PEPSt<TensorT>::new_bond_tensors()
 
         for (int endi=0; endi<2; endi++)
         {
-            int endi_site=lattice_.bond_end_sites(bond_i,endi);
+            int endi_site=lattice_ptr_->bond_end_sites(bond_i,endi);
 
             //consider the boundary bonds case separetely
             if (endi_site<0)
@@ -200,7 +200,7 @@ void PEPSt<TensorT>::new_bond_tensors()
                 continue;
             }
 
-            std::vector<int> endi_site_neigh=lattice_.site_neighbour_bonds(endi_site);
+            std::vector<int> endi_site_neigh=lattice_ptr_->site_neighbour_bonds(endi_site);
             int legi=std::find(endi_site_neigh.begin(),endi_site_neigh.end(),bond_i)-endi_site_neigh.begin();
             assert(legi<n_bonds_to_one_site());
 
@@ -235,16 +235,16 @@ void PEPSt<TensorT>::new_boundary_tensors()
 
     if (name_.find("cylinder")!=std::string::npos || name_.find("open")!=std::string::npos)
     {
-        std::vector<bool> boundary_tensor_created(lattice_.n_boundary_legs(),false);
-        for (int boundary_i=0; boundary_i<lattice_.n_boundary_legs(); boundary_i++)
+        std::vector<bool> boundary_tensor_created(lattice_ptr_->n_boundary_legs(),false);
+        for (int boundary_i=0; boundary_i<lattice_ptr_->n_boundary_legs(); boundary_i++)
         {
             if (boundary_tensor_created[boundary_i]) continue;
-            int site_i=lattice_.boundary_end_site(boundary_i);
-            std::vector<int> neighbour_sites=lattice_.site_neighbour_sites(site_i);
+            int site_i=lattice_ptr_->boundary_end_site(boundary_i);
+            std::vector<int> neighbour_sites=lattice_ptr_->site_neighbour_sites(site_i);
             //begin_iter is the position start to seach the "invalid" neighbour sites
             //should be updated to find next "invalid" one
             auto begin_iter=neighbour_sites.begin();
-            for (const auto &boundary_id : lattice_.site_neighbour_boundary(site_i))
+            for (const auto &boundary_id : lattice_ptr_->site_neighbour_boundary(site_i))
             {
                 auto neighbour_boundary_iter=std::find_if(begin_iter,neighbour_sites.end(), [](int i){ return (i<0); });
                 int neighbour_boundary_no=neighbour_boundary_iter-neighbour_sites.begin();
@@ -261,10 +261,10 @@ void PEPSt<TensorT>::new_boundary_tensors()
                     //right boundary legs are associated with bonds, labeled as -2
                     if (*neighbour_boundary_iter==-2)
                     {
-                        int bond_i=lattice_.site_neighbour_bonds(site_i,neighbour_boundary_no);
-                        int bond_boundary_i=(lattice_.bond_end_sites(bond_i,0)==-2 ? 0 : 1);
-                        //if (lattice_.bond_end_sites(bond_i,0)==-2) bond_boundary_i=0;
-                        //if (lattice_.bond_end_sites(bond_i,1)==-2) bond_boundary_i=1;
+                        int bond_i=lattice_ptr_->site_neighbour_bonds(site_i,neighbour_boundary_no);
+                        int bond_boundary_i=(lattice_ptr_->bond_end_sites(bond_i,0)==-2 ? 0 : 1);
+                        //if (lattice_ptr_->bond_end_sites(bond_i,0)==-2) bond_boundary_i=0;
+                        //if (lattice_ptr_->bond_end_sites(bond_i,1)==-2) bond_boundary_i=1;
                         auto boundary_leg=dag(bond_tensors_[bond_i].indices()[bond_boundary_i]);
                         boundary_tensors_[boundary_id]=TensorT(boundary_leg);
                     }
@@ -284,8 +284,8 @@ void PEPSt<TensorT>::new_boundary_tensors()
                     //right boundaries are associated with bonds, labeled as -3
                     if (*neighbour_boundary_iter==-2 || *neighbour_boundary_iter==-3)
                     {
-                        int bond_i=lattice_.site_neighbour_bonds(site_i,neighbour_boundary_no);
-                        int bond_boundary_i=(lattice_.bond_end_sites(bond_i,0)<0 ? 0 : 1);
+                        int bond_i=lattice_ptr_->site_neighbour_bonds(site_i,neighbour_boundary_no);
+                        int bond_boundary_i=(lattice_ptr_->bond_end_sites(bond_i,0)<0 ? 0 : 1);
                         auto boundary_leg=dag(bond_tensors_[bond_i].indices()[bond_boundary_i]);
                         boundary_tensors_[boundary_id]=TensorT(boundary_leg);
                     }
@@ -300,7 +300,7 @@ void PEPSt<TensorT>::new_boundary_tensors()
         //int boundary_no=0;
         //for (int sitei=0; sitei<n_sites_total(); sitei++)
         //{
-        //    std::vector<int> neighbour_bonds=lattice_.site_neighbour_bonds(sitei);
+        //    std::vector<int> neighbour_bonds=lattice_ptr_->site_neighbour_bonds(sitei);
         //    auto begin_iter=neighbour_bonds.begin();
         //    //sitei may have many boundary legs
         //    while (begin_iter!=neighbour_bonds.end())
@@ -324,7 +324,7 @@ void PEPSt<TensorT>::new_boundary_tensors()
         //{
         //    for (int legi=0; legi<2; legi++)
         //    {
-        //        if (lattice_.bond_end_sites(bondi,legi)==-2)
+        //        if (lattice_ptr_->bond_end_sites(bondi,legi)==-2)
         //        {
         //            boundary_tensors_[boundary_no]=TensorT(dag(bond_tensors_[bondi].indices()[legi]));
 

@@ -6,6 +6,7 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 {
     //Initialize trotter gate
     std::array<IQIndex,2> site01_legs{{square_peps.phys_legs(0),square_peps.phys_legs(1)}};
+    NN_Heisenberg_Hamiltonian hamiltonian_gate(site01_legs);
     NN_Heisenberg_Trotter_Gate evolve_gate(site01_legs);
 
     //Initialize env_tens
@@ -56,20 +57,22 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 
         for (int step=0; step<square_su_params.steps_nums[iter]; step++)
         {
-            std::stringstream ss;
-            ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
-            std::string file_name=ss.str();
-            Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
-            writeToFile(file_name,square_rvb_storage);
-
             Print(iter);
             Print(step);
             Print(square_su_params.ts[iter]);
 
             //get_env_tensor_iterative(square_peps.site_tensors(0)*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
-            get_env_tensor_minimization(square_peps.site_tensors(0)*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
+            //get_env_tensor_minimization(square_peps.site_tensors(0)*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
+            auto combined_site_tens0=square_peps.site_tensors(0);
+            for (int neighi=0; neighi<square_peps.n_bonds_to_one_site(); neighi++)
+            {
+                int bondi=square_peps.lattice().site_neighbour_bonds(0,neighi);
+                if (bondi==comm_bond) continue;
+                combined_site_tens0*=square_peps.bond_tensors(bondi);
+            }
+            get_env_tensor_minimization(combined_site_tens0*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
 
-            std::array<IQTensor,2> site_env_tens{{square_peps.site_tensors(0),square_peps.site_tensors(1)}};
+            std::array<IQTensor,2> site_env_tens{{combined_site_tens0,square_peps.site_tensors(1)}};
             
             for (int sitei=0; sitei<2; sitei++)
             {
@@ -82,6 +85,9 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 
             //check wf_distance_f, wf_distance_df
             //wf_distance_func_check(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params);
+
+            //measure energy by site_env_tens
+            Print(heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate));
 
             obtain_spin_sym_leg_gates_params_minimization(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params);
 
@@ -106,7 +112,7 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
                 legi++;
                 //PrintDat(leg_gate);
             }
-            site_tens0*=square_peps.site_tensors(0).norm()/site_tens0.norm();
+            //site_tens0*=square_peps.site_tensors(0).norm()/site_tens0.norm();
             //we should never change order of indices of site tensor
             auto site_tens0_ordered_ind=square_peps.site_tensors(0);
             tensor_assignment_diff_order(site_tens0_ordered_ind,site_tens0);
@@ -115,6 +121,7 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
             //auto sym_site_tens0=site_tens0_ordered_ind;
             //rotation_symmetrize_square_rvb_site_tensor(sym_site_tens0);
             //sym_site_tens0*=0.25;
+            //Print(site_tens0_ordered_ind.norm());
             //Print(sym_site_tens0.norm());
             //Print((site_tens0_ordered_ind-sym_site_tens0).norm());
             //Print(diff_tensor_and_singlet_projection(site_tens0_ordered_ind));
@@ -122,10 +129,21 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 
             //symmetrize site_tens0_ordered_ind, and using site_tens0_ordered_ind to generate all site tensors of peps
             rotation_symmetrize_square_rvb_site_tensor(site_tens0_ordered_ind);
-            site_tens0_ordered_ind*=0.25;
+            //site_tens0_ordered_ind*=0.25;
+            //we always keep the same norm as original state
+            site_tens0_ordered_ind*=(square_peps.site_tensors(0).norm())/(site_tens0_ordered_ind.norm());
             site_tens0_ordered_ind.clean();
+            Print(site_tens0_ordered_ind.norm());
+            Print(square_peps.site_tensors(0).norm());
+            Print((site_tens0_ordered_ind-square_peps.site_tensors(0)).norm());
 
             square_peps.generate_site_tensors({site_tens0_ordered_ind});
+
+            std::stringstream ss;
+            ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
+            std::string file_name=ss.str();
+            Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
+            writeToFile(file_name,square_rvb_storage);
 
         }//trotter steps
     }//finish all simple update
@@ -215,13 +233,13 @@ void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &si
 
         vec_params=arma::inv(matN)*vecb;
 
-        Print(iter);
+        //Print(iter);
         //Print(arma::norm(arma::imag(matN),2));
         //Print(arma::real(matN));
         //Print(arma::real(vecb).t());
         //Print(arma::real(vec_params).t());
-        Print(evolved_tensor_norm);
-        Print(updated_tensor_norm);
+        //Print(evolved_tensor_norm);
+        //Print(updated_tensor_norm);
         Print(wf_overlap/(evolved_tensor_norm*updated_tensor_norm));
         Print(diff_sq);
 
@@ -243,6 +261,7 @@ void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
     {
         for (int i=0; i<leg_gates_basis[0].dim(); i++)
             leg_gate_params.push_back(rand_gen());
+        Print(leg_gate_params);
     }
 
     //get time evloved tensors
@@ -349,8 +368,8 @@ void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
     }
     while (find_min_status==GSL_CONTINUE && iter<max_iter);
 
-    Print(iter);
-    Print(s->f);
+    //Print(iter);
+    //Print(s->f);
     Print(wf_distance_f(s->x,wf_distance_params));
 
     //if the leg_gate is not a good approx of trotter gate, we may be trapped in a local minima, thus, we retry to find leg gate
@@ -581,4 +600,23 @@ void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQ
     delete wf_distance_params;
     gsl_vector_free(x);
     gsl_vector_free(df);
+}
+
+
+double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)
+{
+    PrintDat(hamiltonian_gate.site_tensors(0)*hamiltonian_gate.bond_tensor()*hamiltonian_gate.site_tensors(1));
+    std::array<IQTensor,2> site_env_tens_dag={dag(site_env_tens[0]),dag(site_env_tens[1])};
+    auto comm_bond_tensor_dag=dag(comm_bond_tensor).prime();
+    site_env_tens_dag[0].prime(commonIndex(site_env_tens_dag[0],comm_bond_tensor));
+    site_env_tens_dag[1].prime(commonIndex(site_env_tens_dag[1],comm_bond_tensor));
+
+    double wf_norm_sq=((site_env_tens_dag[0]*site_env_tens[0])*comm_bond_tensor*comm_bond_tensor_dag*(site_env_tens_dag[1]*site_env_tens[1])).toComplex().real();
+
+    site_env_tens_dag[0].prime(Site);
+    site_env_tens_dag[1].prime(Site);
+
+    double energy=((site_env_tens[0]*hamiltonian_gate.site_tensors(0)*site_env_tens_dag[0])*hamiltonian_gate.bond_tensor()*comm_bond_tensor*comm_bond_tensor_dag*(site_env_tens[1]*hamiltonian_gate.site_tensors(1)*site_env_tens_dag[1])).toComplex().real();
+
+    return energy/wf_norm_sq;
 }

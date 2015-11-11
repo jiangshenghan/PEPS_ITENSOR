@@ -42,4 +42,7 @@ void wf_distance_fdf(const gsl_vector *x, void *params, double *f, gsl_vector *d
 //check wf_distance_func
 void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor,const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
 
+//measure heisenberg energy using two sites, env_tens already included in tensA and tensB
+double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate);
+
 #endif

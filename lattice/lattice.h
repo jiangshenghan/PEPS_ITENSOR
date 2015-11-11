@@ -173,7 +173,7 @@ class Lattice_Base
         }
 
 
-        void print_lattice_inf();
+        void print_lattice_inf() const;
 
     protected:
         //
@@ -219,7 +219,7 @@ class Square_Lattice_Torus : public Lattice_Base
 
         enum Neighbour {Left=0, Up=1, Right=2, Down=3};
 
-        virtual void print_lattice_inf();
+        virtual void print_lattice_inf() const;
 
     private:
         //
