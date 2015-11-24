@@ -46,7 +46,7 @@ class NN_Heisenberg_Hamiltonian
             for (auto &tensor : site_tensors_)
             {
                 Singlet_Tensor_Basis tensor_basis(tensor.indices());
-                tensor=std::sqrt(3.)/2.*tensor_basis[0];
+                tensor=std::sqrt(6.)/2.*tensor_basis[0];
                 //PrintDat(tensor);
             }
         }
@@ -113,7 +113,7 @@ class Trotter_Gate
         const IQTensor &site_tensors(int i) const { return site_tensors_[i]; }
 
         const std::vector<IQTensor> &bond_tensors() const { return bond_tensors_; }
-        const IQTensor &bond_tensors(int i=0) const { return bond_tensors_[i]; }
+        const IQTensor &bond_tensors(int i) const { return bond_tensors_[i]; }
 
         //
         //Other Method
@@ -197,7 +197,7 @@ inline void NN_Heisenberg_Trotter_Gate::init_site_tensors()
     {
         Singlet_Tensor_Basis tensor_basis(tensor.indices());
 
-        tensor+=tensor_basis[0]+std::sqrt(3.)/2.*tensor_basis[1];
+        tensor+=tensor_basis[0]+std::sqrt(6.)/2.*tensor_basis[1];
 
         //PrintDat(tensor);
     }

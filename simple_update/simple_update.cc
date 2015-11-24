@@ -89,7 +89,8 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
             //measure energy by site_env_tens
             Print(heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate));
 
-            obtain_spin_sym_leg_gates_params_minimization(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params);
+            //if we cannot obtain a reasonable leg_gate, we try smaller time separation
+            if (!obtain_spin_sym_leg_gates_params_minimization(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params)) break;
 
             //using leg_gate_params to generate all leg gates
             auto leg_gate_sample=singlet_tensor_from_basis_params(leg_gates_basis[0],leg_gate_params);
@@ -139,13 +140,38 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 
             square_peps.generate_site_tensors({site_tens0_ordered_ind});
 
-            std::stringstream ss;
-            ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
-            std::string file_name=ss.str();
-            Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
-            writeToFile(file_name,square_rvb_storage);
+            //sotore as Tnetwork Storage, which is used for energy measurement
+            if (step*10%square_su_params.steps_nums[iter]==0)
+            {
+                std::stringstream ss;
+                if (std::abs(square_psg::mu_12-1)<EPSILON) //zero-flux
+                {
+                    ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
+                }
+                if (std::abs(square_psg::mu_12+1)<EPSILON) //pi-flux
+                {
+                    ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
+                }
+                std::string file_name=ss.str();
+                Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
+                writeToFile(file_name,square_rvb_storage);
+            }
 
         }//trotter steps
+
+        //stores as PEPS, which is used for further evolution
+        std::stringstream ss;
+        if (std::abs(square_psg::mu_12-1)<EPSILON) //zero-flux state
+        {
+            ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << ".txt";
+        }
+        if (std::abs(square_psg::mu_12+1)<EPSILON) //pi-flux state
+        {
+            ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << ".txt";
+        }
+        std::string file_name=ss.str();
+        writeToFile(file_name,square_peps);
+
     }//finish all simple update
 }
 
@@ -254,7 +280,7 @@ void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &si
 }
 
 
-void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
+bool obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
 {
     //init leg_gate_params
     if (leg_gate_params.empty())
@@ -370,19 +396,21 @@ void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
 
     //Print(iter);
     //Print(s->f);
-    Print(wf_distance_f(s->x,wf_distance_params));
+    //normalized distance
+    double wf_distance=std::sqrt(wf_distance_f(s->x,wf_distance_params))/wf_distance_params->evolved_wf_norm;
+    Print(wf_distance);
 
     //if the leg_gate is not a good approx of trotter gate, we may be trapped in a local minima, thus, we retry to find leg gate
-    if (s->f>0.1)
+    if (wf_distance>0.1)
     {
-        cout << "Leg gate is not good enough, may be trapped in local minima!" << endl;
+        cout << "Leg gate is not good enough, may be trapped in local minima!" << endl << "try smaller time step!" << endl;
         gsl_multimin_fdfminimizer_free(s);
         gsl_vector_free(x);
         delete wf_distance_params;
 
-        leg_gate_params.clear();
-        obtain_spin_sym_leg_gates_params_minimization(site_tensors,bond_tensor,trotter_gate,leg_gates_basis,leg_gate_params);
-        return;
+        //leg_gate_params.clear();
+        //obtain_spin_sym_leg_gates_params_minimization(site_tensors,bond_tensor,trotter_gate,leg_gates_basis,leg_gate_params);
+        return false;
     }
 
     for (int i=0; i<leg_gate_params.size(); i++)
@@ -392,6 +420,8 @@ void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
     gsl_multimin_fdfminimizer_free(s);
     gsl_vector_free(x);
     delete wf_distance_params;
+
+    return true;
 }
 
 
@@ -605,7 +635,7 @@ void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQ
 
 double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)
 {
-    PrintDat(hamiltonian_gate.site_tensors(0)*hamiltonian_gate.bond_tensor()*hamiltonian_gate.site_tensors(1));
+    //PrintDat(hamiltonian_gate.site_tensors(0)*hamiltonian_gate.bond_tensor()*hamiltonian_gate.site_tensors(1));
     std::array<IQTensor,2> site_env_tens_dag={dag(site_env_tens[0]),dag(site_env_tens[1])};
     auto comm_bond_tensor_dag=dag(comm_bond_tensor).prime();
     site_env_tens_dag[0].prime(commonIndex(site_env_tens_dag[0],comm_bond_tensor));
@@ -617,6 +647,23 @@ double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &sit
     site_env_tens_dag[1].prime(Site);
 
     double energy=((site_env_tens[0]*hamiltonian_gate.site_tensors(0)*site_env_tens_dag[0])*hamiltonian_gate.bond_tensor()*comm_bond_tensor*comm_bond_tensor_dag*(site_env_tens[1]*hamiltonian_gate.site_tensors(1)*site_env_tens_dag[1])).toComplex().real();
+
+    return energy/wf_norm_sq;
+}
+
+double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)
+{
+    std::array<IQTensor,2> site_env_tens_dag={dag(site_env_tens[0]),dag(site_env_tens[1])};
+    auto comm_ind=commonIndex(site_env_tens_dag[0],dag(site_env_tens_dag[1]));
+    site_env_tens_dag[0].prime(comm_ind);
+    site_env_tens_dag[1].prime(dag(comm_ind));
+
+    double wf_norm_sq=((site_env_tens_dag[0]*site_env_tens[0])*(site_env_tens_dag[1]*site_env_tens[1])).toComplex().real();
+
+    site_env_tens_dag[0].prime(Site);
+    site_env_tens_dag[1].prime(Site);
+
+    double energy=((site_env_tens[0]*hamiltonian_gate.site_tensors(0)*site_env_tens_dag[0])*hamiltonian_gate.bond_tensor()*(site_env_tens[1]*hamiltonian_gate.site_tensors(1)*site_env_tens_dag[1])).toComplex().real();
 
     return energy/wf_norm_sq;
 }

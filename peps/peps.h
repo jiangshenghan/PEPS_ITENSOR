@@ -30,9 +30,9 @@ class PEPSt
         PEPSt(const Lattice_Base &lattice);
         PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set);
 
-        //Initialize site tensors by tensor data in one unit cell.
-        //Thus, the PEPS is translationally invariant.
-        PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc);
+        //Initialize site tensors by tensor data in one unit cell, mu_12 represents PSG of translation symmetry
+        //Thus, the PEPS is translationally invariant (up to mu_12).
+        PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc, double mu_12=1);
 
         //
         //Access Methods
@@ -158,7 +158,7 @@ class PEPSt
         //given tensors in one uc, generate all translation related tensors
         //this function requires order for indices of given tensors must match those in peps
         void generate_site_tensors(std::vector<TensorT> site_tensors_uc);
-        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc, double mu_12=1);
+        void generate_bond_tensors(std::vector<TensorT> bond_tensors_uc, double mu_12);
         //void generate_boundary_tensors(TensorT single_boundary_tensor);
 
         //this function returns site tensors that absorb the neighbour bond tensors and boundary tensors
@@ -208,39 +208,9 @@ using PEPS=PEPSt<ITensor>;
 using IQPEPS=PEPSt<IQTensor>;
 
 
-//void randomize_spin_sym_square_peps(IQPEPS &square_peps);
 
+//translate PEPS to Tnetwork_Storage
 template <class TensorT>
-inline Tnetwork_Storage<TensorT> peps_to_tnetwork_storage(const PEPSt<TensorT> &peps)
-{
-    Tnetwork_Storage<TensorT> tnetwork_storage;
-    if (peps.name().find("square")!=std::string::npos) 
-    {
-        tnetwork_storage._tnetwork_type=1;
-        tnetwork_storage._n_subl=1;
-    }
-    if (peps.name().find("torus")!=std::string::npos) tnetwork_storage._boundary_condition=1;
-    int Lx=peps.n_uc()[0], Ly=peps.n_uc()[1];
-    tnetwork_storage._Lx=Lx;
-    tnetwork_storage._Ly=Ly;
-
-    tnetwork_storage._tensor_list.set_size(peps.n_sites_total());
-    auto tensor_list=peps.combined_site_tensors();
-    for (int sitei=0; sitei<peps.n_sites_total(); sitei++) 
-        tnetwork_storage._tensor_list(sitei)=tensor_list[sitei];
-
-    tnetwork_storage._coor_to_siteind.set_size(Lx,Ly);
-    for (int x=0; x<Lx; x++)
-    {
-        for (int y=0; y<Ly; y++)
-        {
-            tnetwork_storage._coor_to_siteind(x,y).set_size(tnetwork_storage._n_subl);
-            for (int subli=0; subli<tnetwork_storage._n_subl; subli++)
-                tnetwork_storage._coor_to_siteind(x,y)(subli)=peps.lattice().site_coord_to_list(x,y,subli);
-        }
-    }
-
-    return tnetwork_storage;
-}
+Tnetwork_Storage<TensorT> peps_to_tnetwork_storage(const PEPSt<TensorT> &peps);
 
 #endif

@@ -1,6 +1,16 @@
 
 #include "square_rvb.h"
 
+namespace square_psg
+{
+    double mu_12=-1;
+    double mu_t2c4=-1;
+    double mu_t1T=1;
+    double chi_c4=1;
+    double chi_T=1;
+    Complex Theta_c4=1;
+}
+
 using namespace square_psg;
 
 IQPEPS square_srvb_peps(int Lx, int Ly)

@@ -236,17 +236,17 @@ void Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int ho
 
     clean(sigma_lr_[lr_no]);
 
-    //cout << "\n========================================\n" << endl;
-    //cout << "Iterative contraction for bulk col:" << endl;
-    //cout << "Horizontal Direction: " << horizontal_dir << endl
-    //     << "Vertical Direction: " << vertical_dir << endl
-    //     << "Col: " << coli << endl << endl;
+    cout << "\n========================================\n" << endl;
+    cout << "Iterative contraction for bulk col:" << endl;
+    cout << "Horizontal Direction: " << horizontal_dir << endl
+         << "Vertical Direction: " << vertical_dir << endl
+         << "Col: " << coli << endl << endl;
     //for (const auto &combiner : iterative_combiners_[lr_no]) cout << combiner;
     //PrintDat(sigma_lr_[lr_no]);
     //print the first ten nonzero elems
     //cout << "First ten elems of sigma_lr[" << lr_no << "] are" << endl;
     //print_vector_nonzero_elem(sigma_lr_[lr_no],10);
-    //cout << "\n========================================\n" << endl;
+    cout << "\n========================================\n" << endl;
 
 }
 template

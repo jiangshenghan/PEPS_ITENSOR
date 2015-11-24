@@ -33,7 +33,7 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
 
 //Obtain the leg gate by miinmizing function d=||\phi-\psi||, where \psi is the evolved two-site wavefunction and \phi is obtained from applying leg gates to site tensors
-void obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
+bool obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params);
 
 //The following provides f,df,fdf of gsl_minimization
 double wf_distance_f(const gsl_vector *x, void *params);
@@ -44,5 +44,5 @@ void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQ
 
 //measure heisenberg energy using two sites, env_tens already included in tensA and tensB
 double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate);
-
+double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const NN_Heisenberg_Hamiltonian &hamiltonian_gate);
 #endif

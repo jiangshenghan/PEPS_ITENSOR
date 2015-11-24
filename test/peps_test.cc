@@ -3,8 +3,8 @@
 
 int main()
 {
-    //Square_Lattice_Torus square_lattice{std::array<int,2>{2,2}};
-    Square_Lattice_Open square_lattice{std::array<int,2>{2,2}};
+    Square_Lattice_Torus square_lattice{std::array<int,2>{2,2}};
+    //Square_Lattice_Open square_lattice{std::array<int,2>{2,2}};
    
     square_lattice.print_lattice_inf();
 

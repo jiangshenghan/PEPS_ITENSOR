@@ -40,7 +40,7 @@ template
 PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
 
 template <class TensorT>
-PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc):
+PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc, double mu_12):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_ptr_(new Lattice_Base(lattice)),
@@ -65,14 +65,14 @@ PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &
     //for (const auto &tensor : bond_tensors_uc) PrintDat(tensor);
 
     generate_site_tensors(site_tensors_uc);
-    generate_bond_tensors(bond_tensors_uc);
+    generate_bond_tensors(bond_tensors_uc,mu_12);
 
 
 }
 template
-PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> site_tensors_uc, std::vector<ITensor> bond_tensors_uc);
+PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> site_tensors_uc, std::vector<ITensor> bond_tensors_uc, double mu_12);
 template
-PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> site_tensors_uc, std::vector<IQTensor> bond_tensors_uc);
+PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> site_tensors_uc, std::vector<IQTensor> bond_tensors_uc, double mu_12);
 
 
 template<class TensorT>
@@ -109,7 +109,7 @@ void PEPSt<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc,
             auto end_sites=lattice_ptr_->bond_end_sites(bond_i);
             std::array<Coordinate,2> end_sites_coord={lattice_ptr_->site_list_to_coord(end_sites[0]), lattice_ptr_->site_list_to_coord(end_sites[1])};
 
-            if (std::abs(end_sites_coord[0][1]-end_sites_coord[1][1])%2==1)
+            if (std::abs(end_sites_coord[0][1]-end_sites_coord[1][1])%2==1 && std::abs(end_sites_coord[0][0]%2==1))
             {
                 auto eta_12=eta_from_mu(mu_12,dag(bond_tensors_[bond_i].indices()[0]));
                 bond_tensors_[bond_i]*=eta_12;
@@ -426,197 +426,42 @@ template
 void PEPSt<IQTensor>::write(std::ostream &s) const;
 
 
-//void randomize_spin_sym_square_peps(IQPEPS &spin_peps)
-//{
-//    //generate site tensors by random parameters
-//    //random number generator
-//    std::default_random_engine generator(std::time(0));
-//    std::uniform_real_distribution<double> distribution(-1.0,1.0);
-//    auto rand_param=std::bind(distribution,generator);
-//
-//    //Init a symmetric site0, then generating all other sites
-//    Singlet_Tensor_Basis site0_tensor_basis(spin_peps.site_tensors(0).indices());
-//    std::vector<Complex> site0_tensor_params(site0_tensor_basis.dim(),0.);
-//
-//    //cout << "Basis No. equals to " << site0_tensor_basis.dim() << endl << endl;
-//    //for (const auto &tensor : site0_tensor_basis)
-//    //{
-//    //    PrintDat(tensor);
-//    //}
-//
-//    //site0_basis_visited==true means params of the basis has been assigned
-//    std::vector<bool> site0_basis_visited(site0_tensor_basis.dim(),false); 
-//
-//    IQIndex site0_phys_indice;
-//    IndexSet<IQIndex> site0_virt_indices;
-//    std::vector<int> virt_dims;
-//    for (const auto &indice : spin_peps.site_tensors(0).indices())
-//    {
-//        if (indice.type()==Site) 
-//        {
-//            site0_phys_indice=indice;
-//            continue;
-//        }
-//        site0_virt_indices.addindex(indice);
-//        virt_dims.push_back(indice.m());
-//    }
-//
-//    for (int i=0; i<site0_tensor_basis.dim(); i++)
-//    {
-//        if (site0_basis_visited[i]) continue;
-//        site0_basis_visited[i]=true;
-//
-//        auto spin_list=site0_tensor_basis.spin_configs(i);
-//        auto deg_list=site0_tensor_basis.deg_configs(i);
-//        int fusion_channel=site0_tensor_basis.fusion_channel(i);
-//        site0_tensor_params[i]=rand_param();
-//
-//        cout << "Spins: " << spin_list << endl
-//             << "Colors: " << deg_list << endl
-//             << "Fusion Channel: " << fusion_channel << endl
-//             << "Params: " << site0_tensor_params[i] << endl;
-//        //cout   << "Basis:" << site0_tensor_basis[i] << endl;
-//
-//
-//        //find the first nonzero elem for site0_tensor_basis[i] for later convenient (compare the sign of different basis related by rotation symmetry)
-//        int val_num=0;
-//        double basis_elem;
-//        std::vector<int> val_list;
-//
-//        //cout << virt_dims << endl;
-//        do
-//        {
-//            val_list=list_from_num(val_num,virt_dims);
-//
-//            basis_elem=site0_tensor_basis[i](site0_phys_indice(1),site0_virt_indices[0](val_list[0]+1),site0_virt_indices[1](val_list[1]+1),site0_virt_indices[2](val_list[2]+1),site0_virt_indices[3](val_list[3]+1));
-//            //cout << val_list << endl;
-//            //cout << basis_elem << endl;
-//            val_num++;
-//        }
-//        while (std::abs(basis_elem)<EPSILON);
-//
-//        cout << "nonzero elem val_list: " << val_list << endl;
-//        cout << "basis_elem: " << basis_elem << endl << endl;
-//
-//        //TODO: Debug the following
-//        //spin_oddness[i]==1 means spin_list[i] stores half-int spin
-//        std::vector<int> spin_oddness;
-//        for (const auto &S : spin_list)
-//            spin_oddness.push_back(S%2);
-//
-//        //params may be imaginary when Theta_c4 is imaginary as well as the following condition holds
-//        if (spin_oddness[1]!=spin_oddness[3])
-//            site0_tensor_params[i]*=Theta_c4;
-//
-//        //generate rotation symmetry related params
-//        for (int j=1; j<spin_peps.n_bonds_to_one_site(); j++)
-//        {
-//            //We rotate the virtual legs only, where we always assume physcal leg is at FIRST place
-//            std::rotate(spin_list.begin()+1,spin_list.begin()+2,spin_list.end());
-//            std::rotate(deg_list.begin()+1,deg_list.begin()+2,deg_list.end());
-//            //val_list only involves virt leg
-//            std::rotate(val_list.begin(),val_list.begin()+1,val_list.end());
-//            cout << "Spins: " << spin_list << endl
-//                << "Colors: " << deg_list << endl
-//                << "Channel: " << fusion_channel << endl;
-//
-//            auto rotate_basis_no=site0_tensor_basis.spin_deg_list_to_basis_no(spin_list,deg_list,fusion_channel);
-//            //mark the rotated basis as visited.
-//            if (site0_basis_visited[rotate_basis_no]) continue;
-//            site0_basis_visited[rotate_basis_no]=true;
-//
-//            //when generating rotated params, be cautious that the singlet basis may differ by -1, which we saved in rotate_basis_ratio
-//            auto rotate_basis_ratio=site0_tensor_basis[rotate_basis_no](site0_phys_indice(1),site0_virt_indices[0](val_list[0]+1),site0_virt_indices[1](val_list[1]+1),site0_virt_indices[2](val_list[2]+1),site0_virt_indices[3](val_list[3]+1))/basis_elem;
-//
-//            site0_tensor_params[rotate_basis_no]=site0_tensor_params[i]*std::pow(chi_c4*Theta_c4,j)/rotate_basis_ratio;
-//
-//            cout << "nonzero elem val_list: " << val_list << endl;
-//            cout << "Basis Ratios: " << rotate_basis_ratio << endl
-//                 << "Params: " << site0_tensor_params[rotate_basis_no] << endl << endl;
-//        }//generate rotated params
-//    }//generate all params
-//
-//    //generate all translational related site tensors
-//    spin_peps.generate_site_tensors({singlet_tensor_from_basis_params(site0_tensor_basis,site0_tensor_params)});
-//
-//
-//    //generate bond tensors
-//    //init bond0, and generated all other bonds
-//    Singlet_Tensor_Basis bond0_tensor_basis(spin_peps.bond_tensors(0).indices());
-//    std::vector<Complex> bond0_tensor_params(bond0_tensor_basis.dim(),0.);
-//
-//    for (int i=0; i<bond0_tensor_basis.dim(); i++)
-//    {
-//        auto spin_list=bond0_tensor_basis.spin_configs(i);
-//        auto deg_list=bond0_tensor_basis.deg_configs(i);
-//        
-//        //we choose gauge such that bond tensor in extra deg space is either diagonal (symmetric) or ~i\sigma^y\otimes\mathrm{I}_{n/2}
-//        int deg_dim=bond0_tensor_basis.spin_degs(0)[spin_list[0]];
-//        if (deg_list[0]!=deg_list[1]) //not diagonal
-//        {
-//            //not the other case
-//            if (deg_dim%2==1 || std::abs(deg_list[0]-deg_list[1])!=deg_dim/2) continue;
-//        }
-//
-//        //singlet form by two integer spins
-//        //chi_c4=1: real sym
-//        //chi_c4=-1: real antisym
-//        if (spin_list[0]%2==0)
-//        {
-//            if (std::abs(chi_c4-1)<EPSILON)
-//            {
-//                if (deg_list[0]!=deg_list[1]) continue;
-//
-//                //TODO: consider the case with -1
-//                bond0_tensor_params[i]=1.;
-//            }
-//            if (std::abs(chi_c4+1)<EPSILON)
-//            {
-//                assert(deg_dim%2==0);
-//
-//                if (deg_list[0]-deg_list[1]==deg_dim/2) 
-//                    bond0_tensor_params[i]=-1.;
-//                if (deg_list[1]-deg_list[0]==deg_dim/2)
-//                    bond0_tensor_params[i]=1.;
-//            }
-//            continue;
-//        }
-//
-//        //singlet form by two half integer spins
-//        //mu_t1T=1: real
-//        //mu_t1T=-1: imag
-//        //mu_t2c4.chi_c4=-1: sym
-//        //mu_t2c4.chi_c4=+1: antisym
-//        if (spin_list[0]%2==1)
-//        {
-//            if (std::abs(mu_t2c4*chi_c4+1)<EPSILON)
-//            {
-//                if (deg_list[0]!=deg_list[1]) continue;
-//
-//                //TODO: consider the case with -1
-//                bond0_tensor_params[i]=1.;
-//            }
-//            if (std::abs(mu_t2c4*chi_c4-1)<EPSILON)
-//            {
-//                assert(deg_dim%2==0);
-//
-//                if (deg_list[0]-deg_list[1]==deg_dim/2) 
-//                    bond0_tensor_params[i]=-1.;
-//                if (deg_list[1]-deg_list[0]==deg_dim/2)
-//                    bond0_tensor_params[i]=1.;
-//            }
-//            if (std::abs(mu_t1T+1)<EPSILON)
-//            {
-//                bond0_tensor_params[i]*=Complex_i;
-//            }
-//        }
-//    }
-//    spin_peps.bond_tensors(0)=singlet_tensor_from_basis_params(bond0_tensor_basis,bond0_tensor_params);
-//
-//    //generate the horizontal bond B_1 by vertical bond B_0
-//    tensor_assignment(spin_peps.bond_tensors(1),spin_peps.bond_tensors(0));
-//    spin_peps.bond_tensors(1)*=chi_c4;
-//
-//    //generate all translational related bond tensors
-//    spin_peps.generate_bond_tensors({spin_peps.bond_tensors(0),spin_peps.bond_tensors(1)});
-//}
+template <class TensorT>
+Tnetwork_Storage<TensorT> peps_to_tnetwork_storage(const PEPSt<TensorT> &peps)
+{
+    Tnetwork_Storage<TensorT> tnetwork_storage;
+    if (peps.name().find("square")!=std::string::npos) 
+    {
+        tnetwork_storage._tnetwork_type=1;
+        tnetwork_storage._n_subl=1;
+    }
+    if (peps.name().find("torus")!=std::string::npos) tnetwork_storage._boundary_condition=1;
+    int Lx=peps.n_uc()[0], Ly=peps.n_uc()[1];
+    tnetwork_storage._Lx=Lx;
+    tnetwork_storage._Ly=Ly;
+
+    tnetwork_storage._tensor_list.set_size(peps.n_sites_total());
+    auto tensor_list=peps.combined_site_tensors();
+    for (int sitei=0; sitei<peps.n_sites_total(); sitei++) 
+        tnetwork_storage._tensor_list(sitei)=tensor_list[sitei];
+
+    tnetwork_storage._coor_to_siteind.set_size(Lx,Ly);
+    for (int x=0; x<Lx; x++)
+    {
+        for (int y=0; y<Ly; y++)
+        {
+            tnetwork_storage._coor_to_siteind(x,y).set_size(tnetwork_storage._n_subl);
+            for (int subli=0; subli<tnetwork_storage._n_subl; subli++)
+                tnetwork_storage._coor_to_siteind(x,y)(subli)=peps.lattice().site_coord_to_list(x,y,subli);
+        }
+    }
+
+    return tnetwork_storage;
+}
+template
+Tnetwork_Storage<ITensor> peps_to_tnetwork_storage(const PEPSt<ITensor> &peps);
+template
+Tnetwork_Storage<IQTensor> peps_to_tnetwork_storage(const PEPSt<IQTensor> &peps);
+
+
+

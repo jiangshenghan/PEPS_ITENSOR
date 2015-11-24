@@ -207,15 +207,17 @@ IQTensor eta_from_mu(double mu, const std::vector<int> &flavor_deg)
         }
         return eta;
     }
-
-    std::vector<Spin_Basis> eta_leg_spin_basis;
-    iqind_to_spin_basis(eta_leg,flavor_deg,eta_leg_spin_basis);
-
-    for (int val=1; val<=eta_leg.m(); val++)
+    else
     {
-        eta(eta_leg(val),eta_leg_prime(val))=std::pow(mu,eta_leg_spin_basis[val-1].S());
+        std::vector<Spin_Basis> eta_leg_spin_basis;
+        iqind_to_spin_basis(eta_leg,flavor_deg,eta_leg_spin_basis);
+
+        for (int val=1; val<=eta_leg.m(); val++)
+        {
+            eta(eta_leg(val),eta_leg_prime(val))=std::pow(mu,eta_leg_spin_basis[val-1].S());
+        }
+        return eta;
     }
-    return eta;
 
 }
 
@@ -234,15 +236,17 @@ IQTensor eta_from_mu(double mu, IQIndex eta_leg)
         }
         return eta;
     }
-
-    std::vector<Spin_Basis> eta_leg_spin_basis;
-    iqind_to_spin_basis(eta_leg,eta_leg_spin_basis);
-
-    for (int val=1; val<=eta_leg.m(); val++)
+    else
     {
-        eta(eta_leg(val),eta_leg_prime(val))=std::pow(mu,eta_leg_spin_basis[val-1].S());
+        std::vector<Spin_Basis> eta_leg_spin_basis;
+        iqind_to_spin_basis(eta_leg,eta_leg_spin_basis);
+
+        for (int val=1; val<=eta_leg.m(); val++)
+        {
+            eta(eta_leg(val),eta_leg_prime(val))=std::pow(mu,eta_leg_spin_basis[val-1].S());
+        }
+        return eta;
     }
-    return eta;
 
 }
 

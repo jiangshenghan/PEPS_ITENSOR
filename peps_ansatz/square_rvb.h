@@ -6,13 +6,23 @@
 //The following parameters labels different class of symmetric wf on square lattice
 namespace square_psg
 {
-    static const double mu_12=1;
-    static const double mu_t2c4=-1;
-    static const double mu_t1T=1;
-    static const double chi_c4=1;
-    static const double chi_T=1;
-    static const Complex Theta_c4=1;
+    extern double mu_12;
+    extern double mu_t2c4;
+    extern double mu_t1T;
+    extern double chi_c4;
+    extern double chi_T;
+    extern Complex Theta_c4;
 }
+
+//namespace square_psg
+//{
+//    static const double mu_12=-1;
+//    static const double mu_t2c4=-1;
+//    static const double mu_t1T=1;
+//    static const double chi_c4=1;
+//    static const double chi_T=1;
+//    static const Complex Theta_c4=1;
+//}
 
 IQPEPS square_srvb_peps(int Lx, int Ly);
 

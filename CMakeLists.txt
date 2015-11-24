@@ -46,4 +46,4 @@ SET(NUMERIC_LIB itpp_static gsl -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_rt -lm
 
 #add directories for source file generating executable file
 ADD_SUBDIRECTORY(test)
-#ADD_SUBDIRECTORY(execute)
+ADD_SUBDIRECTORY(execute)
