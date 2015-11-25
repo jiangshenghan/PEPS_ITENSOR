@@ -277,5 +277,16 @@ class Honeycomb_Lattice_Torus : public Lattice_Base
         enum Neighbour {NeighA=0, NeighB=1, NeighC=2};
 };
 
+//
+//Kagome lattice with cirac geometry on torus
+//The convention follows fig on kagome_lattice_cirac_notes.pdf
+//Here, "bonds" are actually plaquette center
+//
+class Kagome_Lattice_Cirac_Torus : public Lattice_Base
+{
+    public:
+        Kagome_Lattice_Cirac_Torus(const std::array<int,2> &n_uc);
+};
+
 
 #endif
