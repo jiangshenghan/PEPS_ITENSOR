@@ -4,16 +4,20 @@
 int main()
 {
     //Square_Lattice_Torus square_lattice{std::array<int,2>{2,2}};
-    Square_Lattice_Cylinder square_lattice{{3,3}};
+    //Square_Lattice_Cylinder square_lattice{{3,3}};
     //Square_Lattice_Open square_lattice{{3,3}};
+    
+    //square_lattice.print_lattice_inf();
+
+    Kagome_Lattice_Cirac_Torus kagome_cirac({3,3});
    
-    square_lattice.print_lattice_inf();
 
 
     //PEPS_IndexSet index_set(2,2,square_lattice);
     //PEPS peps_test(square_lattice,index_set);
 
-    IQPEPS_IndexSet_SpinHalf index_set(6,square_lattice);
+    //IQPEPS_IndexSet_SpinHalf index_set(6,square_lattice);
+    IQPEPS_IndexSet_SpinHalf index_set(6,kagome_cirac);
     //IQPEPS_IndexSet_SpinHalf index_set(17,std::vector<int>{1,3,0,0,2},square_lattice);
 
     cout << "\n========================================\n" << endl;
@@ -50,7 +54,8 @@ int main()
     //}
     //cout << "\n========================================\n" << endl;
 
-    IQPEPS peps_test(square_lattice,index_set);
+    //IQPEPS peps_test(square_lattice,index_set);
+    IQPEPS peps_test(kagome_cirac,index_set);
 
     cout << "\n========================================\n" << endl;
     cout << "Original PEPS:" << endl;

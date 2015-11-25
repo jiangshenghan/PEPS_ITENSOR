@@ -228,7 +228,6 @@ void PEPSt<ITensor>::new_bond_tensors();
 template
 void PEPSt<IQTensor>::new_bond_tensors();
 
-//TODO:Modify this function
 template <class TensorT>
 void PEPSt<TensorT>::new_boundary_tensors()
 {
