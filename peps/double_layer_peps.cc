@@ -173,16 +173,16 @@ void Double_Layer_PEPSt<TensorT>::obtain_single_layer_tensors()
         {
             int bond_no=this->lattice().site_neighbour_bonds(sitei,neighi);
             if (bond_no<0) continue;
-            //For bulk bond, we only multiply those start from the site to avoid double counting. Namely bond_end_sites(bond_no,0)==sitei
+            //For bulk bond, we only multiply those start from the site to avoid double counting. Namely bond_neighbour_sites(bond_no,0)==sitei
             //For boundary bond, we will always absorb to the bond
-            if (this->lattice().bond_end_sites(bond_no,0)==sitei ||
-                this->lattice().bond_end_sites(bond_no,0)<0)
+            if (this->lattice().bond_neighbour_sites(bond_no,0)==sitei ||
+                this->lattice().bond_neighbour_sites(bond_no,0)<0)
             {
                 site_tensor*=single_layer_peps_.bond_tensors(bond_no);
             }
         }
         //multiply neighbouring boundary tensors
-        for (const auto &boundary_no : this->lattice().site_neighbour_boundary(sitei))
+        for (const auto &boundary_no : this->lattice().site_neighbour_boundaries(sitei))
         {
             site_tensor*=single_layer_peps_.boundary_tensors(boundary_no);
         }

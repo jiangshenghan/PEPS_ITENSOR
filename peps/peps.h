@@ -52,27 +52,32 @@ class PEPSt
             return lattice_ptr_->n_uc();
         }
 
-        inline const int &n_sites_uc() const
+        int n_sites_uc() const
         {
             return lattice_ptr_->n_sites_uc();
         }
 
-        inline const int &n_bonds_uc() const
+        int n_bonds_uc() const
         {
             return lattice_ptr_->n_bonds_uc();
         }
 
-        inline const int &n_bonds_to_one_site() const
+        int n_bonds_to_one_site() const
         {
             return lattice_ptr_->n_bonds_to_one_site();
         }
 
-        inline const int &n_sites_total() const
+        int n_sites_to_one_bond() const
+        {
+            return lattice_ptr_->n_sites_to_one_bond();
+        }
+
+        int n_sites_total() const
         {
             return lattice_ptr_->n_sites_total();
         }
 
-        inline const int &n_bonds_total() const
+        int n_bonds_total() const
         {
             return lattice_ptr_->n_bonds_total();
         }
@@ -162,6 +167,7 @@ class PEPSt
         //void generate_boundary_tensors(TensorT single_boundary_tensor);
 
         //this function returns site tensors that absorb the neighbour bond tensors and boundary tensors
+        //this function only works for PEPS with canonical bond tensors (two ends)
         std::vector<TensorT> combined_site_tensors() const;
 
 
