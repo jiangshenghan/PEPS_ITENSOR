@@ -1,5 +1,5 @@
-#ifndef _SQUARE_RVB_
-#define _SQUARE_RVB_
+#ifndef _SQUARE_RVB_H_
+#define _SQUARE_RVB_H_
 
 #include "peps.h"
 

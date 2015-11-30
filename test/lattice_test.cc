@@ -12,7 +12,7 @@ int main()
     //Square_Lattice_Open square_open({3,3});
     //square_open.print_lattice_inf();
 
-    Kagome_Lattice_Cirac_Torus kagome_torus({3,3});
+    Kagome_Cirac_Lattice_Torus kagome_torus({3,3});
     kagome_torus.print_lattice_inf();
     return 0;
 }

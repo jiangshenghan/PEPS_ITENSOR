@@ -9,7 +9,7 @@ int main()
     
     //square_lattice.print_lattice_inf();
 
-    Kagome_Lattice_Cirac_Torus kagome_cirac({3,3});
+    Kagome_Cirac_Lattice_Torus kagome_cirac({3,3});
    
 
 

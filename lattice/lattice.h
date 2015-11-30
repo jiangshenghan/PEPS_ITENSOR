@@ -282,10 +282,10 @@ class Honeycomb_Lattice_Torus : public Lattice_Base
 //The convention follows fig on kagome_lattice_cirac_notes.pdf
 //Here, "bonds" are actually plaquette center
 //
-class Kagome_Lattice_Cirac_Torus : public Lattice_Base
+class Kagome_Cirac_Lattice_Torus : public Lattice_Base
 {
     public:
-        Kagome_Lattice_Cirac_Torus(const std::array<int,2> &n_uc);
+        Kagome_Cirac_Lattice_Torus(const std::array<int,2> &n_uc);
 };
 
 

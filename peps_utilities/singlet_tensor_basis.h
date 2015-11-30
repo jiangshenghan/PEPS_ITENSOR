@@ -96,6 +96,7 @@ class Singlet_Tensor_Basis
 
 inline std::ostream &operator<<(std::ostream &s, const Singlet_Tensor_Basis &tensor_basis)
 {
+    s << "Total dimension: " << tensor_basis.dim() << endl << endl;
     for (int i=0; i<tensor_basis.dim(); i++)
     {
         s << "Basis no: " << i << endl;

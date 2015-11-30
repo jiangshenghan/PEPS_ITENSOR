@@ -428,8 +428,8 @@ Honeycomb_Lattice_Torus::Honeycomb_Lattice_Torus(const std::array<int,2> &n_uc):
     }
 }
 
-//Kagome_Lattice_Cirac_Torus
-Kagome_Lattice_Cirac_Torus::Kagome_Lattice_Cirac_Torus(const std::array<int,2> &n_uc): Lattice_Base(3,2,n_uc,0,3) 
+//Kagome_Cirac_Lattice_Torus
+Kagome_Cirac_Lattice_Torus::Kagome_Cirac_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(3,2,n_uc,0,3) 
 {
     name_="kagome lattice cirac on torus";
 
@@ -445,8 +445,8 @@ Kagome_Lattice_Cirac_Torus::Kagome_Lattice_Cirac_Torus(const std::array<int,2> &
         }
         if (sitei_coord[2]==1)
         {
-            neigh_bonds_coord[0]=Coordinate{sitei_coord[0]-1,sitei_coord[1],1};
-            neigh_bonds_coord[1]=Coordinate{sitei_coord[0],sitei_coord[1],0};
+            neigh_bonds_coord[0]=Coordinate{sitei_coord[0],sitei_coord[1],0};
+            neigh_bonds_coord[1]=Coordinate{sitei_coord[0]-1,sitei_coord[1],1};
         }
         if (sitei_coord[2]==2)
         {
