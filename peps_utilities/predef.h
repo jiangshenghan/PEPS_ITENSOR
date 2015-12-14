@@ -10,9 +10,11 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <utility>
 #include <algorithm>
 #include <numeric>
 #include <initializer_list>
+#include <functional>
 #include <ctime>
 #include <chrono>
 #include <random>

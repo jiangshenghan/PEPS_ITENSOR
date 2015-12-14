@@ -10,12 +10,14 @@ int main()
     int Lx=8, Ly=8;
     Square_Lattice_Torus square_lattice({Lx,Ly});
 
-    IQPEPS_IndexSet_SpinHalf index_set(10,square_lattice);
+    IQPEPS_IndexSet_SpinHalf index_set(6,square_lattice);
     IQPEPS square_peps(square_lattice,index_set);
     //random_init_square_rvb_peps(square_peps);
 
+    //control PSG parameters
+    mu_12=1; 
+
     //get a better init state
-    mu_12=1;
     double init_energy=0;
     do
     {
@@ -111,7 +113,7 @@ int main()
     //cout << "Imag time: " << evolve_gate.t() << endl;
 
     //Check for optimazation
-    Evolution_Params square_su_params(3,{100,1000,1000},{0.01,0.001,1E-5});
+    Evolution_Params square_su_params(3,{500,1000,1000},{0.01,0.001,1E-5});
     spin_square_peps_simple_update(square_peps,square_su_params);
 
     //Check the output result

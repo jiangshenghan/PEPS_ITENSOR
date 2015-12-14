@@ -140,37 +140,37 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 
             square_peps.generate_site_tensors({site_tens0_ordered_ind});
 
-            //sotore as Tnetwork Storage, which is used for energy measurement
-            if (step*10%square_su_params.steps_nums[iter]==0)
-            {
-                std::stringstream ss;
-                if (std::abs(square_psg::mu_12-1)<EPSILON) //zero-flux
-                {
-                    ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
-                }
-                if (std::abs(square_psg::mu_12+1)<EPSILON) //pi-flux
-                {
-                    ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
-                }
-                std::string file_name=ss.str();
-                Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
-                writeToFile(file_name,square_rvb_storage);
-            }
+            //store as Tnetwork Storage, which is used for energy measurement
+            //if (step*10%square_su_params.steps_nums[iter]==0)
+            //{
+            //    std::stringstream ss;
+            //    if (std::abs(square_psg::mu_12-1)<EPSILON) //zero-flux
+            //    {
+            //        ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
+            //    }
+            //    if (std::abs(square_psg::mu_12+1)<EPSILON) //pi-flux
+            //    {
+            //        ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
+            //    }
+            //    std::string file_name=ss.str();
+            //    Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
+            //    writeToFile(file_name,square_rvb_storage);
+            //}
 
         }//trotter steps
 
         //stores as PEPS, which is used for further evolution
-        std::stringstream ss;
-        if (std::abs(square_psg::mu_12-1)<EPSILON) //zero-flux state
-        {
-            ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << ".txt";
-        }
-        if (std::abs(square_psg::mu_12+1)<EPSILON) //pi-flux state
-        {
-            ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << ".txt";
-        }
-        std::string file_name=ss.str();
-        writeToFile(file_name,square_peps);
+        //std::stringstream ss;
+        //if (std::abs(square_psg::mu_12-1)<EPSILON) //zero-flux state
+        //{
+        //    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << ".txt";
+        //}
+        //if (std::abs(square_psg::mu_12+1)<EPSILON) //pi-flux state
+        //{
+        //    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << ".txt";
+        //}
+        //std::string file_name=ss.str();
+        //writeToFile(file_name,square_peps);
 
     }//finish all simple update
 }
