@@ -28,7 +28,7 @@ SET(ITPP_INCLUDE_DIR "/home/jiangsb/opt/itpp_intel/include")
 SET(ITPP_LIB_DIR "/home/jiangsb/opt/itpp_intel/lib")
 
 #include directories storing head files
-INCLUDE_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update ${ITPP_INCLUDE_DIR} ${ITENSOR_INCLUDE_DIR} ${WIGNERSYMBOL_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update corner_transfer_matrix ${ITPP_INCLUDE_DIR} ${ITENSOR_INCLUDE_DIR} ${WIGNERSYMBOL_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR})
 
 #add directories for source file generate libraries
 ADD_SUBDIRECTORY(lattice)
@@ -36,10 +36,11 @@ ADD_SUBDIRECTORY(peps)
 ADD_SUBDIRECTORY(peps_utilities)
 ADD_SUBDIRECTORY(peps_ansatz)
 ADD_SUBDIRECTORY(simple_update)
+ADD_SUBDIRECTORY(corner_transfer_matrix)
 #ADD_SUBDIRECTORY(boundary_theory)
 
 #include directories for library
-LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update ${ITPP_LIB_DIR} ${ITENSOR_LIB_DIR} ${WIGNERSYMBOL_LIB_DIR} ${BLAS_LAPACK_LIB_DIR})
+LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update corner_transfer_matrix ${ITPP_LIB_DIR} ${ITENSOR_LIB_DIR} ${WIGNERSYMBOL_LIB_DIR} ${BLAS_LAPACK_LIB_DIR})
 
 SET(ITENSOR_LIB itensor matrix utilities)
 SET(NUMERIC_LIB itpp_static gsl -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_rt -lmkl_core -liomp5 -lpthread)

@@ -1,0 +1,2 @@
+
+ADD_LIBRARY(corner_transfer_matrix corner_transfer_matrix.cc)

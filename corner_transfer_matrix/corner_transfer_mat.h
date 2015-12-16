@@ -2,7 +2,7 @@
 #ifndef _CORNER_TRANSFER_MAT_H_
 #define _CORNER_TRANSFER_MAT_H_
 
-#include ""
+#include "utilities.h"
 
 //
 //class to obtain and store effective environment for iPEPS using CTM
@@ -26,7 +26,7 @@ class Corner_Transfer_Matrix
         //
         Corner_Transfer_Matrix() {}
         //construct class using building blocks of ipeps
-        //ordered_virt_indices is virtual indices for each tensors, in lurd order
+        //ordered_virt_indices is virtual indices for each tensors, in Left/Up/Right/Down order
         Corner_Transfer_Matrix(const std::vector<TensorT> &single_layer_tensors, const std::vector<std::array<IndexT,4>> &ordered_virt_indices, int Lx=1, int Ly=1);
 
         //
@@ -98,8 +98,21 @@ class Corner_Transfer_Matrix
             return proj_tensors(coord[0],coord[1],coord[2],coord[3]);
         }
 
+        std::vector<double> &singular_vals(int x, int y, int spec_dir)
+        {
+            x=(x%Lx_+Lx_)%Lx_;
+            y=(y%Ly_+Ly_)%Ly_;
+            return singular_vals_[x+y*Lx_][spec_dir];
+        }
+        std::vector<double> &singular_vals(const std::array<int,3> &coord)
+        {
+            return singular_vals(coord[0],coord[1],coord[2]);
+        }
+
         TensorT &networks_tensors(int network_no, const std::array<int,2> &coord)
         {
+            coord[0]=(coord[0]+4)%4;
+            coord[1]=(coord[1]+4)%4;
             return networks_tensors_[network_no][coord[0]+coord[1]*4];
         }
 
@@ -110,15 +123,9 @@ class Corner_Transfer_Matrix
             y=(y%Ly_+Ly_)%Ly_;
             return bulk_tensors_indices_[x+y*Lx_];
         }
-        IndexT &bulk_tensors_indices(int x, int y, int bondi) 
-        { 
-            x=(x%Lx_+Lx_)%Lx_;
-            y=(y%Ly_+Ly_)%Ly_;
-            return bulk_tensors_indices_[x+y*Lx_][bondi]; 
-        }
-        IndexT &bulk_tensors_indices(const std::array<int,2> &coord, int bondi)
+        std::array<IndexT,4> &bulk_tensors_indices(const std::array<int,2> &coord)
         {
-            return bulk_tensors_indices(coord[0],coord[1],bondi);
+            return bulk_tensors_indices(coord[0],coord[1]);
         }
 
         std::array<IndexT,4> &edge_tensors_indices(int x, int y, int edgei)
@@ -127,15 +134,9 @@ class Corner_Transfer_Matrix
             y=(y%Ly_+Ly_)%Ly_;
             return edge_tensors_indices_[x+y*Lx_][edgei];
         }
-        IndexT &edge_tensors_indices(int x, int y, int edgei, int bondi)
+        std::array<IndexT,4> &edge_tensors_indices(const std::array<int,3> &coord)
         {
-            x=(x%Lx_+Lx_)%Lx_;
-            y=(y%Ly_+Ly_)%Ly_;
-            return edge_tensors_indices_[x+y*Lx_][edgei][bondi];
-        }
-        IndexT &edge_tensors_indices(const std::array<int,3> &coord, int bondi)
-        {
-            return edge_tensors_indices(coord[0],coord[1],coord[2],bondi);
+            return edge_tensors_indices(coord[0],coord[1],coord[2]);
         }
 
         std::array<IndexT,4> &corner_tensors_indices(int x, int y, int corneri)
@@ -144,15 +145,9 @@ class Corner_Transfer_Matrix
             y=(y%Ly_+Ly_)%Ly_;
             return corner_tensors_indices_[x+y*Lx_][corneri];
         }
-        IndexT &corner_tensors_indices(int x, int y, int corneri, int bondi)
+        std::array<IndexT> &corner_tensors_indices(const std::array<int,3> &coord)
         {
-            x=(x%Lx_+Lx_)%Lx_;
-            y=(y%Ly_+Ly_)%Ly_;
-            return corner_tensors_indices_[x+y*Lx_][corneri][bondi];
-        }
-        IndexT &corner_tensors_indices(const std::array<int,3> &coord, int bondi)
-        {
-            return corner_tensors_indices(coord[0],coord[1],coord[2],bondi);
+            return corner_tensors_indices(coord[0],coord[1],coord[2]);
         }
 
         std::array<std::array<IndexT,3>,2> &proj_tensors_indices(int x, int y, int proj_dir)
@@ -167,36 +162,37 @@ class Corner_Transfer_Matrix
             y=(y%Ly_+Ly_)%Ly_;
             return proj_tensors_indices_[x+y*Lx_][proj_dir][j];
         }
-        IndexT &proj_tensors_indices(int x, int y, int proj_dir, int j int bondi)
+        std::array<IndexT,3> &proj_tensors_indices(const std::array<int,4> &coord)
         {
-            x=(x%Lx_+Lx_)%Lx_;
-            y=(y%Ly_+Ly_)%Ly_;
-            return proj_tensors_indices_[x+y*Lx_][proj_dir][j][bondi];
-        }
-        IndexT &proj_tensors_indices(const std::array<int,4> &coord, int bondi)
-        {
-            return proj_tensors_indices(coord[0],coord[1],coord[2],coord[3],bondi);
+            return proj_tensors_indices(coord[0],coord[1],coord[2],coord[3]);
         }
 
         IndexT &networks_indices(int network_no, int linki) 
         {
             return networks_indices_[network_no][linki]; 
         }
-        IndexT networks_indices(int network_no, const std::array<int,2> &coord0, const std::array<int,2> &coord1)
+        //return indice connect network site coord_a and coord_b
+        IndexT networks_indices(int network_no, const std::array<int,2> &coord_a, const std::array<int,2> &coord_b)
         {
-            int site0=coord0[0]+coord0[1]*4,
-                site1=coord1[0]+coord1[1]*4;
+            for (int i=0; i<2; i++)
+            {
+                coord_a[i]=(coord_a[i]+4)%4;
+                coord_b[i]=(coord_b[i]+4)%4;
+            }
+
+            int site0=coord_a[0]+coord_a[1]*4,
+                site1=coord_b[0]+coord_b[1]*4;
 
             if (site1<site0) 
-                return dag(networks_indices(network_no,coord1,coord0));
+                return dag(networks_indices(network_no,coord_b,coord_a));
 
-            if (coord0[0]==(coord1[0]-1) && coord0[1]==coord1[1])
+            if (coord_a[0]==(coord_b[0]-1) && coord_a[1]==coord_b[1])
             {
-                return networks_indices_[network_no][coord0[0]+coord0[1]*4];
+                return networks_indices_[network_no][coord_a[0]+coord_a[1]*3];
             }
-            if (coord0[0]==coord1[0] && coord0[1]==(coord1[1]-1))
+            if (coord_a[0]==coord_b[0] && coord_a[1]==(coord_b[1]-1))
             {
-                return networks_indices_[network_no][12+coord0[0]+coord0[1]*3];
+                return networks_indices_[network_no][12+coord_a[0]+coord_a[1]*4];
             }
 
             return IndexT::Null();
@@ -244,15 +240,21 @@ class Corner_Transfer_Matrix
         }
 
         //obtain proj_tensor P and their indices for partiuclar network and particular move direction
-        void obtain_proj_tensor(int network_no, Direction dir, std::array<TensorT,2> &P, std::array<std::array<IndexT,3>,2> &P_indices, double cut_off=1E-4);
-        void obtain_proj_tensor(const std::array<int,2> &network_coord , Direction dir, std::array<TensorT,2> &P, std::array<std::array<IndexT,3>,2> &P_indices, double cut_off=1E-4)
+        void obtain_proj_tensor(int network_no, const std::array<int,3> &proj_coord, double cut_off=1E-4);
+        void obtain_proj_tensor(const std::array<int,2> &network_coord , const std::array<int,3> &proj_coord, double cut_off=1E-4)
         {
             int x=(network_coord[0]%Lx_+Lx_)%Lx_,
                 y=(network_coord[1]%Ly_+Ly_)%Ly_;
             network_no=x+y*Lx_;
-            return obtain_proj_tensor(network_no,dir,P,P_indices,cut_off);
+            return obtain_proj_tensor(network_no,proj_coord,cut_off);
         }
+
         void obtain_R_from_network(int network_no, Direction dir, std::array<TensorT,2> &R, std::array<IndexT,2> &outside_indices, std::array<IndexT,2> &inside_indices);
+
+
+        //
+        //Methods for measurement
+        //
 
 
         //
@@ -298,7 +300,10 @@ class Corner_Transfer_Matrix
         //the proj_tensors_indices_ is ordered as outside_ind, inside_ind and indice after projection
         std::vector<std::array<std::array<TensorT,2>,4>> proj_tensors_;
         std::vector<std::array<std::array<std::array<IndexT,3>,2>4>> proj_tensors_indices_;
-        //
+        //we store svd eigenvalues to check the convergence 
+        std::vector<std::array<std::vector<double>,4>> singular_vals_;
+        double spec_diff_;
+
         //we store tensors in a 4 by 4 network, which is used to update single step CTM of particular site (x,y)
         //
         // C1---T1---T1---C2
@@ -315,7 +320,7 @@ class Corner_Transfer_Matrix
         //where coordinate of C0 is [x,y]
         //
         //networks_indices are ordered as horizontal and vertical
-        //we always choose indices from smaller site to larger site
+        //we always choose indices from smaller site to larger site (left to right and down to up)
         std::vector<std::array<Tensor,16>> networks_tensors_;
         std::vector<std::array<IndexT,24>> networks_indices_;
 };

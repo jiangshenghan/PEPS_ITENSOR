@@ -112,7 +112,7 @@ inline void index_assignment(Index &IA, const Index &IB, const std::string &IA_n
 inline void index_assignment(IQIndex &IA, const IQIndex &IB, const std::string &IA_name="IndexA")
 {
     std::vector<IndexQN> ind_qn(IB.indices());
-    IA=IQIndex(IA_name,IB.dir(),IB.primeLevel());
+    IA=IQIndex(IA_name,ind_qn,IB.dir(),IB.primeLevel());
 }
 
 
