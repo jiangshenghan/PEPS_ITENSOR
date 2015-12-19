@@ -1,10 +1,14 @@
 
-#include "corner_transfer_mat.h"
+#include "corner_transfer_matrix.h"
 
 //Class Corner_Transfer_Matrix
 template <class TensorT>
 Corner_Transfer_Matrix<TensorT>::Corner_Transfer_Matrix(const std::vector<TensorT> &single_layer_tensors, const std::vector<std::array<IndexT,4>> &ordered_virt_indices, int Lx, int Ly): 
     Lx_(Lx), Ly_(Ly), N_(Lx*Ly),
+    single_layer_tensors_(single_layer_tensors),
+    ordered_virt_indices_(ordered_virt_indices),
+    double_layer_uncontracted_tensors_(N_),
+    ordered_combined_virt_indices_(N_),
     bulk_tensors_(N_),
     bulk_tensors_indices_(N_),
     edge_tensors_(N_),
@@ -17,15 +21,20 @@ Corner_Transfer_Matrix<TensorT>::Corner_Transfer_Matrix(const std::vector<Tensor
     networks_tensors_(N_),
     networks_indices_(N_)
 {
-    init_bulk(single_layer_tensors,ordered_virt_indices);
-    init_edge(single_layer_tensors,ordered_virt_indices);
-    init_corner(single_layer_tensors,ordered_virt_indices);
+    //init cutoff_ and converge_diff_
+    cutoff_=1E-4;
+    converge_diff_=1E-4;
+
+    init_double_layer_uncontracted_tensors();
+    init_bulk();
+    init_edge();
+    init_corner();
 
     for (int sitei=0; sitei<N_; sitei++) init_network(sitei);
 
     for (int sitei=0; sitei<N_; sitei++)
     {
-        for (int diri=0; diri<4; dir++)
+        for (int diri=0; diri<4; diri++)
         {
             singular_vals_[sitei][diri]=std::vector<double>(200,0);
         }
@@ -65,7 +74,7 @@ void Corner_Transfer_Matrix<TensorT>::left_move(int left_x0)
     //obtain proj_tensors at (left_x0,y)
     for (int y=0; y<Ly_; y++)
     {
-        obtain_proj_tensor({left_x0,y-1},{Left_x0,y,Left});
+        obtain_proj_tensor({left_x0,y-1},{left_x0,y,0});
     }
 
     //update env_tensors using proj_tensors obtained above
@@ -175,26 +184,26 @@ void Corner_Transfer_Matrix<TensorT>::down_move(int down_y0)
 
 }
 template
-void Corner_Transfer_Matrix<ITensor>::down_move(down_y0);
+void Corner_Transfer_Matrix<ITensor>::down_move(int down_y0);
 template
-void Corner_Transfer_Matrix<IQTensor>::down_move(down_y0);
+void Corner_Transfer_Matrix<IQTensor>::down_move(int down_y0);
 
 
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT>::update_corner_tensor(const std:array<int,3> &corner_coord, const std:array<int,3> &edge_coord, const std::array<int,4> &proj_coord)
+void Corner_Transfer_Matrix<TensorT>::update_corner_tensor(const std::array<int,3> &corner_coord, const std::array<int,3> &edge_coord, const std::array<int,4> &proj_coord)
 {
     //dir denotes the moving direction, proj_dir denotes the relative position of proj_tensor
     int dir=proj_coord[2], 
         inv_dir=(dir+2)%4, 
         proj_dir=(edge_coord[2]+2)%4;
 
-    const IndexT &corner_contract_ind=corner_tensors_indices(corner_coord,inv_dir),
-                 &edge_contract_ind=edge_tensors_indices(edge_coord,dir),
-                 &edge_untouched_ind=edge_tensors_indices(edge_coord,inv_dir);
+    const IndexT &corner_contract_ind=corner_tensors_indices(corner_coord)[inv_dir],
+                 &edge_contract_ind=edge_tensors_indices(edge_coord)[dir],
+                 &edge_untouched_ind=edge_tensors_indices(edge_coord)[inv_dir];
     //contract original corner tensor and edge tensor, get corner_edge_tensor
     //C---T--
     //|   |
-    TensorT corner_edge_tensor=tensor_contraction(corner_tensors(corner_coord),edge_tensors(edge_coord),{corner_contract_ind},{edge_contract_ind});
+    TensorT corner_edge_tensor=tensor_contraction<TensorT,IndexT>(corner_tensors(corner_coord),edge_tensors(edge_coord),{corner_contract_ind},{edge_contract_ind});
 
     //act projector on corner_edge_tensor, get the corner_tensor_prime
     //C---T--
@@ -203,9 +212,9 @@ void Corner_Transfer_Matrix<TensorT>::update_corner_tensor(const std:array<int,3
     //  P
     //  |
     //we get corner_tensor_prime with edge_untouched_ind and proj_tensors_indice(2)
-    IndexT outside_ind=corner_tensors_indices(corner_coord,proj_dir),
-           inside_ind=edge_tensors_indices(edge_coord,proj_dir);
-    TensorT corner_tensor_prime=tensor_contraction(corner_edge_tensor,proj_tensors(proj_coord),{outside_ind,inside_ind},{proj_tensors_indices(proj_coord)[0],proj_tensors_indices(proj_coord)[1]});
+    IndexT outside_ind=corner_tensors_indices(corner_coord)[proj_dir],
+           inside_ind=edge_tensors_indices(edge_coord)[proj_dir];
+    TensorT corner_tensor_prime=tensor_contraction<TensorT,IndexT>(corner_edge_tensor,proj_tensors(proj_coord),{outside_ind,inside_ind},{proj_tensors_indices(proj_coord)[0],proj_tensors_indices(proj_coord)[1]});
     
     //update the corner_tensor as well as its indices
     auto updated_corner_coord=edge_coord;
@@ -219,12 +228,12 @@ void Corner_Transfer_Matrix<TensorT>::update_corner_tensor(const std:array<int,3
     corner_tensors(updated_corner_coord).replaceIndex(proj_tensors_indices(proj_coord)[2],updated_indices[proj_dir]);
 }
 template
-void Corner_Transfer_Matrix<ITensor>::update_corner_tensor(const std:array<int,3> &corner_coord, const std:array<int,3> &edge_coord, const std::array<int,3> &proj_coord);
+void Corner_Transfer_Matrix<ITensor>::update_corner_tensor(const std::array<int,3> &corner_coord, const std::array<int,3> &edge_coord, const std::array<int,4> &proj_coord);
 template
-void Corner_Transfer_Matrix<IQTensor>::update_corner_tensor(const std:array<int,3> &corner_coord, const std:array<int,3> &edge_coord, const std::array<int,3> &proj_coord);
+void Corner_Transfer_Matrix<IQTensor>::update_corner_tensor(const std::array<int,3> &corner_coord, const std::array<int,3> &edge_coord, const std::array<int,4> &proj_coord);
 
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT>::update_edge_tensor(const std::array<int,3> &edge_coord, const std::array<int,3> &bulk_coord, const std::array<int,4> &proj_coord_a, const std::array<int,4> &proj_coord_b)
+void Corner_Transfer_Matrix<TensorT>::update_edge_tensor(const std::array<int,3> &edge_coord, const std::array<int,2> &bulk_coord, const std::array<int,4> &proj_coord_a, const std::array<int,4> &proj_coord_b)
 {
     //dir denotes the moving direction, proj_diri denotes the relateve
     //position of proj_tensori
@@ -254,7 +263,9 @@ void Corner_Transfer_Matrix<TensorT>::update_edge_tensor(const std::array<int,3>
                   &proj_tens_b=proj_tensors(proj_coord_b),
                   &curr_edge_tens=edge_tensors(edge_coord),
                   &bulk_tens=bulk_tensors(bulk_coord);
-    TensorT edge_tensor_prime=tensor_contraction({curr_edge_tens,proj_tens_a,bulk_tens,proj_tens_b},{{outside_ind_a},{proj_tensors_indices(proj_coord_a)[0]},{edge_contract_ind,proj_tensors_indices(proj_coord_a)[1]},{bulk_contract_ind,inside_ind_a},{outside_ind_b,inside_ind_b},{proj_tensors_indices(proj_coord_b)[0],proj_tensors_indices(proj_coord_b)[1]}});
+    TensorT edge_proj_a=tensor_contraction<TensorT,IndexT>(curr_edge_tens,proj_tens_a,{outside_ind_a},{proj_tensors_indices(proj_coord_a)[0]}),
+            edge_bulk_proj_a=tensor_contraction<TensorT,IndexT>(edge_proj_a,bulk_tens,{edge_contract_ind,proj_tensors_indices(proj_coord_a)[1]},{bulk_contract_ind,inside_ind_a}),
+            edge_tensor_prime=tensor_contraction<TensorT,IndexT>(edge_bulk_proj_a,proj_tens_b,{outside_ind_b,inside_ind_b},{proj_tensors_indices(proj_coord_b)[0],proj_tensors_indices(proj_coord_b)[1]});
 
     //update edge tensors as well as its indices
     auto updated_edge_coord=edge_coord;
@@ -263,8 +274,8 @@ void Corner_Transfer_Matrix<TensorT>::update_edge_tensor(const std::array<int,3>
 
     auto &updated_indices=edge_tensors_indices(updated_edge_coord);
     //index_assignment(updated_indices(inv_dir),bulk_untouched_ind);
-    index_assignment(updated_indices(proj_dir_a),proj_tensors_indices(proj_coord_a)[2]);
-    index_assignment(updated_indices(proj_dir_b),proj_tensors_indices(proj_coord_b)[2]);
+    index_assignment(updated_indices[proj_dir_a],proj_tensors_indices(proj_coord_a)[2]);
+    index_assignment(updated_indices[proj_dir_b],proj_tensors_indices(proj_coord_b)[2]);
 
     TensorT &updated_edge_tensor=edge_tensors(updated_edge_coord);
     updated_edge_tensor=edge_tensor_prime;
@@ -273,13 +284,13 @@ void Corner_Transfer_Matrix<TensorT>::update_edge_tensor(const std::array<int,3>
     updated_edge_tensor.replaceIndex(proj_tensors_indices(proj_coord_b)[2],updated_indices[proj_dir_b]);
 }
 template
-void Corner_Transfer_Matrix<ITensor>::update_edge_tensor(const std::array<int,3> &edge_coord, const std::array<int,3> &bulk_coord, const std::array<int,4> &proj_coord_a, const std::array<int,4> &proj_coord_b);
+void Corner_Transfer_Matrix<ITensor>::update_edge_tensor(const std::array<int,3> &edge_coord, const std::array<int,2> &bulk_coord, const std::array<int,4> &proj_coord_a, const std::array<int,4> &proj_coord_b);
 template
-void Corner_Transfer_Matrix<IQTensor>::update_edge_tensor(const std::array<int,3> &edge_coord, const std::array<int,3> &bulk_coord, const std::array<int,4> &proj_coord_a, const std::array<int,4> &proj_coord_b);
+void Corner_Transfer_Matrix<IQTensor>::update_edge_tensor(const std::array<int,3> &edge_coord, const std::array<int,2> &bulk_coord, const std::array<int,4> &proj_coord_a, const std::array<int,4> &proj_coord_b);
 
 
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT>::update_network_boundary(int network_net, Direction boundary_dir)
+void Corner_Transfer_Matrix<TensorT>::update_network_boundary(int network_no, int boundary_dir)
 {
     int x=network_no%Lx_,
         y=network_no/Lx_;
@@ -343,13 +354,13 @@ void Corner_Transfer_Matrix<TensorT>::update_network_boundary(int network_net, D
 
 }
 template
-void Corner_Transfer_Matrix<ITensor>::update_network_boundary(int network_net, Direction boundary_dir);
+void Corner_Transfer_Matrix<ITensor>::update_network_boundary(int network_no, int boundary_dir);
 template
-void Corner_Transfer_Matrix<IQTensor>::update_network_boundary(int network_net, Direction boundary_dir);
+void Corner_Transfer_Matrix<IQTensor>::update_network_boundary(int network_no, int boundary_dir);
 
 
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT>::obtain_proj_tensor(int network_no, const std::array<int,3> &proj_coord, double cut_off)
+void Corner_Transfer_Matrix<TensorT>::obtain_proj_tensor(int network_no, const std::array<int,3> &proj_coord)
 {
     //obtain R by contracting network and QR decomp
     std::array<TensorT,2> R;
@@ -365,22 +376,22 @@ void Corner_Transfer_Matrix<TensorT>::obtain_proj_tensor(int network_no, const s
     //--P[0]=== = --s^{-1/2}--U^{\dagger}---R[0]===
     //===P[1]-- = ===R[1]---V^{\dagger}--s^{-1/2}--
     //We always make s normalized in order to check convergence
-    IndexT U_ind=uniqueIndex(R[0],R[1]);
+    IndexT U_ind=uniqueIndex(R[0],R[1],All);
     TensorT U(U_ind),s,V,s_inv_sqrt;
     //TODO: be careful about small singular value, use SVDThreshold in opts?
     OptSet opts;
-    opts.add("Cutoff",cutoff);
+    opts.add("Cutoff",cutoff_);
     svd(R[0]*R[1],U,s,V,opts);
     
     //obtain the distance between (normalized) singular value of current step with that of the last step. Then, add the distance to spec_diff_ to test convergence
     auto temp_singular_val=std::vector<double>(singular_vals(proj_coord).size(),0);
     auto s_diag=s.diag();
-    int length=std::min(temp_singular_val.size(),s_diag.Length());
+    int length=std::min((int)temp_singular_val.size(),s_diag.Length());
     double temp_singular_val_norm=0;
     for (int diagi=0; diagi<length; diagi++)
     {
         auto diag_elem=s_diag(diagi+1);
-        temp_sigular_val[diagi]=diag_elem;
+        temp_singular_val[diagi]=diag_elem;
         temp_singular_val_norm+=diag_elem*diag_elem;
     }
     temp_singular_val_norm=sqrt(temp_singular_val_norm);
@@ -389,15 +400,15 @@ void Corner_Transfer_Matrix<TensorT>::obtain_proj_tensor(int network_no, const s
     for (int diagi=0; diagi<temp_singular_val.size(); diagi++)
     {
         temp_singular_val[diagi]/=temp_singular_val_norm;
-        update_val_distance_sq+=pow(singular_vals(proj_coord)[diagi]-temp_singular_val[diagi],2)
+        update_val_distance_sq+=pow(singular_vals(proj_coord)[diagi]-temp_singular_val[diagi],2);
     }
     spec_diff_+=sqrt(update_val_distance_sq);
     singular_vals(proj_coord)=temp_singular_val;
 
     //get s^{-1/2}
-    auto s_inv_sqrt=dag(s);
+    s_inv_sqrt=dag(s);
     s_inv_sqrt.pseudoInvert();
-    std::function<double(double)> Sqrt=sqrt;
+    std::function<double(double)> Sqrt=[](double x){return sqrt(x);};
     s_inv_sqrt.mapElems(Sqrt);
 
     auto &P=proj_tensors(proj_coord);
@@ -409,7 +420,7 @@ void Corner_Transfer_Matrix<TensorT>::obtain_proj_tensor(int network_no, const s
     std::array<IndexT,2> forward_indices;
     for (int i=0; i<2; i++)
     {
-        forward_indices[i]=uniqueIndex(P[i],TensorT(outside_indices[i][0],inside_indices[i][0]));
+        forward_indices[i]=uniqueIndex(P[i],TensorT(outside_indices[i],inside_indices[i]),All);
 
         index_assignment(P_indices[i][0],outside_indices[i]);
         index_assignment(P_indices[i][1],inside_indices[i]);
@@ -422,14 +433,14 @@ void Corner_Transfer_Matrix<TensorT>::obtain_proj_tensor(int network_no, const s
 
 }
 template
-void Corner_Transfer_Matrix<ITensor>::obtain_proj_tensor(int network_no, const std::array<int,3> &proj_coord, double cut_off);
+void Corner_Transfer_Matrix<ITensor>::obtain_proj_tensor(int network_no, const std::array<int,3> &proj_coord);
 template
-void Corner_Transfer_Matrix<IQTensor>::obtain_proj_tensor(int network_no, const std::array<int,3> &proj_coord, double cut_off);
+void Corner_Transfer_Matrix<IQTensor>::obtain_proj_tensor(int network_no, const std::array<int,3> &proj_coord);
 
 
 //TODO: we should write QR decomposition rather than use denmatDecomp
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT>::obtain_R_from_network(int network_no, Direction dir, std::array<TensorT,2> &R, std::array<IndexT,2> &outside_indices, std::array<IndexT,2> &inside_indices)
+void Corner_Transfer_Matrix<TensorT>::obtain_R_from_network(int network_no, int dir, std::array<TensorT,2> &R, std::array<IndexT,2> &outside_indices, std::array<IndexT,2> &inside_indices)
 {
     std::array<TensorT,2> Q;
 
@@ -452,8 +463,8 @@ void Corner_Transfer_Matrix<TensorT>::obtain_R_from_network(int network_no, Dire
         inside_indices[1]=dag(inside_indices[0]);
         R[1]=dag(R[0]);
 
-        denmatDecomp(upper_half_tensor,R[0],Q[0],FromRight);
-        denmatDecomp(lower_half_tensor,R[1],Q[1],FromRight);
+        denmatDecomp(upper_half_tensor,R[0],Q[0],Fromright);
+        denmatDecomp(lower_half_tensor,R[1],Q[1],Fromright);
     }
     if (dir==Right)
     {
@@ -468,8 +479,8 @@ void Corner_Transfer_Matrix<TensorT>::obtain_R_from_network(int network_no, Dire
         inside_indices[1]=dag(inside_indices[0]);
         R[1]=dag(R[0]);
 
-        denmatDecomp(lower_half_tensor,R[0],Q[0],FromRight);
-        denmatDecomp(upper_half_tensor,R[1],Q[1],FromRight);
+        denmatDecomp(lower_half_tensor,R[0],Q[0],Fromright);
+        denmatDecomp(upper_half_tensor,R[1],Q[1],Fromright);
     }
 
     if (dir==Up)
@@ -485,8 +496,8 @@ void Corner_Transfer_Matrix<TensorT>::obtain_R_from_network(int network_no, Dire
         inside_indices[1]=dag(inside_indices[0]);
         R[1]=dag(R[0]);
 
-        denmatDecomp(right_half_tensor,R[0],Q[0],FromRight);
-        denmatDecomp(left_half_tensor,R[1],Q[1],FromRight);
+        denmatDecomp(right_half_tensor,R[0],Q[0],Fromright);
+        denmatDecomp(left_half_tensor,R[1],Q[1],Fromright);
     }
     if (dir==Down)
     {
@@ -501,27 +512,130 @@ void Corner_Transfer_Matrix<TensorT>::obtain_R_from_network(int network_no, Dire
         inside_indices[1]=dag(inside_indices[0]);
         R[1]=dag(R[0]);
 
-        denmatDecomp(left_half_tensor,R[0],Q[0],FromRight);
-        denmatDecomp(right_half_tensor,R[1],Q[1],FromRight);
+        denmatDecomp(left_half_tensor,R[0],Q[0],Fromright);
+        denmatDecomp(right_half_tensor,R[1],Q[1],Fromright);
     }
 
 }
 template
-void Corner_Transfer_Matrix<ITensor>::obtain_R_from_network(int network_no, Direction dir, std::array<ITensor,2> &R, std::array<Index,2> &outside_indices, std::array<Index,2> &inside_indices);
+void Corner_Transfer_Matrix<ITensor>::obtain_R_from_network(int network_no, int dir, std::array<ITensor,2> &R, std::array<Index,2> &outside_indices, std::array<Index,2> &inside_indices);
 template
-void Corner_Transfer_Matrix<IQTensor>::obtain_R_from_network(int network_no, Direction dir, std::array<IQTensor,2> &R, std::array<IQIndex,2> &outside_indices, std::array<IQIndex,2> &inside_indices);
+void Corner_Transfer_Matrix<IQTensor>::obtain_R_from_network(int network_no, int dir, std::array<IQTensor,2> &R, std::array<IQIndex,2> &outside_indices, std::array<IQIndex,2> &inside_indices);
 
 
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT>::init_bulk(const std::vector<TensorT> &single_layer_tensors, const std::vector<std::array<IndexT,4>> &ordered_virt_indices)
+Complex Corner_Transfer_Matrix<TensorT>::network_norm(int network_no)
+{
+    TensorT upper_left_tensor=networks_tensors(network_no,{0,2})*networks_tensors(network_no,{0,3})*networks_tensors(network_no,{1,3})*networks_tensors(network_no,{1,2}),
+            upper_right_tensor=networks_tensors(network_no,{3,2})*networks_tensors(network_no,{3,3})*networks_tensors(network_no,{2,3})*networks_tensors(network_no,{2,2}),
+            lower_left_tensor=networks_tensors(network_no,{0,1})*networks_tensors(network_no,{0,0})*networks_tensors(network_no,{1,0})*networks_tensors(network_no,{1,1}),
+            lower_right_tensor=networks_tensors(network_no,{3,1})*networks_tensors(network_no,{3,0})*networks_tensors(network_no,{2,0})*networks_tensors(network_no,{2,1});
+
+    auto norm=(upper_left_tensor*upper_right_tensor*lower_left_tensor*lower_right_tensor).toComplex();
+
+    return norm;
+}
+template
+Complex Corner_Transfer_Matrix<ITensor>::network_norm(int network_no);
+template
+Complex Corner_Transfer_Matrix<IQTensor>::network_norm(int network_no);
+
+
+template <class TensorT>
+void Corner_Transfer_Matrix<TensorT>::obtain_ctm_sandwich_operator(int network_no, const std::vector<int> &bulk_position, TPOt<TensorT> tensor_operator)
+{
+    int x=network_no%Lx_,
+        y=network_no%Ly_;
+    std::array<TensorT,4> updated_bulk_tensors;
+    for (int bulki=0; bulki<4; bulki++)
+    {
+        std::array<int,2> bulk_coord={1+bulki%2,1+bulki/2};
+        updated_bulk_tensors[bulki]=networks_tensors(network_no,bulk_coord);
+    }
+    for (int i=0; i<bulk_position.size(); i++)
+    {
+        //replace phys leg of tensor operator
+        std::array<int,2> coord={x+1+bulk_position[i]%2,y+1+bulk_position[i]/2};
+        auto &curr_site_tensor=single_layer_tensors(coord);
+        auto &curr_site_tensor_indices=ordered_virt_indices(coord);
+
+        IndexT phys_leg=findtype(curr_site_tensor,Site),
+               old_leg=tensor_operator.phys_legs(i);
+        tensor_operator.site_tensors(i).replaceIndex(old_leg,dag(phys_leg));
+        tensor_operator.site_tensors(i).replaceIndex(dag(prime(old_leg)),prime(phys_leg));
+
+        //sandwich tensor_operator, replace indices of the result tensor with network indices
+        updated_bulk_tensors[bulk_position[i]]=tensor_operator.site_tensors(i)*double_layer_uncontracted_tensors(coord);
+        for (int diri=0; diri<4; diri++)
+        {
+            auto neigh_coord=coord;
+            if (diri==0) neigh_coord[0]-=1;
+            if (diri==1) neigh_coord[1]+=1;
+            if (diri==2) neigh_coord[0]+=1;
+            if (diri==3) neigh_coord[1]-=1;
+            updated_bulk_tensors[bulk_position[i]].replaceIndex(ordered_combined_virt_indices(coord)[diri],networks_indices(network_no,{coord},{neigh_coord}));
+        }
+    }
+
+    //obtain the sandwiched value
+    TensorT upper_left_tensor=networks_tensors(network_no,{0,2})*networks_tensors(network_no,{0,3})*networks_tensors(network_no,{1,3})*updated_bulk_tensors[2],
+            upper_right_tensor=networks_tensors(network_no,{3,2})*networks_tensors(network_no,{3,3})*networks_tensors(network_no,{2,3})*updated_bulk_tensors[3],
+            lower_left_tensor=networks_tensors(network_no,{0,1})*networks_tensors(network_no,{0,0})*networks_tensors(network_no,{1,0})*updated_bulk_tensors[0],
+            lower_right_tensor=networks_tensors(network_no,{3,1})*networks_tensors(network_no,{3,0})*networks_tensors(network_no,{2,0})*updated_bulk_tensors[1];
+    TensorT result_tensor=upper_left_tensor*upper_right_tensor*lower_left_tensor*lower_right_tensor;
+    for (const auto &bond_tensor : tensor_operator.bond_tensors())
+    {
+        result_tensor*=bond_tensor;
+    }
+
+    Complex norm=network_norm(network_no),
+            sandwich_val=result_tensor.toComplex()/norm;
+    
+}
+template
+void Corner_Transfer_Matrix<ITensor>::obtain_ctm_sandwich_operator(int network_no, const std::vector<int> &bulk_position, TPOt<ITensor> tensor_operator);
+template
+void Corner_Transfer_Matrix<IQTensor>::obtain_ctm_sandwich_operator(int network_no, const std::vector<int> &bulk_position, TPOt<IQTensor> tensor_operator);
+
+
+template <class TensorT>
+void Corner_Transfer_Matrix<TensorT>::init_double_layer_uncontracted_tensors()
 {
     for (int sitei=0; sitei<N_; sitei++)
     {
-        auto temp_bulk_tensor=single_layer_tensors[sitei]*(dag(single_layer_tensors[sitei]).prime(Link));
+        double_layer_uncontracted_tensors_[sitei]=single_layer_tensors_[sitei];
+        int total_leg_no=single_layer_tensors_[sitei].r();
+        for (int legi=0; legi<ordered_virt_indices_[sitei].size(); legi++)
+        {
+            CombinerT leg_combiner(ordered_virt_indices_[sitei][legi],dag(prime(ordered_virt_indices_[sitei][legi])));
+            ordered_combined_virt_indices_[sitei][legi]=leg_combiner.right();
+            TensorT leg_combiner_tensor;
+            combiner_to_tensor(leg_combiner,leg_combiner_tensor);
+            double_layer_uncontracted_tensors_[sitei]*=leg_combiner_tensor;
+            //keep track of # of indices
+            if (double_layer_uncontracted_tensors_[sitei].r()==NMAX)
+            {
+                double_layer_uncontracted_tensors_[sitei]*=dag(prime(single_layer_tensors_[sitei]));
+            }
+        }
+    }
+}
+template
+void Corner_Transfer_Matrix<ITensor>::init_double_layer_uncontracted_tensors();
+template
+void Corner_Transfer_Matrix<IQTensor>::init_double_layer_uncontracted_tensors();
+
+
+template <class TensorT>
+void Corner_Transfer_Matrix<TensorT>::init_bulk()
+{
+    for (int sitei=0; sitei<N_; sitei++)
+    {
+        auto temp_bulk_tensor=single_layer_tensors_[sitei]*(dag(single_layer_tensors_[sitei]).prime(Link));
         std::array<IndexT,4> temp_bulk_tensor_indices;
         for (int bondi=0; bondi<4; bondi++)
         {
-            CombinerT temp_combiner(ordered_virt_indices[sitei][bondi],dag(ordered_virt_indices[sitei][bondi]).prime());
+            CombinerT temp_combiner(ordered_virt_indices_[sitei][bondi],dag(ordered_virt_indices_[sitei][bondi]).prime());
             temp_bulk_tensor=temp_bulk_tensor*temp_combiner;
             temp_bulk_tensor_indices[bondi]=temp_combiner.right();
         }
@@ -531,26 +645,26 @@ void Corner_Transfer_Matrix<TensorT>::init_bulk(const std::vector<TensorT> &sing
     }
 }
 template
-void Corner_Transfer_Matrix<ITensor>::init_bulk(const std::vector<ITensor> &single_layer_tensors, const std::vector<std::array<Index,4>> &ordered_virt_indices);
+void Corner_Transfer_Matrix<ITensor>::init_bulk();
 template
-void Corner_Transfer_Matrix<IQTensor>::init_bulk(const std::vector<IQTensor> &single_layer_tensors, const std::vector<std::array<IQIndex,4>> &ordered_virt_indices);
+void Corner_Transfer_Matrix<IQTensor>::init_bulk();
 
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT> init_edge(const std::vector<TensorT> &single_layer_tensors, const std::vector<std::array<IndexT,4>> &ordered_virt_indices)
+void Corner_Transfer_Matrix<TensorT>::init_edge()
 {
     for (int sitei=0; sitei<N_; sitei++)
     {
         for (int edgei=0; edgei<4; edgei++)
         {
-            //contract ordered_virt_indices[sitei][edgei]
-            auto temp_edge_tensor=single_layer_tensors[sitei]*(dag(single_layer_tensors[sitei]).prime(Link).noprime(ordered_virt_indices[sitei][edgei]));
+            //contract ordered_virt_indices_[sitei][edgei]
+            auto temp_edge_tensor=single_layer_tensors_[sitei]*(dag(single_layer_tensors_[sitei]).prime(Link).noprime(ordered_virt_indices_[sitei][edgei]));
             std::array<IndexT,4> temp_edge_tensor_indices;
             for (int bondi=0; bondi<4; bondi++)
             {
                 if (bondi==edgei) 
                     temp_edge_tensor_indices[bondi]=IndexT::Null();
 
-                CombinerT temp_combiner(ordered_virt_indices[sitei][bondi],dag(ordered_virt_indices[sitei][bondi]).prime());
+                CombinerT temp_combiner(ordered_virt_indices_[sitei][bondi],dag(ordered_virt_indices_[sitei][bondi]).prime());
                 temp_edge_tensor=temp_edge_tensor*temp_combiner;
                 temp_edge_tensor_indices[bondi]=temp_combiner.right();
             }
@@ -561,50 +675,50 @@ void Corner_Transfer_Matrix<TensorT> init_edge(const std::vector<TensorT> &singl
     }
 }
 template
-void Corner_Transfer_Matrix<ITensor> init_edge(const std::vector<ITensor> &single_layer_tensors, const std::vector<std::array<Index,4>> &ordered_virt_indices);
+void Corner_Transfer_Matrix<ITensor>::init_edge();
 template
-void Corner_Transfer_Matrix<IQIndex> init_edge(const std::vector<IQIndex> &single_layer_tensors, const std::vector<std::array<IQIndex,4>> &ordered_virt_indices);
+void Corner_Transfer_Matrix<IQTensor>::init_edge();
 
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT>::init_corner(const std::vector<TensorT> &single_layer_tensors, const std::vector<std::array<IndexT,4>> &ordered_virt_indices)
+void Corner_Transfer_Matrix<TensorT>::init_corner()
 {
     for (int sitei=0; sitei<N_; sitei++)
     {
         std::array<CombinerT,2> temp_combiners;
 
         //init C0, leave up and right ind uncontracted
-        corner_tensors_[sitei][0]=single_layer_tensors[sitei]*(dag(single_layer_tensors[sitei]).prime(ordered_virt_indices[sitei][1]).prime(ordered_virt_indices[sitei][2]));
-        temp_combiners[0]=CombinerT(ordered_virt_indices[sitei][1],dag(ordered_virt_indices[sitei][1]).prime());
-        temp_combiners[1]=CombinerT(ordered_virt_indices[sitei][2],dag(ordered_virt_indices[sitei][2]).prime());
+        corner_tensors_[sitei][0]=single_layer_tensors_[sitei]*(dag(single_layer_tensors_[sitei]).prime(ordered_virt_indices_[sitei][1]).prime(ordered_virt_indices_[sitei][2]));
+        temp_combiners[0]=CombinerT(ordered_virt_indices_[sitei][1],dag(ordered_virt_indices_[sitei][1]).prime());
+        temp_combiners[1]=CombinerT(ordered_virt_indices_[sitei][2],dag(ordered_virt_indices_[sitei][2]).prime());
         corner_tensors_[sitei][0]=corner_tensors_[sitei][0]*temp_combiners[0]*temp_combiners[1];
         corner_tensors_indices_[sitei][0]=std::array<IndexT,4>{IndexT::Null(),temp_combiners[0].right(),temp_combiners[1].right(),IndexT::Null()};
 
         //init C1, leave right and down ind uncontracted
-        corner_tensors_[sitei][1]=single_layer_tensors[sitei]*(dag(single_layer_tensors).prime(ordered_virt_indices[sitei][2]).prime(ordered_virt_indices[sitei][3]));
-        temp_combiners[0]=CombinerT(ordered_virt_indices[sitei][2],dag(ordered_virt_indices[sitei][2]).prime());
-        temp_combiners[1]=CombinerT(ordered_virt_indices[sitei][3],dag(ordered_virt_indices[sitei][3]).prime());
+        corner_tensors_[sitei][1]=single_layer_tensors_[sitei]*(dag(single_layer_tensors_[sitei]).prime(ordered_virt_indices_[sitei][2]).prime(ordered_virt_indices_[sitei][3]));
+        temp_combiners[0]=CombinerT(ordered_virt_indices_[sitei][2],dag(ordered_virt_indices_[sitei][2]).prime());
+        temp_combiners[1]=CombinerT(ordered_virt_indices_[sitei][3],dag(ordered_virt_indices_[sitei][3]).prime());
         corner_tensors_[sitei][1]=corner_tensors_[sitei][1]*temp_combiners[0]*temp_combiners[1];
         corner_tensors_indices_[sitei][1]=std::array<IndexT,4>{IndexT::Null(),IndexT::Null(),temp_combiners[0].right(),temp_combiners[1].right()};
 
         //init C2, leave left and down ind uncontracted
-        corner_tensors_[sitei][2]=single_layer_tensors[sitei]*(dag(single_layer_tensors[sitei]).prime(ordered_virt_indices[sitei][0]).prime(ordered_virt_indices[sitei][3]));
-        temp_combiners[0]=CombinerT(ordered_virt_indices[sitei][0],dag(ordered_virt_indices[sitei][0]).prime());
-        temp_combiners[1]=CombinerT(ordered_virt_indices[sitei][3],dag(ordered_virt_indices[sitei][3]).prime());
+        corner_tensors_[sitei][2]=single_layer_tensors_[sitei]*(dag(single_layer_tensors_[sitei]).prime(ordered_virt_indices_[sitei][0]).prime(ordered_virt_indices_[sitei][3]));
+        temp_combiners[0]=CombinerT(ordered_virt_indices_[sitei][0],dag(ordered_virt_indices_[sitei][0]).prime());
+        temp_combiners[1]=CombinerT(ordered_virt_indices_[sitei][3],dag(ordered_virt_indices_[sitei][3]).prime());
         corner_tensors_[sitei][2]=corner_tensors_[sitei][2]*temp_combiners[0]*temp_combiners[1];
         corner_tensors_indices_[sitei][2]=std::array<IndexT,4>{temp_combiners[0].right(),IndexT::Null(),IndexT::Null(),temp_combiners[1].right()};
 
         //init C3, leave left and up ind uncontracted
-        corner_tensors_[sitei][3]=single_layer_tensors[sitei]*(dag(single_layer_tensors[sitei]).prime(ordered_virt_indices[sitei][0]).prime(ordered_virt_indices[sitei][1]));
-        temp_combiners[0]=CombinerT(ordered_virt_indices[sitei][0],dag(ordered_virt_indices[sitei][0]).prime());
-        temp_combiners[1]=CombinerT(ordered_virt_indices[sitei][1],dag(ordered_virt_indices[sitei][1]).prime());
+        corner_tensors_[sitei][3]=single_layer_tensors_[sitei]*(dag(single_layer_tensors_[sitei]).prime(ordered_virt_indices_[sitei][0]).prime(ordered_virt_indices_[sitei][1]));
+        temp_combiners[0]=CombinerT(ordered_virt_indices_[sitei][0],dag(ordered_virt_indices_[sitei][0]).prime());
+        temp_combiners[1]=CombinerT(ordered_virt_indices_[sitei][1],dag(ordered_virt_indices_[sitei][1]).prime());
         corner_tensors_[sitei][3]=corner_tensors_[sitei][3]*temp_combiners[0]*temp_combiners[1];
         corner_tensors_indices_[sitei][3]=std::array<IndexT,4>{temp_combiners[0].right(),temp_combiners[1].right(),IndexT::Null(),IndexT::Null()};
     }
 }
 template
-void Corner_Transfer_Matrix<ITensor>::init_corner(const std::vector<ITensor> &single_layer_tensors, const std::vector<std::array<Index,4>> &ordered_virt_indices);
+void Corner_Transfer_Matrix<ITensor>::init_corner();
 template
-void Corner_Transfer_Matrix<IQTensor>::init_corner(const std::vector<IQTensor> &single_layer_tensors, const std::vector<std::array<IQIndex,4>> &ordered_virt_indices);
+void Corner_Transfer_Matrix<IQTensor>::init_corner();
 
 
 template <class TensorT>
@@ -659,7 +773,7 @@ void Corner_Transfer_Matrix<TensorT>::init_network(int network_no)
 
 }
 template
-void Corner_Transfer_Matrix<ITensor>::init_network(int x, int y);
+void Corner_Transfer_Matrix<ITensor>::init_network(int network_no);
 template
-void Corner_Transfer_Matrix<IQTensor>::init_network(int x, int y);
+void Corner_Transfer_Matrix<IQTensor>::init_network(int network_no);
 

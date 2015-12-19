@@ -140,8 +140,8 @@ template <class TensorT>
 void tensor_assignment_diff_order(TensorT &TA, const TensorT &TB);
 
 //contract tensor by identifying given indices
-template <class TensorT>
-inline TensorT tensor_contraction(TensorT TA, TensorT TB, const std::vector<TensorT::IndexT> &TA_inds, const std::vector<TensorT::IndexT> &TB_inds)
+template <class TensorT, class IndexT>
+inline TensorT tensor_contraction(TensorT TA, TensorT TB, const std::vector<IndexT> &TA_inds, const std::vector<IndexT> &TB_inds)
 {
     for (int indi=0; indi<TA_inds.size(); indi++)
     {
@@ -151,27 +151,40 @@ inline TensorT tensor_contraction(TensorT TA, TensorT TB, const std::vector<Tens
 }
 
 //contract multiple tensors in order
-inline TensorT tensor_contracion(std::list<TensorT> Tens, std::list<std::vector<TensorT::IndexT>> Tens_inds)
+//template <class TensorT, class IndexT>
+//inline TensorT tensor_contracion(std::list<TensorT> Tens, std::list<std::vector<IndexT>> Tens_inds)
+//{
+//    if (Tens.size()<2) 
+//    {
+//        cout << "Tensor contraction requires at least two tensors!" << endl;
+//        exit(EXIT_FAILURE);
+//    }
+//    TensorT temp_tensor=tensor_contracion(Tens[0],Tens[1],Tens_inds[0],Tens_inds[1]);
+//    if (Tens.size()==2) 
+//    {
+//        return temp_tensor;
+//    }
+//    else
+//    {
+//        Tens.pop_front();
+//        Tens.pop_front();
+//        Tens.push_front(temp_tensor);
+//        Tens_inds.pop_front();
+//        Tens_inds.pop_front();
+//        return tensor_contraction(Tens,Tens_inds);
+//    }
+//}
+
+//Translate Combiner/IQCombiner to ITensor/IQTensor 
+inline void combiner_to_tensor(Combiner &combiner, ITensor &tensor)
 {
-    if (Tens.size()<2) 
-    {
-        cout << "Tensor contraction requires at least two tensors!" << endl;
-        exit(EXIT_FAILURE);
-    }
-    TensorT temp_tensor=tensor_contracion(Tens[0],Tens[1],Tens_inds[0],Tens_inds[1]);
-    if (Tens.size()==2) 
-    {
-        return temp_tensor;
-    }
-    else
-    {
-        Tens.pop_front();
-        Tens.pop_front();
-        Tens.push_front(temp_tensor);
-        Tens_inds.pop_front();
-        Tens_inds.pop_front();
-        return tensor_contraction(Tens,Tens_inds);
-    }
+    combiner.init();
+    tensor=combiner.toITensor();
+}
+inline void combiner_to_tensor(IQCombiner &iqcombiner, IQTensor &iqtensor)
+{
+    iqcombiner.init();
+    iqtensor=iqcombiner.toIQTensor();
 }
 
 #endif

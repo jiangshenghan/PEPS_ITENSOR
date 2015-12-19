@@ -1,13 +1,13 @@
 
 #include "tnetwork_storage.h"
-#include "corner_transfer_mat.h"
+#include "corner_transfer_matrix.h"
 
 int main()
 {
     //reading tnetwork from file
     std::stringstream ss;
     ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_srvb_Lx=4_Ly=4.txt";
-    std::string file_name=ss.str();
+    std::string filename=ss.str();
     Tnetwork_Storage<IQTensor> square_srvb_tnetwork;
     readFromFile(filename,square_srvb_tnetwork);
     //check tnetwork from file
@@ -25,7 +25,7 @@ int main()
     tens0_ordered_virt_indices[1]=commonIndex(tensor_list(0),tensor_list(1));
     tens0_ordered_virt_indices[1]=commonIndex(tensor_list(0),tensor_list(Lx*(Ly-1)));
 
-    Corner_Transfer_Matrix square_srvb_ctm=({tensor_list(0)},{tens0_ordered_virt_indices});
+    Corner_Transfer_Matrix<IQTensor> square_srvb_ctm({tensor_list(0)},{tens0_ordered_virt_indices});
     
 
     return 0;

@@ -162,7 +162,7 @@ void init_square_rvb_bond_tensors(IQPEPS &square_rvb)
 void rotation_symmetrize_square_rvb_site_tensor(IQTensor &site_tensor)
 {
     IQTensor site_tensor_sym(site_tensor);
-    //set all elems of site_tensor_sym to be zeor
+    //set all elems of site_tensor_sym to be zero
     site_tensor_sym-=site_tensor;
 
     std::vector<int> max_val_list;

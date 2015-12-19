@@ -10,6 +10,7 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <list>
 #include <utility>
 #include <algorithm>
 #include <numeric>
