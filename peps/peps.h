@@ -26,7 +26,7 @@ class PEPSt
         //
         //Constructors
         //
-        //PEPSt() {}
+        PEPSt() {}
         PEPSt(const Lattice_Base &lattice);
         PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set);
 

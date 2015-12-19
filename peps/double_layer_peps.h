@@ -25,6 +25,7 @@ class Double_Layer_PEPSt
         //
         //Double_Layer_PEPSt() {}
 
+        Double_Layer_PEPS () {}
         Double_Layer_PEPSt(const Lattice_Base &lattice);  
 
         Double_Layer_PEPSt(const PEPSt<TensorT> &peps);

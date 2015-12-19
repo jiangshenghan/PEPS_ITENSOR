@@ -420,6 +420,7 @@ std::vector<IQTensor> PEPSt<IQTensor>::combined_site_tensors() const;
 template <class TensorT>
 void PEPSt<TensorT>::read(std::istream &s)
 {
+    lattice_ptr_->read(s);
     indexset_ptr_->read(s);
 
     for (auto &tensor : site_tensors_) tensor.read(s);
@@ -443,6 +444,7 @@ void PEPSt<IQTensor>::read(std::istream &s);
 template <class TensorT>
 void PEPSt<TensorT>::write(std::ostream &s) const
 {
+    lattice_ptr_->write(s);
     indexset_ptr_->write(s);
 
     for (const auto &tensor : site_tensors_) tensor.write(s);
