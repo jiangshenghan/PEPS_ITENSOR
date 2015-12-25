@@ -255,7 +255,7 @@ class Corner_Transfer_Matrix
         //
         //Methods to get environment tensors
         //
-        void obtain_env_tensors();
+        void update_env_tensor_one_step();
 
         //Update env tensor by left/right moves for one col or up/down moves for one row
         void left_move(int left_x0);
@@ -313,7 +313,10 @@ class Corner_Transfer_Matrix
         //notice, we assume this only works for operator act within one network
         //bulk_position are position for bulk tensor in one network 
         //0:(1,1), 1:(2,1), 2:(1,2), 3:(2,2)
-        void obtain_ctm_sandwich_operator(int network_no, const std::vector<int> &bulk_position, TPOt<TensorT> tensor_operator);
+        Complex ctm_sandwich_operator_value(int network_no, const std::vector<int> &bulk_position, TPOt<TensorT> tensor_operator);
+
+        //the order of bonds is left(0&2), up(2&3), right(1&3), down(0&1)
+        void obtain_all_bonds_energy(const TPOt<TensorT> &hamiltonian);
 
         //
         //Constructor helpers

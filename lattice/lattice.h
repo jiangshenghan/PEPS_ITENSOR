@@ -17,12 +17,15 @@ class Lattice_Base
         //
         //Constructors
         //
-        Lattice_Base() {}
+        //Lattice_Base() {n_sites_total_=0;}
 
         Lattice_Base(int n_sites_uc, int n_bonds_uc, const std::array<int,2> &n_uc, int n_boundary_legs=0, int n_sites_to_one_bond=2);
 
         //Constructor helpers
         void init_list_coord();
+
+        //lattice is empty if use default constructor, thus n_sites_total==0
+        //bool is_empty() const { return (n_sites_total_==0); }
 
         //
         //Accessor Methods
@@ -188,8 +191,8 @@ class Lattice_Base
         void print_lattice_inf() const;
 
         //read/write from/to file
-        void read(std::istream &s);
-        void write(std::ostream &s);
+        //void read(std::istream &s);
+        //void write(std::ostream &s) const;
 
     protected:
         //
@@ -234,7 +237,7 @@ class Square_Lattice_Torus : public Lattice_Base
         //
         //Constructor
         //
-        Square_Lattice_Torus() {}
+        //Square_Lattice_Torus() {}
         Square_Lattice_Torus(const std::array<int,2> &n_uc);
 
         enum Neighbour {Left=0, Up=1, Right=2, Down=3};
@@ -253,7 +256,7 @@ class Square_Lattice_Torus : public Lattice_Base
 class Square_Lattice_Cylinder : public Lattice_Base
 {
     public:
-        Square_Lattice_Cylinder() {}
+        //Square_Lattice_Cylinder() {}
         Square_Lattice_Cylinder(const std::array<int,2> &n_uc);
 
         enum Neighbour {Left=0, Up=1, Right=2, Down=3};
@@ -266,7 +269,7 @@ class Square_Lattice_Cylinder : public Lattice_Base
 class Square_Lattice_Open : public Lattice_Base
 {
     public:
-        Square_Lattice_Open() {}
+        //Square_Lattice_Open() {}
         Square_Lattice_Open(const std::array<int,2> &n_uc);
 
         enum Neighbour {Left=0, Up=1, Right=2, Down=3};
@@ -281,7 +284,7 @@ class Square_Lattice_Open : public Lattice_Base
 class Honeycomb_Lattice_Torus : public Lattice_Base
 {
     public:
-        Honeycomb_Lattice_Torus() {}
+        //Honeycomb_Lattice_Torus() {}
         Honeycomb_Lattice_Torus(const std::array<int,2> &n_uc);
 
         enum Neighbour {NeighA=0, NeighB=1, NeighC=2};
@@ -295,7 +298,7 @@ class Honeycomb_Lattice_Torus : public Lattice_Base
 class Kagome_Cirac_Lattice_Torus : public Lattice_Base
 {
     public:
-        Kagome_Cirac_Lattice_Torus() {}
+        //Kagome_Cirac_Lattice_Torus() {}
         Kagome_Cirac_Lattice_Torus(const std::array<int,2> &n_uc);
 };
 

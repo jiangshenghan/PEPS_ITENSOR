@@ -382,6 +382,7 @@ std::vector<TensorT> PEPSt<TensorT>::combined_site_tensors() const
     for (int sitei=0; sitei<this->n_sites_total(); sitei++)
     {
         auto site_tensor=this->site_tensors(sitei);
+        //cout << "Original tensor:" << endl << sitei << endl << site_tensor << endl;
 
         //multiply neighbouring bond tensors 
         for (int neighi=0; neighi<this->lattice().n_bonds_to_one_site(); neighi++)
@@ -399,6 +400,7 @@ std::vector<TensorT> PEPSt<TensorT>::combined_site_tensors() const
         //multiply neighbouring boundary tensors
         for (const auto &boundary_no : this->lattice().site_neighbour_boundaries(sitei))
         {
+            if (boundary_no<0) continue;
             site_tensor*=this->boundary_tensors(boundary_no);
         }
         clean(site_tensor);
@@ -420,7 +422,7 @@ std::vector<IQTensor> PEPSt<IQTensor>::combined_site_tensors() const;
 template <class TensorT>
 void PEPSt<TensorT>::read(std::istream &s)
 {
-    lattice_ptr_->read(s);
+    //if (lattice_ptr_->is_empty()) lattice_ptr_->read(s);
     indexset_ptr_->read(s);
 
     for (auto &tensor : site_tensors_) tensor.read(s);
@@ -444,7 +446,7 @@ void PEPSt<IQTensor>::read(std::istream &s);
 template <class TensorT>
 void PEPSt<TensorT>::write(std::ostream &s) const
 {
-    lattice_ptr_->write(s);
+    //lattice_ptr_->write(s);
     indexset_ptr_->write(s);
 
     for (const auto &tensor : site_tensors_) tensor.write(s);
@@ -474,11 +476,17 @@ Tnetwork_Storage<TensorT> peps_to_tnetwork_storage(const PEPSt<TensorT> &peps)
     int Lx=peps.n_uc()[0], Ly=peps.n_uc()[1];
     tnetwork_storage._Lx=Lx;
     tnetwork_storage._Ly=Ly;
+    //Print(tnetwork_storage._Lx);
+    //Print(tnetwork_storage._Ly);
 
     tnetwork_storage._tensor_list.set_size(peps.n_sites_total());
     auto tensor_list=peps.combined_site_tensors();
     for (int sitei=0; sitei<peps.n_sites_total(); sitei++) 
+    {
         tnetwork_storage._tensor_list(sitei)=tensor_list[sitei];
+        //Print(sitei);
+        //Print(tnetwork_storage._tensor_list(sitei));
+    }
 
     tnetwork_storage._coor_to_siteind.set_size(Lx,Ly);
     for (int x=0; x<Lx; x++)

@@ -48,7 +48,10 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
 
     //leg_gate_params stores tunable parameters for the leg gate.
     std::vector<double> leg_gate_params(leg_gates_basis[0].dim());
+    //random generate leg_gate_params
     for (auto &param : leg_gate_params) param=rand_gen();
+    //we guess some particular leg_gate_params to get good init params
+    //leg_gate_params=std::vector<double>{-1,0,1.4141,0,1.113,0,-0.61934};
     Print(leg_gate_params);
     
     for (int iter=0; iter<square_su_params.iter_nums; iter++)
@@ -90,7 +93,10 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
             Print(heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate));
 
             //if we cannot obtain a reasonable leg_gate, we try smaller time separation
-            if (!obtain_spin_sym_leg_gates_params_minimization(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params)) break;
+            //double cutoff=square_su_params.ts[iter]/10.;
+            //if (cutoff>1e-5) cutoff=1e-5;
+            double cutoff=1e-5;
+            if (!obtain_spin_sym_leg_gates_params_minimization(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params,cutoff)) break;
 
             //using leg_gate_params to generate all leg gates
             auto leg_gate_sample=singlet_tensor_from_basis_params(leg_gates_basis[0],leg_gate_params);
@@ -146,33 +152,38 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
             //    std::stringstream ss;
             //    if (std::abs(square_psg::mu_12-1)<EPSILON) //zero-flux
             //    {
-            //        ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
+            //        ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
             //    }
             //    if (std::abs(square_psg::mu_12+1)<EPSILON) //pi-flux
             //    {
-            //        ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step  << ".txt";
+            //        ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
             //    }
             //    std::string file_name=ss.str();
             //    Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
             //    writeToFile(file_name,square_rvb_storage);
             //}
 
+            //stores as PEPS, which is used for further evolution
+            if ((step+1)*10%square_su_params.steps_nums[iter]==0)
+            {
+                std::stringstream ss;
+
+                //zero flux state
+                ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
+                //pi flux state
+                //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
+
+                std::string file_name=ss.str();
+                writeToFile(file_name,square_peps);
+                
+                //reinit leg_gate_params to get rid of local minimal
+                //for (auto &param : leg_gate_params) param=rand_gen();
+            }
+
+
         }//trotter steps
 
-        //stores as PEPS, which is used for further evolution
-        //std::stringstream ss;
-        //if (std::abs(square_psg::mu_12-1)<EPSILON) //zero-flux state
-        //{
-        //    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << ".txt";
-        //}
-        //if (std::abs(square_psg::mu_12+1)<EPSILON) //pi-flux state
-        //{
-        //    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << ".txt";
-        //}
-        //std::string file_name=ss.str();
-        //writeToFile(file_name,square_peps);
-
-    }//finish all simple update
+    }//trotter iters
 }
 
 
@@ -280,13 +291,15 @@ void obtain_spin_sym_leg_gates_params_iterative(const std::array<IQTensor,2> &si
 }
 
 
-bool obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params)
+bool obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> &site_tensors, const IQTensor &bond_tensor, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params, double cutoff)
 {
     //init leg_gate_params
     if (leg_gate_params.empty())
     {
         for (int i=0; i<leg_gates_basis[0].dim(); i++)
+        {
             leg_gate_params.push_back(rand_gen());
+        }
         Print(leg_gate_params);
     }
 
@@ -357,7 +370,7 @@ bool obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
 
     //using conjugate gradient minimization to minimize distance square between updated wf and time evolved wf
     int find_min_status;
-    int iter=0, max_iter=100;
+    int iter=0, max_iter=1e4;
 
     const gsl_multimin_fdfminimizer_type *minimize_T;
     gsl_multimin_fdfminimizer *s;
@@ -387,7 +400,7 @@ bool obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
         iter++;
         find_min_status=gsl_multimin_fdfminimizer_iterate(s);
         if (find_min_status) break;
-        find_min_status=gsl_multimin_test_gradient(s->gradient,0.1);
+        find_min_status=gsl_multimin_test_gradient(s->gradient,cutoff);
 
         //Print(iter);
         //Print(s->f);
@@ -401,7 +414,8 @@ bool obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
     Print(wf_distance);
 
     //if the leg_gate is not a good approx of trotter gate, we may be trapped in a local minima, thus, we retry to find leg gate
-    if (wf_distance>0.1)
+    //if (wf_distance>cutoff*30)
+    if (iter==max_iter)
     {
         cout << "Leg gate is not good enough, may be trapped in local minima!" << endl << "try smaller time step!" << endl;
         gsl_multimin_fdfminimizer_free(s);

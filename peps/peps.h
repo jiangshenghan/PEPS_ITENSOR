@@ -26,7 +26,7 @@ class PEPSt
         //
         //Constructors
         //
-        PEPSt() {}
+        //PEPSt(): lattice_ptr_(new Lattice_Base), indexset_ptr_(new PEPSt_IndexSet_Base<IndexT>) {}
         PEPSt(const Lattice_Base &lattice);
         PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set);
 
@@ -99,7 +99,7 @@ class PEPSt
 
         inline const IndexT &virt_legs(const int &leg_i) const
         {
-            return indexset_ptr_->virt_legs_(leg_i);
+            return indexset_ptr_->virt_legs(leg_i);
         }
 
         inline const TensorT &site_tensors(int i) const

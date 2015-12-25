@@ -40,7 +40,6 @@ Corner_Transfer_Matrix<TensorT>::Corner_Transfer_Matrix(const std::vector<Tensor
         }
     }
 
-    obtain_env_tensors();
 }
 template 
 Corner_Transfer_Matrix<ITensor>::Corner_Transfer_Matrix(const std::vector<ITensor> &single_layer_tensors, const std::vector<std::array<Index,4>> &ordered_virt_indices, int Lx, int Ly);
@@ -49,23 +48,19 @@ Corner_Transfer_Matrix<IQTensor>::Corner_Transfer_Matrix(const std::vector<IQTen
 
 
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT>::obtain_env_tensors()
+void Corner_Transfer_Matrix<TensorT>::update_env_tensor_one_step()
 {
-    do
-    {
         spec_diff_=0;
 
         for (int x=0; x<Lx_; x++) left_move(x);
         for (int y=Ly_-1; y>=0; y++) up_move(y);
         for (int x=Lx_-1; x>=0; x--) right_move(x);
         for (int y=0; y<Ly_; y++) down_move(y);
-    }
-    while (spec_diff_<1E-3);
 }
 template
-void Corner_Transfer_Matrix<ITensor>::obtain_env_tensors();
+void Corner_Transfer_Matrix<ITensor>::update_env_tensor_one_step();
 template
-void Corner_Transfer_Matrix<IQTensor>::obtain_env_tensors();
+void Corner_Transfer_Matrix<IQTensor>::update_env_tensor_one_step();
 
 
 template <class TensorT>
@@ -542,7 +537,7 @@ Complex Corner_Transfer_Matrix<IQTensor>::network_norm(int network_no);
 
 
 template <class TensorT>
-void Corner_Transfer_Matrix<TensorT>::obtain_ctm_sandwich_operator(int network_no, const std::vector<int> &bulk_position, TPOt<TensorT> tensor_operator)
+Complex Corner_Transfer_Matrix<TensorT>::ctm_sandwich_operator_value(int network_no, const std::vector<int> &bulk_position, TPOt<TensorT> tensor_operator)
 {
     int x=network_no%Lx_,
         y=network_no%Ly_;
@@ -588,14 +583,33 @@ void Corner_Transfer_Matrix<TensorT>::obtain_ctm_sandwich_operator(int network_n
         result_tensor*=bond_tensor;
     }
 
-    Complex norm=network_norm(network_no),
-            sandwich_val=result_tensor.toComplex()/norm;
+    Complex sandwich_val=result_tensor.toComplex();
     
 }
 template
-void Corner_Transfer_Matrix<ITensor>::obtain_ctm_sandwich_operator(int network_no, const std::vector<int> &bulk_position, TPOt<ITensor> tensor_operator);
+Complex Corner_Transfer_Matrix<ITensor>::ctm_sandwich_operator_value(int network_no, const std::vector<int> &bulk_position, TPOt<ITensor> tensor_operator);
 template
-void Corner_Transfer_Matrix<IQTensor>::obtain_ctm_sandwich_operator(int network_no, const std::vector<int> &bulk_position, TPOt<IQTensor> tensor_operator);
+Complex Corner_Transfer_Matrix<IQTensor>::ctm_sandwich_operator_value(int network_no, const std::vector<int> &bulk_position, TPOt<IQTensor> tensor_operator);
+
+template <class TensorT>
+void Corner_Transfer_Matrix<TensorT>::obtain_all_bonds_energy(const TPOt<TensorT> &hamiltonian)
+{
+    for (int network_no=0; network_no<N_; network_no++)
+    {
+        cout << "result for network " << network_no << ": " << endl;
+        auto norm=network_norm(network_no);
+        cout << "network norm: " << norm << endl;
+        cout << ctm_sandwich_operator_value(network_no,{0,2},hamiltonian)/norm << endl;
+        cout << ctm_sandwich_operator_value(network_no,{2,3},hamiltonian)/norm << endl;
+        cout << ctm_sandwich_operator_value(network_no,{1,3},hamiltonian)/norm << endl;
+        cout << ctm_sandwich_operator_value(network_no,{0,1},hamiltonian)/norm << endl;
+        cout << endl;
+    }
+}
+template
+void Corner_Transfer_Matrix<ITensor>::obtain_all_bonds_energy(const TPOt<ITensor> &hamiltonian);
+template
+void Corner_Transfer_Matrix<IQTensor>::obtain_all_bonds_energy(const TPOt<IQTensor> &hamiltonian);
 
 
 template <class TensorT>

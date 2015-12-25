@@ -115,139 +115,139 @@ void Lattice_Base::print_lattice_inf() const
 }
 
 //TODO:test read and write
-void Lattice_Base::read(std::istream &s)
-{
-    s.read((char*)&n_sites_uc_,sizeof(n_sites_uc_));
-    s.read((char*)&n_bonds_uc_,sizeof(n_bonds_uc_));
-    s.read((char*)&n_bonds_to_one_site_,sizeof(n_bonds_to_one_site_));
-    s.read((char*)&n_sites_to_one_bond_,sizeof(n_sites_to_one_bond_));
-    s.read((char*)&n_sites_total_,sizeof(n_sites_total_));
-    s.read((char*)&n_bonds_total_,sizeof(n_bonds_total_));
-    s.read((char*)&n_boundary_legs_,sizeof(n_boundary_legs_));
-
-    s.read((char*)&n_uc_[0],sizeof(n_uc_[0]));
-    s.read((char*)&n_uc_[1],sizeof(n_uc_[1]));
-
-    site_neighbour_bonds_=std::vector<std::vector<int>>(n_sites_total_,std::vector<int>(n_bonds_to_one_site_));
-    for (int sitei=0; sitei<n_sites_total_; sitei++) 
-    {
-        for (int neighi=0; neighi<n_bonds_to_one_site_; neighi++)
-        {
-            s.read((char*)&site_neighbour_bonds_[sitei][neighi],sizeof(site_neighbour_bonds_[sitei][neighi]));
-        }
-    }
-
-    bond_neighbour_sites_=std::vector<std::vector<int>>(n_bonds_total_,std::vector<int>(n_sites_to_one_bond_));
-    for (int bondi=0; bondi<n_bonds_total_; bondi++)
-    {
-        for (int neighi=0; neighi<n_sites_to_one_bond_; neighi++)
-        {
-            s.read((char*)&bond_neighbour_sites_[bondi][neighi],sizeof(bond_neighbour_sites_[bondi][neighi]));
-        }
-    }
-
-    boundary_neighbour_site_=std::vector<int>(n_boundary_legs_);
-    for (int boundaryi=0; boundaryi<n_boundary_legs_; boundaryi++)
-    {
-        s.read((char*)&boundary_neighbour_site_[boundaryi],sizeof(&boundary_neighbour_site_[boundaryi]));
-    }
-
-    boundary_neighbour_bond_=std::vector<int>(n_boundary_legs_);
-    for (int boundaryi=0; boundaryi<n_boundary_legs_; boundaryi++)
-    {
-        s.read((char*)&boundary_neighbour_bond_[boundaryi],sizeof(&boundary_neighbour_bond_[boundaryi]));
-    }
-
-    site_neighbour_boundaries_=std::vector<std::vector<int>>(n_sites_total_,std::vector<int>(n_bonds_to_one_site_,-1));
-    for (int sitei=0; sitei<n_sites_total_; sitei++)
-    {
-        for (int neighi=0; neighi<n_bonds_to_one_site_; neighi++)
-        {
-            s.read((char*)&site_neighbour_boundaries_[sitei][neighi],sizeof(site_neighbour_boundaries_[sitei][neighi]));
-        }
-    }
-
-    bond_neighbour_boundaries_=std::vector<std::vector<int>>(n_bonds_total_,std::vector<int>(n_sites_to_one_bond_,-1));
-    for (int bondi=0; bondi<n_bonds_total_; bondi++)
-    {
-        for (int neighi=0; neighi<n_sites_to_one_bond_; neighi++)
-        {
-            s.read((char*)&bond_neighbour_boundaries_[bondi][neighi],sizeof(bond_neighbour_boundaries_[bondi][neighi]));
-        }
-    }
-
-    site_list_to_coord_=std::vector<Coordinate>(n_sites_total_),
-    bond_list_to_coord_=std::vector<Coordinate>(n_bonds_total_),
-    site_coord_to_list_=std::vector<std::vector<std::vector<int>>>(n_uc_[0],std::vector<std::vector<int>>(n_uc_[1],std::vector<int>(n_sites_uc_))),
-    bond_coord_to_list_=std::vector<std::vector<std::vector<int>>>(n_uc_[0],std::vector<std::vector<int>>(n_uc_[1],std::vector<int>(n_bonds_uc_)))
-    init_list_coord();
-
-    int nlength;
-    s.read((char*)&nlength,sizeof(nlength));
-    auto newname=std::unique_ptr<char[]>(new char[nlength+1]);
-    s.read(newname.get(),nlength+1);
-    name_=std::string(newname.get());
-}
-
-void Lattice_Base::write(std::ostream &s) const
-{
-    s.write((char*)&n_sites_uc_,sizeof(n_sites_uc_));
-    s.write((char*)&n_bonds_uc_,sizeof(n_bonds_uc_));
-    s.write((char*)&n_bonds_to_one_site_,sizeof(n_bonds_to_one_site_));
-    s.write((char*)&n_sites_to_one_bond_,sizeof(n_sites_to_one_bond_));
-    s.write((char*)&n_sites_total_,sizeof(n_sites_total_));
-    s.write((char*)&n_bonds_total_,sizeof(n_bonds_total_));
-    s.write((char*)&n_boundary_legs_,sizeof(n_boundary_legs_));
-
-    s.write((char*)&n_uc_[0],sizeof(n_uc_[0]));
-    s.write((char*)&n_uc_[1],sizeof(n_uc_[1]));
-
-    for (int sitei=0; sitei<n_sites_total_; sitei++) 
-    {
-        for (int neighi=0; neighi<n_bonds_to_one_site_; neighi++)
-        {
-            s.write((char*)&site_neighbour_bonds_[sitei][neighi],sizeof(site_neighbour_bonds_[sitei][neighi]));
-        }
-    }
-
-    for (int bondi=0; bondi<n_bonds_total_; bondi++)
-    {
-        for (int neighi=0; neighi<n_sites_to_one_bond_; neighi++)
-        {
-            s.write((char*)&bond_neighbour_sites_[bondi][neighi],sizeof(bond_neighbour_sites_[bondi][neighi]));
-        }
-    }
-
-    for (int boundaryi=0; boundaryi<n_boundary_legs_; boundaryi++)
-    {
-        s.write((char*)&boundary_neighbour_site_[boundaryi],sizeof(&boundary_neighbour_site_[boundaryi]));
-    }
-
-    for (int boundaryi=0; boundaryi<n_boundary_legs_; boundaryi++)
-    {
-        s.write((char*)&boundary_neighbour_bond_[boundaryi],sizeof(&boundary_neighbour_bond_[boundaryi]));
-    }
-
-    for (int sitei=0; sitei<n_sites_total_; sitei++)
-    {
-        for (int neighi=0; neighi<n_bonds_to_one_site_; neighi++)
-        {
-            s.write((char*)&site_neighbour_boundaries_[sitei][neighi],sizeof(site_neighbour_boundaries_[sitei][neighi]));
-        }
-    }
-
-    for (int bondi=0; bondi<n_bonds_total_; bondi++)
-    {
-        for (int neighi=0; neighi<n_sites_to_one_bond_; neighi++)
-        {
-            s.write((char*)&bond_neighbour_boundaries_[bondi][neighi],sizeof(bond_neighbour_boundaries_[bondi][neighi]));
-        }
-    }
-
-    const int nlength=name_.length();
-    s.write((char*)&nlength,sizeof(nlength));
-    s.write(name_.c_str(),nlength+1);
-}
+//void Lattice_Base::read(std::istream &s)
+//{
+//    s.read((char*)&n_sites_uc_,sizeof(n_sites_uc_));
+//    s.read((char*)&n_bonds_uc_,sizeof(n_bonds_uc_));
+//    s.read((char*)&n_bonds_to_one_site_,sizeof(n_bonds_to_one_site_));
+//    s.read((char*)&n_sites_to_one_bond_,sizeof(n_sites_to_one_bond_));
+//    s.read((char*)&n_sites_total_,sizeof(n_sites_total_));
+//    s.read((char*)&n_bonds_total_,sizeof(n_bonds_total_));
+//    s.read((char*)&n_boundary_legs_,sizeof(n_boundary_legs_));
+//
+//    s.read((char*)&n_uc_[0],sizeof(n_uc_[0]));
+//    s.read((char*)&n_uc_[1],sizeof(n_uc_[1]));
+//
+//    site_neighbour_bonds_=std::vector<std::vector<int>>(n_sites_total_,std::vector<int>(n_bonds_to_one_site_));
+//    for (int sitei=0; sitei<n_sites_total_; sitei++) 
+//    {
+//        for (int neighi=0; neighi<n_bonds_to_one_site_; neighi++)
+//        {
+//            s.read((char*)&site_neighbour_bonds_[sitei][neighi],sizeof(site_neighbour_bonds_[sitei][neighi]));
+//        }
+//    }
+//
+//    bond_neighbour_sites_=std::vector<std::vector<int>>(n_bonds_total_,std::vector<int>(n_sites_to_one_bond_));
+//    for (int bondi=0; bondi<n_bonds_total_; bondi++)
+//    {
+//        for (int neighi=0; neighi<n_sites_to_one_bond_; neighi++)
+//        {
+//            s.read((char*)&bond_neighbour_sites_[bondi][neighi],sizeof(bond_neighbour_sites_[bondi][neighi]));
+//        }
+//    }
+//
+//    boundary_neighbour_site_=std::vector<int>(n_boundary_legs_);
+//    for (int boundaryi=0; boundaryi<n_boundary_legs_; boundaryi++)
+//    {
+//        s.read((char*)&boundary_neighbour_site_[boundaryi],sizeof(&boundary_neighbour_site_[boundaryi]));
+//    }
+//
+//    boundary_neighbour_bond_=std::vector<int>(n_boundary_legs_);
+//    for (int boundaryi=0; boundaryi<n_boundary_legs_; boundaryi++)
+//    {
+//        s.read((char*)&boundary_neighbour_bond_[boundaryi],sizeof(&boundary_neighbour_bond_[boundaryi]));
+//    }
+//
+//    site_neighbour_boundaries_=std::vector<std::vector<int>>(n_sites_total_,std::vector<int>(n_bonds_to_one_site_,-1));
+//    for (int sitei=0; sitei<n_sites_total_; sitei++)
+//    {
+//        for (int neighi=0; neighi<n_bonds_to_one_site_; neighi++)
+//        {
+//            s.read((char*)&site_neighbour_boundaries_[sitei][neighi],sizeof(site_neighbour_boundaries_[sitei][neighi]));
+//        }
+//    }
+//
+//    bond_neighbour_boundaries_=std::vector<std::vector<int>>(n_bonds_total_,std::vector<int>(n_sites_to_one_bond_,-1));
+//    for (int bondi=0; bondi<n_bonds_total_; bondi++)
+//    {
+//        for (int neighi=0; neighi<n_sites_to_one_bond_; neighi++)
+//        {
+//            s.read((char*)&bond_neighbour_boundaries_[bondi][neighi],sizeof(bond_neighbour_boundaries_[bondi][neighi]));
+//        }
+//    }
+//
+//    site_list_to_coord_=std::vector<Coordinate>(n_sites_total_);
+//    bond_list_to_coord_=std::vector<Coordinate>(n_bonds_total_);
+//    site_coord_to_list_=std::vector<std::vector<std::vector<int>>>(n_uc_[0],std::vector<std::vector<int>>(n_uc_[1],std::vector<int>(n_sites_uc_)));
+//    bond_coord_to_list_=std::vector<std::vector<std::vector<int>>>(n_uc_[0],std::vector<std::vector<int>>(n_uc_[1],std::vector<int>(n_bonds_uc_)));
+//    init_list_coord();
+//
+//    int nlength;
+//    s.read((char*)&nlength,sizeof(nlength));
+//    auto newname=std::unique_ptr<char[]>(new char[nlength+1]);
+//    s.read(newname.get(),nlength+1);
+//    name_=std::string(newname.get());
+//}
+//
+//void Lattice_Base::write(std::ostream &s) const
+//{
+//    s.write((char*)&n_sites_uc_,sizeof(n_sites_uc_));
+//    s.write((char*)&n_bonds_uc_,sizeof(n_bonds_uc_));
+//    s.write((char*)&n_bonds_to_one_site_,sizeof(n_bonds_to_one_site_));
+//    s.write((char*)&n_sites_to_one_bond_,sizeof(n_sites_to_one_bond_));
+//    s.write((char*)&n_sites_total_,sizeof(n_sites_total_));
+//    s.write((char*)&n_bonds_total_,sizeof(n_bonds_total_));
+//    s.write((char*)&n_boundary_legs_,sizeof(n_boundary_legs_));
+//
+//    s.write((char*)&n_uc_[0],sizeof(n_uc_[0]));
+//    s.write((char*)&n_uc_[1],sizeof(n_uc_[1]));
+//
+//    for (int sitei=0; sitei<n_sites_total_; sitei++) 
+//    {
+//        for (int neighi=0; neighi<n_bonds_to_one_site_; neighi++)
+//        {
+//            s.write((char*)&site_neighbour_bonds_[sitei][neighi],sizeof(site_neighbour_bonds_[sitei][neighi]));
+//        }
+//    }
+//
+//    for (int bondi=0; bondi<n_bonds_total_; bondi++)
+//    {
+//        for (int neighi=0; neighi<n_sites_to_one_bond_; neighi++)
+//        {
+//            s.write((char*)&bond_neighbour_sites_[bondi][neighi],sizeof(bond_neighbour_sites_[bondi][neighi]));
+//        }
+//    }
+//
+//    for (int boundaryi=0; boundaryi<n_boundary_legs_; boundaryi++)
+//    {
+//        s.write((char*)&boundary_neighbour_site_[boundaryi],sizeof(&boundary_neighbour_site_[boundaryi]));
+//    }
+//
+//    for (int boundaryi=0; boundaryi<n_boundary_legs_; boundaryi++)
+//    {
+//        s.write((char*)&boundary_neighbour_bond_[boundaryi],sizeof(&boundary_neighbour_bond_[boundaryi]));
+//    }
+//
+//    for (int sitei=0; sitei<n_sites_total_; sitei++)
+//    {
+//        for (int neighi=0; neighi<n_bonds_to_one_site_; neighi++)
+//        {
+//            s.write((char*)&site_neighbour_boundaries_[sitei][neighi],sizeof(site_neighbour_boundaries_[sitei][neighi]));
+//        }
+//    }
+//
+//    for (int bondi=0; bondi<n_bonds_total_; bondi++)
+//    {
+//        for (int neighi=0; neighi<n_sites_to_one_bond_; neighi++)
+//        {
+//            s.write((char*)&bond_neighbour_boundaries_[bondi][neighi],sizeof(bond_neighbour_boundaries_[bondi][neighi]));
+//        }
+//    }
+//
+//    const int nlength=name_.length();
+//    s.write((char*)&nlength,sizeof(nlength));
+//    s.write(name_.c_str(),nlength+1);
+//}
 
 
 Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc)

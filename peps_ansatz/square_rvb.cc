@@ -115,13 +115,13 @@ void init_square_rvb_bond_tensors(IQPEPS &square_rvb)
             {
                 if (flavor_list[0]!=flavor_list[1]) continue;
                 //TODO: consider the case with -1 on diag
-                bond_tensor_params[basei]=1.;
+                bond_tensor_params[basei]=1.*sqrt(spin_list[0]+1.);
             }
             if (std::abs(chi_c4+1)<EPSILON)
             {
                 assert(flavor_dim%2==0);
-                if (flavor_list[0]-flavor_list[1]==flavor_dim/2) bond_tensor_params[basei]=-1.;
-                if (flavor_list[1]-flavor_list[0]==flavor_dim/2) bond_tensor_params[basei]=1.;
+                if (flavor_list[0]-flavor_list[1]==flavor_dim/2) bond_tensor_params[basei]=-1.*sqrt(spin_list[0]+1.);
+                if (flavor_list[1]-flavor_list[0]==flavor_dim/2) bond_tensor_params[basei]=1.*sqrt(spin_list[0]+1);
             }
             continue;
         }
@@ -137,18 +137,18 @@ void init_square_rvb_bond_tensors(IQPEPS &square_rvb)
             {
                 if (flavor_list[0]!=flavor_list[1]) continue;
                 //TODO: consider the case with -1 on diag
-                bond_tensor_params[basei]=1.;
+                bond_tensor_params[basei]=1.*sqrt(spin_list[0]+1.);
             }
             if (std::abs(mu_t2c4*chi_c4-1)<EPSILON)
             {
                 assert(flavor_dim%2==0);
-                if (flavor_list[0]-flavor_list[1]==flavor_dim/2) bond_tensor_params[basei]=-1.;
+                if (flavor_list[0]-flavor_list[1]==flavor_dim/2) bond_tensor_params[basei]=-1.*sqrt(spin_list[0]+1.);
                 if (flavor_list[1]-flavor_list[0]==flavor_dim/2)
-                    bond_tensor_params[basei]=1.;
+                    bond_tensor_params[basei]=1.*sqrt(spin_list[0]+1.);
             }
             if (std::abs(mu_t1T+1)<EPSILON)
             {
-                bond_tensor_params[basei]*=Complex_i;
+                bond_tensor_params[basei]*=Complex_i*sqrt(spin_list[0]+1.);
             }
         }
     }//init params bond tensor

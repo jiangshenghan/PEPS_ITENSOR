@@ -7,17 +7,19 @@ using namespace square_psg;
 
 int main()
 {
-    int Lx=8, Ly=8;
-    Square_Lattice_Torus square_lattice({Lx,Ly});
-
-    IQPEPS_IndexSet_SpinHalf index_set(6,square_lattice);
-    IQPEPS square_peps(square_lattice,index_set);
-    //random_init_square_rvb_peps(square_peps);
-
     //control PSG parameters
     mu_12=1; 
 
-    //get a better init state
+
+    //init lattice
+    int Lx=8, Ly=8;
+    Square_Lattice_Torus square_lattice({Lx,Ly});
+
+
+    //construct random peps with a good initial state
+    IQPEPS_IndexSet_SpinHalf index_set(6,square_lattice);
+    IQPEPS square_peps(square_lattice,index_set);
+
     double init_energy=0;
     do
     {
@@ -54,36 +56,28 @@ int main()
     }
     while (init_energy>-0.2);
 
+    //construct short-range rvb
     //IQPEPS square_peps=square_srvb_peps(Lx,Ly);
     
-    //for (const auto &tensor : square_peps.site_tensors())
-    //{
-    //    PrintDat(tensor);
-    //}
 
-    //for (const auto &tensor : square_peps.bond_tensors())
-    //{
-    //    PrintDat(tensor);
-    //}
+    //construct PEPS from file
+    std::stringstream ss;
 
-    ////reading PEPS from file
-    //std::stringstream ss;
-    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=6_Lx=" << Lx << "_Ly=" << Ly << "_iter=2.txt";
+    //zero-flux state
+    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=6_Lx=" << Lx << "_Ly=" << Ly << "_optimized";
+    //pi flux state
+    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=6_Lx=" << Lx << "_Ly=" << Ly << "_optimized";
+
     //std::string file_name=ss.str();
     //IQPEPS square_peps(square_lattice);
     //readFromFile(file_name,square_peps);
-    ////write PEPS to tnetwork_storage
-    //Tnetwork_Storage<IQTensor> square_rvb_tnetwork=peps_to_tnetwork_storage(square_peps);
-    //ss.str(std::string());
-    //ss.clear();
-    //ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=6" << "_Lx=" << Lx << "_Ly=" << Ly << "_iter=2_step=999.txt";
-    //file_name=ss.str();
-    //writeToFile(file_name,square_rvb_tnetwork);
+
 
     //Check symmetry
     //Print(diff_tensor_and_singlet_projection(square_peps.site_tensors(0)));
     //Print(diff_tensor_and_singlet_projection(square_peps.bond_tensors(0)));
     //Print(diff_tensor_and_singlet_projection(square_peps.bond_tensors(1)));
+
 
     //Check environment update
     //std::array<std::vector<IQTensor>,2> env_tensors;
@@ -96,6 +90,7 @@ int main()
     //}
     //get_env_tensor_minimization(site_tensorA,site_tensorB,env_tensors);
     
+
     //Check for trotter_gate and hamiltonian gate
     //std::array<IQIndex,2> site_legs{Spin_leg({0,1},"site1",Out),Spin_leg({0,1},"site2",Out)};
     //NN_Heisenberg_Hamiltonian hamiltonian_gate(site_legs);
@@ -112,9 +107,12 @@ int main()
     //PrintDat(evolve_gate.bond_tensors(0));
     //cout << "Imag time: " << evolve_gate.t() << endl;
 
-    //Check for optimazation
-    Evolution_Params square_su_params(3,{500,1000,1000},{0.01,0.001,1E-5});
+
+    //optimazation
+    Evolution_Params square_su_params(6,{100,200,400,500,1000,5000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
+    //Evolution_Params square_su_params(1,{500},{1e-2});
     spin_square_peps_simple_update(square_peps,square_su_params);
+
 
     //Check the output result
     //for (int step=0; step<20; step++)
@@ -122,7 +120,7 @@ int main()
     //    Print(step);
     //    Tnetwork_Storage<IQTensor> square_rvb_from_file;
     //    std::stringstream ss;
-    //    ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=6" << "_Lx=" << Lx << "_Ly=" << Ly << "_iter=0_step=" << step << ".txt";
+    //    ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=6" << "_Lx=" << Lx << "_Ly=" << Ly << "_iter=0_step=" << step;
     //    std::string file_name=ss.str();
     //    readFromFile(file_name,square_rvb_from_file);
     //    //Print(square_rvb_from_file._Lx);
