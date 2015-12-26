@@ -26,6 +26,7 @@ struct Env_Tens_Params
 //4. view preivous steps as a function with input tensors as params, diag elements of env_tensor as auguments and f=updated_env-env, solve f=0
 void get_env_tensor_iterative(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens);
 
+//TODO: consider flavor deg case
 //solve the env tensor by minimization method
 void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens);
 

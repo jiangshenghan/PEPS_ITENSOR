@@ -93,9 +93,9 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
             Print(heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate));
 
             //if we cannot obtain a reasonable leg_gate, we try smaller time separation
-            //double cutoff=square_su_params.ts[iter]/10.;
-            //if (cutoff>1e-5) cutoff=1e-5;
-            double cutoff=1e-5;
+            double cutoff=square_su_params.ts[iter]/10.;
+            if (cutoff>1e-5) cutoff=1e-5;
+            //double cutoff=1e-5;
             if (!obtain_spin_sym_leg_gates_params_minimization(site_env_tens,comm_bond_tensor,evolve_gate,leg_gates_basis,leg_gate_params,cutoff)) break;
 
             //using leg_gate_params to generate all leg gates
@@ -111,12 +111,10 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
             //updated site_tensors[0]
             auto site_tens0=square_peps.site_tensors(0);
 
-            int legi=0;
             for (const auto &leg_gate : leg_gates_site0)
             {
                 site_tens0*=evolve_gate.site_tensors(0)*leg_gate;
                 site_tens0.noprime();
-                legi++;
                 //PrintDat(leg_gate);
             }
             //site_tens0*=square_peps.site_tensors(0).norm()/site_tens0.norm();
@@ -169,9 +167,9 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
                 std::stringstream ss;
 
                 //zero flux state
-                ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
+                //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
                 //pi flux state
-                //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
+                ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
 
                 std::string file_name=ss.str();
                 writeToFile(file_name,square_peps);
@@ -184,6 +182,230 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
         }//trotter steps
 
     }//trotter iters
+}
+
+
+IQTensor square_peps_two_sites_RDM_simple_update(const IQPEPS &square_peps, const IQTensor &env_tens, std::vector<std::vector<int>> patch_sites, std::array<int,2> uncontracted_sites)
+{
+    std::array<int,2> patch_dim={patch_sites.size(),patch_sites[0].size()};
+    //get site tensors dressed with env tens
+    std::vector<std::vector<IQTensor>> patch_site_tensors(patch_dim[0],std::vector<IQTensor>(patch_dim[1]));
+
+    for (int rowi=0; rowi<patch_dim[0]; rowi++)
+    {
+        for (int coli=0; coli<patch_dim[1]; coli++)
+        {
+            patch_site_tensors[rowi][coli]=square_peps.site_tensors(patch_sites[rowi][coli]);
+        }
+    }
+    //multiply env tensors on boundary legs
+    for (int rowi=0; rowi<patch_dim[0]; rowi++)
+    {
+        //multiply left leg of first col with env tens
+        obtain_env_dressed_tensor(patch_site_tensors[rowi][0],env_tens,square_peps.virt_legs(patch_sites[rowi][0],0));
+        //multiply right leg of last col with env tens
+        obtain_env_dressed_tensor(patch_site_tensors[rowi][patch_dim[1]-1],env_tens,square_peps.virt_legs(patch_sites[rowi][patch_dim[1]-1],2));
+    }
+    for (int coli=0; coli<patch_dim[0]; coli++)
+    {
+        //multiply down leg of first row with env tens
+        obtain_env_dressed_tensor(patch_site_tensors[0][coli],env_tens,square_peps.virt_legs(patch_sites[0][coli],3));
+        //multiply up leg of last row with env tens
+        obtain_env_dressed_tensor(patch_site_tensors[patch_dim[0]-1][coli],env_tens,square_peps.virt_legs(patch_sites[patch_dim[0]-1][coli],1));
+    }
+
+    //we combine two layers of up legs and down legs but leave left and right legs uncombined
+    std::vector<std::vector<IQCombiner>> up_legs_combiners, down_legs_combiners;
+    for (int rowi=0; rowi<patch_dim[0]; rowi++)
+    {
+        std::vector<IQCombiner> up_legs_combiners_one_row, down_legs_combiners_one_row;
+        for (int coli=0; coli<patch_dim[1]; coli++)
+        {
+            up_legs_combiners_one_row.push_back(IQCombiner(square_peps.virt_legs(patch_sites[rowi][coli],1),dag(prime(square_peps.virt_legs(patch_sites[rowi][coli],1)))));
+            down_legs_combiners_one_row.push_back(IQCombiner(square_peps.virt_legs(patch_sites[rowi][coli],3),dag(prime(square_peps.virt_legs(patch_sites[rowi][coli],3)))));
+        }
+        up_legs_combiners.push_back(up_legs_combiners_one_row);
+        down_legs_combiners.push_back(down_legs_combiners_one_row);
+    }
+    //we also combine uncontracted physical legs
+    std::array<IQCombiner,2> phys_legs_combiners={IQCombiner(square_peps.phys_legs(uncontracted_sites[0]),dag(prime(square_peps.phys_legs(uncontracted_sites[0])))),IQCombiner(square_peps.phys_legs(uncontracted_sites[1]),dag(prime(square_peps.phys_legs(uncontracted_sites[1]))))};
+
+    //obtain double layer tensors, where we leave physical legs of two sites uncontracted 
+    std::vector<std::vector<IQTensor>> patch_double_layer_tensors(patch_site_tensors);
+
+    IQTensor temp_bra_tensor;
+    //obtain four corner tensors
+    //left_down
+    temp_bra_tensor=dag(patch_site_tensors[0][0]).prime(square_peps.virt_legs(patch_sites[0][0],1)).prime(square_peps.virt_legs(patch_sites[0][0],2));
+    if (patch_sites[0][0]==uncontracted_sites[0] || patch_sites[0][0]==uncontracted_sites[1]) temp_bra_tensor.prime(Site);
+    patch_double_layer_tensors[0][0]*=temp_bra_tensor;
+    patch_double_layer_tensors[0][0]=patch_double_layer_tensors[0][0]*up_legs_combiners[0][0];
+    //right_down
+    temp_bra_tensor=dag(patch_site_tensors[0][patch_dim[1]-1]).prime(square_peps.virt_legs(patch_sites[0][patch_dim[1]-1],0)).prime(square_peps.virt_legs(patch_sites[0][patch_dim[1]-1],1));
+    if (patch_sites[0][patch_dim[1]-1]==uncontracted_sites[0] || patch_sites[0][patch_dim[1]-1]==uncontracted_sites[1]) temp_bra_tensor.prime(Site);
+    patch_double_layer_tensors[0][patch_dim[1]-1]*=temp_bra_tensor;
+    patch_double_layer_tensors[0][patch_dim[1]-1]=patch_double_layer_tensors[0][patch_dim[1]-1]*up_legs_combiners[0][patch_dim[1]-1];
+    //left_up
+    temp_bra_tensor=dag(patch_site_tensors[patch_dim[0]-1][0]).prime(square_peps.virt_legs(patch_sites[patch_dim[0]-1][0],2)).prime(square_peps.virt_legs(patch_sites[patch_dim[0]-1][0],3));
+    if (patch_sites[patch_dim[0]-1][0]==uncontracted_sites[0] || patch_sites[patch_dim[0]-1][0]==uncontracted_sites[1]) temp_bra_tensor.prime(Site);
+    patch_double_layer_tensors[patch_dim[0]-1][0]*=temp_bra_tensor;
+    patch_double_layer_tensors[patch_dim[0]-1][0]=patch_double_layer_tensors[patch_dim[0]-1][0]*down_legs_combiners[patch_dim[0]-1][0];
+    //right_up
+    temp_bra_tensor=dag(patch_site_tensors[patch_dim[0]-1][patch_dim[1]-1]).prime(square_peps.virt_legs(patch_sites[patch_dim[0]-1][patch_dim[1]-1],0)).prime(square_peps.virt_legs(patch_sites[patch_dim[0]-1][patch_dim[1]-1],3));
+    if (patch_sites[patch_dim[0]-1][patch_dim[1]-1]==uncontracted_sites[0] || patch_sites[patch_dim[0]-1][patch_dim[1]-1]==uncontracted_sites[1]) temp_bra_tensor.prime(Site);
+    patch_double_layer_tensors[patch_dim[0]-1][patch_dim[1]-1]*=temp_bra_tensor;
+    patch_double_layer_tensors[patch_dim[0]-1][patch_dim[1]-1]=patch_double_layer_tensors[patch_dim[0]-1][patch_dim[1]-1]*down_legs_combiners[patch_dim[0]-1][patch_dim[1]-1];
+    //Print(patch_double_layer_tensors[0][0]);
+    //Print(patch_double_layer_tensors[0][patch_dim[1]-1]);
+    //Print(patch_double_layer_tensors[patch_dim[0]-1][0]);
+    //Print(patch_double_layer_tensors[patch_dim[0]-1][patch_dim[1]-1]);
+
+    //obtain edge tensors
+    for (int rowi=1; rowi<patch_dim[0]-1; rowi++)
+    {
+        //left edge
+        temp_bra_tensor=dag(patch_site_tensors[rowi][0]).prime().noprime(prime(square_peps.virt_legs(patch_sites[rowi][0],0))).noprime(Site);
+        if (patch_sites[rowi][0]==uncontracted_sites[0] || patch_sites[rowi][0]==uncontracted_sites[1]) temp_bra_tensor.prime(Site);
+        patch_double_layer_tensors[rowi][0]*=temp_bra_tensor;
+        patch_double_layer_tensors[rowi][0]=patch_double_layer_tensors[rowi][0]*up_legs_combiners[rowi][0]*down_legs_combiners[rowi][0];
+        //right edge
+        temp_bra_tensor=dag(patch_site_tensors[rowi][patch_dim[1]-1]).prime().noprime(prime(square_peps.virt_legs(patch_sites[rowi][patch_dim[1]-1],2))).noprime(Site);
+        if (patch_sites[rowi][patch_dim[1]-1]==uncontracted_sites[0] || patch_sites[rowi][patch_dim[1]-1]==uncontracted_sites[1]) temp_bra_tensor.prime(Site);
+        patch_double_layer_tensors[rowi][patch_dim[1]-1]*=temp_bra_tensor;
+        patch_double_layer_tensors[rowi][patch_dim[1]-1]=patch_double_layer_tensors[rowi][patch_dim[1]-1]*up_legs_combiners[rowi][patch_dim[1]-1]*down_legs_combiners[rowi][patch_dim[1]-1];
+    }
+    for (int coli=1; coli<patch_dim[1]-1; coli++)
+    {
+        //down edge
+        temp_bra_tensor=dag(patch_site_tensors[0][coli]).prime().noprime(prime(square_peps.virt_legs(patch_sites[0][coli],3))).noprime(Site);
+        if (patch_sites[0][coli]==uncontracted_sites[0] || patch_sites[0][coli]==uncontracted_sites[1]) temp_bra_tensor.prime(Site);
+        patch_double_layer_tensors[0][coli]*=temp_bra_tensor;
+        patch_double_layer_tensors[0][coli]=patch_double_layer_tensors[0][coli]*up_legs_combiners[0][coli];
+        //up edge
+        temp_bra_tensor=dag(patch_site_tensors[patch_dim[0]-1][coli]).prime().noprime(prime(square_peps.virt_legs(patch_sites[patch_dim[0]-1][coli],1))).noprime(Site);
+        if (patch_sites[patch_dim[0]-1][coli]==uncontracted_sites[0] || patch_sites[patch_dim[0]-1][coli]==uncontracted_sites[1]) temp_bra_tensor.prime(Site);
+        patch_double_layer_tensors[patch_dim[0]-1][coli]*=temp_bra_tensor;
+        patch_double_layer_tensors[patch_dim[0]-1][coli]=patch_double_layer_tensors[patch_dim[0]-1][coli]*down_legs_combiners[patch_dim[0]-1][coli];
+    }
+    //obtain bulk tensors
+    for (int rowi=1; rowi<patch_dim[0]-1; rowi++)
+    {
+        for (int coli=1; coli<patch_dim[1]-1; coli++)
+        {
+            temp_bra_tensor=dag(patch_site_tensors[rowi][coli]).prime().noprime(Site);
+            //for uncontracted sites, to avoid overflow of indices number, we first combine lr indices 
+            if (patch_sites[rowi][coli]==uncontracted_sites[0] || patch_sites[rowi][coli]==uncontracted_sites[1])
+            {
+                temp_bra_tensor.prime(Site);
+                IQCombiner lr_combiner(square_peps.virt_legs(patch_sites[rowi][coli],0),square_peps.virt_legs(patch_sites[rowi][coli],2));
+                patch_double_layer_tensors[rowi][coli]=(patch_site_tensors[rowi][coli]*lr_combiner)*(temp_bra_tensor*dag(prime(lr_combiner)))*up_legs_combiners[rowi][coli]*down_legs_combiners[rowi][coli];
+                patch_double_layer_tensors[rowi][coli]=patch_double_layer_tensors[rowi][coli]*dag(lr_combiner)*prime(lr_combiner);
+            }
+            else
+            {
+                patch_double_layer_tensors[rowi][coli]*=temp_bra_tensor;
+                patch_double_layer_tensors[rowi][coli]=patch_double_layer_tensors[rowi][coli]*up_legs_combiners[rowi][coli]*down_legs_combiners[rowi][coli];
+            }
+
+            //Print(rowi);
+            //Print(coli);
+            //Print(patch_double_layer_tensors[rowi][coli]);
+        }
+    }
+
+    //combine uncontracted phys_legs
+    std::array<std::array<int,2>,2> patch_uncontracted_coord;
+    for (int rowi=0; rowi<patch_dim[0]; rowi++)
+    {
+        for (int coli=0; coli<patch_dim[1]; coli++)
+        {
+            if (patch_sites[rowi][coli]==uncontracted_sites[0])
+            {
+                patch_uncontracted_coord[0][0]=rowi;
+                patch_uncontracted_coord[0][1]=coli;
+            }
+            if (patch_sites[rowi][coli]==uncontracted_sites[1])
+            {
+                patch_uncontracted_coord[1][0]=rowi;
+                patch_uncontracted_coord[1][1]=coli;
+            }
+        }
+    }
+    for (int i=0; i<2; i++)
+    {
+        auto &tensor=patch_double_layer_tensors[patch_uncontracted_coord[i][0]][patch_uncontracted_coord[i][1]];
+        tensor=tensor*phys_legs_combiners[i];
+        //Print(tensor);
+    }
+
+    //absorb up and right bond tensors into double layer tensors
+    for (int rowi=0; rowi<patch_dim[0]; rowi++)
+    {
+        for (int coli=0; coli<patch_dim[1]; coli++)
+        {
+            //absorb right bond
+            if (coli<patch_dim[1]-1)
+            {
+                int rbond=square_peps.lattice().comm_bond(patch_sites[rowi][coli],patch_sites[rowi][coli+1]);
+                patch_double_layer_tensors[rowi][coli]*=square_peps.bond_tensors(rbond)*dag(prime(square_peps.bond_tensors(rbond)));
+            }
+            //absorb up bond
+            if (rowi<patch_dim[0]-1)
+            {
+                int ubond=square_peps.lattice().comm_bond(patch_sites[rowi][coli],patch_sites[rowi+1][coli]);
+                patch_double_layer_tensors[rowi][coli]*=square_peps.bond_tensors(ubond)*dag(prime(square_peps.bond_tensors(ubond)))*dag(up_legs_combiners[rowi][coli])*dag(down_legs_combiners[rowi+1][coli]);
+            }
+
+            //Print(rowi);
+            //Print(coli);
+            //Print(patch_double_layer_tensors[rowi][coli]);
+        }
+    }
+
+    //for (int rowi=0; rowi<patch_dim[0]; rowi++)
+    //{
+    //    for (int coli=0; coli<patch_dim[1]; coli++)
+    //    {
+    //        Print(rowi);
+    //        Print(coli);
+    //        //PrintDat(patch_site_tensors[rowi][coli]);
+    //        //Print(up_legs_combiners[rowi][coli]);
+    //        //Print(down_legs_combiners[rowi][coli]);
+    //        Print(patch_double_layer_tensors[rowi][coli]);
+    //    }
+    //}
+
+
+    //obtain RDM row by row
+    IQTensor two_sites_RDM;
+    IQCombiner two_sites_combiner(phys_legs_combiners[0].right(),phys_legs_combiners[1].right());
+    int uncontracted_sites_include=0;
+    for (int rowi=0; rowi<patch_dim[0]; rowi++)
+    {
+        for (int coli=0; coli<patch_dim[1]; coli++)
+        {
+            if (!two_sites_RDM.valid()) 
+                two_sites_RDM=patch_double_layer_tensors[rowi][coli];
+            else
+                two_sites_RDM*=patch_double_layer_tensors[rowi][coli];
+
+            if (patch_sites[rowi][coli]==uncontracted_sites[0] || patch_sites[rowi][coli]==uncontracted_sites[1]) uncontracted_sites_include++;
+            if (uncontracted_sites_include==2)
+            {
+                two_sites_RDM=two_sites_RDM*two_sites_combiner;
+                uncontracted_sites_include=0;
+            }
+
+            //Print(rowi);
+            //Print(coli);
+            //Print(patch_double_layer_tensors[rowi][coli]);
+            //Print(two_sites_RDM);
+        }
+    }
+
+    two_sites_RDM=two_sites_RDM*dag(two_sites_combiner)*dag(phys_legs_combiners[0])*dag(phys_legs_combiners[1]);
+
+    return two_sites_RDM;
 }
 
 

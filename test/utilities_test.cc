@@ -1,34 +1,36 @@
 
 //#include "peps.h"
-#include "square_rvb.h"
+//#include "square_rvb.h"
 //#include "kagome_rvb.h"
+#include "simple_update.h"
 
-//using namespace square_psg;
+using namespace square_psg;
 
 int main()
 {
-    Square_Lattice_Torus square_torus({8,8});
 
-    IQPEPS square_peps(square_torus);
+    //Square_Lattice_Torus square_torus({8,8});
 
-    std::stringstream ss;
-    //zero-flux state
-    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=6_Lx=8_Ly=8_optimized"; 
-    //pi-flux state
-    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=6_Lx=8_Ly=8_optimized"; 
-    std::string file_name=ss.str();
-    readFromFile(file_name,square_peps);
-    Print(square_peps.name());
+    //IQPEPS square_peps(square_torus);
 
-    //store as tnetwork_storage
-    Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
-    std::stringstream ss_tnetwork;
-    //zero-flux state
-    ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=6_Lx=8_Ly=8_optimized";
-    //pi-flux state
-    //ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=6_Lx=8_Ly=8_optimized";
-    file_name=ss_tnetwork.str();
-    writeToFile(file_name,square_rvb_storage);
+    //std::stringstream ss;
+    ////zero-flux state
+    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=6_Lx=8_Ly=8_optimized"; 
+    ////pi-flux state
+    ////ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=6_Lx=8_Ly=8_optimized"; 
+    //std::string file_name=ss.str();
+    //readFromFile(file_name,square_peps);
+    //Print(square_peps.name());
+
+    ////store as tnetwork_storage
+    //Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
+    //std::stringstream ss_tnetwork;
+    ////zero-flux state
+    //ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=6_Lx=8_Ly=8_optimized";
+    ////pi-flux state
+    ////ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=6_Lx=8_Ly=8_optimized";
+    //file_name=ss_tnetwork.str();
+    //writeToFile(file_name,square_rvb_storage);
 
     //check C4 symmetry
     //T^i_{abcd}=\chi_c4*theta_c4 T^i_{dabc}
@@ -55,6 +57,14 @@ int main()
     //        cout << endl;
     //    }
     //}
+
+    mu_12=1;
+    IQPEPS square_peps=square_srvb_peps(8,8);
+
+    std::array<std::vector<IQTensor>,2> env_tens;
+    get_env_tensor_minimization(square_peps.site_tensors(0)*square_peps.bond_tensors(1),square_peps.site_tensors(1),env_tens);
+
+    PrintDat(square_peps_two_sites_RDM_simple_update(square_peps,env_tens[0][0],{{0,1,2,3},{8,9,10,11},{16,17,18,19}},{9,10}));
 
     return 0;
 }

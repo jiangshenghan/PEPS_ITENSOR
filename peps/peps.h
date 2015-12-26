@@ -101,6 +101,10 @@ class PEPSt
         {
             return indexset_ptr_->virt_legs(leg_i);
         }
+        inline const IndexT &virt_legs(int sitei, int neighi) const
+        {
+            return indexset_ptr_->virt_legs(sitei*n_bonds_to_one_site()+neighi);
+        }
 
         inline const TensorT &site_tensors(int i) const
         {

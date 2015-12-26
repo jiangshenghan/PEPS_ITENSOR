@@ -8,7 +8,7 @@ using namespace square_psg;
 int main()
 {
     //control PSG parameters
-    mu_12=1; 
+    mu_12=-1; 
 
 
     //init lattice
@@ -17,44 +17,44 @@ int main()
 
 
     //construct random peps with a good initial state
-    IQPEPS_IndexSet_SpinHalf index_set(6,square_lattice);
-    IQPEPS square_peps(square_lattice,index_set);
+    //IQPEPS_IndexSet_SpinHalf index_set(6,square_lattice);
+    //IQPEPS square_peps(square_lattice,index_set);
 
-    double init_energy=0;
-    do
-    {
-        //get "energy" of init state by env_tens
-        random_init_square_rvb_peps(square_peps);
-        std::array<IQIndex,2> site01_legs{square_peps.phys_legs(0),square_peps.phys_legs(1)};
-        NN_Heisenberg_Hamiltonian hamiltonian_gate(site01_legs);
-        std::array<std::vector<IQTensor>,2> env_tens;
+    //double init_energy=0;
+    //do
+    //{
+    //    //get "energy" of init state by env_tens
+    //    random_init_square_rvb_peps(square_peps);
+    //    std::array<IQIndex,2> site01_legs{square_peps.phys_legs(0),square_peps.phys_legs(1)};
+    //    NN_Heisenberg_Hamiltonian hamiltonian_gate(site01_legs);
+    //    std::array<std::vector<IQTensor>,2> env_tens;
 
-        int comm_bond=square_peps.lattice().comm_bond(0,1);
-        auto comm_bond_tensor=square_peps.bond_tensors(comm_bond);
+    //    int comm_bond=square_peps.lattice().comm_bond(0,1);
+    //    auto comm_bond_tensor=square_peps.bond_tensors(comm_bond);
 
-        auto combined_site_tens0=square_peps.site_tensors(0);
-        for (int neighi=0; neighi<square_peps.n_bonds_to_one_site(); neighi++)
-        {
-            int bondi=square_peps.lattice().site_neighbour_bonds(0,neighi);
-            if (bondi==comm_bond) continue;
-            combined_site_tens0*=square_peps.bond_tensors(bondi);
-        }
-        get_env_tensor_minimization(combined_site_tens0*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
+    //    auto combined_site_tens0=square_peps.site_tensors(0);
+    //    for (int neighi=0; neighi<square_peps.n_bonds_to_one_site(); neighi++)
+    //    {
+    //        int bondi=square_peps.lattice().site_neighbour_bonds(0,neighi);
+    //        if (bondi==comm_bond) continue;
+    //        combined_site_tens0*=square_peps.bond_tensors(bondi);
+    //    }
+    //    get_env_tensor_minimization(combined_site_tens0*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
 
-        std::array<IQTensor,2> site_env_tens{{combined_site_tens0,square_peps.site_tensors(1)}}; 
-        for (int sitei=0; sitei<2; sitei++)
-        {
-            for (const auto &env_leg_tensor : env_tens[sitei])
-            {
-                site_env_tens[sitei]*=env_leg_tensor;
-            }
-            site_env_tens[sitei].noprime();
-        }
+    //    std::array<IQTensor,2> site_env_tens{{combined_site_tens0,square_peps.site_tensors(1)}}; 
+    //    for (int sitei=0; sitei<2; sitei++)
+    //    {
+    //        for (const auto &env_leg_tensor : env_tens[sitei])
+    //        {
+    //            site_env_tens[sitei]*=env_leg_tensor;
+    //        }
+    //        site_env_tens[sitei].noprime();
+    //    }
 
-        init_energy=heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate);
-        Print(init_energy);
-    }
-    while (init_energy>-0.2);
+    //    init_energy=heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate);
+    //    Print(init_energy);
+    //}
+    //while (init_energy>-0.2);
 
     //construct short-range rvb
     //IQPEPS square_peps=square_srvb_peps(Lx,Ly);
@@ -66,11 +66,11 @@ int main()
     //zero-flux state
     //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=6_Lx=" << Lx << "_Ly=" << Ly << "_optimized";
     //pi flux state
-    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=6_Lx=" << Lx << "_Ly=" << Ly << "_optimized";
+    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=6_Lx=" << Lx << "_Ly=" << Ly << "_optimized";
 
-    //std::string file_name=ss.str();
-    //IQPEPS square_peps(square_lattice);
-    //readFromFile(file_name,square_peps);
+    std::string file_name=ss.str();
+    IQPEPS square_peps(square_lattice);
+    readFromFile(file_name,square_peps);
 
 
     //Check symmetry
@@ -109,8 +109,8 @@ int main()
 
 
     //optimazation
-    Evolution_Params square_su_params(6,{100,200,400,500,1000,5000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
-    //Evolution_Params square_su_params(1,{500},{1e-2});
+    //Evolution_Params square_su_params(6,{100,200,400,500,1000,5000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
+    Evolution_Params square_su_params(1,{20000},{1e-5});
     spin_square_peps_simple_update(square_peps,square_su_params);
 
 

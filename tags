@@ -1730,6 +1730,7 @@ spin_symmetrize_tensor	peps_ansatz/square_rvb.cc	/^void spin_symmetrize_tensor(I
 spin_symmetrize_tensor	peps_ansatz/square_rvb.h	/^void spin_symmetrize_tensor(IQTensor &site_tensor, const Singlet_Tensor_Basis &site_tensor_basis);$/;"	p	signature:(IQTensor &site_tensor, const Singlet_Tensor_Basis &site_tensor_basis)
 spin_to_sz	peps_utilities/utilities.cc	/^void spin_to_sz(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg)$/;"	f	signature:(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg)
 spin_to_sz	peps_utilities/utilities.h	/^void spin_to_sz(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg);$/;"	p	signature:(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg)
+square_peps_two_sites_RDM_simple_update	simple_update/simple_update.h	/^IQTensor square_peps_two_sites_RDM_simple_update(const IQPEPS &square_peps, std::vector<std::vector<Coordinate>> const IQTensor &env_tens);$/;"	p	signature:(const IQPEPS &square_peps, std::vector<std::vector<Coordinate>> const IQTensor &env_tens)
 square_psg	peps_ansatz/square_rvb.cc	/^namespace square_psg$/;"	n	file:
 square_psg	peps_ansatz/square_rvb.h	/^namespace square_psg$/;"	n
 square_psg::Theta_c4	peps_ansatz/square_rvb.cc	/^    Complex Theta_c4=1;$/;"	m	namespace:square_psg	file:
