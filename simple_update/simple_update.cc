@@ -903,3 +903,21 @@ double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &sit
 
     return energy/wf_norm_sq;
 }
+
+double heisenberg_energy_from_RDM(const IQTensor &two_sites_RDM)
+{
+    std::vector<IQIndex> phys_legs;
+    for (const auto &indice : two_sites_RDM.indices())
+    {
+        if (indice.primeLevel()==0) phys_legs.push_back(indice); 
+    }
+
+    auto norm_sq=trace(two_sites_RDM,phys_legs[0],prime(dag(phys_legs[0]))).trace(phys_legs[1],prime(dag(phys_legs[1]))).toComplex();
+    NN_Heisenberg_Hamiltonian heisenberg_gate({phys_legs[0],phys_legs[1]});
+    auto energy=(two_sites_RDM*(heisenberg_gate.site_tensors(0)*heisenberg_gate.bond_tensor()*heisenberg_gate.site_tensors(1))).toComplex();
+
+    Print(norm_sq);
+    Print(energy);
+
+    return (energy/norm_sq).real();
+}

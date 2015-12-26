@@ -64,7 +64,9 @@ int main()
     std::array<std::vector<IQTensor>,2> env_tens;
     get_env_tensor_minimization(square_peps.site_tensors(0)*square_peps.bond_tensors(1),square_peps.site_tensors(1),env_tens);
 
-    PrintDat(square_peps_two_sites_RDM_simple_update(square_peps,env_tens[0][0],{{0,1,2,3},{8,9,10,11},{16,17,18,19}},{9,10}));
+    auto two_sites_RDM=square_peps_two_sites_RDM_simple_update(square_peps,env_tens[0][0],{{0,1,2,3},{8,9,10,11},{16,17,18,19}},{9,10});
+
+    Print(heisenberg_energy_from_RDM(two_sites_RDM));
 
     return 0;
 }

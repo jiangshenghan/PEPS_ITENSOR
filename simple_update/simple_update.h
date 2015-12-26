@@ -77,5 +77,5 @@ void wf_distance_func_check(const std::array<IQTensor,2> &site_tensors, const IQ
 double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate);
 double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const NN_Heisenberg_Hamiltonian &hamiltonian_gate);
 //measure heisenberg energy using two sites RDM
-double heisenberg_energy_from_RDM(const IQTensor &two_sites_RDM, const NN_Heisenberg_Hamiltonian hamiltonian_gate);
+double heisenberg_energy_from_RDM(const IQTensor &two_sites_RDM);
 #endif
