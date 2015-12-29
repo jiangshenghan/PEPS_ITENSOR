@@ -730,6 +730,7 @@ PEPSt::site_tensors	peps/peps.h	/^        inline const TensorT &site_tensors(int
 PEPSt::site_tensors	peps/peps.h	/^        inline const std::vector<TensorT> &site_tensors() const$/;"	f	class:PEPSt	access:public	signature:() const
 PEPSt::site_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_; $/;"	m	class:PEPSt	access:private
 PEPSt::virt_legs	peps/peps.h	/^        inline const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt	access:public	signature:(const int &leg_i) const
+PEPSt::virt_legs	peps/peps.h	/^        inline const IndexT &virt_legs(int sitei, int neighi) const$/;"	f	class:PEPSt	access:public	signature:(int sitei, int neighi) const
 PEPSt::write	peps/peps.cc	/^void PEPSt<IQTensor>::write(std::ostream &s) const;$/;"	p	class:PEPSt	file:	signature:(std::ostream &s) const
 PEPSt::write	peps/peps.cc	/^void PEPSt<ITensor>::write(std::ostream &s) const;$/;"	p	class:PEPSt	file:	signature:(std::ostream &s) const
 PEPSt::write	peps/peps.cc	/^void PEPSt<TensorT>::write(std::ostream &s) const$/;"	f	class:PEPSt	signature:(std::ostream &s) const
@@ -1054,6 +1055,39 @@ Square_Lattice_Torus::Right	lattice/lattice.h	/^        enum Neighbour {Left=0, 
 Square_Lattice_Torus::Square_Lattice_Torus	lattice/lattice.cc	/^Square_Lattice_Torus::Square_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(1,2,n_uc)$/;"	f	class:Square_Lattice_Torus	signature:(const std::array<int,2> &n_uc)
 Square_Lattice_Torus::Square_Lattice_Torus	lattice/lattice.h	/^        Square_Lattice_Torus(const std::array<int,2> &n_uc);$/;"	p	class:Square_Lattice_Torus	access:public	signature:(const std::array<int,2> &n_uc)
 Square_Lattice_Torus::Up	lattice/lattice.h	/^        enum Neighbour {Left=0, Up=1, Right=2, Down=3};$/;"	e	enum:Square_Lattice_Torus::Neighbour
+Square_Patch_RDM	simple_update/simple_update_patch.cc	/^Square_Patch_RDM::Square_Patch_RDM(IQPEPS &square_peps, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites):$/;"	f	class:Square_Patch_RDM	signature:(IQPEPS &square_peps, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites)
+Square_Patch_RDM	simple_update/simple_update_patch.h	/^        Square_Patch_RDM(IQPEPS &square_peps, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites);$/;"	p	class:Square_Patch_RDM	access:public	signature:(IQPEPS &square_peps, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites)
+Square_Patch_RDM	simple_update/simple_update_patch.h	/^class Square_Patch_RDM$/;"	c
+Square_Patch_RDM::Square_Patch_RDM	simple_update/simple_update_patch.cc	/^Square_Patch_RDM::Square_Patch_RDM(IQPEPS &square_peps, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites):$/;"	f	class:Square_Patch_RDM	signature:(IQPEPS &square_peps, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites)
+Square_Patch_RDM::Square_Patch_RDM	simple_update/simple_update_patch.h	/^        Square_Patch_RDM(IQPEPS &square_peps, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites);$/;"	p	class:Square_Patch_RDM	access:public	signature:(IQPEPS &square_peps, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites)
+Square_Patch_RDM::cutting_sites_	simple_update/simple_update_patch.h	/^        std::array<int,2> cutting_sites_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::down_legs_combiners_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQCombiner>> left_legs_combiners_, down_legs_combiners_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::env_tens_	simple_update/simple_update_patch.h	/^        IQTensor env_tens_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::expect_val_from_replaced_tensors	simple_update/simple_update_patch.cc	/^Complex Square_Patch_RDM::expect_val_from_replaced_tensors(std::array<int,2> replaced_tensors, std::array<int,2> replaced_tensors_dag)$/;"	f	class:Square_Patch_RDM	signature:(std::array<int,2> replaced_tensors, std::array<int,2> replaced_tensors_dag)
+Square_Patch_RDM::expect_val_from_replaced_tensors	simple_update/simple_update_patch.h	/^        Complex expect_val_from_replaced_tensors(std::array<int,4> replaced_tensors);$/;"	p	class:Square_Patch_RDM	access:public	signature:(std::array<int,4> replaced_tensors)
+Square_Patch_RDM::init_legs_combiners	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::init_legs_combiners()$/;"	f	class:Square_Patch_RDM	signature:()
+Square_Patch_RDM::init_legs_combiners	simple_update/simple_update_patch.h	/^        void init_legs_combiners();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
+Square_Patch_RDM::init_patch_cutting_coords	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::init_patch_cutting_coords()$/;"	f	class:Square_Patch_RDM	signature:()
+Square_Patch_RDM::init_patch_cutting_coords	simple_update/simple_update_patch.h	/^        void init_patch_cutting_coords();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
+Square_Patch_RDM::init_patch_double_layer_tensors	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::init_patch_double_layer_tensors()$/;"	f	class:Square_Patch_RDM	signature:()
+Square_Patch_RDM::init_patch_double_layer_tensors	simple_update/simple_update_patch.h	/^        void init_patch_double_layer_tensors();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
+Square_Patch_RDM::init_patch_tensors	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::init_patch_tensors()$/;"	f	class:Square_Patch_RDM	signature:()
+Square_Patch_RDM::init_patch_tensors	simple_update/simple_update_patch.h	/^        void init_patch_tensors();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
+Square_Patch_RDM::left_legs_combiners_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQCombiner>> left_legs_combiners_, down_legs_combiners_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::modify_boundary_patch_tensors	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::modify_boundary_patch_tensors()$/;"	f	class:Square_Patch_RDM	signature:()
+Square_Patch_RDM::modify_boundary_patch_tensors	simple_update/simple_update_patch.h	/^        void modify_boundary_patch_tensors();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
+Square_Patch_RDM::obtain_two_sites_RDM	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::obtain_two_sites_RDM()$/;"	f	class:Square_Patch_RDM	signature:()
+Square_Patch_RDM::obtain_two_sites_RDM	simple_update/simple_update_patch.h	/^        void obtain_two_sites_RDM();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
+Square_Patch_RDM::patch_cutting_coords_	simple_update/simple_update_patch.h	/^        std::array<std::array<int,2>,2> patch_cutting_coords_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::patch_dim_	simple_update/simple_update_patch.h	/^        std::array<int,2> patch_dim_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::patch_double_layer_tensors_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQTensor>> patch_tensors_, patch_tensors_dag_, patch_double_layer_tensors_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::patch_sites_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<int>> patch_sites_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::patch_tensors_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQTensor>> patch_tensors_, patch_tensors_dag_, patch_double_layer_tensors_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::patch_tensors_dag_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQTensor>> patch_tensors_, patch_tensors_dag_, patch_double_layer_tensors_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::phys_legs_combiners_	simple_update/simple_update_patch.h	/^        std::vector<IQCombiner> phys_legs_combiners_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::square_peps_	simple_update/simple_update_patch.h	/^        IQPEPS square_peps_;$/;"	m	class:Square_Patch_RDM	access:private
+Square_Patch_RDM::two_sites_RDM	simple_update/simple_update_patch.h	/^        const IQTensor &two_sites_RDM() const $/;"	f	class:Square_Patch_RDM	access:public	signature:() const
+Square_Patch_RDM::two_sites_RDM_	simple_update/simple_update_patch.h	/^        IQTensor two_sites_RDM_;$/;"	m	class:Square_Patch_RDM	access:private
 TPOt	peps_utilities/TPO.h	/^        TPOt() {}$/;"	f	class:TPOt	access:public	signature:()
 TPOt	peps_utilities/TPO.h	/^        TPOt(int n_sites, int n_bonds): site_tensors_(n_sites), bond_tensors_(n_bonds) {}$/;"	f	class:TPOt	access:public	signature:(int n_sites, int n_bonds)
 TPOt	peps_utilities/TPO.h	/^class TPOt$/;"	c
@@ -1132,6 +1166,7 @@ _PEPS_INDEXSET_H_	peps/peps_indexset.h	3;"	d
 _PREDEF_H_	peps_utilities/predef.h	3;"	d
 _SIMPLE_UPDATE_ENV_H_	simple_update/simple_update_env.h	3;"	d
 _SIMPLE_UPDATE_H_	simple_update/simple_update.h	3;"	d
+_SIMPLE_UPDATE_PATCH_H_	simple_update/simple_update_patch.h	3;"	d
 _SINGLET_TENSOR_BASIS_	peps_utilities/singlet_tensor_basis.h	3;"	d
 _SQUARE_CYLINDER_H_	peps/square_double_layer_peps.h	3;"	d
 _SQUARE_RVB_H_	peps_ansatz/square_rvb.h	2;"	d
@@ -1221,6 +1256,8 @@ ctm_sandwich_operator_value	corner_transfer_matrix/corner_transfer_matrix.cc	/^C
 ctm_sandwich_operator_value	corner_transfer_matrix/corner_transfer_matrix.h	/^        Complex ctm_sandwich_operator_value(int network_no, const std::vector<int> &bulk_position, TPOt<TensorT> tensor_operator);$/;"	p	class:Corner_Transfer_Matrix	access:public	signature:(int network_no, const std::vector<int> &bulk_position, TPOt<TensorT> tensor_operator)
 cutoff_	corner_transfer_matrix/corner_transfer_matrix.h	/^        double cutoff_, spec_diff_, converge_diff_;$/;"	m	class:Corner_Transfer_Matrix	access:private
 cutting_col_	peps/square_double_layer_peps.h	/^        int cutting_col_; $/;"	m	class:Square_Double_Layer_PEPSt	access:private
+cutting_sites_	simple_update/simple_update_patch.cc	/^    cutting_sites_(cutting_sites),$/;"	p	file:	signature:(cutting_sites)
+cutting_sites_	simple_update/simple_update_patch.h	/^        std::array<int,2> cutting_sites_;$/;"	m	class:Square_Patch_RDM	access:private
 d	peps/peps.h	/^        int d() const$/;"	f	class:PEPSt	access:public	signature:() const
 d	peps/peps_indexset.h	/^        inline const int &d() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 d_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt	access:private
@@ -1260,6 +1297,7 @@ double_layer_tensors_	peps/double_layer_peps.h	/^        std::vector<TensorT> do
 double_layer_uncontracted_tensors	corner_transfer_matrix/corner_transfer_matrix.h	/^        const TensorT &double_layer_uncontracted_tensors(const std::array<int,2> &coord) const$/;"	f	class:Corner_Transfer_Matrix	access:public	signature:(const std::array<int,2> &coord) const
 double_layer_uncontracted_tensors	corner_transfer_matrix/corner_transfer_matrix.h	/^        const TensorT &double_layer_uncontracted_tensors(int x, int y) const$/;"	f	class:Corner_Transfer_Matrix	access:public	signature:(int x, int y) const
 double_layer_uncontracted_tensors_	corner_transfer_matrix/corner_transfer_matrix.h	/^        std::vector<TensorT> double_layer_uncontracted_tensors_;$/;"	m	class:Corner_Transfer_Matrix	access:private
+down_legs_combiners_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQCombiner>> left_legs_combiners_, down_legs_combiners_;$/;"	m	class:Square_Patch_RDM	access:private
 down_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<IQTensor>::down_move(int down_y0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int down_y0)
 down_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<ITensor>::down_move(int down_y0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int down_y0)
 down_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<TensorT>::down_move(int down_y0)$/;"	f	class:Corner_Transfer_Matrix	signature:(int down_y0)
@@ -1287,6 +1325,8 @@ entanglement_spectrum	peps/square_double_layer_peps.h	/^        std::vector<doub
 env_elems_from_env_tens	simple_update/simple_update_env.cc	/^std::vector<double> env_elems_from_env_tens(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::array<std::vector<IQTensor>,2> &env_tens)$/;"	f	signature:(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::array<std::vector<IQTensor>,2> &env_tens)
 env_elems_from_env_tens	simple_update/simple_update_env.h	/^std::vector<double> env_elems_from_env_tens(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::array<std::vector<IQTensor>,2> &env_tens);$/;"	p	signature:(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::array<std::vector<IQTensor>,2> &env_tens)
 env_tens	simple_update/simple_update_env.h	/^        std::array<std::vector<IQTensor>,2> env_tens;$/;"	m	struct:Env_Tens_Params	access:public
+env_tens_	simple_update/simple_update_patch.cc	/^    env_tens_(env_tens),$/;"	p	file:	signature:(env_tens)
+env_tens_	simple_update/simple_update_patch.h	/^        IQTensor env_tens_;$/;"	m	class:Square_Patch_RDM	access:private
 eta_from_mu	peps_utilities/utilities.cc	/^IQTensor eta_from_mu(double mu, IQIndex eta_leg)$/;"	f	signature:(double mu, IQIndex eta_leg)
 eta_from_mu	peps_utilities/utilities.cc	/^IQTensor eta_from_mu(double mu, const std::vector<int> &flavor_deg)$/;"	f	signature:(double mu, const std::vector<int> &flavor_deg)
 eta_from_mu	peps_utilities/utilities.cc	/^ITensor eta_from_mu(double mu, Index eta_leg)$/;"	f	signature:(double mu, Index eta_leg)
@@ -1294,6 +1334,8 @@ eta_from_mu	peps_utilities/utilities.h	/^IQTensor eta_from_mu(double mu, IQIndex
 eta_from_mu	peps_utilities/utilities.h	/^IQTensor eta_from_mu(double mu, const std::vector<int> &flavor_deg);$/;"	p	signature:(double mu, const std::vector<int> &flavor_deg)
 eta_from_mu	peps_utilities/utilities.h	/^ITensor eta_from_mu(double mu, Index eta_leg);$/;"	p	signature:(double mu, Index eta_leg)
 evolved_wf_norm	simple_update/simple_update.h	/^        double evolved_wf_norm;$/;"	m	struct:Wf_Distance_Params	access:public
+expect_val_from_replaced_tensors	simple_update/simple_update_patch.cc	/^Complex Square_Patch_RDM::expect_val_from_replaced_tensors(std::array<int,2> replaced_tensors, std::array<int,2> replaced_tensors_dag)$/;"	f	class:Square_Patch_RDM	signature:(std::array<int,2> replaced_tensors, std::array<int,2> replaced_tensors_dag)
+expect_val_from_replaced_tensors	simple_update/simple_update_patch.h	/^        Complex expect_val_from_replaced_tensors(std::array<int,4> replaced_tensors);$/;"	p	class:Square_Patch_RDM	access:public	signature:(std::array<int,4> replaced_tensors)
 flavor_accumulate_deg	simple_update/simple_update_env.h	/^        std::vector<int> flavor_accumulate_deg;$/;"	m	struct:Env_Tens_Params	access:public
 flavor_configs	peps_utilities/singlet_tensor_basis.h	/^        const std::vector<int> &flavor_configs(int i) const { return flavor_configs_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
 flavor_configs_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<std::vector<int>> flavor_configs_;$/;"	m	class:Singlet_Tensor_Basis	access:private
@@ -1318,6 +1360,8 @@ get_env_tensor_iterative	simple_update/simple_update_env.cc	/^void get_env_tenso
 get_env_tensor_iterative	simple_update/simple_update_env.h	/^void get_env_tensor_iterative(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens);$/;"	p	signature:(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
 get_env_tensor_minimization	simple_update/simple_update_env.cc	/^void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)$/;"	f	signature:(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
 get_env_tensor_minimization	simple_update/simple_update_env.h	/^void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens);$/;"	p	signature:(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
+heisenberg_energy_from_RDM	simple_update/simple_update_patch.cc	/^double heisenberg_energy_from_RDM(const IQTensor &two_sites_RDM)$/;"	f	signature:(const IQTensor &two_sites_RDM)
+heisenberg_energy_from_RDM	simple_update/simple_update_patch.h	/^double heisenberg_energy_from_RDM(const IQTensor &two_sites_RDM);$/;"	p	signature:(const IQTensor &two_sites_RDM)
 heisenberg_energy_from_site_env_tensors	simple_update/simple_update.cc	/^double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)$/;"	f	signature:(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)
 heisenberg_energy_from_site_env_tensors	simple_update/simple_update.cc	/^double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)$/;"	f	signature:(const std::array<IQTensor,2> &site_env_tens, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)
 heisenberg_energy_from_site_env_tensors	simple_update/simple_update.h	/^double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate);$/;"	p	signature:(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)
@@ -1358,12 +1402,20 @@ init_edge	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfe
 init_edge	corner_transfer_matrix/corner_transfer_matrix.h	/^        void init_edge();$/;"	p	class:Corner_Transfer_Matrix	access:public	signature:()
 init_env_tensor	simple_update/simple_update_env.cc	/^void init_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)$/;"	f	signature:(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
 init_env_tensor	simple_update/simple_update_env.h	/^void init_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens);$/;"	p	signature:(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens)
+init_legs_combiners	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::init_legs_combiners()$/;"	f	class:Square_Patch_RDM	signature:()
+init_legs_combiners	simple_update/simple_update_patch.h	/^        void init_legs_combiners();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
 init_list_coord	lattice/lattice.cc	/^void Lattice_Base::init_list_coord()$/;"	f	class:Lattice_Base	signature:()
 init_list_coord	lattice/lattice.h	/^        void init_list_coord();$/;"	p	class:Lattice_Base	access:public	signature:()
 init_network	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<IQTensor>::init_network(int network_no);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int network_no)
 init_network	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<ITensor>::init_network(int network_no);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int network_no)
 init_network	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<TensorT>::init_network(int network_no)$/;"	f	class:Corner_Transfer_Matrix	signature:(int network_no)
 init_network	corner_transfer_matrix/corner_transfer_matrix.h	/^        void init_network(int network_no);$/;"	p	class:Corner_Transfer_Matrix	access:public	signature:(int network_no)
+init_patch_cutting_coords	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::init_patch_cutting_coords()$/;"	f	class:Square_Patch_RDM	signature:()
+init_patch_cutting_coords	simple_update/simple_update_patch.h	/^        void init_patch_cutting_coords();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
+init_patch_double_layer_tensors	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::init_patch_double_layer_tensors()$/;"	f	class:Square_Patch_RDM	signature:()
+init_patch_double_layer_tensors	simple_update/simple_update_patch.h	/^        void init_patch_double_layer_tensors();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
+init_patch_tensors	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::init_patch_tensors()$/;"	f	class:Square_Patch_RDM	signature:()
+init_patch_tensors	simple_update/simple_update_patch.h	/^        void init_patch_tensors();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
 init_phys_legs	peps/peps_indexset.cc	/^void IQPEPS_IndexSet_SpinHalf::init_phys_legs()$/;"	f	class:IQPEPS_IndexSet_SpinHalf	signature:()
 init_phys_legs	peps/peps_indexset.cc	/^void IQPEPS_IndexSet_Spin_Sym::init_phys_legs(const std::vector<int> &phys_leg_spin_deg, int phys_legs_qn_order)$/;"	f	class:IQPEPS_IndexSet_Spin_Sym	signature:(const std::vector<int> &phys_leg_spin_deg, int phys_legs_qn_order)
 init_phys_legs	peps/peps_indexset.cc	/^void PEPS_IndexSet::init_phys_legs()$/;"	f	class:PEPS_IndexSet	signature:()
@@ -1412,6 +1464,7 @@ lattice	peps/peps.h	/^        inline const Lattice_Base &lattice() const$/;"	f	c
 lattice_ptr_	peps/peps.h	/^        std::shared_ptr<Lattice_Base> lattice_ptr_;$/;"	m	class:PEPSt	access:private
 left_leg_of_combiners	peps_utilities/utilities.h	/^inline IQIndex left_leg_of_combiners(const IQCombiner &combiner, int i) { return combiner.left()[i]; }$/;"	f	signature:(const IQCombiner &combiner, int i)
 left_leg_of_combiners	peps_utilities/utilities.h	/^inline Index left_leg_of_combiners(const Combiner &combiner, int i) { return combiner.left(i); }$/;"	f	signature:(const Combiner &combiner, int i)
+left_legs_combiners_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQCombiner>> left_legs_combiners_, down_legs_combiners_;$/;"	m	class:Square_Patch_RDM	access:private
 left_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<IQTensor>::left_move(int left_x0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int left_x0)
 left_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<ITensor>::left_move(int left_x0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int left_x0)
 left_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<TensorT>::left_move(int left_x0)$/;"	f	class:Corner_Transfer_Matrix	signature:(int left_x0)
@@ -1431,9 +1484,9 @@ main	execute/honeycomb_correlators.cc	/^int main()$/;"	f	signature:()
 main	execute/peps_change_size.cc	/^int main()$/;"	f	signature:()
 main	test/ctm_test.cc	/^int main()$/;"	f	signature:()
 main	test/lattice_test.cc	/^int main()$/;"	f	signature:()
+main	test/patch_test.cc	/^int main()$/;"	f	signature:()
 main	test/peps_test.cc	/^int main()$/;"	f	signature:()
 main	test/simple_update_test.cc	/^int main()$/;"	f	signature:()
-main	test/small_sample_test.cc	/^int main()$/;"	f	signature:()
 main	test/utilities_test.cc	/^int main()$/;"	f	signature:()
 match_sigma_left_right	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<IQTensor>::match_sigma_left_right(int lr_no);$/;"	p	class:Square_Double_Layer_PEPSt	file:	signature:(int lr_no)
 match_sigma_left_right	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<ITensor>::match_sigma_left_right(int lr_no);$/;"	p	class:Square_Double_Layer_PEPSt	file:	signature:(int lr_no)
@@ -1444,6 +1497,8 @@ match_sigma_lr_double_peps	peps/square_double_layer_peps.cc	/^void Square_Double
 match_sigma_lr_double_peps	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<TensorT>::match_sigma_lr_double_peps()$/;"	f	class:Square_Double_Layer_PEPSt	signature:()
 match_sigma_lr_double_peps	peps/square_double_layer_peps.h	/^        void match_sigma_lr_double_peps();$/;"	p	class:Square_Double_Layer_PEPSt	access:public	signature:()
 max_spins_	peps_utilities/singlet_tensor_basis.h	/^        std::vector<int> max_spins_;$/;"	m	class:Singlet_Tensor_Basis	access:private
+modify_boundary_patch_tensors	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::modify_boundary_patch_tensors()$/;"	f	class:Square_Patch_RDM	signature:()
+modify_boundary_patch_tensors	simple_update/simple_update_patch.h	/^        void modify_boundary_patch_tensors();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
 move_sigma_lr	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<IQTensor>::move_sigma_lr(const std::array<int,2> &new_col_lr);$/;"	p	class:Square_Double_Layer_PEPSt	file:	signature:(const std::array<int,2> &new_col_lr)
 move_sigma_lr	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<ITensor>::move_sigma_lr(const std::array<int,2> &new_col_lr);$/;"	p	class:Square_Double_Layer_PEPSt	file:	signature:(const std::array<int,2> &new_col_lr)
 move_sigma_lr	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<TensorT>::move_sigma_lr(const std::array<int,2> &new_col_lr)$/;"	f	class:Square_Double_Layer_PEPSt	signature:(const std::array<int,2> &new_col_lr)
@@ -1539,6 +1594,8 @@ obtain_density_matrix_spectrum	peps/square_double_layer_peps.cc	/^void Square_Do
 obtain_density_matrix_spectrum	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<ITensor>::obtain_density_matrix_spectrum();$/;"	p	class:Square_Double_Layer_PEPSt	file:	signature:()
 obtain_density_matrix_spectrum	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<TensorT>::obtain_density_matrix_spectrum()$/;"	f	class:Square_Double_Layer_PEPSt	signature:()
 obtain_density_matrix_spectrum	peps/square_double_layer_peps.h	/^        void obtain_density_matrix_spectrum();$/;"	p	class:Square_Double_Layer_PEPSt	access:public	signature:()
+obtain_env_dressed_tensor	simple_update/simple_update_patch.cc	/^void obtain_env_dressed_tensor(IQTensor &dressed_tens, const IQTensor &env_tens, const IQIndex &boundary_leg)$/;"	f	signature:(IQTensor &dressed_tens, const IQTensor &env_tens, const IQIndex &boundary_leg)
+obtain_env_dressed_tensor	simple_update/simple_update_patch.h	/^void obtain_env_dressed_tensor(IQTensor &dressed_tens, const IQTensor &env_tens, const IQIndex &boundary_leg);$/;"	p	signature:(IQTensor &dressed_tens, const IQTensor &env_tens, const IQIndex &boundary_leg)
 obtain_env_tens_from_env_elems	simple_update/simple_update_env.cc	/^void obtain_env_tens_from_env_elems(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::vector<double> env_elems, std::array<std::vector<IQTensor>,2> &env_tens)$/;"	f	signature:(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::vector<double> env_elems, std::array<std::vector<IQTensor>,2> &env_tens)
 obtain_env_tens_from_env_elems	simple_update/simple_update_env.h	/^void obtain_env_tens_from_env_elems(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::vector<double> env_elems, std::array<std::vector<IQTensor>,2> &env_tens);$/;"	p	signature:(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::vector<double> env_elems, std::array<std::vector<IQTensor>,2> &env_tens)
 obtain_layered_tensors_with_combined_legs	peps/double_layer_peps.cc	/^void Double_Layer_PEPSt<IQTensor>::obtain_layered_tensors_with_combined_legs();$/;"	p	class:Double_Layer_PEPSt	file:	signature:()
@@ -1578,6 +1635,8 @@ obtain_transfer_matrix	peps/square_double_layer_peps.cc	/^void Square_Double_Lay
 obtain_transfer_matrix	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<ITensor>::obtain_transfer_matrix(int coli);$/;"	p	class:Square_Double_Layer_PEPSt	file:	signature:(int coli)
 obtain_transfer_matrix	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<TensorT>::obtain_transfer_matrix(int coli)$/;"	f	class:Square_Double_Layer_PEPSt	signature:(int coli)
 obtain_transfer_matrix	peps/square_double_layer_peps.h	/^        void obtain_transfer_matrix(int coli=1);$/;"	p	class:Square_Double_Layer_PEPSt	access:public	signature:(int coli=1)
+obtain_two_sites_RDM	simple_update/simple_update_patch.cc	/^void Square_Patch_RDM::obtain_two_sites_RDM()$/;"	f	class:Square_Patch_RDM	signature:()
+obtain_two_sites_RDM	simple_update/simple_update_patch.h	/^        void obtain_two_sites_RDM();$/;"	p	class:Square_Patch_RDM	access:public	signature:()
 operator ()	peps_utilities/cgtensor.h	/^        IQIndexVal operator()(int n) const$/;"	f	class:IndexSpin	access:public	signature:(int n) const
 operator ()	peps_utilities/singlet_tensor_basis.h	/^        const IQTensor &operator()(int i) const { return singlet_tensors_[i]; }$/;"	f	class:Singlet_Tensor_Basis	access:public	signature:(int i) const
 operator <<	peps_utilities/TPO.h	/^std::ostream &operator<<(std::ostream &s, const TPOt<TensorT> &T)$/;"	f	signature:(std::ostream &s, const TPOt<TensorT> &T)
@@ -1595,6 +1654,13 @@ ordered_combined_virt_indices_	corner_transfer_matrix/corner_transfer_matrix.h	/
 ordered_virt_indices	corner_transfer_matrix/corner_transfer_matrix.h	/^        const std::array<IndexT,4> &ordered_virt_indices(const std::array<int,2> &coord) const$/;"	f	class:Corner_Transfer_Matrix	access:public	signature:(const std::array<int,2> &coord) const
 ordered_virt_indices	corner_transfer_matrix/corner_transfer_matrix.h	/^        const std::array<IndexT,4> &ordered_virt_indices(int x, int y) const$/;"	f	class:Corner_Transfer_Matrix	access:public	signature:(int x, int y) const
 ordered_virt_indices_	corner_transfer_matrix/corner_transfer_matrix.h	/^        std::vector<std::array<IndexT,4>> ordered_virt_indices_;$/;"	m	class:Corner_Transfer_Matrix	access:private
+patch_cutting_coords_	simple_update/simple_update_patch.h	/^        std::array<std::array<int,2>,2> patch_cutting_coords_;$/;"	m	class:Square_Patch_RDM	access:private
+patch_dim_	simple_update/simple_update_patch.h	/^        std::array<int,2> patch_dim_;$/;"	m	class:Square_Patch_RDM	access:private
+patch_double_layer_tensors_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQTensor>> patch_tensors_, patch_tensors_dag_, patch_double_layer_tensors_;$/;"	m	class:Square_Patch_RDM	access:private
+patch_sites	simple_update/simple_update_patch.cc	/^    patch_sites_(patch_sites),$/;"	v
+patch_sites_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<int>> patch_sites_;$/;"	m	class:Square_Patch_RDM	access:private
+patch_tensors_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQTensor>> patch_tensors_, patch_tensors_dag_, patch_double_layer_tensors_;$/;"	m	class:Square_Patch_RDM	access:private
+patch_tensors_dag_	simple_update/simple_update_patch.h	/^        std::vector<std::vector<IQTensor>> patch_tensors_, patch_tensors_dag_, patch_double_layer_tensors_;$/;"	m	class:Square_Patch_RDM	access:private
 peps_to_tnetwork_storage	peps/peps.cc	/^Tnetwork_Storage<IQTensor> peps_to_tnetwork_storage(const PEPSt<IQTensor> &peps);$/;"	p	file:	signature:(const PEPSt<IQTensor> &peps)
 peps_to_tnetwork_storage	peps/peps.cc	/^Tnetwork_Storage<ITensor> peps_to_tnetwork_storage(const PEPSt<ITensor> &peps);$/;"	p	file:	signature:(const PEPSt<ITensor> &peps)
 peps_to_tnetwork_storage	peps/peps.cc	/^Tnetwork_Storage<TensorT> peps_to_tnetwork_storage(const PEPSt<TensorT> &peps)$/;"	f	signature:(const PEPSt<TensorT> &peps)
@@ -1606,6 +1672,7 @@ phys_legs	peps_utilities/TPO.h	/^        IndexT phys_legs(int i)$/;"	f	class:TPO
 phys_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
 phys_legs_	simple_update/trotter_gate.h	/^        std::array<std::array<IQIndex,2>,2> phys_legs_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
 phys_legs_	simple_update/trotter_gate.h	/^        std::vector<std::array<IQIndex,2>> phys_legs_;$/;"	m	class:Trotter_Gate	access:protected
+phys_legs_combiners_	simple_update/simple_update_patch.h	/^        std::vector<IQCombiner> phys_legs_combiners_;$/;"	m	class:Square_Patch_RDM	access:private
 print_lattice_inf	lattice/lattice.cc	/^void Lattice_Base::print_lattice_inf() const$/;"	f	class:Lattice_Base	signature:() const
 print_lattice_inf	lattice/lattice.h	/^        void print_lattice_inf() const;$/;"	p	class:Lattice_Base	access:public	signature:() const
 print_vector_nonzero_elem	peps/square_double_layer_peps.h	/^        void print_vector_nonzero_elem(TensorT vector, int nonzero_elem_num)$/;"	f	class:Square_Double_Layer_PEPSt	access:public	signature:(TensorT vector, int nonzero_elem_num)
@@ -1730,7 +1797,8 @@ spin_symmetrize_tensor	peps_ansatz/square_rvb.cc	/^void spin_symmetrize_tensor(I
 spin_symmetrize_tensor	peps_ansatz/square_rvb.h	/^void spin_symmetrize_tensor(IQTensor &site_tensor, const Singlet_Tensor_Basis &site_tensor_basis);$/;"	p	signature:(IQTensor &site_tensor, const Singlet_Tensor_Basis &site_tensor_basis)
 spin_to_sz	peps_utilities/utilities.cc	/^void spin_to_sz(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg)$/;"	f	signature:(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg)
 spin_to_sz	peps_utilities/utilities.h	/^void spin_to_sz(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg);$/;"	p	signature:(const std::vector<int> &flavor_deg, std::vector<int> &sz_deg)
-square_peps_two_sites_RDM_simple_update	simple_update/simple_update.h	/^IQTensor square_peps_two_sites_RDM_simple_update(const IQPEPS &square_peps, std::vector<std::vector<Coordinate>> const IQTensor &env_tens);$/;"	p	signature:(const IQPEPS &square_peps, std::vector<std::vector<Coordinate>> const IQTensor &env_tens)
+square_peps_	simple_update/simple_update_patch.cc	/^    square_peps_(square_peps)$/;"	f	signature:(square_peps)
+square_peps_	simple_update/simple_update_patch.h	/^        IQPEPS square_peps_;$/;"	m	class:Square_Patch_RDM	access:private
 square_psg	peps_ansatz/square_rvb.cc	/^namespace square_psg$/;"	n	file:
 square_psg	peps_ansatz/square_rvb.h	/^namespace square_psg$/;"	n
 square_psg::Theta_c4	peps_ansatz/square_rvb.cc	/^    Complex Theta_c4=1;$/;"	m	namespace:square_psg	file:
@@ -1771,6 +1839,8 @@ transfer_matrix_eigvals	peps/square_double_layer_peps.cc	/^std::vector<Complex> 
 transfer_matrix_eigvals	peps/square_double_layer_peps.cc	/^std::vector<Complex> Square_Double_Layer_PEPSt<TensorT>::transfer_matrix_eigvals()$/;"	f	class:Square_Double_Layer_PEPSt	signature:()
 transfer_matrix_eigvals	peps/square_double_layer_peps.h	/^        std::vector<Complex> transfer_matrix_eigvals();$/;"	p	class:Square_Double_Layer_PEPSt	access:public	signature:()
 ts	simple_update/trotter_gate.h	/^        std::vector<double> ts;$/;"	m	struct:Evolution_Params	access:public
+two_sites_RDM	simple_update/simple_update_patch.h	/^        const IQTensor &two_sites_RDM() const $/;"	f	class:Square_Patch_RDM	access:public	signature:() const
+two_sites_RDM_	simple_update/simple_update_patch.h	/^        IQTensor two_sites_RDM_;$/;"	m	class:Square_Patch_RDM	access:private
 up_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<IQTensor>::up_move(int up_y0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int up_y0)
 up_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<ITensor>::up_move(int up_y0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int up_y0)
 up_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<TensorT>::up_move(int up_y0)$/;"	f	class:Corner_Transfer_Matrix	signature:(int up_y0)
@@ -1813,6 +1883,7 @@ virt_leg_combiners	peps/double_layer_peps.h	/^        const std::vector<Combiner
 virt_leg_combiners	peps/double_layer_peps.h	/^        const std::vector<std::vector<CombinerT>> &virt_leg_combiners() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
 virt_leg_combiners_	peps/double_layer_peps.h	/^        std::vector<std::vector<CombinerT>> virt_leg_combiners_;$/;"	m	class:Double_Layer_PEPSt	access:protected
 virt_legs	peps/peps.h	/^        inline const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt	access:public	signature:(const int &leg_i) const
+virt_legs	peps/peps.h	/^        inline const IndexT &virt_legs(int sitei, int neighi) const$/;"	f	class:PEPSt	access:public	signature:(int sitei, int neighi) const
 virt_legs	peps/peps_indexset.h	/^        const IndexT &virt_legs(const int &leg_i) const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:(const int &leg_i) const
 virt_legs	peps/peps_indexset.h	/^        const std::vector<IndexT> &virt_legs() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 virt_legs_	peps/peps_indexset.h	/^        std::vector<IndexT> phys_legs_, virt_legs_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
