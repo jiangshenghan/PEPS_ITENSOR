@@ -15,9 +15,9 @@ int main()
 
     std::stringstream ss;
     //zero-flux state
-    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/optimized_peps/square_rvb_D=6_Lx=8_Ly=8_optimized_step_1e-6"; 
+    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/optimized_peps/square_rvb_D=6_Lx=8_Ly=8_optimized_step_1e-5"; 
     //pi-flux state
-    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/optimized_peps/square_pi_rvb_D=6_Lx=8_Ly=8_optimized_step_1e-3"; 
+    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/optimized_peps/square_pi_rvb_D=6_Lx=8_Ly=8_optimized_step_1e-3"; 
     std::string file_name=ss.str();
     readFromFile(file_name,square_peps);
     //Print(square_peps.name());
@@ -51,14 +51,14 @@ int main()
     Print(heisenberg_energy_from_site_env_tensors(site_env_tens,square_peps.bond_tensors(1),NN_Heisenberg_Hamiltonian({square_peps.phys_legs(0),square_peps.phys_legs(1)})));
 
     //store as tnetwork_storage
-    //Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
-    //std::stringstream ss_tnetwork;
-    ////zero-flux state
-    ////ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=6_Lx=8_Ly=8_optimized_1e-6";
-    ////pi-flux state
+    Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
+    std::stringstream ss_tnetwork;
+    //zero-flux state
+    ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=6_Lx=8_Ly=8_optimized_1e-5";
+    //pi-flux state
     //ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=6_Lx=8_Ly=8_optimized";
-    //file_name=ss_tnetwork.str();
-    //writeToFile(file_name,square_rvb_storage);
+    file_name=ss_tnetwork.str();
+    writeToFile(file_name,square_rvb_storage);
 
     //check C4 symmetry
     //T^i_{abcd}=\chi_c4*theta_c4 T^i_{dabc}

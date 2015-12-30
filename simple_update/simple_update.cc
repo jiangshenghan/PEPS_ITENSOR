@@ -356,6 +356,19 @@ bool obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
     for (int base_num=0; base_num<total_base_num; base_num++)
     {
         auto base_list=list_from_num(base_num,max_base_list);
+
+        //only get nonzero result when spin of contraction indice matches
+        if (leg_gates_basis[0].spin_configs(base_list[0])[2]!=leg_gates_basis[1].spin_configs(base_list[1])[2])
+        {
+            updated_wf_basis_overlap.push_back(0);
+            continue;
+        }
+        if (leg_gates_basis[0].spin_configs(base_list[2])[2]!=leg_gates_basis[1].spin_configs(base_list[3])[2])
+        {
+            updated_wf_basis_overlap.push_back(0);
+            continue;
+        }
+
         auto M_ijkl=(site_tensors_updated_basis_dag[0][base_list[0]]*site_tensors_updated_basis[0][base_list[2]])*bond_tensor_dag*bond_tensor*(site_tensors_updated_basis_dag[1][base_list[1]]*site_tensors_updated_basis[1][base_list[3]]);
         updated_wf_basis_overlap.push_back(M_ijkl.toComplex().real());
         //PrintDat(M_ijkl);
@@ -367,6 +380,14 @@ bool obtain_spin_sym_leg_gates_params_minimization(const std::array<IQTensor,2> 
     for (int base_num=0; base_num<N_leg_basis*N_leg_basis; base_num++)
     {
         std::array<int,2> base_list={base_num/N_leg_basis,base_num%N_leg_basis};
+
+        //only get nonzero result when spin of contraction indice matches
+        if (leg_gates_basis[0].spin_configs(base_list[0])[2]!=leg_gates_basis[1].spin_configs(base_list[1])[2])
+        {
+            updated_wf_basis_evolved_wf_overlap.push_back(0);
+            continue;
+        }
+
         auto w_ij=(site_tensors_updated_basis_dag[0][base_list[0]]*site_tensors_evolved[0])*bond_tensor_dag*bond_tensor_evolved*(site_tensors_updated_basis_dag[1][base_list[1]]*site_tensors_evolved[1]);
         w_ij+=dag(w_ij);
         updated_wf_basis_evolved_wf_overlap.push_back(w_ij.toComplex().real());
