@@ -115,8 +115,8 @@ int main()
     Evolution_Params square_su_params(1,{11},{1e-0});
     //spin_square_peps_simple_update(square_peps,square_su_params);
     //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1},{Lx,Lx+1}},{0,1});
-    //TODO:debug for the following patch
-    spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1,2,3},{Lx,Lx+1,Lx+2,Lx+3},{2*Lx,2*Lx+1,2*Lx+2,2*Lx+3}},{Lx+1,Lx+2});
+    spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1},{Lx,Lx+1},{2*Lx,2*Lx+1}},{Lx,Lx+1});
+    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1,2,3},{Lx,Lx+1,Lx+2,Lx+3},{2*Lx,2*Lx+1,2*Lx+2,2*Lx+3}},{Lx+1,Lx+2});
 
 
     //Check the output result

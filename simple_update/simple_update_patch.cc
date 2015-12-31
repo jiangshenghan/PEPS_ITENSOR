@@ -460,6 +460,7 @@ void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_P
 
     int comm_bond=square_peps.lattice().comm_bond(evolved_sites[0],evolved_sites[1]);
     auto comm_bond_tensor=square_peps.bond_tensors(comm_bond);
+    //Print(comm_bond_tensor);
 
     //leg gates is used to approx evolve_gate, which formed by three indices, two in one out (primed). 
     //two in legs are contracting to the site tensor which has applied by trotter gate
@@ -469,17 +470,17 @@ void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_P
     for (int i=0; i<2; i++)
     {
         leg_gates_indices[i].addindex(commonIndex(dag(square_peps.site_tensors(evolved_sites[i])),comm_bond_tensor));
-        leg_gates_indices[i].addindex(commonIndex(dag(evolve_gate.site_tensors(evolved_sites[i])),evolve_gate.bond_tensors(0)));
+        leg_gates_indices[i].addindex(commonIndex(dag(evolve_gate.site_tensors(i)),evolve_gate.bond_tensors(0)));
         leg_gates_indices[i].addindex(commonIndex(square_peps.site_tensors(evolved_sites[i]),dag(comm_bond_tensor)).prime());
 
         leg_gates_basis[i]=Singlet_Tensor_Basis(leg_gates_indices[i]);
 
-        PrintDat(leg_gates_basis[i]);
+        //PrintDat(leg_gates_basis[i]);
     }
 
     //leg_gates_for_one_site is used to update site_tensors[evolved_sites[0]]
     std::vector<IQTensor> leg_gates_for_one_site;
-    auto indice_from_evolve_gate=commonIndex(dag(evolve_gate.site_tensors(evolved_sites[0])),evolve_gate.bond_tensors(0));
+    auto indice_from_evolve_gate=commonIndex(dag(evolve_gate.site_tensors(0)),evolve_gate.bond_tensors(0));
     for (const auto &leg_indice : square_peps.site_tensors(evolved_sites[0]).indices())
     {
         if (leg_indice.type()==Site) continue;
@@ -675,7 +676,7 @@ bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(const Square_Patch_R
         //    //Print(leg_gates_basis[1].spin_configs(base_list[1]));
         //    //Print(leg_gates_basis[0].spin_configs(base_list[2]));
         //    //Print(leg_gates_basis[1].spin_configs(base_list[3]));
-        //    Print(M_ijkl);
+            Print(M_ijkl);
         //    nonzero_M++;
         //}
     }
