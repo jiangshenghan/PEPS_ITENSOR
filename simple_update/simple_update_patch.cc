@@ -61,7 +61,7 @@ void Square_Patch_RDM::obtain_two_sites_RDM()
     two_sites_RDM_=two_sites_RDM_*dag(phys_legs_combiners_[0])*dag(phys_legs_combiners_[1]);
 }
 
-Complex Square_Patch_RDM::expect_val_from_replaced_tensors(std::array<IQTensor,2> replaced_tensors, std::array<IQTensor,2> replaced_tensors_dag) const
+std::vector<std::vector<IQTensor>> Square_Patch_RDM::double_layer_tensors_from_replaced_tensors(std::array<IQTensor,2> replaced_tensors, std::array<IQTensor,2> replaced_tensors_dag) const
 {
     for (auto &tensor : replaced_tensors_dag)
     {
@@ -166,7 +166,18 @@ Complex Square_Patch_RDM::expect_val_from_replaced_tensors(std::array<IQTensor,2
 
     }
 
-    //calculate expectation value using replaced_double_layer_tensors
+    return replaced_double_layer_tensors;
+
+}
+
+Complex Square_Patch_RDM::expect_val_from_replaced_tensors(std::array<IQTensor,2> replaced_tensors, std::array<IQTensor,2> replaced_tensors_dag) const
+{
+    auto replaced_double_layer_tensors=double_layer_tensors_from_replaced_tensors(replaced_tensors,replaced_tensors_dag);
+    return expect_val_from_double_layer_tensors(replaced_double_layer_tensors);
+}
+
+Complex Square_Patch_RDM::expect_val_from_double_layer_tensors(const std::vector<std::vector<IQTensor>> &double_layer_tensors) const
+{
     IQTensor network_tensor;
     if (patch_dim_[0]>=patch_dim_[1])
     {
@@ -175,9 +186,9 @@ Complex Square_Patch_RDM::expect_val_from_replaced_tensors(std::array<IQTensor,2
             for (int coli=0; coli<patch_dim_[1]; coli++)
             {
                 if (rowi==0 && coli==0)
-                    network_tensor=replaced_double_layer_tensors[0][0];
+                    network_tensor=double_layer_tensors[0][0];
                 else
-                    network_tensor*=replaced_double_layer_tensors[rowi][coli];
+                    network_tensor*=double_layer_tensors[rowi][coli];
             }
         }
     }
@@ -188,9 +199,9 @@ Complex Square_Patch_RDM::expect_val_from_replaced_tensors(std::array<IQTensor,2
             for (int rowi=0; rowi<patch_dim_[0]; rowi++)
             {
                 if (rowi==0 && coli==0)
-                    network_tensor=replaced_double_layer_tensors[0][0];
+                    network_tensor=double_layer_tensors[0][0];
                 else
-                    network_tensor*=replaced_double_layer_tensors[rowi][coli];
+                    network_tensor*=double_layer_tensors[rowi][coli];
             }
         }
     }
@@ -198,7 +209,28 @@ Complex Square_Patch_RDM::expect_val_from_replaced_tensors(std::array<IQTensor,2
     //PrintDat(network_tensor);
 
     return network_tensor.toComplex();
+}
 
+IQTensor Square_Patch_RDM::half_patch_tensor_from_double_layer_tensors(const std::vector<std::vector<IQTensor>> &double_layer_tensors, int dir) const
+{
+    int coli=(patch_dim_[1]-1)*(dir+1)/2;
+    IQTensor half_patch_tensor;
+    while (coli!=patch_cutting_coords_[(1-dir)/2][1])
+    {
+        for (int rowi=0; rowi<patch_dim_[0]; rowi++)
+        {
+            if (!half_patch_tensor.valid())
+            {
+                half_patch_tensor=double_layer_tensors[rowi][coli];
+            }
+            else
+            {
+                half_patch_tensor*=double_layer_tensors[rowi][coli];
+            }
+        }
+        coli=coli-dir;
+    }
+    return half_patch_tensor;
 }
 
 void Square_Patch_RDM::modify_env_tens(const IQTensor &env_tens)
@@ -606,8 +638,6 @@ bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(const Square_Patch_R
         Print(leg_gate_params);
     }
 
-    int N_basis=leg_gate_params.size();
-
     //prepare evolved site tensors and bond tensors
     std::array<IQTensor,2> site_tensors_evolved(square_RDM.cutting_site_tensors());
     IQTensor bond_tensor_evolved(square_RDM.cutting_bond_tensor());
@@ -640,10 +670,28 @@ bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(const Square_Patch_R
         //Print(i);
         //Print(site_tensors_updated_basis[i]);
     }
+    int N_leg_basis=site_tensors_updated_basis[0].size();
+
+    //get left half and right half respectively
+    std::vector<IQTensor> left_half_basis, right_half_basis;
+    for (int base_num=0; base_num<N_leg_basis*N_leg_basis; base_num++)
+    {
+        std::array<int,2> base_list={base_num/N_leg_basis,base_num%N_leg_basis};
+
+        std::array<IQTensor,2> left_replaced_tensors={site_tensors_updated_basis[0][base_list[1]]*square_RDM.cutting_bond_tensor(),site_tensors_updated_basis[1][0]},
+                               left_replaced_tensors_dag={site_tensors_updated_basis[0][base_list[0]]*square_RDM.cutting_bond_tensor(),site_tensors_updated_basis[1][0]},
+                               right_replaced_tensors={site_tensors_updated_basis[0][0]*square_RDM.cutting_bond_tensor(),site_tensors_updated_basis[1][base_list[1]]},
+                               right_replaced_tensors_dag={site_tensors_updated_basis[0][0]*square_RDM.cutting_bond_tensor(),site_tensors_updated_basis[1][base_list[0]]};
+
+        auto double_layer_tensors_for_left_half_basis=square_RDM.double_layer_tensors_from_replaced_tensors(left_replaced_tensors,left_replaced_tensors_dag);
+        auto double_layer_tensors_for_right_half_basis=square_RDM.double_layer_tensors_from_replaced_tensors(right_replaced_tensors,right_replaced_tensors_dag);
+
+        left_half_basis.push_back(square_RDM.half_patch_tensor_from_double_layer_tensors(double_layer_tensors_for_left_half_basis,-1));
+        right_half_basis.push_back(square_RDM.half_patch_tensor_from_double_layer_tensors(double_layer_tensors_for_right_half_basis,1));
+    }
 
     int total_base_num=1;
     std::vector<int> max_base_list;
-    int N_leg_basis=site_tensors_updated_basis[0].size();
     for (int i=0; i<4; i++)
     {
         total_base_num*=N_leg_basis;
@@ -666,7 +714,8 @@ bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(const Square_Patch_R
             continue;
         }
 
-        auto M_ijkl=square_RDM.expect_val_from_replaced_tensors({site_tensors_updated_basis[0][base_list[2]]*square_RDM.cutting_bond_tensor(),site_tensors_updated_basis[1][base_list[3]]},{site_tensors_updated_basis[0][base_list[0]]*square_RDM.cutting_bond_tensor(),site_tensors_updated_basis[1][base_list[1]]});
+        //auto M_ijkl=square_RDM.expect_val_from_replaced_tensors({site_tensors_updated_basis[0][base_list[2]]*square_RDM.cutting_bond_tensor(),site_tensors_updated_basis[1][base_list[3]]},{site_tensors_updated_basis[0][base_list[0]]*square_RDM.cutting_bond_tensor(),site_tensors_updated_basis[1][base_list[1]]});
+        auto M_ijkl=(left_half_basis[base_list[0]*N_leg_basis+base_list[2]]*right_half_basis[base_list[1]*N_leg_basis+base_list[3]]).toComplex();
         updated_wf_basis_overlap.push_back(M_ijkl.real());
 
         //if (std::abs(M_ijkl)>0) 
@@ -676,7 +725,7 @@ bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(const Square_Patch_R
         //    //Print(leg_gates_basis[1].spin_configs(base_list[1]));
         //    //Print(leg_gates_basis[0].spin_configs(base_list[2]));
         //    //Print(leg_gates_basis[1].spin_configs(base_list[3]));
-            Print(M_ijkl);
+        //    Print(M_ijkl);
         //    nonzero_M++;
         //}
     }

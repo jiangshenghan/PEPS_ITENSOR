@@ -75,8 +75,7 @@ class Lattice_Base
         {
             return site_neighbour_bonds_[site_i][j];
         }
-
-        inline const std::vector<int> &site_neighbour_bonds(const int &site_i) const
+        const std::vector<int> &site_neighbour_bonds(const int &site_i) const
         {
             return site_neighbour_bonds_[site_i];
         }
@@ -86,7 +85,6 @@ class Lattice_Base
         {
             return bond_neighbour_sites_[bond_i][j];
         }
-
         inline const std::vector<int> &bond_neighbour_sites(const int &bond_i) const
         {
             return bond_neighbour_sites_[bond_i];
@@ -96,7 +94,6 @@ class Lattice_Base
         {
             return boundary_neighbour_site_[boundary_i];
         }
-
         int boundary_neighbour_bond(int boundary_i) const
         {
             return boundary_neighbour_bond_[boundary_i];
@@ -106,7 +103,6 @@ class Lattice_Base
         {
             return site_neighbour_boundaries_[site_i][j];
         }
-
         const std::vector<int> &site_neighbour_boundaries(int site_i) const
         {
             return site_neighbour_boundaries_[site_i];
@@ -116,7 +112,6 @@ class Lattice_Base
         {
             return bond_neighbour_boundaries_[bond_i][j];
         }
-
         const std::vector<int> &bond_neighbour_boundaries(int bond_i) const
         {
             return bond_neighbour_boundaries_[bond_i];

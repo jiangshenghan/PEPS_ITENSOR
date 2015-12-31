@@ -86,6 +86,14 @@ struct Evolution_Params
         std::vector<double> ts;
 };
 
+inline std::ostream &operator<<(std::ostream &s, const Evolution_Params &evolve_par)
+{
+    return s << "Evolution Params: " << endl
+             << "iter_nums = " << evolve_par.iter_nums << endl
+             << "steps_nums = " << endl << evolve_par.steps_nums << endl
+             << "times = " << endl << evolve_par.ts << endl;
+}
+
 
 //class for general trotter_gate
 class Trotter_Gate

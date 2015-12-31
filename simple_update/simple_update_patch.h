@@ -88,7 +88,11 @@ class Square_Patch_RDM
         //   --S0-S1--
         //
         //
+        std::vector<std::vector<IQTensor>> double_layer_tensors_from_replaced_tensors(std::array<IQTensor,2> replaced_tensors, std::array<IQTensor,2> replaced_tensors_dag) const;
         Complex expect_val_from_replaced_tensors(std::array<IQTensor,2> replaced_tensors, std::array<IQTensor,2> replaced_tensors_dag) const;
+        Complex expect_val_from_double_layer_tensors(const std::vector<std::vector<IQTensor>> &double_layer_tensors) const;
+        //get left (dir==-1) or right (dir==1) half of the patch contracted, 
+        IQTensor half_patch_tensor_from_double_layer_tensors(const std::vector<std::vector<IQTensor>> &double_layer_tensors, int dir) const;
 
         //modify RDM
         void modify_env_tens(const IQTensor &env_tens);
@@ -122,6 +126,7 @@ class Square_Patch_RDM
         std::array<int,2> patch_dim_;
         //patch_sites_[i][j] stores site # in row i and col j of patch
         std::vector<std::vector<int>> patch_sites_;
+        //convention: cutting sites are left-right ordered
         std::array<int,2> cutting_sites_;
         //patch_cutting_coords_ are position of cutting_sites_ at patch
         std::array<std::array<int,2>,2> patch_cutting_coords_;
