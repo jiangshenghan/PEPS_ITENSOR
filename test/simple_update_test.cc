@@ -1,7 +1,7 @@
 
 //#include "square_rvb.h"
 //#include "simple_update.h"
-#include "simple_update_patch.h"
+#include "simple_update_patch_square.h"
 
 using namespace square_psg;
 
@@ -18,7 +18,7 @@ int main()
 
 
     //construct random peps with a good initial state
-    int D=6;
+    int D=10;
     IQPEPS_IndexSet_SpinHalf index_set(D,square_lattice);
     IQPEPS square_peps(square_lattice,index_set);
 
@@ -111,14 +111,14 @@ int main()
 
 
     //optimazation
-    //Evolution_Params square_su_params(6,{17,47,597,997,3997,43000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
-    Evolution_Params square_su_params(1,{11},{1e-0});
+    Evolution_Params square_su_params(6,{19,49,599,999,3999,44000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
+    //Evolution_Params square_su_params(1,{11},{1e-0});
     Print(square_su_params);
 
-    //spin_square_peps_simple_update(square_peps,square_su_params);
+    spin_square_peps_simple_update(square_peps,square_su_params);
     //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1},{Lx,Lx+1}},{0,1});
     //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1},{Lx,Lx+1},{2*Lx,2*Lx+1}},{Lx,Lx+1});
-    spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1,2,3},{Lx,Lx+1,Lx+2,Lx+3},{2*Lx,2*Lx+1,2*Lx+2,2*Lx+3}},{Lx+1,Lx+2});
+    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1,2,3},{Lx,Lx+1,Lx+2,Lx+3},{2*Lx,2*Lx+1,2*Lx+2,2*Lx+3}},{Lx+1,Lx+2});
 
 
     //Check the output result

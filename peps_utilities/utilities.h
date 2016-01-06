@@ -187,4 +187,32 @@ inline void combiner_to_tensor(IQCombiner &iqcombiner, IQTensor &iqtensor)
     iqtensor=iqcombiner.toIQTensor();
 }
 
+//count number of legs of tensors after contraction
+//we exclude the case that more than two tensors share the same leg
+template <class TensorT>
+inline int legs_num_after_contraction(const std::vector<TensorT> &curr_tensors)
+{
+    int legs_num=0;
+    std::vector<typename TensorT::IndexT> uncontract_indices;
+
+    for (const auto &tens : curr_tensors)
+    {
+        for (const auto &ind : tens.indices())
+        {
+            auto ind_iter=std::find(uncontract_indices.begin(),uncontract_indices.end(),ind);
+            if (ind_iter==uncontract_indices.end())
+            {
+                legs_num++;
+                uncontract_indices.push_back(ind);
+            }
+            else
+            {
+                legs_num--;
+            }
+        }
+    }
+
+    return legs_num;
+}
+
 #endif

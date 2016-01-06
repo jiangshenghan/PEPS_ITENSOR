@@ -90,8 +90,8 @@ inline std::ostream &operator<<(std::ostream &s, const Evolution_Params &evolve_
 {
     return s << "Evolution Params: " << endl
              << "iter_nums = " << evolve_par.iter_nums << endl
-             << "steps_nums = " << endl << evolve_par.steps_nums << endl
-             << "times = " << endl << evolve_par.ts << endl;
+             << "steps_nums = " << evolve_par.steps_nums << endl
+             << "times = " << evolve_par.ts << endl;
 }
 
 

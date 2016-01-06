@@ -85,7 +85,7 @@ class Lattice_Base
         {
             return bond_neighbour_sites_[bond_i][j];
         }
-        inline const std::vector<int> &bond_neighbour_sites(const int &bond_i) const
+        const std::vector<int> &bond_neighbour_sites(const int &bond_i) const
         {
             return bond_neighbour_sites_[bond_i];
         }
@@ -182,6 +182,27 @@ class Lattice_Base
             }
             return -1;
         }
+        //get common "bond" of multiple sites
+        int comm_bond(const std::vector<int> &sites) const
+        {
+            auto neigh_bonds=site_neighbour_bonds(sites[0]);
+            for (auto bondi : neigh_bonds)
+            {
+                int comm_no=0;
+                for (auto sitei : sites)
+                {
+                    auto bond_iter=std::find(site_neighbour_bonds(sitei).begin(),site_neighbour_bonds(sitei).end(),bondi);
+                    if (bond_iter==site_neighbour_bonds(sitei).end())
+                        break;
+                    else
+                        comm_no++;
+                }
+                if (comm_no==sites.size())
+                    return bondi;
+            }
+            return -1;
+        }
+
 
         void print_lattice_inf() const;
 

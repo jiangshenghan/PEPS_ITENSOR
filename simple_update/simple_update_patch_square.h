@@ -19,6 +19,7 @@
 //  \  |   |  /
 //   --T---T--
 //
+//The following class is only designed for square patch of square IQPEPS
 //
 class Square_Patch_RDM
 {
@@ -95,7 +96,7 @@ class Square_Patch_RDM
         IQTensor half_patch_tensor_from_double_layer_tensors(const std::vector<std::vector<IQTensor>> &double_layer_tensors, int dir) const;
 
         //modify RDM
-        void modify_env_tens(const IQTensor &env_tens);
+        //void modify_env_tens(const IQTensor &env_tens);
 
         //
         //Constructor Helpers
@@ -144,10 +145,12 @@ class Square_Patch_RDM
 
 //get tensors multiply env tens but leaves the original indices invariant
 //we always assume contraction of noprime leg with boundary leg
-void obtain_env_dressed_tensor(IQTensor &dressed_tens, const IQTensor &env_tens, const IQIndex &boundary_leg);
+template <class TensorT>
+void obtain_env_dressed_tensor(TensorT &dressed_tens, const TensorT &env_tens, const typename TensorT::IndexT &boundary_leg);
 
 //combine comm legs (with inverse dir) of two tensors to one leg
-void combine_comm_legs(std::array<IQTensor,2> &tensors);
+template <class TensorT>
+void combine_comm_legs(std::array<TensorT,2> &tensors);
 
 
 //obtain leg gate params with a given two_sites_RDM

@@ -1,5 +1,5 @@
 
-#include "simple_update_patch.h"
+#include "simple_update_patch_square.h"
 
 //class Square_Patch_RDM
 Square_Patch_RDM::Square_Patch_RDM(const IQPEPS &square_peps, const IQTensor &env_tens, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites):
@@ -233,16 +233,16 @@ IQTensor Square_Patch_RDM::half_patch_tensor_from_double_layer_tensors(const std
     return half_patch_tensor;
 }
 
-void Square_Patch_RDM::modify_env_tens(const IQTensor &env_tens)
-{
-    env_tens_=env_tens;
-
-    init_env_tens();
-    modify_boundary_patch_tensors();
-    init_patch_double_layer_tensors();
-    obtain_two_sites_RDM();
-    wf_norm_=std::sqrt(trace(two_sites_RDM_,cutting_phys_legs(0),prime(dag(cutting_phys_legs(0)))).trace(cutting_phys_legs(1),prime(dag(cutting_phys_legs(1)))).toComplex().real());
-}
+//void Square_Patch_RDM::modify_env_tens(const IQTensor &env_tens)
+//{
+//    env_tens_=env_tens;
+//
+//    init_env_tens();
+//    modify_boundary_patch_tensors();
+//    init_patch_double_layer_tensors();
+//    obtain_two_sites_RDM();
+//    wf_norm_=std::sqrt(trace(two_sites_RDM_,cutting_phys_legs(0),prime(dag(cutting_phys_legs(0)))).trace(cutting_phys_legs(1),prime(dag(cutting_phys_legs(1)))).toComplex().real());
+//}
 
 void Square_Patch_RDM::init_patch_cutting_coords()
 {
@@ -446,21 +446,27 @@ void Square_Patch_RDM::init_patch_double_layer_tensors()
 }
 
 
-void obtain_env_dressed_tensor(IQTensor &dressed_tens, const IQTensor &env_tens, const IQIndex &boundary_leg)
+template <class TensorT>
+void obtain_env_dressed_tensor(TensorT &dressed_tens, const TensorT &env_tens, const typename TensorT::IndexT &boundary_leg)
 {
-    std::vector<IQIndex> env_tens_leg={env_tens.indices()[0],env_tens.indices()[1]};
-    if (env_tens_leg[0].primeLevel()==1) 
-    {
-        env_tens_leg[0]=env_tens.indices()[1];
-        env_tens_leg[1]=env_tens.indices()[0];
-    }
-    dressed_tens=tensor_contraction<IQTensor,IQIndex>(dressed_tens,env_tens,{boundary_leg},{env_tens_leg[0]});
-    dressed_tens.replaceIndex(env_tens_leg[1],boundary_leg);
+    //std::vector<typename TensorT::IndexT> env_tens_leg={env_tens.indices()[0],env_tens.indices()[1]};
+    //if (env_tens_leg[0].primeLevel()==1) 
+    //{
+    //    env_tens_leg[0]=env_tens.indices()[1];
+    //    env_tens_leg[1]=env_tens.indices()[0];
+    //}
+    dressed_tens=tensor_contraction<TensorT,TensorT::IndexT>(dressed_tens,env_tens,{boundary_leg},{env_tens.indices()[0]});
+    dressed_tens.replaceIndex(env_tens.indices()[1],boundary_leg);
 }
+template
+void obtain_env_dressed_tensor(ITensor &dressed_tens, const ITensor &env_tens, const ITensor::IndexT &boundary_leg);
+template
+void obtain_env_dressed_tensor(IQTensor &dressed_tens, const IQTensor &env_tens, const IQTensor::IndexT &boundary_leg);
 
-void combine_comm_legs(std::array<IQTensor,2> &tensors)
+template <class TensorT>
+void combine_comm_legs(std::array<TensorT,2> &tensors)
 {
-    std::vector<IQIndex> comm_legs;
+    std::vector<typename TensorT::IndexT> comm_legs;
     for (const auto &leg: tensors[0].indices())
     {
         if (hasindex(tensors[1],leg)) 
@@ -472,12 +478,16 @@ void combine_comm_legs(std::array<IQTensor,2> &tensors)
         exit(EXIT_FAILURE);
     }
     if (comm_legs.size()==1) return;
-    IQCombiner comm_legs_combiner(comm_legs[0]);
+    typename TensorT::CombinerT comm_legs_combiner(comm_legs[0]);
     for (int legi=1; legi<comm_legs.size(); legi++) 
         comm_legs_combiner.addleft(comm_legs[legi]);
     tensors[0]=tensors[0]*comm_legs_combiner;
     tensors[1]=tensors[1]*dag(comm_legs_combiner);
 }
+template
+void combine_comm_legs(std::array<ITensor,2> &tensors);
+template
+void combine_comm_legs(std::array<IQTensor,2> &tensors);
 
 void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params, std::vector<std::vector<int>> patch_sites, std::array<int,2> evolved_sites)
 {
