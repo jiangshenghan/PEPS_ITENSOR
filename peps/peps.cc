@@ -96,26 +96,46 @@ template<class TensorT>
 void PEPSt<TensorT>::generate_bond_tensors(std::vector<TensorT> bond_tensors_uc, double mu_12)
 {
     //for symmetric peps with half spin per site, we have 
-    //B_{(x,y,i)}=\eta_{12}^{x}B_i, if B_i connect site with different y coordinate
+    //B_{(x,y,i)}=\eta_{12}^{x}_{\alpha\alpha'}. (B_i)_{\alpha'...}, if leg a of B_i connect site with different y coordinate
     //So we need to double the unit cell in x direction if \mu_12==-1
-    if (name_.find("half spin")!=std::string::npos && name_.find("square")!=std::string::npos && std::abs(mu_12+1)<EPSILON)
+    if (name_.find("half spin")!=std::string::npos && std::abs(mu_12+1)<EPSILON)
     {
         for (int bond_i=0; bond_i<n_bonds_total(); bond_i++)
         {
             auto sublattice_i=lattice_ptr_->bond_list_to_coord(bond_i)[2];
-
             tensor_assignment(bond_tensors_[bond_i],bond_tensors_uc[sublattice_i]);
-
+            //if x is even, then \eta_12^x=I, so we leave bond tensors invariant
+            if (lattice_ptr_->bond_list_to_coord(bond_i)[0]%2==0) continue;
             auto end_sites=lattice_ptr_->bond_neighbour_sites(bond_i);
-            std::array<Coordinate,2> end_sites_coord={lattice_ptr_->site_list_to_coord(end_sites[0]), lattice_ptr_->site_list_to_coord(end_sites[1])};
-
-            if (std::abs(end_sites_coord[0][1]-end_sites_coord[1][1])%2==1 && std::abs(end_sites_coord[0][0]%2==1))
+            for (auto end_site : end_sites)
             {
-                auto eta_12=eta_from_mu(mu_12,dag(bond_tensors_[bond_i].indices()[0]));
-                bond_tensors_[bond_i]*=eta_12;
-                bond_tensors_[bond_i].noprime();
+                if (lattice_ptr_->site_list_to_coord(end_site)[1]%2!=0)
+                {
+                    obtain_tensor_after_eta_action(mu_12,bond_tensors_[bond_i],commonIndex(bond_tensors(bond_i),site_tensors(end_site)));
+                }
             }
+
         }
+
+        //if (name_.find("square")!=std::string::npos )
+        //{
+        //    for (int bond_i=0; bond_i<n_bonds_total(); bond_i++)
+        //    {
+        //        auto sublattice_i=lattice_ptr_->bond_list_to_coord(bond_i)[2];
+
+        //        tensor_assignment(bond_tensors_[bond_i],bond_tensors_uc[sublattice_i]);
+
+        //        auto end_sites=lattice_ptr_->bond_neighbour_sites(bond_i);
+        //        std::array<Coordinate,2> end_sites_coord={lattice_ptr_->site_list_to_coord(end_sites[0]), lattice_ptr_->site_list_to_coord(end_sites[1])};
+
+        //        if (std::abs(end_sites_coord[0][1]-end_sites_coord[1][1])%2==1 && std::abs(end_sites_coord[0][0]%2==1))
+        //        {
+        //            auto eta_12=eta_from_mu(mu_12,dag(bond_tensors_[bond_i].indices()[0]));
+        //            bond_tensors_[bond_i]*=eta_12;
+        //            bond_tensors_[bond_i].noprime();
+        //        }
+        //    }
+        //}
 
         return;
     }

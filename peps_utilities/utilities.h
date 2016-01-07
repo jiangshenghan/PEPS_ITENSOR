@@ -139,6 +139,25 @@ TensorT tensor_permutation(const std::vector<int> &permuted_indices, const Tenso
 template <class TensorT>
 void tensor_assignment_diff_order(TensorT &TA, const TensorT &TB);
 
+
+//Multiply the corresponding eta of mu on one leg, and leave the indices order invariant
+template <class TensorT>
+inline void obtain_tensor_after_eta_action(double mu, TensorT &tens, const typename TensorT::IndexT &act_leg)
+{
+    auto eta=eta_from_mu(mu,dag(act_leg));
+    TensorT eta_tens_unordered=eta*tens;
+    eta_tens_unordered.replaceIndex(prime(act_leg),act_leg);
+    tensor_assignment_diff_order(tens,eta_tens_unordered);
+}
+
+template <class TensorT>
+inline TensorT tensor_after_eta_action(double mu, TensorT tens, const typename TensorT::IndexT &act_leg)
+{
+    obtain_tensor_after_eta_action(mu,tens,act_leg);
+    return tens;
+}
+
+
 //contract tensor by identifying given indices
 template <class TensorT, class IndexT>
 inline TensorT tensor_contraction(TensorT TA, TensorT TB, const std::vector<IndexT> &TA_inds, const std::vector<IndexT> &TB_inds)

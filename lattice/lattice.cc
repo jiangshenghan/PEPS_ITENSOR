@@ -568,7 +568,7 @@ Honeycomb_Lattice_Torus::Honeycomb_Lattice_Torus(const std::array<int,2> &n_uc):
 //Kagome_Cirac_Lattice_Torus
 Kagome_Cirac_Lattice_Torus::Kagome_Cirac_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(3,2,n_uc,0,3) 
 {
-    name_="kagome lattice cirac on torus";
+    name_="kagome cirac lattice on torus";
 
     for (int sitei=0; sitei<n_sites_total_; sitei++)
     {

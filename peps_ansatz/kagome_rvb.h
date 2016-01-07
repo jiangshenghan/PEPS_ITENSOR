@@ -14,7 +14,7 @@ namespace kagome_psg
 }
 
 //Depends on values of mu_12 and mu_c6, there are four kinds of srvb on kagome lattice
-IQPEPS kagome_srvb_cirac_peps(int Lx, int Ly);
+IQPEPS kagome_cirac_srvb_peps(int Lx, int Ly);
 
 //void random_init_kagome_rvb_cirac_peps(IQPEPS &kagome_rvb);
 //
