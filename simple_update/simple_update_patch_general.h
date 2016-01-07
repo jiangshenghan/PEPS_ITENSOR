@@ -55,6 +55,23 @@ class General_Patch_RDM
         //
         //Acess Method
         //
+        const std::vector<int> &cutting_sites() const
+        {
+            return cutting_sites_;
+        }
+        const TensorT &cutting_site_tensors(int cuti) const
+        {
+            return peps_.site_tensors(cutting_sites_[cuti]);
+        }
+        const TensorT &cutting_bond_tensor() const
+        {
+            int comm_bond=peps_.lattice().comm_bond(cutting_sites_);
+            return peps_.bond_tensors(comm_bond);
+        }
+        IndexT cutting_virt_legs(int cuti) const
+        {
+            return commonIndex(cutting_site_tensors(cuti),cutting_bond_tensor());
+        }
         const TensorT &RDM() const
         {
             return RDM_;
@@ -62,6 +79,25 @@ class General_Patch_RDM
         double patch_norm() const
         {
             return patch_norm_;
+        }
+        double wf_norm() const
+        {
+            return patch_norm_;
+        }
+        std::string patch_name() const
+        {
+            if (name_.find("square")!=std::string::npos) 
+            {
+                if (name_.find("regular shape")!=std::string::npos)
+                {
+                    return nameint("patch=",patch_dim_[0])+nameint("x",patch_dim_.size());
+                }
+                if (name_.find("special shape I")!=std::string::npos)
+                {
+                    return "patch=speical_shape_I";
+                }
+            }
+            return "unnamed_patch";
         }
 
         //
@@ -71,7 +107,12 @@ class General_Patch_RDM
         std::vector<TensorT> double_layer_tensors_from_replaced_cutting_sites_tensors(std::vector<std::array<TensorT,2>> replaced_tensors_ket_bra); 
         TensorT tensor_from_contract_patch(const std::vector<TensorT> &double_layer_tensors);
         //for square lattice, dir=0 means left half, dir=1 right half
-        TensorT tensor_from_contraction_part_patch(const std::vector<TensorT> &double_layer_tensors, int parti);
+        TensorT tensor_from_contract_part_patch(const std::vector<TensorT> &double_layer_tensors, int parti);
+        Complex expect_val_from_replaced_tensors(const std::vector<std::array<TensorT,2>> &replaced_tensors_ket_bra)
+        {
+            auto double_layer_tensors=double_layer_tensors_from_replaced_cutting_sites_tensors(replaced_tensors_ket_bra);
+            return tensor_from_contract_patch(double_layer_tensors).toComplex();
+        }
 
     private:
         //name_ labels the lattice geometry as well as the patch geometry, which determines the order of contraction
@@ -98,6 +139,7 @@ class General_Patch_RDM
         //after applying this function, boundary legs of patch_site_tensors and patch_site_tensors_dag can be directly contracted
         void init_env_tens();
         void init_legs_combiners();
+        //TODO: for bulk sites on square lattice, it is very time costing to construct a double layer tensors with combiners (~D^10), modify algorithm in those case (for example, special shape I case)
         void init_patch_double_layer_tensors();
         //absorb env tens to boundary legs for ket and bra tensors locate at sitei
         //if the tensors is inside patch bulk, then leave it invariant
@@ -106,5 +148,14 @@ class General_Patch_RDM
         //absorb neighbouring bonds of sitei into double layer tensor, where we disgard forbid bond
         void absorb_neigh_bonds(int sitei, TensorT &double_layer_tensor, int forbid_bond=-1);
 };
+
+
+
+//here we use small patch to do simple update for square PEPS
+void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params, std::vector<int> patch_sites, std::array<int,2> evolved_sites, std::string patch_name);
+
+//obtain leg gate params of SQUARE peps with a given general RDM
+bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(General_Patch_RDM<IQTensor> &square_RDM, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params, double cutoff=1E-5);
+
 
 #endif

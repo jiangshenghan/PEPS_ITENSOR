@@ -37,6 +37,11 @@ class Square_Patch_RDM
             return two_sites_RDM_;
         }
 
+        const IQTensor &RDM() const
+        {
+            return two_sites_RDM_;
+        }
+
         double wf_norm() const
         {
             return wf_norm_;
@@ -153,12 +158,11 @@ template <class TensorT>
 void combine_comm_legs(std::array<TensorT,2> &tensors);
 
 
-//obtain leg gate params with a given two_sites_RDM
-bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(const Square_Patch_RDM &square_RDM, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params, double cutoff);
-
-
 //here we use small patch to do simple update
 void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params, std::vector<std::vector<int>> patch_sites, std::array<int,2> evolved_sites={0,1});
+
+//obtain leg gate params with a given two_sites_RDM
+bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(const Square_Patch_RDM &square_RDM, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params, double cutoff=1E-5);
 
 
 //measure heisenberg energy using two sites RDM

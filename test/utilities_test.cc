@@ -15,9 +15,9 @@ int main()
 
     std::stringstream ss;
     //zero-flux state
-    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/optimized_peps/square_rvb_D=10_Lx=8_Ly=8_optimized_step_1e-4"; 
+    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/optimized_peps/square_rvb_D=10_Lx=8_Ly=8_optimized_step_1e-4"; 
     //pi-flux state
-    //ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/optimized_peps/square_pi_rvb_D=10_Lx=8_Ly=8_optimized_step_1e-4"; 
+    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/optimized_peps/square_pi_rvb_D=6_Lx=8_Ly=8_patch=2x2_optimized_step_1e-4"; 
     std::string file_name=ss.str();
     readFromFile(file_name,square_peps);
     //Print(square_peps.name());
@@ -54,9 +54,9 @@ int main()
     Tnetwork_Storage<IQTensor> square_rvb_storage=peps_to_tnetwork_storage(square_peps);
     std::stringstream ss_tnetwork;
     //zero-flux state
-    ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=10_Lx=8_Ly=8_optimized_1e-4";
+    //ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_rvb_D=10_Lx=8_Ly=8_optimized_1e-4";
     //pi-flux state
-    //ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=6_Lx=8_Ly=8_optimized";
+    ss_tnetwork << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/square_pi_rvb_D=6_Lx=8_Ly=8_patch=2x2_optimized_step_1e-4";
     file_name=ss_tnetwork.str();
     writeToFile(file_name,square_rvb_storage);
 

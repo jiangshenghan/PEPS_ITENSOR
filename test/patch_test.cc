@@ -36,7 +36,7 @@ int main()
 
     //General_Patch_RDM<IQTensor> square_RDM_II("regular shape",square_peps, env_tens[0][0],{0,1},{0,1});
     //General_Patch_RDM<IQTensor> square_RDM_II("regular shape",square_peps, env_tens[0][0],{0,1,Lx,Lx+1},{0,1});
-    General_Patch_RDM<IQTensor> square_RDM_II("regular shape",square_peps, env_tens[0][0],{0,1,Lx,Lx+1,2*Lx,2*Lx+1},{Lx,Lx+1});
+    General_Patch_RDM<IQTensor> square_RDM_II("regular shape",square_peps,env_tens[0][0],{0,1,Lx,Lx+1,2*Lx,2*Lx+1},{Lx,Lx+1});
     //General_Patch_RDM<IQTensor> square_RDM_II("regular shape", square_peps,env_tens[0][0],{0,1,2,3,Lx,Lx+1,Lx+2,Lx+3,2*Lx,2*Lx+1,2*Lx+2,2*Lx+3},{Lx+1,Lx+2});
     //General_Patch_RDM<IQTensor> square_RDM_II("special shape I", square_peps,env_tens[0][0],{1,2,Lx+1,Lx+2,2*Lx+1,2*Lx+2,Lx,Lx+3},{Lx+1,Lx+2});
     Print(heisenberg_energy_from_RDM(square_RDM_II.RDM()));

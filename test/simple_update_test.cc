@@ -1,7 +1,8 @@
 
 //#include "square_rvb.h"
 //#include "simple_update.h"
-#include "simple_update_patch_square.h"
+//#include "simple_update_patch_square.h"
+#include "simple_update_patch_general.h"
 
 using namespace square_psg;
 
@@ -18,45 +19,46 @@ int main()
 
 
     //construct random peps with a good initial state
-    int D=10;
+    int D=6;
     IQPEPS_IndexSet_SpinHalf index_set(D,square_lattice);
     IQPEPS square_peps(square_lattice,index_set);
+    random_init_square_rvb_peps(square_peps);
 
-    double init_energy=0;
-    do
-    {
-        //get "energy" of init state by env_tens
-        random_init_square_rvb_peps(square_peps);
-        std::array<IQIndex,2> site01_legs{square_peps.phys_legs(0),square_peps.phys_legs(1)};
-        NN_Heisenberg_Hamiltonian hamiltonian_gate(site01_legs);
-        std::array<std::vector<IQTensor>,2> env_tens;
+    //double init_energy=0;
+    //do
+    //{
+    //    //get "energy" of init state by env_tens
+    //    random_init_square_rvb_peps(square_peps);
+    //    std::array<IQIndex,2> site01_legs{square_peps.phys_legs(0),square_peps.phys_legs(1)};
+    //    NN_Heisenberg_Hamiltonian hamiltonian_gate(site01_legs);
+    //    std::array<std::vector<IQTensor>,2> env_tens;
 
-        int comm_bond=square_peps.lattice().comm_bond(0,1);
-        auto comm_bond_tensor=square_peps.bond_tensors(comm_bond);
+    //    int comm_bond=square_peps.lattice().comm_bond(0,1);
+    //    auto comm_bond_tensor=square_peps.bond_tensors(comm_bond);
 
-        auto combined_site_tens0=square_peps.site_tensors(0);
-        for (int neighi=0; neighi<square_peps.n_bonds_to_one_site(); neighi++)
-        {
-            int bondi=square_peps.lattice().site_neighbour_bonds(0,neighi);
-            if (bondi==comm_bond) continue;
-            combined_site_tens0*=square_peps.bond_tensors(bondi);
-        }
-        get_env_tensor_minimization(combined_site_tens0*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
+    //    auto combined_site_tens0=square_peps.site_tensors(0);
+    //    for (int neighi=0; neighi<square_peps.n_bonds_to_one_site(); neighi++)
+    //    {
+    //        int bondi=square_peps.lattice().site_neighbour_bonds(0,neighi);
+    //        if (bondi==comm_bond) continue;
+    //        combined_site_tens0*=square_peps.bond_tensors(bondi);
+    //    }
+    //    get_env_tensor_minimization(combined_site_tens0*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
 
-        std::array<IQTensor,2> site_env_tens{{combined_site_tens0,square_peps.site_tensors(1)}}; 
-        for (int sitei=0; sitei<2; sitei++)
-        {
-            for (const auto &env_leg_tensor : env_tens[sitei])
-            {
-                site_env_tens[sitei]*=env_leg_tensor;
-            }
-            site_env_tens[sitei].noprime();
-        }
+    //    std::array<IQTensor,2> site_env_tens{{combined_site_tens0,square_peps.site_tensors(1)}}; 
+    //    for (int sitei=0; sitei<2; sitei++)
+    //    {
+    //        for (const auto &env_leg_tensor : env_tens[sitei])
+    //        {
+    //            site_env_tens[sitei]*=env_leg_tensor;
+    //        }
+    //        site_env_tens[sitei].noprime();
+    //    }
 
-        init_energy=heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate);
-        Print(init_energy);
-    }
-    while (init_energy>-0.1);
+    //    init_energy=heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate);
+    //    Print(init_energy);
+    //}
+    //while (init_energy>-0.1);
 
     //construct short-range rvb
     //IQPEPS square_peps=square_srvb_peps(Lx,Ly);
@@ -115,10 +117,19 @@ int main()
     //Evolution_Params square_su_params(1,{11},{1e-0});
     Print(square_su_params);
 
-    spin_square_peps_simple_update(square_peps,square_su_params);
+    //basic simple update
+    //spin_square_peps_simple_update(square_peps,square_su_params);
+
+    //update use Square_Patch_RDM
     //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1},{Lx,Lx+1}},{0,1});
     //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1},{Lx,Lx+1},{2*Lx,2*Lx+1}},{Lx,Lx+1});
     //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1,2,3},{Lx,Lx+1,Lx+2,Lx+3},{2*Lx,2*Lx+1,2*Lx+2,2*Lx+3}},{Lx+1,Lx+2});
+
+    //update use General_Patch_RDM
+    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{0,1},{0,1},"regular shape");
+    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{0,1,Lx,Lx+1},{0,1},"regular shape");
+    spin_square_peps_patch_simple_update(square_peps,square_su_params,{0,1,Lx,Lx+1,2*Lx,2*Lx+1},{Lx,Lx+1},"regular shape");
+    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{0,1,Lx,Lx+1,2*Lx,2*Lx+1,2*Lx-1,Lx+2},{Lx,Lx+1},"special shape I");
 
 
     //Check the output result

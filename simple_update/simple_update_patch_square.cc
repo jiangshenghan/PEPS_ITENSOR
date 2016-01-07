@@ -551,11 +551,14 @@ void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_P
 
             get_env_tensor_minimization(square_peps.site_tensors(evolved_sites[0])*comm_bond_tensor,square_peps.site_tensors(evolved_sites[1]),env_tens);
 
-            //obtain two sites RDM
+            //obtain square patch RDM
             Square_Patch_RDM square_RDM(square_peps,env_tens[0][0],patch_sites,evolved_sites);
-
+            //using general patch RDM
+            //General_Patch_RDM<IQTensor> square_RDM(patch_name,square_peps,env_tens[0][0],patch_sites,{evolved_sites[0],evolved_sites[1]});
             //measure energy by RDM
-            Print(heisenberg_energy_from_RDM(square_RDM));
+            Print(heisenberg_energy_from_RDM(square_RDM.RDM()));
+
+
 
             //if we cannot obtain a reasonable leg_gate, we try smaller time separation
             double cutoff=square_su_params.ts[iter]/10.;
@@ -636,7 +639,7 @@ void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_P
 }
 
 
-bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(const Square_Patch_RDM &square_RDM, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params, double cutoff=1E-5)
+bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(const Square_Patch_RDM &square_RDM, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params, double cutoff)
 {
     //init leg_gate_params
     if (leg_gate_params.empty())

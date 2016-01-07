@@ -117,6 +117,8 @@ class Trotter_Gate
         //
         double t() { return t_; }
 
+        const std::vector<IQIndex> &virt_legs(int i) const { return virt_legs_[i]; }
+
         const std::vector<IQTensor> &site_tensors() const { return site_tensors_; }
         const IQTensor &site_tensors(int i) const { return site_tensors_[i]; }
 
