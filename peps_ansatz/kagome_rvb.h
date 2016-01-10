@@ -16,12 +16,14 @@ namespace kagome_psg
 //Depends on values of mu_12 and mu_c6, there are four kinds of srvb on kagome lattice
 IQPEPS kagome_cirac_srvb_peps(int Lx, int Ly);
 
-//void random_init_kagome_rvb_cirac_peps(IQPEPS &kagome_rvb);
-//
-//void random_init_kagome_rvb_cirac_site_tensors(IQPEPS &kagome_rvb);
-//void random_init_kagome_rvb_cirac_bond_tensors(IQPEPS &kagome_rvb);
-//
-//void rotation_symmetrize_kagome_rvb_site_tensors_uc(std::vector<IQTensor> &site_tensors_uc);
-//void rotation_symmetrize_kagome_rvb_bond_tensors_uc(std::vector<IQTensor> &bond_tensors_uc);
+void random_init_kagome_rvb_cirac_peps(IQPEPS &kagome_rvb);
+
+void random_init_kagome_rvb_cirac_site_tensors(IQPEPS &kagome_rvb);
+void random_init_kagome_rvb_cirac_bond_tensors(IQPEPS &kagome_rvb);
+
+//make T^u rotation symmetric
+void rotation_symmetrize_kagome_rvb_site_tensor(IQTensor &site_tensor);
+//make P_p rotation symmetric
+void rotation_symmetrize_kagome_rvb_bond_tensor(IQTensor &bond_tensor);
 
 #endif

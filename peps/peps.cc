@@ -487,35 +487,91 @@ template <class TensorT>
 Tnetwork_Storage<TensorT> peps_to_tnetwork_storage(const PEPSt<TensorT> &peps)
 {
     Tnetwork_Storage<TensorT> tnetwork_storage;
+    
+    if (peps.name().find("torus")!=std::string::npos) tnetwork_storage._boundary_condition=1;
+
+    //Translate from square lattice
     if (peps.name().find("square")!=std::string::npos) 
     {
         tnetwork_storage._tnetwork_type=1;
         tnetwork_storage._n_subl=1;
-    }
-    if (peps.name().find("torus")!=std::string::npos) tnetwork_storage._boundary_condition=1;
-    int Lx=peps.n_uc()[0], Ly=peps.n_uc()[1];
-    tnetwork_storage._Lx=Lx;
-    tnetwork_storage._Ly=Ly;
-    //Print(tnetwork_storage._Lx);
-    //Print(tnetwork_storage._Ly);
 
-    tnetwork_storage._tensor_list.set_size(peps.n_sites_total());
-    auto tensor_list=peps.combined_site_tensors();
-    for (int sitei=0; sitei<peps.n_sites_total(); sitei++) 
-    {
-        tnetwork_storage._tensor_list(sitei)=tensor_list[sitei];
-        //Print(sitei);
-        //Print(tnetwork_storage._tensor_list(sitei));
-    }
+        int Lx=peps.n_uc()[0], Ly=peps.n_uc()[1];
+        tnetwork_storage._Lx=Lx;
+        tnetwork_storage._Ly=Ly;
+        //Print(tnetwork_storage._Lx);
+        //Print(tnetwork_storage._Ly);
 
-    tnetwork_storage._coor_to_siteind.set_size(Lx,Ly);
-    for (int x=0; x<Lx; x++)
-    {
-        for (int y=0; y<Ly; y++)
+        tnetwork_storage._tensor_list.set_size(peps.n_sites_total());
+        auto tensor_list=peps.combined_site_tensors();
+        for (int sitei=0; sitei<peps.n_sites_total(); sitei++) 
         {
-            tnetwork_storage._coor_to_siteind(x,y).set_size(tnetwork_storage._n_subl);
-            for (int subli=0; subli<tnetwork_storage._n_subl; subli++)
-                tnetwork_storage._coor_to_siteind(x,y)(subli)=peps.lattice().site_coord_to_list(x,y,subli);
+            tnetwork_storage._tensor_list(sitei)=tensor_list[sitei];
+            //Print(sitei);
+            //Print(tnetwork_storage._tensor_list(sitei));
+        }
+
+        tnetwork_storage._coor_to_siteind.set_size(Lx,Ly);
+        for (int x=0; x<Lx; x++)
+        {
+            for (int y=0; y<Ly; y++)
+            {
+                tnetwork_storage._coor_to_siteind(x,y).set_size(tnetwork_storage._n_subl);
+                for (int subli=0; subli<tnetwork_storage._n_subl; subli++)
+                    tnetwork_storage._coor_to_siteind(x,y)(subli)=peps.lattice().site_coord_to_list(x,y,subli);
+            }
+        }
+    }
+
+    //translate from kagome cirac lattice
+    if (peps.name().find("kagome cirac")!=std::string::npos)
+    {
+        tnetwork_storage._tnetwork_type=5;
+        tnetwork_storage._n_subl=5;
+
+        int Lx=peps.n_uc()[1],
+            Ly=peps.n_uc()[0];
+        tnetwork_storage._Lx=Lx;
+        tnetwork_storage._Ly=Ly;
+
+        tnetwork_storage._tensor_list.set_size(peps.n_sites_total()+peps.n_bonds_total());
+        tnetwork_storage._coor_to_siteind.set_size(Lx,Ly);
+        for (int x=0; x<Lx; x++)
+        {
+            for (int y=0; y<Ly; y++)
+            {
+                tnetwork_storage._coor_to_siteind(x,y).set_size(tnetwork_storage._n_subl);
+                for (int subli=0; subli<tnetwork_storage._n_subl; subli++)
+                {
+                    int siteind=(x+y*Lx)*tnetwork_storage._n_subl+subli;
+                    tnetwork_storage._coor_to_siteind(x,y)(subli)=siteind;
+                    if (subli==0)
+                    {
+                        int original_siteind=peps.lattice().site_coord_to_list(y,-x,1);
+                        tnetwork_storage._tensor_list(siteind)=peps.site_tensors(original_siteind);
+                    }
+                    if (subli==1)
+                    {
+                        int original_siteind=peps.lattice().site_coord_to_list(y,-x,2);
+                        tnetwork_storage._tensor_list(siteind)=peps.site_tensors(original_siteind);
+                    }
+                    if (subli==2)
+                    {
+                        int original_siteind=peps.lattice().site_coord_to_list(y,-x,0);
+                        tnetwork_storage._tensor_list(siteind)=peps.site_tensors(original_siteind);
+                    }
+                    if (subli==3)
+                    {
+                        int original_siteind=peps.lattice().bond_coord_to_list(y,-x,0);
+                        tnetwork_storage._tensor_list(siteind)=peps.bond_tensors(original_siteind);
+                    }
+                    if (subli==4)
+                    {
+                        int original_siteind=peps.lattice().bond_coord_to_list(y-1,-x-1,1);
+                        tnetwork_storage._tensor_list(siteind)=peps.bond_tensors(original_siteind);
+                    }
+                }
+            }
         }
     }
 

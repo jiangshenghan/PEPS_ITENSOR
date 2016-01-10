@@ -113,8 +113,8 @@ int main()
 
 
     //optimazation
-    Evolution_Params square_su_params(6,{19,49,599,999,3999,44000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
-    //Evolution_Params square_su_params(1,{11},{1e-0});
+    //Evolution_Params square_su_params(6,{19,49,599,999,3999,44000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
+    Evolution_Params square_su_params(1,{11},{1e-0});
     Print(square_su_params);
 
     //basic simple update

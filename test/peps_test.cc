@@ -5,22 +5,43 @@
 
 int main()
 {
+    //Kagome_Cirac_Lattice_Torus kagome_cirac_lattice({4,4});
+    //IQPEPS_IndexSet_SpinHalf index_set(6,kagome_cirac_lattice);
+    //IQPEPS kagome_rvb(kagome_cirac_lattice,index_set);
+
+    //random_init_kagome_rvb_cirac_peps(kagome_rvb);
+
     kagome_psg::mu_12=-1;
-    auto kagome_peps=kagome_cirac_srvb_peps(4,4);
-    PrintDat(kagome_peps.bond_tensors(0));
-    PrintDat(kagome_peps.bond_tensors(1));
-    PrintDat(kagome_peps.bond_tensors(2));
-    PrintDat(kagome_peps.bond_tensors(3));
+    kagome_psg::mu_c6=-1;
+    auto kagome_rvb=kagome_cirac_srvb_peps(4,4);
+
+    Tnetwork_Storage<IQTensor> kagome_rvb_storage=peps_to_tnetwork_storage(kagome_rvb);
+
+    Print(kagome_rvb_storage._tnetwork_type);
+    Print(kagome_rvb_storage._Lx);
+    Print(kagome_rvb_storage._Ly);
+    Print(kagome_rvb_storage._boundary_condition);
+    Print(kagome_rvb_storage._n_subl);
+    Print(kagome_rvb_storage._coor_to_siteind);
+    Print(kagome_rvb_storage._tensor_list);
+
+    std::stringstream ss;
+    ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/kagome_srvb_Lx=4_Ly=4_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6;
+    std::string file_name=ss.str();
+    writeToFile(file_name,kagome_rvb_storage);
+
+    //PrintDat(kagome_rvb.site_tensors(0));
+    //PrintDat(kagome_rvb.site_tensors(1));
+    //PrintDat(kagome_rvb.site_tensors(2));
+
+    //PrintDat(kagome_rvb.bond_tensors(0));
+    //PrintDat(kagome_rvb.bond_tensors(1));
 
     //Square_Lattice_Torus square_lattice{std::array<int,2>{2,2}};
     //Square_Lattice_Cylinder square_lattice{{3,3}};
     //Square_Lattice_Open square_lattice{{3,3}};
     
     //square_lattice.print_lattice_inf();
-
-    //Kagome_Cirac_Lattice_Torus kagome_cirac({4,4});
-   
-
 
     //PEPS_IndexSet index_set(2,2,square_lattice);
     //PEPS peps_test(square_lattice,index_set);

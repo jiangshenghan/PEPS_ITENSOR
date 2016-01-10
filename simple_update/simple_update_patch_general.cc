@@ -626,10 +626,10 @@ bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(General_Patch_RDM<IQ
         right_half_basis.push_back(square_RDM.tensor_from_contract_part_patch(double_layer_tensors_for_right_half_basis,1));
 
         //TODO:debug the speed
-        Print(base_num);
+        //Print(base_num);
         //Print(double_layer_tensors_for_left_half_basis);
         //Print(double_layer_tensors_for_right_half_basis);
-        Print(*(left_half_basis.end()-1));
+        //Print(*(left_half_basis.end()-1));
         //Print(*(right_half_basis.end()-1));
     }
 
