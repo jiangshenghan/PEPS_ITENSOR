@@ -61,6 +61,12 @@ class Singlet_Tensor_Basis
             int spin_list_num=num_from_list(spin_list,max_spins_),
                 flavor_list_num=num_from_list(flavor_list,spin_set_degs);
 
+            //Print(spin_list);
+            //Print(max_spins_);
+            //Print(spin_list_num);
+            //Print(flavor_list_num);
+            //Print(fusion_channel);
+
             return spin_flavor_list_to_num_[spin_list_num][flavor_list_num][fusion_channel];
         }
 

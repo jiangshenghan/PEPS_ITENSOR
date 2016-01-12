@@ -185,9 +185,13 @@ int num_from_list(const std::vector<int> &list, const std::vector<int> &max_nums
 
     for (int i=1; i<list.size(); i++)
     {
-        num*=max_nums[i-1];
+        num*=max_nums[i];
         num+=list[i];
     }
+
+    //Print(list);
+    //Print(max_nums);
+    //Print(num);
 
     return num;
 }

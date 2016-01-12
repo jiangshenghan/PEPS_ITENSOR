@@ -84,3 +84,48 @@ std::array<IQTPO,3> vectorSpinChirality(const std::array<IQIndex,2> &phys_legs)
 
     return SxS;
 }
+
+
+IQTPO SpinSpin_kagome_cirac(const std::array<IQIndex,3> &phys_legs)
+{
+    std::array<IQIndex,3> virt_legs{Spin_leg({1,0,1},"virt_leg a"),Spin_leg({1,0,1},"virt_leg b"),Spin_leg({1,0,1},"virt_leg c")};
+    IQTPO SdotS(3,1);
+
+    //Init site tensors
+    for (int sitei=0; sitei<3; sitei++)
+    {
+        Singlet_Tensor_Basis tensor_basis(std::vector<IQIndex>{dag(phys_legs[sitei]),prime(phys_legs[sitei]),virt_legs[sitei]});
+        //PrintDat(tensor_basis);
+        std::vector<double> tensor_params={sqrt(2.),sqrt(6.)/2};
+        SdotS.site_tensors(sitei)=singlet_tensor_from_basis_params(tensor_basis,tensor_params);
+    }
+    //Init bond tensor
+    Singlet_Tensor_Basis bond_tensor_basis(std::vector<IQIndex>{dag(virt_legs[0]),dag(virt_legs[1]),dag(virt_legs[2])});
+    //PrintDat(bond_tensor_basis);
+    std::vector<double> bond_tensor_params={0,-sqrt(3.),-sqrt(3.),-sqrt(3.),0};
+    SdotS.bond_tensors(0)=singlet_tensor_from_basis_params(bond_tensor_basis,bond_tensor_params);
+
+    return SdotS;
+}
+
+IQTPO trotter_gate_kagome_cirac(const std::array<IQIndex,3> &phys_legs, double t)
+{
+    std::array<IQIndex,3> virt_legs{Spin_leg({1,0,1},"virt_leg a"),Spin_leg({1,0,1},"virt_leg b"),Spin_leg({1,0,1},"virt_leg c")};
+    IQTPO trotter_gate(3,1);
+
+    //Init site tensors
+    for (int sitei=0; sitei<3; sitei++)
+    {
+        Singlet_Tensor_Basis tensor_basis(std::vector<IQIndex>{dag(phys_legs[sitei]),prime(phys_legs[sitei]),virt_legs[sitei]});
+        //PrintDat(tensor_basis);
+        std::vector<double> tensor_params={sqrt(2.),sqrt(6.)/2};
+        trotter_gate.site_tensors(sitei)=singlet_tensor_from_basis_params(tensor_basis,tensor_params);
+    }
+    //Init bond tensor
+    Singlet_Tensor_Basis bond_tensor_basis(std::vector<IQIndex>{dag(virt_legs[0]),dag(virt_legs[1]),dag(virt_legs[2])});
+    //PrintDat(bond_tensor_basis);
+    std::vector<double> bond_tensor_params={1.,t*sqrt(3.),t*sqrt(3.),t*sqrt(3.),0};
+    trotter_gate.bond_tensors(0)=singlet_tensor_from_basis_params(bond_tensor_basis,bond_tensor_params);
+
+    return trotter_gate;
+}

@@ -4,6 +4,7 @@
 Singlet_Tensor_Basis::Singlet_Tensor_Basis(const std::vector<IQIndex> &iqinds):
     is_(iqinds)
 {
+    //Print(is_);
     init_spin_deg_and_basis();
     init_singlet_tensors();
 }
@@ -30,6 +31,7 @@ void Singlet_Tensor_Basis::init_spin_deg_and_basis()
         is_flavor_deg_.push_back(flavor_deg);
         is_spin_basis_.push_back(spin_basis);
 
+        //Print(sz_leg);
         //Print(flavor_deg);
         //Print(spin_basis);
     }
@@ -170,6 +172,9 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
     //set norm of singlet_tensors_ to be 1
     for (auto &tensor :singlet_tensors_)
         tensor/=tensor.norm();
+
+    //Print(spin_flavor_list_to_num_.size());
+    //PrintDat(singlet_tensors_);
 }
 
 
