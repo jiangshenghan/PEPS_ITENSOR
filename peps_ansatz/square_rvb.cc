@@ -155,6 +155,7 @@ void init_square_rvb_bond_tensors(IQPEPS &square_rvb)
 
     auto bond_tensor=singlet_tensor_from_basis_params(bond_tensor_basis,bond_tensor_params);
     bond_tensor.clean();
+    //TODO:should be \eta_t2c4.chi_c4.bond_tensor. However, this does not change result
     square_rvb.generate_bond_tensors({bond_tensor,chi_c4*bond_tensor},mu_12);
 }
 

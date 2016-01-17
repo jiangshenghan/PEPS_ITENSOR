@@ -22,7 +22,7 @@ IQPEPS kagome_cirac_srvb_peps(int Lx, int Ly)
                          bond_tensor_basis(kagome_srvb.bond_tensors(0).indices());
 
     std::vector<Complex> site_tensor_params={sqrt(2)*std::pow(Complex(mu_12*mu_c6),-0.5),sqrt(2)},
-                         bond_tensor_params={1,sqrt(2),-mu_12*mu_c6*sqrt(2),mu_12*sqrt(2)};
+                         bond_tensor_params={sqrt(2),sqrt(2),-mu_12*mu_c6*sqrt(2),mu_12*sqrt(2)};
 
     //Print(mu_12);
     //Print(mu_c6);

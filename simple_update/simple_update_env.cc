@@ -290,7 +290,7 @@ void updated_env_tens_diff_df(const gsl_vector *x, void *params, gsl_vector *df)
     //Print(f_x);
     for (int i=0; i<x_size; i++)
     {
-        double dxi=1E-8;
+        double dxi=1E-10;
         gsl_vector_set(x_plus_dx,i,gsl_vector_get(x,i)+dxi);
         double f_x_plus_dxi=updated_env_tens_diff_f(x_plus_dx,params);
         gsl_vector_set(df,i,(f_x_plus_dxi-f_x)/dxi);

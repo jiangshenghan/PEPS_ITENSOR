@@ -106,32 +106,38 @@ class PEPSt
             return indexset_ptr_->virt_legs(sitei*n_bonds_to_one_site()+neighi);
         }
 
-        inline const TensorT &site_tensors(int i) const
+        const TensorT &site_tensors(int i) const
         {
             return site_tensors_[i];
         }
-
         TensorT &site_tensors(int i)
         {
             return site_tensors_[i];
         }
-
-        inline const std::vector<TensorT> &site_tensors() const
+        TensorT &site_tensors(const Coordinate &coord)
+        {
+            int siteind=lattice().site_coord_to_list(coord);
+            return site_tensors_[siteind];
+        }
+        const std::vector<TensorT> &site_tensors() const
         {
             return site_tensors_;
         }
 
-        inline const TensorT &bond_tensors(int i) const
+        const TensorT &bond_tensors(int i) const
         {
             return bond_tensors_[i];
         }
-
         TensorT &bond_tensors(int i)
         {
             return bond_tensors_[i];
         }
-
-        inline const std::vector<TensorT> &bond_tensors() const
+        TensorT &bond_tensors(const Coordinate &coord)
+        {
+            int bondind=lattice().bond_coord_to_list(coord);
+            return bond_tensors_[bondind];
+        }
+        const std::vector<TensorT> &bond_tensors() const
         {
             return bond_tensors_;
         }

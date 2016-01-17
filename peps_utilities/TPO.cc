@@ -86,7 +86,7 @@ std::array<IQTPO,3> vectorSpinChirality(const std::array<IQIndex,2> &phys_legs)
 }
 
 
-IQTPO SpinSpin_kagome_cirac(const std::array<IQIndex,3> &phys_legs)
+IQTPO SpinSpin_kagome_cirac(const std::vector<IQIndex> &phys_legs)
 {
     std::array<IQIndex,3> virt_legs{Spin_leg({1,0,1},"virt_leg a"),Spin_leg({1,0,1},"virt_leg b"),Spin_leg({1,0,1},"virt_leg c")};
     IQTPO SdotS(3,1);
@@ -108,7 +108,7 @@ IQTPO SpinSpin_kagome_cirac(const std::array<IQIndex,3> &phys_legs)
     return SdotS;
 }
 
-IQTPO trotter_gate_kagome_cirac(const std::array<IQIndex,3> &phys_legs, double t)
+IQTPO trotter_gate_kagome_cirac(const std::vector<IQIndex> &phys_legs, double t)
 {
     std::array<IQIndex,3> virt_legs{Spin_leg({1,0,1},"virt_leg a"),Spin_leg({1,0,1},"virt_leg b"),Spin_leg({1,0,1},"virt_leg c")};
     IQTPO trotter_gate(3,1);

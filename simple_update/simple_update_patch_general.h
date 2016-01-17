@@ -34,7 +34,15 @@
 //      |6 2 3 7|     
 //        |0 1|
 //
-//
+//2. kagome cirac geometry: We consider RDM for three sites
+//  a. tree shape I: includes three site tensors and one plaquette tensor
+//     |
+//     1
+//     |
+//     3
+//    / \
+//   0   2
+//  /     \
 //
 template <class TensorT>
 class General_Patch_RDM
@@ -55,9 +63,17 @@ class General_Patch_RDM
         //
         //Acess Method
         //
+        int cutting_sites_no() const
+        {
+            return cutting_sites_.size();
+        }
         const std::vector<int> &cutting_sites() const
         {
             return cutting_sites_;
+        }
+        const IndexT &cutting_phys_legs(int cuti) const
+        {
+            return peps_.phys_legs(cutting_sites_[cuti]);
         }
         const TensorT &cutting_site_tensors(int cuti) const
         {
@@ -84,6 +100,10 @@ class General_Patch_RDM
         {
             return patch_norm_;
         }
+        std::string peps_name() const
+        {
+            return peps_.name();
+        }
         std::string patch_name() const
         {
             if (name_.find("square")!=std::string::npos) 
@@ -97,6 +117,13 @@ class General_Patch_RDM
                     return "patch=speical_shape_I";
                 }
             }
+            if (name_.find("kagome cirac")!=std::string::npos)
+            {
+                if (name_.find("tree shape I")!=std::string::npos)
+                {
+                    return "tree_shape_I";
+                }
+            }
             return "unnamed_patch";
         }
 
@@ -108,10 +135,26 @@ class General_Patch_RDM
         TensorT tensor_from_contract_patch(const std::vector<TensorT> &double_layer_tensors);
         //for square lattice, dir=0 means left half, dir=1 right half
         TensorT tensor_from_contract_part_patch(const std::vector<TensorT> &double_layer_tensors, int parti);
+        //calculate expectation value of tensO
+        Complex expect_val_from_RDM(const TensorT &tensO)
+        {
+            return (RDM_*tensO).toComplex();
+        }
+        //contract network obtained by replace cutting site and bond tensors
         Complex expect_val_from_replaced_tensors(const std::vector<std::array<TensorT,2>> &replaced_tensors_ket_bra)
         {
             auto double_layer_tensors=double_layer_tensors_from_replaced_cutting_sites_tensors(replaced_tensors_ket_bra);
             return tensor_from_contract_patch(double_layer_tensors).toComplex();
+        }
+        //for the case ket tensor equals bra tensor (up to dagger)
+        Complex expect_val_from_replaced_tensors(const std::vector<TensorT> &replaced_tensors_ket)
+        {
+            std::vector<std::array<TensorT,2>> replaced_tensors_ket_bra;
+            for (const auto &ket_tensor : replaced_tensors_ket)
+            {
+                replaced_tensors_ket_bra.push_back({ket_tensor,ket_tensor});
+            }
+            return expect_val_from_replaced_tensors(replaced_tensors_ket_bra);
         }
 
     private:
@@ -151,11 +194,27 @@ class General_Patch_RDM
 
 
 
-//here we use small patch to do simple update for square PEPS
+//we use small patch to do simple update for square PEPS
 void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params, std::vector<int> patch_sites, std::array<int,2> evolved_sites, std::string patch_name);
+
+//patch simple update for kagome cirac PEPS
+void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolution_Params &su_params, std::vector<int> patch_sites, std:vector<int> evolved_sites, std::string patch_name);
+
 
 //obtain leg gate params of SQUARE peps with a given general RDM
 bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(General_Patch_RDM<IQTensor> &square_RDM, const Trotter_Gate &trotter_gate, const std::array<Singlet_Tensor_Basis,2> &leg_gates_basis, std::vector<double> &leg_gate_params, double cutoff=1E-5);
+//obtain leg gates params for kagome cirac peps (both site and plaquette)
+//0/1 labels site leg gates and plaquette leg_gates
+bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTensor> &kagome_patch_RDM, const IQTPO &evolve_gate, const std::array<std::vector<Singlet_Tensor_Basis>,2> &leg_gates_basis, std::array<std::vector<double>,2> &leg_gates_params, double cutoff=1E-5);
 
+//the following functions provides distance_sq for kagome cirac 
+double kagome_cirac_wf_distance_f(const gsl_vector *x, void *params);
+//TODO:improve the numerical derivative?
+void kagome_cirac_wf_distance_df(const gsl_vector *x, void *params, gsl_vector *df);
+void kagome_cirac_wf_distance_fdf(const gsl_vector *x, void *params, double *f, gsl_vector *df);
+
+
+//measure heisenberg energy using two sites RDM
+double heisenberg_energy_from_RDM(const General_Patch_RDM<IQTensor> &patch_rdm);
 
 #endif

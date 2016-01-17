@@ -5,6 +5,7 @@
 #include "trotter_gate.h"
 #include "simple_update_env.h"
 #include "square_rvb.h"
+#include "kagome_rvb.h"
 
 //provide struct for wavefunction overlap params (M_ijkl=\langle\phi_ij|\phi_lk\rangle and w_ij=\langle\phi_ij|\psi\rangle+\langle\psi|\phi_ij\rangle, as well as N_leg_basis) to do multiminimization
 struct Wf_Distance_Params
@@ -16,6 +17,19 @@ struct Wf_Distance_Params
         std::vector<double> M;
         std::vector<double> w;
 };
+
+//provide params for wf_distance_params fo kagome_cirac 
+struct Kagome_Cirac_Wf_Distance_Params
+{
+    public:
+        Kagome_Cirac_Wf_Distance_Params(double wf_norm, const General_Patch_RDM<IQTensor> &patch_RDM, const std::vector<IQTensor> site_tensors_evolved, const IQTensor &bond_tensor_evolved, const std::vector<IQCombiner> legs_combiners, const std::array<std::vector<Singlet_Tensor_Basis>,2> &basis): evolved_wf_norm(wf_norm), kagome_patch_RDM(patch_RDM), evolved_site_tensors(site_tensors_evolved), evolved_bond_tensor(bond_tensor_evolved), evolve_legs_combiners(legs_combiners), leg_gates_basis(basis) {}
+        double evolved_wf_norm;
+        General_Patch_RDM<IQTensor> kagome_patch_RDM;
+        std::array<IQTensor> evolved_site_tensors;
+        IQTensor evolved_bond_tensor;
+        std::vector<IQCombiner> evolve_legs_combiners;
+        std::array<std::vector<Singlet_Tensor_Basis>,2> leg_gates_basis; 
+}
 
 //Using simple update algorithm to obtain spin symmetric peps with the optimal energy. The algorithm is as follows
 //1. input init PEPS as well as the imaginary time evolution params. We should ensure that init PEPS satisfy all lattice symmetry as well as spin rotation symmetry
