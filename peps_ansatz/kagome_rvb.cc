@@ -43,10 +43,10 @@ IQPEPS kagome_cirac_srvb_peps(int Lx, int Ly)
 
 
 
-void random_init_kagome_rvb_cirac_peps(IQPEPS &kagome_rvb)
+void random_init_kagome_rvb_cirac_peps(IQPEPS &kagome_rvb, std::array<double,2> bond_param_norms)
 {
     random_init_kagome_rvb_cirac_site_tensors(kagome_rvb);
-    random_init_kagome_rvb_cirac_bond_tensors(kagome_rvb);
+    random_init_kagome_rvb_cirac_bond_tensors(kagome_rvb,bond_param_norms);
 }
 
 void random_init_kagome_rvb_cirac_site_tensors(IQPEPS &kagome_rvb)
@@ -83,7 +83,7 @@ void random_init_kagome_rvb_cirac_site_tensors(IQPEPS &kagome_rvb)
     kagome_rvb.generate_site_tensors({site_tensor,site_tensor,tensor_permutation({0,2,1},site_tensor)});
 }
 
-void random_init_kagome_rvb_cirac_bond_tensors(IQPEPS &kagome_rvb)
+void random_init_kagome_rvb_cirac_bond_tensors(IQPEPS &kagome_rvb, std::array<double,2> bond_param_norms)
 {
     //generate site tensors by random parameters
     //random number generator
@@ -100,11 +100,15 @@ void random_init_kagome_rvb_cirac_bond_tensors(IQPEPS &kagome_rvb)
     for (int basei=0; basei<bond_tensor_basis.dim(); basei++)
     {
         const auto &spin_list=bond_tensor_basis.spin_configs(basei);
-        if (spin_list[0]%2==0) bond_tensor_params[basei]=rand_param();
+        if (spin_list[0]%2==0) 
+        {
+            bond_tensor_params[basei]=rand_param();
+        }
     }
 
     auto bond_tensor=singlet_tensor_from_basis_params(bond_tensor_basis,bond_tensor_params);
     rotation_symmetrize_kagome_rvb_bond_tensor(bond_tensor);
+    fix_ratio_kagome_rvb_bond_tensor(bond_tensor,bond_tensor_basis,bond_param_norms);
 
     kagome_rvb.generate_bond_tensors({bond_tensor,tensor_permutation({2,0,1},bond_tensor)},mu_12);
 }
@@ -127,4 +131,42 @@ void rotation_symmetrize_kagome_rvb_bond_tensor(IQTensor &bond_tensor)
     obtain_tensor_after_eta_action(mu_c6,bond_tensors_permute[2],bond_tensor.indices()[0]);
 
     bond_tensor=1./3.*(bond_tensors_permute[0]+bond_tensors_permute[1]+bond_tensors_permute[2]);
+}
+
+
+void fix_ratio_kagome_rvb_bond_tensor(IQTensor &bond_tensor, const Singlet_Tensor_Basis &bond_tensor_basis, std::array<double,2> bond_param_norms)
+{
+    std::vector<Complex> bond_params;
+    obtain_singlet_tensor_params(bond_tensor,bond_tensor_basis,bond_params);
+    //classify singlet basis into two types
+    std::array<std::vector<int>,2> classified_base_no;
+    for (int basei=0; basei<bond_tensor_basis.dim(); basei++)
+    {
+        int type=0;
+        for (auto spin : bond_tensor_basis.spin_configs(basei))
+        {
+            if (spin%2!=0)
+            {
+                type=1;
+                break;
+            }
+        }
+        classified_base_no[type].push_back(basei);
+    }
+
+    //obtain the original norm
+    std::array<double,2> origin_bond_param_norms={0,0};
+    for (int typei=0; typei<2; typei++)
+    {
+        for (int base_no : classified_base_no[typei]) origin_bond_param_norms[typei]+=std::abs(bond_params[base_no]*bond_params[base_no]);
+        origin_bond_param_norms[typei]=sqrt(origin_bond_param_norms[typei]);
+    }
+
+    //rescale params
+    for (int typei=0; typei<2; typei++)
+    {
+        for (int base_no: classified_base_no[typei]) bond_params[base_no]*=bond_param_norms[typei]/origin_bond_param_norms[typei];
+    }
+    
+    bond_tensor=singlet_tensor_from_basis_params(bond_tensor_basis,bond_params);
 }

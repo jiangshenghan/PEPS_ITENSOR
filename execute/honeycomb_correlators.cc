@@ -5,7 +5,7 @@
 int main()
 {
     //system size
-    int Ly=3, Lx=24*Ly;
+    int Ly=5, Lx=50*Ly;
 
     double A1=0.9, A2=1-A1;
 

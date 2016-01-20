@@ -63,6 +63,10 @@ class General_Patch_RDM
         //
         //Acess Method
         //
+        const std::vector<int> &patch_sites() const
+        {
+            return patch_sites_;
+        }
         int cutting_sites_no() const
         {
             return cutting_sites_.size();
@@ -192,13 +196,38 @@ class General_Patch_RDM
         void absorb_neigh_bonds(int sitei, TensorT &double_layer_tensor, int forbid_bond=-1);
 };
 
+template <class TensorT>
+inline std::ostream &operator<<(std::ostream &s, const General_Patch_RDM<TensorT> &patch_rdm)
+{
+    s << "patch name: " << patch_rdm.patch_name() << endl;
+    s << "patch sites: " << patch_rdm.patch_sites() << endl;
+    s << "cutting sites: " << patch_rdm.cutting_sites() << endl;
+    s << "RDM: " << endl << patch_rdm.RDM();
+    s << "wf norm: " << patch_rdm.wf_norm() << endl;
+    return s;
+}
+
+
+
+//provide params for wf_distance_params fo kagome_cirac 
+struct Kagome_Cirac_Wf_Distance_Params
+{
+    public:
+        Kagome_Cirac_Wf_Distance_Params(double wf_norm, const General_Patch_RDM<IQTensor> &patch_RDM, const std::vector<IQTensor> &site_tensors_evolved, const IQTensor &bond_tensor_evolved, const std::vector<IQCombiner> &legs_combiners, const std::array<std::vector<Singlet_Tensor_Basis>,2> &basis): evolved_wf_norm(wf_norm), kagome_patch_RDM(patch_RDM), evolved_site_tensors(site_tensors_evolved), evolved_bond_tensor(bond_tensor_evolved), evolve_legs_combiners(legs_combiners), leg_gates_basis(basis) {}
+        double evolved_wf_norm;
+        General_Patch_RDM<IQTensor> kagome_patch_RDM;
+        std::vector<IQTensor> evolved_site_tensors;
+        IQTensor evolved_bond_tensor;
+        std::vector<IQCombiner> evolve_legs_combiners;
+        std::array<std::vector<Singlet_Tensor_Basis>,2> leg_gates_basis; 
+};
 
 
 //we use small patch to do simple update for square PEPS
 void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_Params &square_su_params, std::vector<int> patch_sites, std::array<int,2> evolved_sites, std::string patch_name);
 
 //patch simple update for kagome cirac PEPS
-void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolution_Params &su_params, std::vector<int> patch_sites, std:vector<int> evolved_sites, std::string patch_name);
+void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolution_Params &su_params, std::vector<int> patch_sites, std::vector<int> evolved_sites, std::string patch_name, std::array<double,2> bond_param_norms={1.,1.});
 
 
 //obtain leg gate params of SQUARE peps with a given general RDM
@@ -208,10 +237,10 @@ bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(General_Patch_RDM<IQ
 bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTensor> &kagome_patch_RDM, const IQTPO &evolve_gate, const std::array<std::vector<Singlet_Tensor_Basis>,2> &leg_gates_basis, std::array<std::vector<double>,2> &leg_gates_params, double cutoff=1E-5);
 
 //the following functions provides distance_sq for kagome cirac 
-double kagome_cirac_wf_distance_f(const gsl_vector *x, void *params);
+double kagome_cirac_wf_distance_sq_f(const gsl_vector *x, void *params);
 //TODO:improve the numerical derivative?
-void kagome_cirac_wf_distance_df(const gsl_vector *x, void *params, gsl_vector *df);
-void kagome_cirac_wf_distance_fdf(const gsl_vector *x, void *params, double *f, gsl_vector *df);
+void kagome_cirac_wf_distance_sq_df(const gsl_vector *x, void *params, gsl_vector *df);
+void kagome_cirac_wf_distance_sq_fdf(const gsl_vector *x, void *params, double *f, gsl_vector *df);
 
 
 //measure heisenberg energy using two sites RDM

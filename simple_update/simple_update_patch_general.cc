@@ -579,7 +579,7 @@ void spin_square_peps_patch_simple_update(IQPEPS &square_peps, const Evolution_P
 }
 
 
-void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolution_Params &su_params, std::vector<int> patch_sites, std:vector<int> evolved_sites, std::string patch_name)
+void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolution_Params &su_params, std::vector<int> patch_sites, std::vector<int> evolved_sites, std::string patch_name, std::array<double,2> bond_param_norms)
 {
     //Initialize env_tens
     std::array<std::vector<IQTensor>,2> env_tens;
@@ -590,6 +590,7 @@ void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolut
 
     double site_norm=kagome_rvb.site_tensors(evolved_sites[0]).norm(),
            bond_norm=kagome_rvb.bond_tensors(comm_bond_no).norm();
+    Singlet_Tensor_Basis comm_bond_basis(kagome_rvb.bond_tensors(comm_bond_no).indices());
 
     for (int iter=0; iter<su_params.iter_nums; iter++)
     {
@@ -599,22 +600,25 @@ void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolut
         //init leg gates for sites and bonds, which are used to approx evolve_gate
         //every leg gate is formed by two in legs and one out leg
         std::array<std::vector<Singlet_Tensor_Basis>,2> leg_gates_basis;
-        for (int evolvei=0; evolvei<evolve_sites.size(); evolvei++)
+        for (int evolvei=0; evolvei<evolved_sites.size(); evolvei++)
         {
             IndexSet<IQIndex> leg_gate_indices;
             leg_gate_indices.addindex(commonIndex(dag(kagome_rvb.site_tensors(evolved_sites[evolvei])),kagome_rvb.bond_tensors(comm_bond_no)));
             leg_gate_indices.addindex(commonIndex(dag(evolve_gate.site_tensors(evolvei)),evolve_gate.bond_tensors(0)));
             leg_gate_indices.addindex(commonIndex(kagome_rvb.site_tensors(evolved_sites[evolvei]),dag(kagome_rvb.bond_tensors(comm_bond_no))).prime());
             leg_gates_basis[0].push_back(Singlet_Tensor_Basis(leg_gate_indices));
-            leg_gates_basis[1].push_back(Singlet_Tensor_Basis(leg_gate_indices.dag()));
+            leg_gate_indices.dag();
+            leg_gates_basis[1].push_back(Singlet_Tensor_Basis(leg_gate_indices));
         }
+        //Print(leg_gates_basis[0]);
+        //Print(leg_gates_basis[1]);
 
         //init leg_gates_params
         for (int i=0; i<2; i++)
         {
             if (leg_gates_params[i].empty())
             {
-                for (int parami=0; parami<leg_gates_basis[i][0].size(); parami++) leg_gates_params[i].push_back(rand_gen());
+                for (int parami=0; parami<leg_gates_basis[i][0].dim(); parami++) leg_gates_params[i].push_back(rand_gen());
             }
         }
 
@@ -636,6 +640,8 @@ void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolut
            std::vector<IQIndex> leg_gate_indices{dag(peps_virt_leg),dag(evolve_gate_virt_leg),prime(peps_virt_leg)};
            leg_gates_for_one_tensor[1].push_back(IQTensor(leg_gate_indices));
         }
+        //Print(leg_gates_for_one_tensor[0]);
+        //Print(leg_gates_for_one_tensor[1]);
 
         for (int step=0; step<su_params.steps_nums[iter]; step++)
         {
@@ -660,7 +666,7 @@ void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolut
             {
                 auto leg_gate_sample=singlet_tensor_from_basis_params(leg_gates_basis[i][0],leg_gates_params[i]);
 
-                for (const auto &gate : leg_gates_for_one_tensor[i])
+                for (auto &gate : leg_gates_for_one_tensor[i])
                 {
                     tensor_assignment(gate,leg_gate_sample);
                 }
@@ -672,33 +678,34 @@ void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolut
             for (const auto &site_leg_gate : leg_gates_for_one_tensor[0]) 
             {
                 updated_site_tens_unordered*=evolve_gate.site_tensors(0)*site_leg_gate; 
+                updated_site_tens_unordered.noprime();
             }
-            updated_site_tens_unordered.noprime();
             //we should never change order of indices of site tensors
             auto updated_site_tens=kagome_rvb.site_tensors(evolved_sites[0]);
             tensor_assignment_diff_order(updated_site_tens,updated_site_tens_unordered);
-            rotation_symmetrize_kagome_site_tensor(updated_site_tens);
+            rotation_symmetrize_kagome_rvb_site_tensor(updated_site_tens);
             //keep the same norm
             updated_site_tens*=site_norm/(updated_site_tens.norm());
-            kagome_rvb.generate_site_tensors(updated_site_tens,updated_site_tens,tensor_permutation({0,2,1},updated_site_tens));
+            kagome_rvb.generate_site_tensors({updated_site_tens,updated_site_tens,tensor_permutation({0,2,1},updated_site_tens)});
 
             //updated bond tensors
-            IQTensor updated_bond_tens_unordered=kagome_rvb.bond_tensors(comm_bond_no);
+            IQTensor updated_bond_tens_unordered=kagome_rvb.bond_tensors(comm_bond_no)*evolve_gate.bond_tensors(0);
             for (const auto &bond_leg_gate : leg_gates_for_one_tensor[1])
             {
-                updated_bond_tens_unordered*=evolve_gate.bond_tensors(0)*bond_leg_gate;
+                updated_bond_tens_unordered*=bond_leg_gate;
             }
             updated_bond_tens_unordered.noprime();
             //we should never change order of inds
             auto updated_bond_tens=kagome_rvb.bond_tensors(comm_bond_no);
             tensor_assignment_diff_order(updated_bond_tens,updated_bond_tens_unordered);
-            rotation_symmetrize_kagome_bond_tensor(updated_bond_tens);
+            rotation_symmetrize_kagome_rvb_bond_tensor(updated_bond_tens);
             //keep the same norm
-            updated_bond_tens*=bond_norm/(updated_bond_tens.norm());
-            kagome_rvb.generate_bond_tensors({bond_tensor,tensor_permutation({2,0,1},bond_tensor)},kagome_psg::mu_12);
+            //updated_bond_tens*=bond_norm/(updated_bond_tens.norm());
+            fix_ratio_kagome_rvb_bond_tensor(updated_bond_tens,comm_bond_basis,bond_param_norms);
+            kagome_rvb.generate_bond_tensors({updated_bond_tens,tensor_permutation({2,0,1},updated_bond_tens)},kagome_psg::mu_12);
 
             //stores as PEPS
-            if ((step+1)*10%su_params.step_nums[iter]==0)
+            if ((step+1)*10%su_params.steps_nums[iter]==0)
             {
                 std::stringstream ss;
 
@@ -915,7 +922,7 @@ bool obtain_spin_sym_leg_gates_params_minimization_from_RDM(General_Patch_RDM<IQ
     return true;
 }
 
-bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTensor> &kagome_patch_RDM, const IQTPO &evolve_gate, const std::array<std::vector<Singlet_Tensor_Basis>,2> &leg_gates_basis, std::array<std::vector<double>,2> &leg_gates_params, double cutoff=1E-5)
+bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTensor> &kagome_patch_RDM, const IQTPO &evolve_gate, const std::array<std::vector<Singlet_Tensor_Basis>,2> &leg_gates_basis, std::array<std::vector<double>,2> &leg_gates_params, double cutoff)
 {
     //construct site tensors and bond tensors after applied by evolve_gate
     std::vector<IQTensor> site_tensors_evolved;
@@ -925,15 +932,19 @@ bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTenso
     {
         site_tensors_evolved.push_back(kagome_patch_RDM.cutting_site_tensors(cuti)*evolve_gate.site_tensors(cuti));
         site_tensors_evolved[cuti].noprime();
-        auto evolve_gate_virt_leg=commonIndex(evolve_gate.site_tensors(cuti),evolve_gate.bond_tensors(cuti));
+        auto evolve_gate_virt_leg=commonIndex(evolve_gate.site_tensors(cuti),evolve_gate.bond_tensors(0));
         evolve_legs_combiners.push_back(IQCombiner(kagome_patch_RDM.cutting_virt_legs(cuti),evolve_gate_virt_leg));
     }
     auto bond_tensor_evolved=kagome_patch_RDM.cutting_bond_tensor()*evolve_gate.bond_tensors(0);
+    //PrintDat(site_tensors_evolved);
+    //PrintDat(bond_tensor_evolved);
+    //Print(evolve_legs_combiners);
 
     //obtain evolved_wf_norm
     IQTensor evolve_gate_tensor=evolve_gate.bond_tensors(0);
     for (const auto &tens : evolve_gate.site_tensors()) evolve_gate_tensor*=tens;
     double evolved_wf_norm=sqrt((kagome_patch_RDM.RDM()*(evolve_gate_tensor*dag(swapPrime(evolve_gate_tensor,0,2))).mapprime(2,1)).real());
+    //Print(evolved_wf_norm);
 
     //using conjugate gradient methods to minimize distance square between updated_wf and evolved_wf
     int find_min_status;
@@ -943,8 +954,8 @@ bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTenso
     gsl_multimin_fdfminimizer *s;
 
     //params to do minimization
-    Kagome_Cirac_Wf_Distance_Params kagome_cirac_wf_distance_params(evolved_wf_norm,kagome_patch_RDM,site_tensors_evolved,bond_tensor_evolved,evolve_legs_combiners,leg_gates_basis);
-    
+    Kagome_Cirac_Wf_Distance_Params *kagome_cirac_wf_distance_params=new Kagome_Cirac_Wf_Distance_Params(evolved_wf_norm,kagome_patch_RDM,site_tensors_evolved,bond_tensor_evolved,evolve_legs_combiners,leg_gates_basis);
+
     //x stores coefficient for site leg gates and plaquette leg gates
     gsl_vector *x;
     gsl_multimin_function_fdf wf_distance_sq_func;
@@ -953,6 +964,7 @@ bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTenso
     wf_distance_sq_func.f=kagome_cirac_wf_distance_sq_f;
     wf_distance_sq_func.df=kagome_cirac_wf_distance_sq_df;
     wf_distance_sq_func.fdf=kagome_cirac_wf_distance_sq_fdf;
+    wf_distance_sq_func.params=kagome_cirac_wf_distance_params;
 
     x=gsl_vector_alloc(wf_distance_sq_func.n);
     for (int i=0; i<leg_gates_params[0].size(); i++) gsl_vector_set(x,i,leg_gates_params[0][i]);
@@ -961,23 +973,36 @@ bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTenso
     minimize_T=gsl_multimin_fdfminimizer_conjugate_fr;
     s=gsl_multimin_fdfminimizer_alloc(minimize_T,wf_distance_sq_func.n);
     gsl_multimin_fdfminimizer_set(s,&wf_distance_sq_func,x,0.1,0.1);
-
     do
     {
         iter++;
         find_min_status=gsl_multimin_fdfminimizer_iterate(s);
         if (find_min_status) break;
-        find_min_status=gsl_multimin_test_gradient(s->gradient,cutoff);
+        find_min_status=gsl_multimin_test_gradient(s->gradient,kagome_patch_RDM.wf_norm()*cutoff);
+
+        Print(iter);
+        Print(s->f);
     }
     while (find_min_status==GSL_CONTINUE && iter<max_iter);
+
+
+    //using minimization methods without derivative to minimize distance square between updated_wf and evolved_wf
+    //gsl_vector *ss;
+    //ss=gsl_vector_alloc(x->size);
+    //minimize_T=gsl_multimin_fminimizer_nmsimplex2;
+    //gsl_multimin_fminimizer_set(s,&wf_distance_sq_func,x,0.1,0.1);
+
+
+    Print(iter);
+    Print(s->f);
 
     double wf_norm=kagome_patch_RDM.wf_norm(),
            wf_evolved_wf_overlap=2*(kagome_patch_RDM.expect_val_from_RDM(evolve_gate_tensor)).real(),
            wf_evolved_wf_distance=std::sqrt(2*pow(evolved_wf_norm,2.)-evolved_wf_norm/wf_norm*wf_evolved_wf_overlap),
-           updated_wf_evolved_wf_distance=sqrt(wf_distance_f(s->x,kagome_cirac_wf_distance_sq_params));
+           updated_wf_evolved_wf_distance=sqrt(kagome_cirac_wf_distance_sq_f(s->x,kagome_cirac_wf_distance_params));
 
     Print(wf_evolved_wf_distance/evolved_wf_norm);
-    Print(updated_wf_basis_evolved_wf_overlap/evolved_wf_norm);
+    Print(updated_wf_evolved_wf_distance/evolved_wf_norm);
 
     if (iter==max_iter)
     {
@@ -1005,16 +1030,29 @@ bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTenso
 }
 
 
-double kagome_cirac_wf_distance_f(const gsl_vector *x, void *params)
+double kagome_cirac_wf_distance_sq_f(const gsl_vector *x, void *params)
 {
     std::array<std::vector<double>,2> leg_gates_params;
     Kagome_Cirac_Wf_Distance_Params *kagome_cirac_wf_distance_params=(Kagome_Cirac_Wf_Distance_Params *)params;
-    std::array<int,2> N_legs_basis={kagome_cirac_wf_distance_params->leg_gates_basis[0][0].size(),kagome_cirac_wf_distance_params->leg_gates_basis[1][0].size()};
+    std::array<int,2> N_legs_basis={kagome_cirac_wf_distance_params->leg_gates_basis[0][0].dim(),kagome_cirac_wf_distance_params->leg_gates_basis[1][0].dim()};
+
+    //Print(kagome_cirac_wf_distance_params->evolved_wf_norm);
+    //Print(kagome_cirac_wf_distance_params->kagome_patch_RDM);
+    //Print(kagome_cirac_wf_distance_params->evolved_site_tensors);
+    //Print(kagome_cirac_wf_distance_params->evolved_bond_tensor);
+    //Print(kagome_cirac_wf_distance_params->evolve_legs_combiners);
+    //Print(kagome_cirac_wf_distance_params->leg_gates_basis[0]);
+    //Print(kagome_cirac_wf_distance_params->leg_gates_basis[1]);
+    //Print(N_legs_basis[0]);
+    //Print(N_legs_basis[1]);
    
     for (int i=0; i<N_legs_basis[0]; i++)
         leg_gates_params[0].push_back(gsl_vector_get(x,i));
     for (int i=0; i<N_legs_basis[1]; i++)
         leg_gates_params[1].push_back(gsl_vector_get(x,i+N_legs_basis[0]));
+
+    //Print(leg_gates_params[0]);
+    //Print(leg_gates_params[1]);
 
     //construct leg gates
     std::array<std::vector<IQTensor>,2> leg_gates;
@@ -1025,6 +1063,8 @@ double kagome_cirac_wf_distance_f(const gsl_vector *x, void *params)
             leg_gates[typei].push_back(singlet_tensor_from_basis_params(singlet_basis,leg_gates_params[typei]));
         }
     }
+    //PrintDat(leg_gates[0]);
+    //PrintDat(leg_gates[1]);
 
     //updated sites and bonds are obtained by multiplication of evolved_sites (bonds) with leg gates
     auto evolved_site_tensors=kagome_cirac_wf_distance_params->evolved_site_tensors;
@@ -1040,9 +1080,11 @@ double kagome_cirac_wf_distance_f(const gsl_vector *x, void *params)
         updated_bond_tensor.noprime();
 
         //combine virtual legs of evolved_tensors
-        evolved_site_tensors[cuti]=evolved_site_tensors[cuti]*dag(evolve_legs_combiners[cuti]);
-        evolved_bond_tensor=evolved_bond_tensor*dag(evolved_legs_combiner[cuti]);
+        evolved_site_tensors[cuti]=evolved_site_tensors[cuti]*evolve_legs_combiners[cuti];
+        evolved_bond_tensor=evolved_bond_tensor*dag(evolve_legs_combiners[cuti]);
     }
+    //PrintDat(evolved_site_tensors);
+    //PrintDat(evolved_bond_tensor);
 
 
     double updated_wf_norm_sq=(kagome_cirac_wf_distance_params->kagome_patch_RDM.expect_val_from_replaced_tensors({updated_site_tensors[0]*updated_bond_tensor,updated_site_tensors[1],updated_site_tensors[2]})).real();
@@ -1051,34 +1093,40 @@ double kagome_cirac_wf_distance_f(const gsl_vector *x, void *params)
 
     double distance_sq=updated_wf_norm_sq+pow(kagome_cirac_wf_distance_params->evolved_wf_norm,2.)-updated_evolved_wf_overlap;
 
+    //Print(updated_evolved_wf_overlap);
+    //Print(kagome_cirac_wf_distance_params->evolved_wf_norm);
+    //Print(sqrt(updated_wf_norm_sq));
+    //Print(sqrt(distance_sq));
+
     return distance_sq;
 }
 
-void kagome_cirac_wf_distance_df(const gsl_vector *x, void *params, gsl_vector *df)
+void kagome_cirac_wf_distance_sq_df(const gsl_vector *x, void *params, gsl_vector *df)
 {
     int x_size=x->size;
 
     gsl_vector *x_plus_dx;
-    x_plux_dx=gsl_vector_alloc(x_size);
-    gsl_vector_memcpy(x_plux_dx,x);
+    x_plus_dx=gsl_vector_alloc(x_size);
+    gsl_vector_memcpy(x_plus_dx,x);
 
-    double f_x=kagome_cirac_wf_distance_f(x,params);
+    double f_x=kagome_cirac_wf_distance_sq_f(x,params);
     for (int i=0; i<x_size; i++)
     {
         double dxi=1E-10;
-        gsl_vector_set(x_plus_dx,i,gsl_vector_get(x,i),dxi);
-        double f_x_plus_dxi=kagome_cirac_wf_distance_f(x_plus_dx,params);
+        gsl_vector_set(x_plus_dx,i,gsl_vector_get(x,i)+dxi);
+        double f_x_plus_dxi=kagome_cirac_wf_distance_sq_f(x_plus_dx,params);
         gsl_vector_set(df,i,(f_x_plus_dxi-f_x)/dxi);
         gsl_vector_set(x_plus_dx,i,gsl_vector_get(x,i));
+        //Print(gsl_vector_get(df,i));
     }
 
     gsl_vector_free(x_plus_dx);
 }
 
-void kagome_cirac_wf_distance_fdf(const gsl_vector *x, void *params, double *f, gsl_vector *df)
+void kagome_cirac_wf_distance_sq_fdf(const gsl_vector *x, void *params, double *f, gsl_vector *df)
 {
-    *f=kagome_cirac_wf_distance_f(x,params);
-    wf_distance_df(x,params,df);
+    *f=kagome_cirac_wf_distance_sq_f(x,params);
+    kagome_cirac_wf_distance_sq_df(x,params,df);
 }
 
 double heisenberg_energy_from_RDM(const General_Patch_RDM<IQTensor> &patch_rdm)

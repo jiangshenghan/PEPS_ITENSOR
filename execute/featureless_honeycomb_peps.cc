@@ -5,7 +5,7 @@
 int main()
 {
     //system size
-    int Ly=3,Lx=16*Ly;
+    int Ly=5,Lx=50*Ly;
 
     //tunable parameter for wavefunctions
     srand(time(NULL));

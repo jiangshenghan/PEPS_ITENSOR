@@ -4,25 +4,33 @@
 //#include "simple_update_patch_square.h"
 #include "simple_update_patch_general.h"
 
-using namespace square_psg;
+//using namespace square_psg;
 
 
 int main()
 {
     //control PSG parameters
-    mu_12=1; 
+    kagome_psg::mu_12=1; 
+    kagome_psg::mu_c6=1;
 
 
     //init lattice
     int Lx=8, Ly=8;
-    Square_Lattice_Torus square_lattice({Lx,Ly});
+    //Square_Lattice_Torus square_lattice({Lx,Ly});
+    Kagome_Cirac_Lattice_Torus kagome_cirac_lattice({Lx,Ly});
 
 
     //construct random peps with a good initial state
     int D=6;
-    IQPEPS_IndexSet_SpinHalf index_set(D,square_lattice);
-    IQPEPS square_peps(square_lattice,index_set);
-    random_init_square_rvb_peps(square_peps);
+
+    //IQPEPS_IndexSet_SpinHalf index_set(D,square_lattice);
+    //IQPEPS square_peps(square_lattice,index_set);
+    //random_init_square_rvb_peps(square_peps);
+
+    IQPEPS_IndexSet_SpinHalf index_set(D,kagome_cirac_lattice);
+    IQPEPS kagome_peps(kagome_cirac_lattice,index_set);
+    std::array<double,2> bond_param_norms={2,3};
+    random_init_kagome_rvb_cirac_peps(kagome_peps,bond_param_norms);
 
     //double init_energy=0;
     //do
@@ -113,23 +121,24 @@ int main()
 
 
     //optimazation
-    //Evolution_Params square_su_params(6,{19,49,599,999,3999,44000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
-    Evolution_Params square_su_params(1,{11},{1e-0});
-    Print(square_su_params);
+    //Evolution_Params su_params(6,{19,49,599,999,3999,44000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
+    Evolution_Params su_params(1,{31},{1e-0});
+    Print(su_params);
 
     //basic simple update
-    //spin_square_peps_simple_update(square_peps,square_su_params);
+    //spin_square_peps_simple_update(square_peps,su_params);
 
     //update use Square_Patch_RDM
-    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1},{Lx,Lx+1}},{0,1});
-    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1},{Lx,Lx+1},{2*Lx,2*Lx+1}},{Lx,Lx+1});
-    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{{0,1,2,3},{Lx,Lx+1,Lx+2,Lx+3},{2*Lx,2*Lx+1,2*Lx+2,2*Lx+3}},{Lx+1,Lx+2});
+    //spin_square_peps_patch_simple_update(square_peps,su_params,{{0,1},{Lx,Lx+1}},{0,1});
+    //spin_square_peps_patch_simple_update(square_peps,su_params,{{0,1},{Lx,Lx+1},{2*Lx,2*Lx+1}},{Lx,Lx+1});
+    //spin_square_peps_patch_simple_update(square_peps,su_params,{{0,1,2,3},{Lx,Lx+1,Lx+2,Lx+3},{2*Lx,2*Lx+1,2*Lx+2,2*Lx+3}},{Lx+1,Lx+2});
 
     //update use General_Patch_RDM
-    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{0,1},{0,1},"regular shape");
-    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{0,1,Lx,Lx+1},{0,1},"regular shape");
-    spin_square_peps_patch_simple_update(square_peps,square_su_params,{0,1,Lx,Lx+1,2*Lx,2*Lx+1},{Lx,Lx+1},"regular shape");
-    //spin_square_peps_patch_simple_update(square_peps,square_su_params,{0,1,Lx,Lx+1,2*Lx,2*Lx+1,2*Lx-1,Lx+2},{Lx,Lx+1},"special shape I");
+    //spin_square_peps_patch_simple_update(square_peps,su_params,{0,1},{0,1},"regular shape");
+    //spin_square_peps_patch_simple_update(square_peps,su_params,{0,1,Lx,Lx+1},{0,1},"regular shape");
+    //spin_square_peps_patch_simple_update(square_peps,su_params,{0,1,Lx,Lx+1,2*Lx,2*Lx+1},{Lx,Lx+1},"regular shape");
+    //spin_square_peps_patch_simple_update(square_peps,su_params,{0,1,Lx,Lx+1,2*Lx,2*Lx+1,2*Lx-1,Lx+2},{Lx,Lx+1},"special shape I");
+    spin_kagome_cirac_peps_patch_simple_update(kagome_peps,su_params,{0,1,2},{0,1,2},"tree shape I",bond_param_norms);
 
 
     //Check the output result
