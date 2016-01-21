@@ -4,7 +4,7 @@
 namespace kagome_psg
 {
     double mu_12=1;
-    double mu_c6=-1;
+    double mu_c6=1;
     double mu_sigma=-1;
     double chi_sigmac6=1;
 }
@@ -30,10 +30,12 @@ IQPEPS kagome_cirac_srvb_peps(int Lx, int Ly)
     IQTensor site_tensor=singlet_tensor_from_basis_params(site_tensor_basis,site_tensor_params),
              bond_tensor=singlet_tensor_from_basis_params(bond_tensor_basis,bond_tensor_params);
 
-    //PrintDat(site_tensor);
-    //PrintDat(tensor_permutation({0,2,1},site_tensor));
-    //PrintDat(bond_tensor);
-    //PrintDat(tensor_permutation({2,0,1},bond_tensor));
+    //auto site_tensor_rotation=site_tensor;
+    //rotation_symmetrize_kagome_rvb_site_tensor(site_tensor_rotation);
+    //Print((site_tensor-site_tensor_rotation).norm()/site_tensor.norm());
+    //auto bond_tensor_rotation=bond_tensor;
+    //rotation_symmetrize_kagome_rvb_bond_tensor(bond_tensor_rotation);
+    //Print((bond_tensor-bond_tensor_rotation).norm()/bond_tensor.norm());
 
     kagome_srvb.generate_site_tensors({site_tensor,site_tensor,tensor_permutation({0,2,1},site_tensor)});
     kagome_srvb.generate_bond_tensors({bond_tensor,tensor_permutation({2,0,1},bond_tensor)},mu_12);
@@ -66,6 +68,7 @@ void random_init_kagome_rvb_cirac_site_tensors(IQPEPS &kagome_rvb)
     {
         const auto &spin_list=site_tensor_basis.spin_configs(basei);
         if (spin_list[1]%2==1) site_tensor_params[basei]=rand_param();
+        //if (spin_list[1]%2==1) site_tensor_params[basei]=0.5;
 
         //Print(basei);
         //Print(spin_list);
@@ -75,7 +78,7 @@ void random_init_kagome_rvb_cirac_site_tensors(IQPEPS &kagome_rvb)
 
     auto site_tensor=singlet_tensor_from_basis_params(site_tensor_basis,site_tensor_params);
 
-    //Print(site_tensor_params);
+    Print(site_tensor_params);
     //PrintDat(site_tensor);
 
     rotation_symmetrize_kagome_rvb_site_tensor(site_tensor);
@@ -169,4 +172,10 @@ void fix_ratio_kagome_rvb_bond_tensor(IQTensor &bond_tensor, const Singlet_Tenso
     }
     
     bond_tensor=singlet_tensor_from_basis_params(bond_tensor_basis,bond_params);
+
+    //Print(bond_tensor_basis);
+    //Print(classified_base_no[0]);
+    //Print(classified_base_no[1]);
+    Print(bond_params);
+
 }

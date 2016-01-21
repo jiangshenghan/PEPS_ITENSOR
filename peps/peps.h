@@ -28,11 +28,11 @@ class PEPSt
         //
         //PEPSt(): lattice_ptr_(new Lattice_Base), indexset_ptr_(new PEPSt_IndexSet_Base<IndexT>) {}
         PEPSt(const Lattice_Base &lattice);
-        PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set);
+        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set);
 
         //Initialize site tensors by tensor data in one unit cell, mu_12 represents PSG of translation symmetry
         //Thus, the PEPS is translationally invariant (up to mu_12).
-        PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc, double mu_12=1);
+        PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc, double mu_12=1);
 
         //
         //Access Methods
@@ -87,12 +87,17 @@ class PEPSt
             return lattice_ptr_->n_boundary_legs();
         }
 
-        inline const Lattice_Base &lattice() const
+        const Lattice_Base &lattice() const
         {
             return *(lattice_ptr_);
         }
+        
+        const PEPSt_IndexSet_Base<IndexT> &indexset() const
+        {
+            return *(indexset_ptr_);
+        }
 
-        inline const IndexT &phys_legs(const int &site_i) const
+        const IndexT &phys_legs(const int &site_i) const
         {
             return indexset_ptr_->phys_legs(site_i);
         }

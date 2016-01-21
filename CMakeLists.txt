@@ -38,8 +38,8 @@ SET(NUMERIC_LIB itpp_static gsl)
 
 #add directories for source file generating executable file
 ADD_SUBDIRECTORY(test)
-#ADD_SUBDIRECTORY(execute)
+ADD_SUBDIRECTORY(execute)
 
-ADD_EXECUTABLE(dmrg dmrg.cc)
-TARGET_LINK_LIBRARIES(dmrg ${ITENSOR_LIB} ${NUMERIC_LIB})
+#ADD_EXECUTABLE(dmrg dmrg.cc)
+#TARGET_LINK_LIBRARIES(dmrg ${ITENSOR_LIB} ${NUMERIC_LIB})
 

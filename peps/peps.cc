@@ -16,7 +16,7 @@ template
 PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice);
 
 template <class TensorT>
-PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set):
+PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_ptr_(new Lattice_Base(lattice)),
@@ -35,12 +35,12 @@ PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &
     //random_site_tensors();
 }
 template
-PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);
+PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set);
 template
-PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
+PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set);
 
 template <class TensorT>
-PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc, double mu_12):
+PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IndexT> &index_set, std::vector<TensorT> site_tensors_uc, std::vector<TensorT> bond_tensors_uc, double mu_12):
     d_(index_set.d()),
     D_(index_set.D()),
     lattice_ptr_(new Lattice_Base(lattice)),
@@ -70,9 +70,9 @@ PEPSt<TensorT>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IndexT> &
 
 }
 template
-PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> site_tensors_uc, std::vector<ITensor> bond_tensors_uc, double mu_12);
+PEPSt<ITensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<ITensor::IndexT> &index_set, std::vector<ITensor> site_tensors_uc, std::vector<ITensor> bond_tensors_uc, double mu_12);
 template
-PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> site_tensors_uc, std::vector<IQTensor> bond_tensors_uc, double mu_12);
+PEPSt<IQTensor>::PEPSt(const Lattice_Base &lattice, const PEPSt_IndexSet_Base<IQTensor::IndexT> &index_set, std::vector<IQTensor> site_tensors_uc, std::vector<IQTensor> bond_tensors_uc, double mu_12);
 
 
 template<class TensorT>

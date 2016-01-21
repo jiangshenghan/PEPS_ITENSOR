@@ -709,7 +709,6 @@ void spin_kagome_cirac_peps_patch_simple_update(IQPEPS &kagome_rvb, const Evolut
             {
                 std::stringstream ss;
 
-                //zero flux state
                 ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/kagome_rvb_D=" << kagome_rvb.D() << "_Lx=" << kagome_rvb.n_uc()[0] << "_Ly=" << kagome_rvb.n_uc()[1] << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_iter=" << iter << "_step=" << step << "_" << kagome_patch_RDM.patch_name();
 
                 std::string file_name=ss.str();
@@ -980,8 +979,8 @@ bool obtain_kagome_cirac_leg_gates_params_minimization(General_Patch_RDM<IQTenso
         if (find_min_status) break;
         find_min_status=gsl_multimin_test_gradient(s->gradient,kagome_patch_RDM.wf_norm()*cutoff);
 
-        Print(iter);
-        Print(s->f);
+        //Print(iter);
+        //Print(s->f);
     }
     while (find_min_status==GSL_CONTINUE && iter<max_iter);
 
@@ -1113,6 +1112,7 @@ void kagome_cirac_wf_distance_sq_df(const gsl_vector *x, void *params, gsl_vecto
     for (int i=0; i<x_size; i++)
     {
         double dxi=1E-10;
+        if (dxi>f_x/10.) dxi=f_x/10.;
         gsl_vector_set(x_plus_dx,i,gsl_vector_get(x,i)+dxi);
         double f_x_plus_dxi=kagome_cirac_wf_distance_sq_f(x_plus_dx,params);
         gsl_vector_set(df,i,(f_x_plus_dxi-f_x)/dxi);

@@ -21,7 +21,7 @@ int main()
 
 
     //construct random peps with a good initial state
-    int D=6;
+    int D=3;
 
     //IQPEPS_IndexSet_SpinHalf index_set(D,square_lattice);
     //IQPEPS square_peps(square_lattice,index_set);
@@ -29,7 +29,7 @@ int main()
 
     IQPEPS_IndexSet_SpinHalf index_set(D,kagome_cirac_lattice);
     IQPEPS kagome_peps(kagome_cirac_lattice,index_set);
-    std::array<double,2> bond_param_norms={2,3};
+    std::array<double,2> bond_param_norms={1,1};
     random_init_kagome_rvb_cirac_peps(kagome_peps,bond_param_norms);
 
     //double init_energy=0;
@@ -121,7 +121,7 @@ int main()
 
 
     //optimazation
-    //Evolution_Params su_params(6,{19,49,599,999,3999,44000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
+    //Evolution_Params su_params(6,{31,101,601,1001,4001,45000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
     Evolution_Params su_params(1,{31},{1e-0});
     Print(su_params);
 
