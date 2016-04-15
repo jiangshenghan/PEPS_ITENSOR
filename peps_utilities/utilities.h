@@ -234,4 +234,19 @@ inline int legs_num_after_contraction(const std::vector<TensorT> &curr_tensors)
     return legs_num;
 }
 
+
+//transfer an rank 2 ITensor to armadillo matrix. T can be either real or cplx
+arma::Mat<Complex> arma_mat_from_rank2_itensor(const ITensor &tensor);
+arma::Mat<Complex> arma_mat_from_rank2_itensor(const ITensor &tensor, Index leg1, Index leg2);
+
+//transfer an armadillo matrix to a rank 2 ITensor
+ITensor rank2_itensor_from_arma_mat(arma::Mat<double> matrix, const Index &leg1, const Index &leg2);
+ITensor rank2_itensor_from_arma_mat(arma::Mat<Complex> matrix, const Index &leg1, const Index &leg2);
+
+//get inverse tensor of rank 2 tensor by transform to arma_mat
+ITensor inverse_rank2_tensor_by_arma_mat(const ITensor &tensor);
+//for IQTensor, we get the inverse of each block separately, and then combine to the total inverse tensor
+IQTensor inverse_rank2_tensor_by_arma_mat(const IQTensor &tensor);
+
+
 #endif

@@ -211,7 +211,7 @@ void Square_Double_Layer_PEPSt<TensorT>::snake_walking_bulk_col(int coli, int ho
 
         //combine the indice of new tensor which will be multiplied next time
         IndexT lower_ind;
-        auto double_virt_leg_combiner=decombine_double_virt_indice({sitei,sitei+horizontal_dir},lower_ind);
+        auto double_virt_leg_combiner=this->decombine_double_virt_indice({sitei,sitei+horizontal_dir},lower_ind);
         if (rowi==start_row) 
         {
             lower_combiners_[lr_no][rowi]=CombinerT(lower_ind);

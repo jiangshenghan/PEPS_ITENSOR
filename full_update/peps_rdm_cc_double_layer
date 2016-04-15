@@ -1,0 +1,362 @@
+
+#include "peps_rdm.h"
+
+template <class TensorT>
+PEPSt_RDM<TensorT>::PEPSt_RDM(const std::string &name, const std::vector<int> &cutting_sites, const std::vector<int> &cutting_bonds, const std::vector<TensorT> &env_tensors, const PEPSt<TensorT> &peps): 
+    name_(name), 
+    cutting_sites_(cutting_sites), 
+    cutting_bonds_(cutting_bonds),
+    env_tensors_(env_tensors),
+    peps_(peps)
+{
+    init_bulk_boundary_legs();
+    init_legs_combiners();
+    init_env_tensors();
+    init_double_layer_tensors();
+    obtain_RDM_and_wf_norm();
+}
+template
+PEPSt_RDM<ITensor>::PEPSt_RDM(const std::string &name, const std::vector<int> &cutting_sites, const std::vector<int> &cutting_bonds, const std::vector<ITensor> &env_tensors, const PEPSt<ITensor> &peps);
+template
+PEPSt_RDM<IQTensor>::PEPSt_RDM(const std::string &name, const std::vector<int> &cutting_sites, const std::vector<int> &cutting_bonds, const std::vector<IQTensor> &env_tensors, const PEPSt<IQTensor> &peps);
+
+
+template <class TensorT>
+void PEPSt_RDM<TensorT>::obtain_RDM_and_wf_norm()
+{
+    //get reduced density matrix
+    //Print(double_layer_site_tensors_);
+    //Print(double_layer_bond_tensors_);
+    //Print(full_env_tensor_);
+    RDM_=tensor_from_contract_patch(double_layer_site_tensors_,double_layer_bond_tensors_);
+    for (int cuti=0; cuti<cutting_sites_.size(); cuti++)
+    {
+        RDM_=RDM_*dag(phys_legs_combiners_[cuti]);
+    }
+
+    //get wf_norm_
+    auto RDM_trace=RDM_;
+    for (int cuti=0; cuti<cutting_sites_.size(); cuti++)
+    {
+        const auto &phys_leg=peps_.phys_legs(cutting_sites_[cuti]);
+        RDM_trace.trace(phys_leg,dag(prime(phys_leg)));
+    }
+    wf_norm_=sqrt(RDM_trace.toComplex().real());
+}
+template
+void PEPSt_RDM<ITensor>::obtain_RDM_and_wf_norm();
+template
+void PEPSt_RDM<IQTensor>::obtain_RDM_and_wf_norm();
+
+
+template <class TensorT>
+Complex PEPSt_RDM<TensorT>::expect_val_from_replaced_tensors(const std::vector<std::array<TensorT,2>> &replaced_site_tensors_ket_bra, const std::vector<std::array<TensorT,2>> &replaced_bond_tensors_ket_bra)
+{
+    //init double layer tensors
+    std::vector<TensorT> replaced_double_layer_site_tensors, 
+                         replaced_double_layer_bond_tensors;
+
+    for (const auto &site_tensor_ket_bra : replaced_site_tensors_ket_bra)
+    {
+        replaced_double_layer_site_tensors.push_back(double_layer_tensor_from_ketbra_tensor({site_tensor_ket_bra[0],dag(site_tensor_ket_bra[1]).prime(Link)}));
+    }
+    //Print(replaced_double_layer_site_tensors);
+
+    for (const auto &bond_tensor_ket_bra : replaced_bond_tensors_ket_bra)
+    {
+        replaced_double_layer_bond_tensors.push_back(double_layer_tensor_from_ketbra_tensor({bond_tensor_ket_bra[0],dag(bond_tensor_ket_bra[1]).prime()}));
+    }
+    //Print(replaced_double_layer_bond_tensors);
+    auto scalar_tensor=tensor_from_contract_patch(replaced_double_layer_site_tensors,replaced_double_layer_bond_tensors);
+    //PrintDat(scalar_tensor);
+    return scalar_tensor.toComplex();
+}
+template
+Complex PEPSt_RDM<ITensor>::expect_val_from_replaced_tensors(const std::vector<std::array<ITensor,2>> &replaced_site_tensors_ket_bra, const std::vector<std::array<ITensor,2>> &replaced_bond_tensors_ket_bra);
+template
+Complex PEPSt_RDM<IQTensor>::expect_val_from_replaced_tensors(const std::vector<std::array<IQTensor,2>> &replaced_site_tensors_ket_bra, const std::vector<std::array<IQTensor,2>> &replaced_bond_tensors_ket_bra);
+
+template <class TensorT>
+Complex PEPSt_RDM<TensorT>::expect_val_from_replaced_tensors(const std::vector<std::array<TensorT,2>> &replaced_site_tensors_ket_bra)
+{
+    //init double layer tensors
+    std::vector<TensorT> replaced_double_layer_site_tensors;
+
+    //calculate time
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    start=std::chrono::system_clock::now();
+
+    for (const auto &site_tensor_ket_bra : replaced_site_tensors_ket_bra)
+    {
+        replaced_double_layer_site_tensors.push_back(double_layer_tensor_from_ketbra_tensor({site_tensor_ket_bra[0],dag(site_tensor_ket_bra[1]).prime(Link)}));
+    }
+    //Print(replaced_double_layer_site_tensors);
+    //Print(double_layer_bond_tensors_);
+
+    auto scalar_tensor=tensor_from_contract_patch(replaced_double_layer_site_tensors,double_layer_bond_tensors_);
+    //Print(scalar_tensor);
+
+    end=std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed=end-start;
+    cout << "time to get expect val: " << endl;
+    Print(elapsed.count());
+
+    return scalar_tensor.toComplex();
+}
+template
+Complex PEPSt_RDM<ITensor>::expect_val_from_replaced_tensors(const std::vector<std::array<ITensor,2>> &replaced_site_tensors_ket_bra);
+template
+Complex PEPSt_RDM<IQTensor>::expect_val_from_replaced_tensors(const std::vector<std::array<IQTensor,2>> &replaced_site_tensors_ket_bra);
+
+
+template <class TensorT>
+TensorT PEPSt_RDM<TensorT>::tensor_from_contract_patch(const std::vector<TensorT> &double_layer_site_tensors, const std::vector<TensorT> &double_layer_bond_tensors)
+{
+    //TODO:square geometry
+
+    //kagome normal geometry
+    if (peps_.name().find("kagome normal")!=std::string::npos)
+    {
+        if (name_.find("two sites shape")!=std::string::npos)
+        {
+            //calculate time
+            //std::chrono::time_point<std::chrono::system_clock> start, end;
+            //start=std::chrono::system_clock::now();
+
+            TensorT left_tensor=double_layer_bond_tensors[0]*double_layer_site_tensors[0]*double_layer_bond_tensors[1],
+                    right_tensor=double_layer_site_tensors[1]*double_layer_bond_tensors[2];
+            for (const auto &env_tensor : env_tensors_)
+            {
+                if (commonIndex(env_tensor,left_tensor)!=IndexT::Null())
+                {
+                    left_tensor*=env_tensor;
+                }
+                else
+                {
+                    right_tensor*=env_tensor;
+                }
+            }
+
+            //end=std::chrono::system_clock::now();
+            //std::chrono::duration<double> elapsed=end-start;
+            //cout << "contract patch duration: " << endl;
+            //Print(elapsed.count());
+
+            return (left_tensor*right_tensor);
+        }
+    }
+
+    //kagome cirac geometry
+    if (peps_.name().find("kagome cirac")!=std::string::npos)
+    {
+        if (name_.find("tree shape I")!=std::string::npos)
+        {
+            auto tensor=double_layer_bond_tensors[0]*double_layer_site_tensors[0]*double_layer_site_tensors[1]*double_layer_site_tensors[2]*full_env_tensor_;
+            return tensor;
+        }
+    }
+
+    return TensorT();
+
+}
+template
+ITensor PEPSt_RDM<ITensor>::tensor_from_contract_patch(const std::vector<ITensor> &double_layer_site_tensors, const std::vector<ITensor> &double_layer_bond_tensors);
+template
+IQTensor PEPSt_RDM<IQTensor>::tensor_from_contract_patch(const std::vector<IQTensor> &double_layer_site_tensors, const std::vector<IQTensor> &double_layer_bond_tensors);
+
+
+template <class TensorT>
+TensorT PEPSt_RDM<TensorT>::double_layer_tensor_from_ketbra_tensor(const std::array<TensorT,2> &ketbra_tensor)
+{
+    //calculate time
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    start=std::chrono::system_clock::now();
+
+    int n_legs_total=legs_num_after_contraction<TensorT>({ketbra_tensor[0],ketbra_tensor[1]});
+    //Print(n_legs_total);
+    if (n_legs_total<=NMAX)
+    {
+        auto double_layer_tensor=ketbra_tensor[0]*ketbra_tensor[1];
+        obtain_tensor_with_combined_virt_legs(double_layer_tensor);
+
+        end=std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed=end-start;
+        cout << "time to get one double layer tensor: (<8)" << endl;
+        Print(elapsed.count());
+
+        return double_layer_tensor;
+    }
+    //For case where total legs greater than NMAX, we will combine 
+    else
+    {
+        //TODO: there is still possibility of indices overflow, consider more general case
+        CombinerT temp_combiner(ketbra_tensor[0].indices()[0],ketbra_tensor[0].indices()[1]);
+        auto double_layer_tensor=(ketbra_tensor[0]*temp_combiner)*(ketbra_tensor[1]*dag(prime(temp_combiner)));
+        obtain_tensor_with_combined_virt_legs(double_layer_tensor);
+
+        double_layer_tensor=double_layer_tensor*dag(temp_combiner)*prime(temp_combiner);
+        obtain_tensor_with_combined_virt_legs(double_layer_tensor);
+
+        end=std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed=end-start;
+        cout << "time to get one double layer tensor: (>8) " << endl;
+        Print(elapsed.count());
+
+        return double_layer_tensor;
+    }
+}
+template
+ITensor PEPSt_RDM<ITensor>::double_layer_tensor_from_ketbra_tensor(const std::array<ITensor,2> &ketbra_tensor);
+template
+IQTensor PEPSt_RDM<IQTensor>::double_layer_tensor_from_ketbra_tensor(const std::array<IQTensor,2> &ketbra_tensor);
+
+
+template <class TensorT>
+void PEPSt_RDM<TensorT>::init_bulk_boundary_legs()
+{
+    std::vector<IndexT> virt_legs;
+    for (int sitei : cutting_sites_)
+    {
+        for (const auto &leg : peps_.site_tensors(sitei).indices())
+        {
+            if (leg.type()==Site) continue;
+            if (std::find(virt_legs.begin(),virt_legs.end(),leg)==virt_legs.end())
+            {
+                virt_legs.push_back(leg);
+            }
+            else
+            {
+                bulk_legs_.push_back(leg);
+            }
+        }
+    }
+
+    for (int bondi : cutting_bonds_)
+    {
+        for (const auto &leg : peps_.bond_tensors(bondi).indices())
+        {
+            if (std::find(virt_legs.begin(),virt_legs.end(),leg)==virt_legs.end())
+            {
+                virt_legs.push_back(leg);
+            }
+            else
+            {
+                bulk_legs_.push_back(leg);
+            }
+        }
+    }
+
+    for (const auto &leg : virt_legs)
+    {
+        if (std::find(bulk_legs_.begin(),bulk_legs_.end(),leg)==bulk_legs_.end()) boundary_legs_.push_back(leg);
+    }
+}
+template
+void PEPSt_RDM<ITensor>::init_bulk_boundary_legs();
+template
+void PEPSt_RDM<IQTensor>::init_bulk_boundary_legs();
+
+template <class TensorT>
+void PEPSt_RDM<TensorT>::init_legs_combiners()
+{
+    for (const auto &bulk_leg : bulk_legs_)
+    {
+        bulk_legs_combiners_.push_back(CombinerT(bulk_leg,dag(prime(bulk_leg))));
+    }
+    for (const auto &boundary_leg : boundary_legs_)
+    {
+        boundary_legs_combiners_.push_back(CombinerT(boundary_leg,dag(prime(boundary_leg))));
+    }
+    for (int sitei : cutting_sites_)
+    {
+        auto phys_leg=peps_.phys_legs(sitei);
+        phys_legs_combiners_.push_back(CombinerT(phys_leg,dag(prime(phys_leg))));
+    }
+}
+template
+void PEPSt_RDM<ITensor>::init_legs_combiners();
+template
+void PEPSt_RDM<IQTensor>::init_legs_combiners();
+
+template <class TensorT>
+void PEPSt_RDM<TensorT>::init_env_tensors()
+{
+    for (auto &env_tensor : env_tensors_)
+    {
+        for (int boundaryi=0; boundaryi<boundary_legs_.size(); boundaryi++)
+        {
+            if (hasindex(env_tensor,boundary_legs_[boundaryi]))
+            {
+                env_tensor=env_tensor*dag(boundary_legs_combiners_[boundaryi]);
+            }
+        }
+    }
+
+    //obtain full_env_tensor_
+    //for square lattice or kagome normal geometry, it is inefficient to use full_env_tensor_
+
+    //kagome cirac geometry
+    if (peps_.name().find("kagome cirac")!=std::string::npos)
+    {
+        if (name_.find("tree shape I")!=std::string::npos)
+        {
+            full_env_tensor_=env_tensors_[0]*env_tensors_[1]*env_tensors_[2];
+        }
+    }
+
+}
+template
+void PEPSt_RDM<ITensor>::init_env_tensors();
+template
+void PEPSt_RDM<IQTensor>::init_env_tensors();
+
+template <class TensorT>
+void PEPSt_RDM<TensorT>::init_double_layer_tensors()
+{
+    double_layer_site_tensors_.clear();
+    double_layer_bond_tensors_.clear();
+    for (int i=0; i<cutting_sites_.size(); i++)
+    {
+        auto &site_tensor=peps_.site_tensors(cutting_sites_[i]);
+        double_layer_site_tensors_.push_back(double_layer_tensor_from_ketbra_tensor({site_tensor,dag(prime(site_tensor))}));
+        auto &tensor=double_layer_site_tensors_.back();
+        tensor=tensor*phys_legs_combiners_[i];
+    }
+
+    for (int i=0; i<cutting_bonds_.size(); i++)
+    {
+        auto &bond_tensor=peps_.bond_tensors(cutting_bonds_[i]);
+        double_layer_bond_tensors_.push_back(double_layer_tensor_from_ketbra_tensor({bond_tensor,dag(prime(bond_tensor))}));
+    }
+}
+template
+void PEPSt_RDM<ITensor>::init_double_layer_tensors();
+template
+void PEPSt_RDM<IQTensor>::init_double_layer_tensors();
+
+
+double heisenberg_energy_from_RDM(PEPSt_RDM<IQTensor> peps_rdm)
+{
+    std::vector<IQIndex> phys_legs;
+    for (int cuti=0; cuti<peps_rdm.cutting_sites().size(); cuti++)
+    {
+        phys_legs.push_back(peps_rdm.cutting_phys_legs(cuti));
+    }
+
+    double energy=0;
+
+    if (peps_rdm.peps_name().find("square")!=std::string::npos || peps_rdm.peps_name().find("kagome normal")!=std::string::npos)
+    {
+        NN_Heisenberg_Hamiltonian heisenberg_gate({phys_legs[0],phys_legs[1]});
+        energy=(peps_rdm.RDM()*(heisenberg_gate.site_tensors(0)*heisenberg_gate.bond_tensor()*heisenberg_gate.site_tensors(1))).toComplex().real();
+    }
+
+    //Print(peps_rdm.patch_name());
+    if (peps_rdm.peps_name().find("kagome cirac")!=std::string::npos)
+    {
+        IQTPO heisenberg_gate=SpinSpin_kagome_cirac(phys_legs);
+        energy=(peps_rdm.RDM()*heisenberg_gate.site_tensors(0)*heisenberg_gate.site_tensors(1)*heisenberg_gate.bond_tensors(0)*heisenberg_gate.site_tensors(2)).toComplex().real();
+    }
+
+    return energy/std::pow(peps_rdm.wf_norm(),2.);
+}

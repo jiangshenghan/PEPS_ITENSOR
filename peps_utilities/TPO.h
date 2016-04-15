@@ -72,8 +72,10 @@ std::array<IQTPO,3> vectorSpinChirality(const std::array<IQIndex,2> &phys_legs);
 
 //Heisenberg Hamilltonian for kagome cirac lattice, which involves three sites
 IQTPO SpinSpin_kagome_cirac(const std::vector<IQIndex> &phys_legs);
-//Trotter gate for kagome cirac lattice
+//NN_Heisenberg trotter gate for kagome cirac lattice
 IQTPO trotter_gate_kagome_cirac(const std::vector<IQIndex> &phys_legs, double t=1.);
+//NN Heisenberg trotter gate for two site
+IQTPO trotter_gate_NN_Heisenberg(const std::vector<IQIndex> &phys_legs, double t=1.);
 
 
 template <class TensorT>
@@ -86,5 +88,6 @@ std::ostream &operator<<(std::ostream &s, const TPOt<TensorT> &T)
     for (int i=0; i<T.n_bonds(); i++) s << T.bond_tensors(i) << endl;
     return s;
 }
+
 
 #endif

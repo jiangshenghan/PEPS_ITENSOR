@@ -170,12 +170,12 @@ void spin_square_peps_simple_update(IQPEPS &square_peps, const Evolution_Params 
                 //zero flux state
                 if (std::abs(square_psg::mu_12-1)<EPSILON)
                 {
-                    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
+                    ss << "/home/jiangsb/tn_ying/tensor_network/result/peps_storage/square_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
                 }
                 //pi flux state
                 if (std::abs(square_psg::mu_12+1)<EPSILON)
                 {
-                    ss << "/home/jiangsb/code/peps_itensor/result/peps_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
+                    ss << "/home/jiangsb/tn_ying/tensor_network/result/peps_storage/square_pi_rvb_D=" << square_peps.D() << "_Lx=" << square_peps.n_uc()[0] << "_Ly=" << square_peps.n_uc()[1] << "_iter=" << iter << "_step=" << step;
                 }
 
                 std::string file_name=ss.str();
@@ -691,11 +691,25 @@ double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &sit
     site_env_tens_dag[1].prime(commonIndex(site_env_tens_dag[1],comm_bond_tensor));
 
     double wf_norm_sq=((site_env_tens_dag[0]*site_env_tens[0])*comm_bond_tensor*comm_bond_tensor_dag*(site_env_tens_dag[1]*site_env_tens[1])).toComplex().real();
+    //Print(wf_norm_sq);
 
-    site_env_tens_dag[0].prime(Site);
-    site_env_tens_dag[1].prime(Site);
+    for (int sitei=0; sitei<2; sitei++)
+    {
+        IQIndex commind=commonIndex(hamiltonian_gate.site_tensors(sitei),site_env_tens_dag[0]);
+        if (commind!=IQIndex::Null())
+        {
+            site_env_tens_dag[0].prime(commind);
+        }
+        commind=commonIndex(hamiltonian_gate.site_tensors(sitei),site_env_tens_dag[1]);
+        if (commind!=IQIndex::Null())
+        {
+            site_env_tens_dag[1].prime(commind);
+        }
+    }
 
-    double energy=((site_env_tens[0]*hamiltonian_gate.site_tensors(0)*site_env_tens_dag[0])*hamiltonian_gate.bond_tensor()*comm_bond_tensor*comm_bond_tensor_dag*(site_env_tens[1]*hamiltonian_gate.site_tensors(1)*site_env_tens_dag[1])).toComplex().real();
+    IQTensor energy_tensor=(site_env_tens[0]*hamiltonian_gate.site_tensors(0)*site_env_tens_dag[0])*hamiltonian_gate.bond_tensor()*comm_bond_tensor*comm_bond_tensor_dag*(site_env_tens[1]*site_env_tens_dag[1]*hamiltonian_gate.site_tensors(1));
+    //Print(energy_tensor);
+    double energy=energy_tensor.toComplex().real();
 
     return energy/wf_norm_sq;
 }

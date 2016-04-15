@@ -410,9 +410,9 @@ std::vector<TensorT> PEPSt<TensorT>::combined_site_tensors() const
             int bond_no=this->lattice().site_neighbour_bonds(sitei,neighi);
             if (bond_no<0) continue;
             //For bulk bond, we only multiply those start from the site to avoid double counting. Namely bond_neighbour_sites(bond_no,0)==sitei
-            //For boundary bond, we will always absorb to the bond
-            if (this->lattice().bond_neighbour_sites(bond_no,0)==sitei ||
-                this->lattice().bond_neighbour_sites(bond_no,0)<0)
+            //For boundary bond, we will always absorb the bond
+            //TODO: consider boundary bonds connect multiple sites
+            if (this->lattice().bond_neighbour_sites(bond_no,0)==sitei || this->lattice().bond_neighbour_sites(bond_no,0)<0)
             {
                 site_tensor*=this->bond_tensors(bond_no);
             }
@@ -570,6 +570,38 @@ Tnetwork_Storage<TensorT> peps_to_tnetwork_storage(const PEPSt<TensorT> &peps)
                         int original_siteind=peps.lattice().bond_coord_to_list(y-1,-x-1,1);
                         tnetwork_storage._tensor_list(siteind)=peps.bond_tensors(original_siteind);
                     }
+                }
+            }
+        }
+    }
+
+    //translate from kagome normal lattice
+    if (peps.name().find("kagome normal")!=std::string::npos)
+    {
+        tnetwork_storage._tnetwork_type=8;
+        tnetwork_storage._n_subl=3;
+
+        int Lx=peps.n_uc()[1],
+            Ly=peps.n_uc()[0];
+        tnetwork_storage._Lx=Lx;
+        tnetwork_storage._Ly=Ly;
+
+        tnetwork_storage._tensor_list.set_size(peps.n_sites_total());
+        auto tensor_list=peps.combined_site_tensors();
+        for (int sitei=0; sitei<peps.n_sites_total(); sitei++)
+        {
+            tnetwork_storage._tensor_list(sitei)=tensor_list[sitei];
+        }
+
+        tnetwork_storage._coor_to_siteind.set_size(Lx,Ly);
+        for (int x=0; x<Lx; x++)
+        {
+            for (int y=0; y<Ly; y++)
+            {
+                tnetwork_storage._coor_to_siteind(x,y).set_size(tnetwork_storage._n_subl);
+                for (int subli=0; subli<tnetwork_storage._n_subl; subli++)
+                {
+                    tnetwork_storage._coor_to_siteind(x,y)(subli)=peps.lattice().site_coord_to_list(x,y,subli);
                 }
             }
         }

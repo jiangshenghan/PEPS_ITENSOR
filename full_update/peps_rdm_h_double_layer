@@ -1,0 +1,179 @@
+
+
+#ifndef _PEPS_RDM_H_
+#define _PEPS_RDM_H_
+
+#include "square_rvb.h"
+#include "kagome_rvb.h"
+#include "trotter_gate.h"
+#include "simple_update_env.h"
+
+//this class stores reduced density matrix used for measurement and full update, where env is approximate by matrix product state
+template <class TensorT>
+class PEPSt_RDM
+{
+    public:
+        //
+        //type alias
+        //
+        using IndexT=typename TensorT::IndexT;
+        using IndexValT=typename TensorT::IndexValT;
+        using CombinerT=typename TensorT::CombinerT;
+
+        //
+        //Constructor
+        //
+        PEPSt_RDM(const std::string &name, const std::vector<int> &cutting_sites, const std::vector<int> &cutting_bonds, const std::vector<TensorT> &env_tensors, const PEPSt<TensorT> &peps);
+
+        //
+        //Access Method
+        //
+        const std::string &peps_name() const { return peps_.name(); }
+
+        int cutting_sites_no() const { return cutting_sites_.size(); }
+        const std::vector<int> &cutting_sites() const { return cutting_sites_; }
+        const std::vector<int> &cutting_bonds() const { return cutting_bonds_; }
+
+        const IndexT &cutting_phys_legs(int cuti) const { return peps_.phys_legs(cutting_sites_[cuti]); }
+
+        const TensorT &cutting_site_tensors(int cuti) const { return peps_.site_tensors(cutting_sites_[cuti]); }
+        std::vector<TensorT> cutting_bond_tensors() const
+        {
+            std::vector<TensorT> bond_tensors;
+            for (int bondi : cutting_bonds_) bond_tensors.push_back(peps_.bond_tensors(bondi));
+            return bond_tensors;
+        }
+        const TensorT &cutting_bond_tensors(int cuti) const { return peps_.bond_tensors(cutting_bonds_[cuti]); }
+
+        const TensorT &RDM() const { return RDM_; }
+
+        double wf_norm() const { return wf_norm_; }
+
+        //
+        //update peps_rdm
+        //
+        void update_peps_rdm(const std::vector<IQTensor> &env_tensors, const PEPSt<TensorT> &peps)
+        {
+            peps_=peps;
+            env_tensors_=env_tensors;
+            init_env_tensors();
+            init_double_layer_tensors();
+            obtain_RDM_and_wf_norm();
+        }
+
+        //
+        //Reduced Density Matrix and related
+        //
+        void obtain_RDM_and_wf_norm();
+
+        Complex expect_val_from_replaced_tensors(const std::vector<std::array<TensorT,2>> &replaced_site_tensors_ket_bra, const std::vector<std::array<TensorT,2>> &replaced_bond_tensors_ket_bra);
+        Complex expect_val_from_replaced_tensors(const std::vector<std::array<TensorT,2>> &replaced_site_tensors_ket_bra);
+        Complex expect_val_from_replaced_tensors(const std::vector<TensorT> &replaced_site_tensors_ket, const std::vector<TensorT> &replaced_bond_tensors_ket)
+        {
+            std::vector<std::array<TensorT,2>> replaced_site_tensors_ket_bra, replaced_bond_tensors_ket_bra;
+            for (const auto &site_tensor : replaced_site_tensors_ket)
+                replaced_site_tensors_ket_bra.push_back({site_tensor,site_tensor});
+            for (const auto &bond_tensor : replaced_bond_tensors_ket)
+                replaced_bond_tensors_ket_bra.push_back({bond_tensor,bond_tensor});
+            return expect_val_from_replaced_tensors(replaced_site_tensors_ket_bra,replaced_bond_tensors_ket_bra);
+        }
+        Complex expect_val_from_replaced_tensors(const std::vector<TensorT> &replaced_site_tensors_ket)
+        {
+            std::vector<std::array<TensorT,2>> replaced_site_tensors_ket_bra;
+            for (const auto &site_tensor : replaced_site_tensors_ket)
+                replaced_site_tensors_ket_bra.push_back({site_tensor,site_tensor});
+            return expect_val_from_replaced_tensors(replaced_site_tensors_ket_bra);
+        }
+
+        //contract all tensors as well as env tensors
+        TensorT tensor_from_contract_patch(const std::vector<TensorT> &double_layer_site_tensors, const std::vector<TensorT> &double_layer_bond_tensors);
+
+        //
+        //Others
+        //
+        //obtain double layer tensor with virttual leg combined
+        TensorT double_layer_tensor_from_ketbra_tensor(const std::array<TensorT,2> &ketbra_tensor);
+
+        //combine top and bottom bulk legs and boundary legs
+        void obtain_tensor_with_combined_virt_legs(TensorT &double_layer_tensor)
+        {
+            for (int boundaryi=0; boundaryi<boundary_legs_.size(); boundaryi++)
+            {
+                if (hasindex(double_layer_tensor,boundary_legs_[boundaryi]))
+                {
+                    double_layer_tensor=double_layer_tensor*boundary_legs_combiners_[boundaryi];
+                }
+            }
+            for (int bulki=0; bulki<bulk_legs_.size(); bulki++)
+            {
+                if (!hasindex(double_layer_tensor,bulk_legs_[bulki])) continue;
+                if (!hasindex(double_layer_tensor,prime(bulk_legs_[bulki]))) continue;
+                //we need to consider carefully about direction of bulk_legs
+                auto leg_iter=std::find(double_layer_tensor.indices().begin(),double_layer_tensor.indices().end(),bulk_legs_[bulki]);
+                if (leg_iter->dir()==bulk_legs_[bulki].dir())
+                {
+                    double_layer_tensor=double_layer_tensor*bulk_legs_combiners_[bulki];
+                }
+                else
+                {
+                    double_layer_tensor=double_layer_tensor*dag(bulk_legs_combiners_[bulki]);
+                }
+            }
+        }
+
+    private:
+        //name_ characterize the shape of cutting sites
+        //1. Square lattice:
+        //
+        //2. Kagome cirac lattice:
+        //  a. tree shape I: three cutting site tensors and one cutting plaquette tensor
+        //     |
+        //     1
+        //     |
+        //     3
+        //    / \
+        //   0   2
+        //  /     \
+        //
+        //3. kagome normal lattice
+        //  a. two sites shape: two cutting site tensors (u,v) and three cutting bond tensors
+        //    |         
+        //  B0|         
+        //    |   B1    |   B4
+        //  --+-- --- --+-- ---
+        //    |         |
+        // 
+        std::string name_;
+        std::vector<int> cutting_sites_, cutting_bonds_;
+        //boundary legs are virtual legs without comm indices
+        std::vector<IndexT> bulk_legs_, boundary_legs_;
+        //env_tensors_ are MPS whose site legs are the boundary legs of cutting sites
+        std::vector<TensorT> env_tensors_;
+        //full_env_tensor_ is obtained by contracting all env_tensors
+        TensorT full_env_tensor_;
+        PEPSt<TensorT> peps_;
+        //combine top and bottom legs to avoid index no overflow
+        std::vector<CombinerT> bulk_legs_combiners_, boundary_legs_combiners_, phys_legs_combiners_;
+        //double layer tensors for both site tensors and bond tensors
+        std::vector<TensorT> double_layer_site_tensors_, double_layer_bond_tensors_;
+        //RDM_ are obtained by contracting env_tensors_ and double layer peps tensors at cutting sites
+        TensorT RDM_;
+        //wf_norm is obtained by contracting phys_legs of RDM_
+        double wf_norm_;
+
+        //
+        //Constructor Helpers
+        //
+        void init_bulk_boundary_legs();
+        void init_legs_combiners();
+        //combine virt legs of env_tensors
+        void init_env_tensors();
+        //get double layer tensors with for sites and bonds, where top and bottom legs are combined
+        void init_double_layer_tensors();
+};
+
+
+double heisenberg_energy_from_RDM(PEPSt_RDM<IQTensor> peps_rdm);
+
+#endif
+

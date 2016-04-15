@@ -34,7 +34,7 @@ void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &sit
     //Print(flavor_accumulate_deg);
     //Print(spin_basis);
 
-    Env_Tens_Params *updated_env_tens_diff_params=new Env_Tens_Params{flavor_deg,flavor_accumulate_deg,spin_basis,{site_tensA,site_tensB},env_tens}; 
+    Env_Tens_Params *updated_env_tens_diff_params=new Env_Tens_Params(flavor_deg,flavor_accumulate_deg,spin_basis,{site_tensA,site_tensB},env_tens); 
 
     //x stores elems of env_tens according to spin and flavor
     //TODO:consider more about flavor_deg!
@@ -77,7 +77,7 @@ void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &sit
     Print(updated_env_tens_diff_f(s->x,updated_env_tens_diff_params));
 
     //if the result is much larger than zero, we will redo the minimization
-    if (s->f>1E-3)
+    if (s->f>1E-5)
     {
         gsl_multimin_fdfminimizer_free(s);
         gsl_vector_free(x);
@@ -94,6 +94,8 @@ void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &sit
     for (int i=0; i<s->x->size; i++) env_elems_final.push_back(gsl_vector_get(s->x,i));
     Print(env_elems_final);
     obtain_env_tens_from_env_elems(flavor_accumulate_deg,spin_basis,env_elems_final,env_tens);
+
+    //PrintDat(env_tens[0][0]);
 
     gsl_multimin_fdfminimizer_free(s);
     gsl_vector_free(x);
@@ -148,6 +150,37 @@ void init_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std
     }
 }
 
+void init_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, const IQTensor &init_tensor, std::array<std::vector<IQTensor>,2> &env_tens)
+{
+    auto comm_leg=commonIndex(site_tensA,site_tensB);
+    env_tens[0].clear();
+    env_tens[1].clear();
+
+    for (const auto &leg : site_tensA.indices())
+    {
+        if (leg.type()==Site) continue;
+        if (leg==comm_leg) continue;
+        IQTensor temp_tens(dag(leg),prime(leg));
+        for (int val=1; val<=leg.m(); val++) 
+        {
+            temp_tens(dag(leg)(val),prime(leg)(val))=init_tensor(init_tensor.indices()[0](val),init_tensor.indices()[1](val));
+        }
+        env_tens[0].push_back(temp_tens);
+    }
+
+    for (const auto &leg : site_tensB.indices())
+    {
+        if (leg.type()==Site) continue;
+        if (leg==comm_leg) continue;
+        IQTensor temp_tens(dag(leg),prime(leg));
+        for (int val=1; val<=leg.m(); val++) 
+        {
+            temp_tens(dag(leg)(val),prime(leg)(val))=init_tensor(init_tensor.indices()[0](val),init_tensor.indices()[1](val));
+        }
+        env_tens[1].push_back(temp_tens);
+    }
+}
+
 
 std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQTensor &tens_B)
 {
@@ -171,7 +204,10 @@ std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQ
     {
         double normA=sqrt(tens_A_norm_square(comm_leg_A(i),dag(prime(comm_leg_A(i))))),
                normB=sqrt(tens_B_norm_square(comm_leg_B(i),dag(prime(comm_leg_B(i)))));
-        env_diag.push_back(normA*normB);
+
+        //env_diag.push_back(normB);
+        env_diag.push_back(sqrt(normA*normB));
+        //env_diag.push_back(normA*normB);
     }
 
     //we fix the norm of env_tens_diag to be sqrt(dim)
@@ -203,7 +239,7 @@ std::vector<double> env_elems_from_env_tens(const std::vector<int> &flavor_accum
     return env_elems;
 }
 
-void obtain_env_tens_from_env_elems(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::vector<double> env_elems, std::array<std::vector<IQTensor>,2> &env_tens)
+void obtain_env_tens_from_env_elems(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::vector<double> &env_elems, std::array<std::vector<IQTensor>,2> &env_tens)
 {
     //assign env_elems to temp_tensor
     IQTensor temp_tensor(env_tens[0][0]);
@@ -327,7 +363,7 @@ void get_env_tensor_iterative(const IQTensor &site_tensA, const IQTensor &site_t
     //assert(n_out_legs==env_tens[1].size());
 
     //get env_mat iteratively
-    int iter=0, max_iter=100;
+    int iter=0, max_iter=5000;
     while (iter<max_iter)
     {
         IQTensor site_env_tensA=site_tensA,
@@ -342,7 +378,7 @@ void get_env_tensor_iterative(const IQTensor &site_tensA, const IQTensor &site_t
         site_env_tensA.clean();
         site_env_tensB.clean();
 
-        auto env_tens_diag=nondeg_spin_sym_env_updated(site_env_tensA,site_env_tensB);
+        std::vector<double> env_tens_diag=nondeg_spin_sym_env_updated(site_env_tensA,site_env_tensB);
 
         //Print(iter);
         //PrintDat(site_env_tensA);
@@ -358,9 +394,10 @@ void get_env_tensor_iterative(const IQTensor &site_tensA, const IQTensor &site_t
         }
 
         //PrintDat(new_env_tensor);
+        Print(env_tens_diag);
         Print((new_env_tensor-env_tens[0][0]).norm());
 
-        if ((new_env_tensor-env_tens[0][0]).norm()<1E-3) break;
+        if ((new_env_tensor-env_tens[0][0]).norm()<1E-7) break;
 
         for (int sitei=0; sitei<2; sitei++)
         {

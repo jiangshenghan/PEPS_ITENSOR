@@ -129,3 +129,22 @@ IQTPO trotter_gate_kagome_cirac(const std::vector<IQIndex> &phys_legs, double t)
 
     return trotter_gate;
 }
+
+IQTPO trotter_gate_NN_Heisenberg(const std::vector<IQIndex> &phys_legs, double t)
+{
+    std::array<IQIndex,2> virt_legs{Spin_leg({1,0,1},"virt_leg a"),Spin_leg({1,0,1},"virt_leg b")};
+    IQTPO trotter_gate(2,1);
+
+    //init site tensors
+    for (int sitei=0; sitei<2; sitei++)
+    {
+        Singlet_Tensor_Basis tensor_basis(std::vector<IQIndex>{dag(phys_legs[sitei]),prime(phys_legs[sitei]),virt_legs[sitei]});
+        trotter_gate.site_tensors(sitei)=singlet_tensor_from_basis_params(tensor_basis,std::vector<double>{1,sqrt(6.)/2.});
+    }
+    
+    //init bond tensors
+    Singlet_Tensor_Basis bond_tensor_basis(std::vector<IQIndex>{dag(virt_legs[0]),dag(virt_legs[1])});
+    trotter_gate.bond_tensors(0)=singlet_tensor_from_basis_params(bond_tensor_basis,std::vector<double>{1,t*sqrt(3.)});
+
+    return trotter_gate;
+}

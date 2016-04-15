@@ -5,42 +5,50 @@
 
 int main()
 {
-    kagome_psg::mu_12=1;
+    kagome_psg::mu_12=-1;
     kagome_psg::mu_c6=1;
+    kagome_psg::mu_sigma=-1;
+    kagome_psg::chi_sigmac6=1;
 
-    auto kagome_srvb=kagome_cirac_srvb_peps(4,4);
+    Print(kagome_psg::mu_12);
+    Print(kagome_psg::mu_c6);
+    Print(kagome_psg::mu_sigma);
+    Print(kagome_psg::chi_sigmac6);
 
-    Kagome_Cirac_Lattice_Torus kagome_cirac_lattice({4,4});
-    IQPEPS_IndexSet_SpinHalf index_set(3,kagome_cirac_lattice);
-    //IQPEPS kagome_rvb(kagome_cirac_lattice,index_set);
-    IQPEPS kagome_rvb(kagome_cirac_lattice,kagome_srvb.indexset());
-    random_init_kagome_rvb_cirac_peps(kagome_rvb,{sqrt(2),sqrt(6)});
+    //auto kagome_srvb=kagome_cirac_srvb_peps(4,4);
+    auto kagome_srvb=kagome_normal_srvb_peps(4,4);
+
+    //Kagome_Cirac_Lattice_Torus kagome_cirac_lattice({4,4});
+    //IQPEPS_IndexSet_SpinHalf index_set(3,kagome_cirac_lattice);
+    ////IQPEPS kagome_rvb(kagome_cirac_lattice,index_set);
+    //IQPEPS kagome_rvb(kagome_cirac_lattice,kagome_srvb.indexset());
+    //random_init_kagome_rvb_cirac_peps(kagome_rvb,{sqrt(2),sqrt(6)});
 
     for (int sitei=0; sitei<kagome_srvb.n_sites_total(); sitei++)
     {
-        PrintDat(kagome_rvb.site_tensors(sitei));
+        //PrintDat(kagome_rvb.site_tensors(sitei));
         PrintDat(kagome_srvb.site_tensors(sitei));
-        PrintDat((kagome_srvb.site_tensors(sitei)-kagome_rvb.site_tensors(sitei)).norm());
+        //PrintDat((kagome_srvb.site_tensors(sitei)-kagome_rvb.site_tensors(sitei)).norm());
     }
     for (int bondi=0; bondi<kagome_srvb.n_bonds_total(); bondi++)
     {
         //PrintDat(kagome_rvb.bond_tensors(bondi));
-        //PrintDat(kagome_srvb.bond_tensors(bondi));
-        Print((kagome_srvb.bond_tensors(bondi)-kagome_rvb.bond_tensors(bondi)).norm());
+        PrintDat(kagome_srvb.bond_tensors(bondi));
+        //Print((kagome_srvb.bond_tensors(bondi)-kagome_rvb.bond_tensors(bondi)).norm());
     }
 
-    Tnetwork_Storage<IQTensor> kagome_rvb_storage=peps_to_tnetwork_storage(kagome_rvb);
+    Tnetwork_Storage<IQTensor> kagome_rvb_storage=peps_to_tnetwork_storage(kagome_srvb);
 
-    //Print(kagome_rvb_storage._tnetwork_type);
-    //Print(kagome_rvb_storage._Lx);
-    //Print(kagome_rvb_storage._Ly);
-    //Print(kagome_rvb_storage._boundary_condition);
-    //Print(kagome_rvb_storage._n_subl);
-    //Print(kagome_rvb_storage._coor_to_siteind);
-    //Print(kagome_rvb_storage._tensor_list);
+    Print(kagome_rvb_storage._tnetwork_type);
+    Print(kagome_rvb_storage._Lx);
+    Print(kagome_rvb_storage._Ly);
+    Print(kagome_rvb_storage._boundary_condition);
+    Print(kagome_rvb_storage._n_subl);
+    Print(kagome_rvb_storage._coor_to_siteind);
+    PrintDat(kagome_rvb_storage._tensor_list);
 
     std::stringstream ss;
-    ss << "/home/jiangsb/code/peps_itensor/result/tnetwork_storage/kagome_srvb_Lx=4_Ly=4_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6;
+    ss << "/home/jiangsb/tn_ying/tensor_network/result/tnetwork_storage/kagome_srvb_Lx=4_Ly=4_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6;
     std::string file_name=ss.str();
     writeToFile(file_name,kagome_rvb_storage);
 

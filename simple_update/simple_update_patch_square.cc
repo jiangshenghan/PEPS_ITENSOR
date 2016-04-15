@@ -3,7 +3,7 @@
 
 //class Square_Patch_RDM
 Square_Patch_RDM::Square_Patch_RDM(const IQPEPS &square_peps, const IQTensor &env_tens, const std::vector<std::vector<int>> &patch_sites, const std::array<int,2> cutting_sites):
-    patch_dim_{patch_sites.size(),patch_sites[0].size()},
+    patch_dim_{(int)patch_sites.size(),(int)patch_sites[0].size()},
     patch_sites_(patch_sites),
     cutting_sites_(cutting_sites),
     env_tens_(env_tens),
@@ -455,7 +455,7 @@ void obtain_env_dressed_tensor(TensorT &dressed_tens, const TensorT &env_tens, c
     //    env_tens_leg[0]=env_tens.indices()[1];
     //    env_tens_leg[1]=env_tens.indices()[0];
     //}
-    dressed_tens=tensor_contraction<TensorT,TensorT::IndexT>(dressed_tens,env_tens,{boundary_leg},{env_tens.indices()[0]});
+    dressed_tens=tensor_contraction<TensorT,typename TensorT::IndexT>(dressed_tens,env_tens,{boundary_leg},{env_tens.indices()[0]});
     dressed_tens.replaceIndex(env_tens.indices()[1],boundary_leg);
 }
 template

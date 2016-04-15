@@ -119,6 +119,11 @@ class PEPSt
         {
             return site_tensors_[i];
         }
+        const TensorT &site_tensors(const Coordinate &coord) const
+        {
+            int siteind=lattice().site_coord_to_list(coord);
+            return site_tensors_[siteind];
+        }
         TensorT &site_tensors(const Coordinate &coord)
         {
             int siteind=lattice().site_coord_to_list(coord);
@@ -136,6 +141,11 @@ class PEPSt
         TensorT &bond_tensors(int i)
         {
             return bond_tensors_[i];
+        }
+        const TensorT &bond_tensors(const Coordinate &coord) const
+        {
+            int bondind=lattice().bond_coord_to_list(coord);
+            return bond_tensors_[bondind];
         }
         TensorT &bond_tensors(const Coordinate &coord)
         {

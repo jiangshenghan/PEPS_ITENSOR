@@ -1,8 +1,7 @@
 
-//#include "square_rvb.h"
 //#include "simple_update.h"
-//#include "simple_update_patch_square.h"
-#include "simple_update_patch_general.h"
+//#include "simple_update_patch_general.h"
+#include "simple_update_kagome_cirac.h"
 
 //using namespace square_psg;
 
@@ -10,63 +9,64 @@
 int main()
 {
     //control PSG parameters
-    kagome_psg::mu_12=1; 
-    kagome_psg::mu_c6=1;
+    //kagome_psg::mu_12=1; 
+    //kagome_psg::mu_c6=1;
+    square_psg::mu_12=1;
 
 
     //init lattice
     int Lx=8, Ly=8;
-    //Square_Lattice_Torus square_lattice({Lx,Ly});
-    Kagome_Cirac_Lattice_Torus kagome_cirac_lattice({Lx,Ly});
+    Square_Lattice_Torus square_lattice({Lx,Ly});
+    //Kagome_Cirac_Lattice_Torus kagome_cirac_lattice({Lx,Ly});
 
 
     //construct random peps with a good initial state
-    int D=3;
+    int D=6;
 
-    //IQPEPS_IndexSet_SpinHalf index_set(D,square_lattice);
-    //IQPEPS square_peps(square_lattice,index_set);
-    //random_init_square_rvb_peps(square_peps);
+    IQPEPS_IndexSet_SpinHalf index_set(D,square_lattice);
+    IQPEPS square_peps(square_lattice,index_set);
+    random_init_square_rvb_peps(square_peps);
 
-    IQPEPS_IndexSet_SpinHalf index_set(D,kagome_cirac_lattice);
-    IQPEPS kagome_peps(kagome_cirac_lattice,index_set);
-    std::array<double,2> bond_param_norms={1,1};
-    random_init_kagome_rvb_cirac_peps(kagome_peps,bond_param_norms);
+    //IQPEPS_IndexSet_SpinHalf index_set(D,kagome_cirac_lattice);
+    //IQPEPS kagome_peps(kagome_cirac_lattice,index_set);
+    //std::array<double,2> bond_param_norms={2,3};
+    //random_init_kagome_rvb_cirac_peps(kagome_peps,bond_param_norms);
 
-    //double init_energy=0;
-    //do
-    //{
-    //    //get "energy" of init state by env_tens
-    //    random_init_square_rvb_peps(square_peps);
-    //    std::array<IQIndex,2> site01_legs{square_peps.phys_legs(0),square_peps.phys_legs(1)};
-    //    NN_Heisenberg_Hamiltonian hamiltonian_gate(site01_legs);
-    //    std::array<std::vector<IQTensor>,2> env_tens;
+    double init_energy=0;
+    do
+    {
+        //get "energy" of init state by env_tens
+        random_init_square_rvb_peps(square_peps);
+        std::array<IQIndex,2> site01_legs{square_peps.phys_legs(0),square_peps.phys_legs(1)};
+        NN_Heisenberg_Hamiltonian hamiltonian_gate(site01_legs);
+        std::array<std::vector<IQTensor>,2> env_tens;
 
-    //    int comm_bond=square_peps.lattice().comm_bond(0,1);
-    //    auto comm_bond_tensor=square_peps.bond_tensors(comm_bond);
+        int comm_bond=square_peps.lattice().comm_bond(0,1);
+        auto comm_bond_tensor=square_peps.bond_tensors(comm_bond);
 
-    //    auto combined_site_tens0=square_peps.site_tensors(0);
-    //    for (int neighi=0; neighi<square_peps.n_bonds_to_one_site(); neighi++)
-    //    {
-    //        int bondi=square_peps.lattice().site_neighbour_bonds(0,neighi);
-    //        if (bondi==comm_bond) continue;
-    //        combined_site_tens0*=square_peps.bond_tensors(bondi);
-    //    }
-    //    get_env_tensor_minimization(combined_site_tens0*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
+        auto combined_site_tens0=square_peps.site_tensors(0);
+        for (int neighi=0; neighi<square_peps.n_bonds_to_one_site(); neighi++)
+        {
+            int bondi=square_peps.lattice().site_neighbour_bonds(0,neighi);
+            if (bondi==comm_bond) continue;
+            combined_site_tens0*=square_peps.bond_tensors(bondi);
+        }
+        get_env_tensor_minimization(combined_site_tens0*comm_bond_tensor,square_peps.site_tensors(1),env_tens);
 
-    //    std::array<IQTensor,2> site_env_tens{{combined_site_tens0,square_peps.site_tensors(1)}}; 
-    //    for (int sitei=0; sitei<2; sitei++)
-    //    {
-    //        for (const auto &env_leg_tensor : env_tens[sitei])
-    //        {
-    //            site_env_tens[sitei]*=env_leg_tensor;
-    //        }
-    //        site_env_tens[sitei].noprime();
-    //    }
+        std::array<IQTensor,2> site_env_tens{{combined_site_tens0,square_peps.site_tensors(1)}}; 
+        for (int sitei=0; sitei<2; sitei++)
+        {
+            for (const auto &env_leg_tensor : env_tens[sitei])
+            {
+                site_env_tens[sitei]*=env_leg_tensor;
+            }
+            site_env_tens[sitei].noprime();
+        }
 
-    //    init_energy=heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate);
-    //    Print(init_energy);
-    //}
-    //while (init_energy>-0.1);
+        init_energy=heisenberg_energy_from_site_env_tensors(site_env_tens,comm_bond_tensor,hamiltonian_gate);
+        Print(init_energy);
+    }
+    while (init_energy>-0.1);
 
     //construct short-range rvb
     //IQPEPS square_peps=square_srvb_peps(Lx,Ly);
@@ -121,12 +121,12 @@ int main()
 
 
     //optimazation
-    //Evolution_Params su_params(6,{31,101,601,1001,4001,45000},{1,1e-1,1e-2,1e-3,1e-4,1e-5});
-    Evolution_Params su_params(1,{31},{1e-0});
+    Evolution_Params su_params(4,{17,77,293,1193},{1,1e-1,1e-2,1e-3});
+    //Evolution_Params su_params(1,{29},{1e-0});
     Print(su_params);
 
     //basic simple update
-    //spin_square_peps_simple_update(square_peps,su_params);
+    spin_square_peps_simple_update(square_peps,su_params);
 
     //update use Square_Patch_RDM
     //spin_square_peps_patch_simple_update(square_peps,su_params,{{0,1},{Lx,Lx+1}},{0,1});
@@ -138,7 +138,10 @@ int main()
     //spin_square_peps_patch_simple_update(square_peps,su_params,{0,1,Lx,Lx+1},{0,1},"regular shape");
     //spin_square_peps_patch_simple_update(square_peps,su_params,{0,1,Lx,Lx+1,2*Lx,2*Lx+1},{Lx,Lx+1},"regular shape");
     //spin_square_peps_patch_simple_update(square_peps,su_params,{0,1,Lx,Lx+1,2*Lx,2*Lx+1,2*Lx-1,Lx+2},{Lx,Lx+1},"special shape I");
-    spin_kagome_cirac_peps_patch_simple_update(kagome_peps,su_params,{0,1,2},{0,1,2},"tree shape I",bond_param_norms);
+    //
+    //Kagome simple update
+    //spin_kagome_cirac_peps_patch_simple_update(kagome_peps,su_params,{0,1,2},{0,1,2},"tree shape I",bond_param_norms);
+    //spin_kagome_cirac_peps_patch_simple_update_no_bond_leg_gates(kagome_peps,su_params,{0,1,2},{0,1,2},"tree shape I",bond_param_norms);
 
 
     //Check the output result

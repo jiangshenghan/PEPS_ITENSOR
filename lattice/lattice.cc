@@ -623,3 +623,89 @@ Kagome_Cirac_Lattice_Torus::Kagome_Cirac_Lattice_Torus(const std::array<int,2> &
 
 }
 
+//Kagome_Normal_Lattice_Torus
+Kagome_Normal_Lattice_Torus::Kagome_Normal_Lattice_Torus(const std::array<int,2> &n_uc): Lattice_Base(3,6,n_uc,0,2)
+{
+    name_="kagome normal lattice on torus";
+    for (int sitei=0; sitei<n_sites_total_; sitei++)
+    {
+        Coordinate sitei_coord=site_list_to_coord(sitei);
+        std::vector<Coordinate> neigh_bonds_coord(n_bonds_to_one_site_);
+        if (sitei_coord[2]==0)
+        {
+            neigh_bonds_coord[0]=Coordinate{sitei_coord[0]-1,sitei_coord[1],4};
+            neigh_bonds_coord[1]=Coordinate{sitei_coord[0],sitei_coord[1],1};
+            neigh_bonds_coord[2]=Coordinate{sitei_coord[0],sitei_coord[1],0};
+            neigh_bonds_coord[3]=Coordinate{sitei_coord[0],sitei_coord[1]-1,3};
+        }
+
+        if (sitei_coord[2]==1)
+        {
+            neigh_bonds_coord[0]=Coordinate{sitei_coord[0],sitei_coord[1],0};
+            neigh_bonds_coord[1]=Coordinate{sitei_coord[0],sitei_coord[1],3};
+            neigh_bonds_coord[2]=Coordinate{sitei_coord[0]-1,sitei_coord[1],5};
+            neigh_bonds_coord[3]=Coordinate{sitei_coord[0],sitei_coord[1],2};
+        }
+
+        if (sitei_coord[2]==2)
+        {
+            neigh_bonds_coord[0]=Coordinate{sitei_coord[0],sitei_coord[1]-1,5};
+            neigh_bonds_coord[1]=Coordinate{sitei_coord[0],sitei_coord[1],2};
+            neigh_bonds_coord[2]=Coordinate{sitei_coord[0],sitei_coord[1],1};
+            neigh_bonds_coord[3]=Coordinate{sitei_coord[0],sitei_coord[1],4};
+        }
+
+        for (int j=0; j<n_bonds_to_one_site_; j++)
+        {
+            site_neighbour_bonds_[sitei][j]=bond_coord_to_list(neigh_bonds_coord[j]);
+        }
+    }
+
+    for (int bondi=0; bondi<n_bonds_total_; bondi++)
+    {
+        Coordinate bondi_coord=bond_list_to_coord(bondi);
+        std::vector<Coordinate> neigh_sites_coord(n_sites_to_one_bond_);
+
+        if (bondi_coord[2]==0)
+        {
+            neigh_sites_coord[0]=Coordinate{bondi_coord[0],bondi_coord[1],0};
+            neigh_sites_coord[1]=Coordinate{bondi_coord[0],bondi_coord[1],1};
+        }
+
+        if (bondi_coord[2]==1)
+        {
+            neigh_sites_coord[0]=Coordinate{bondi_coord[0],bondi_coord[1],0};
+            neigh_sites_coord[1]=Coordinate{bondi_coord[0],bondi_coord[1],2};
+        }
+
+        if (bondi_coord[2]==2)
+        {
+            neigh_sites_coord[0]=Coordinate{bondi_coord[0],bondi_coord[1],1};
+            neigh_sites_coord[1]=Coordinate{bondi_coord[0],bondi_coord[1],2};
+        }
+
+        if (bondi_coord[2]==3)
+        {
+            neigh_sites_coord[0]=Coordinate{bondi_coord[0],bondi_coord[1],1};
+            neigh_sites_coord[1]=Coordinate{bondi_coord[0],bondi_coord[1]+1,0};
+        }
+
+        if (bondi_coord[2]==4)
+        {
+            neigh_sites_coord[0]=Coordinate{bondi_coord[0],bondi_coord[1],2};
+            neigh_sites_coord[1]=Coordinate{bondi_coord[0]+1,bondi_coord[1],0};
+        }
+
+        if (bondi_coord[2]==5)
+        {
+            neigh_sites_coord[0]=Coordinate{bondi_coord[0]+1,bondi_coord[1],1};
+            neigh_sites_coord[1]=Coordinate{bondi_coord[0],bondi_coord[1]+1,2};
+        }
+
+        for (int j=0; j<n_sites_to_one_bond_; j++)
+        {
+            bond_neighbour_sites_[bondi][j]=site_coord_to_list(neigh_sites_coord[j]);
+        }
+    }
+}
+

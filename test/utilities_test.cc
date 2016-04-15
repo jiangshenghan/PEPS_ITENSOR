@@ -1,39 +1,42 @@
 
-//#include "peps.h"
-//#include "square_rvb.h"
-//#include "kagome_rvb.h"
-//#include "simple_update.h"
-#include "simple_update_patch_general.h"
+#include "kagome_rvb.h"
+#include "full_update.h"
+#include "cluster_env.h"
+
 
 int main()
 {
-    kagome_psg::mu_12=-1;
+    kagome_psg::mu_12=1;
     kagome_psg::mu_c6=1;
 
-    auto kagome_rvb=kagome_cirac_srvb_peps(4,4);
+    int Lx=8, Ly=8, D=3;
+    Kagome_Normal_Lattice_Torus kagome_lattice({Lx,Ly});
 
-    //Kagome_Cirac_Lattice_Torus kagome_cirac_lattice({4,4});
-    //IQPEPS_IndexSet_SpinHalf index_set(6,kagome_cirac_lattice);
-    //IQPEPS kagome_rvb(kagome_cirac_lattice,index_set);
-    //random_init_kagome_rvb_cirac_peps(kagome_rvb);
+    //IQPEPS_IndexSet_SpinHalf index_set(D,kagome_lattice);
+    //IQPEPS kagome_rvb(kagome_lattice,index_set);
+    //random_init_kagome_rvb_normal_peps(kagome_rvb);
+    
+    IQPEPS kagome_rvb=kagome_normal_srvb_peps(Lx,Ly);
 
-    //IQTPO SdotS_kagome_cirac=SpinSpin_kagome_cirac({kagome_rvb.phys_legs(0),kagome_rvb.phys_legs(1),kagome_rvb.phys_legs(2)});
-    //PrintDat(SdotS_kagome_cirac);
-    //PrintDat(SdotS_kagome_cirac.site_tensors(0)*SdotS_kagome_cirac.bond_tensors(0)*SdotS_kagome_cirac.site_tensors(1)*SdotS_kagome_cirac.site_tensors(2));
+    Cluster_Env kagome_cluster_env(kagome_rvb.name()+"triangle shape",{0,2},{kagome_rvb.site_tensors(0),kagome_rvb.site_tensors(1)*kagome_rvb.bond_tensors(0)*kagome_rvb.bond_tensors(2)*kagome_rvb.bond_tensors(3),kagome_rvb.site_tensors(2)*kagome_rvb.bond_tensors(1)*kagome_rvb.bond_tensors(4)});
+    kagome_cluster_env.obtain_sl_env_iterative_nodeg();
 
-    //IQTPO trotter_gate=trotter_gate_kagome_cirac({kagome_rvb.phys_legs(0),kagome_rvb.phys_legs(1),kagome_rvb.phys_legs(2)},0.1);
-    //PrintDat(trotter_gate);
-    //PrintDat(trotter_gate.site_tensors(0)*trotter_gate.bond_tensors(0)*trotter_gate.site_tensors(1)*trotter_gate.site_tensors(2));
+    //obtain fake energy
+    std::vector<int> cutting_sites={3*(Lx+1),3*(Lx+1)+2}, 
+                     cutting_bonds={6*(Lx+1),6*(Lx+1)+1,6*(Lx+1)+4};
 
-    std::array<std::vector<IQTensor>,2> kagome_env_tens;
-    IQTensor site_tensA=kagome_rvb.site_tensors(0)*kagome_rvb.bond_tensors(0)*kagome_rvb.site_tensors(1)*kagome_rvb.site_tensors(2);
-    IQTensor site_tensB=kagome_rvb.site_tensors({1,0,0})*kagome_rvb.bond_tensors({0,-1,1})*kagome_rvb.site_tensors({1,-1,1});
-    get_env_tensor_minimization(site_tensA,site_tensB,kagome_env_tens);
+    std::array<std::vector<IQTensor>,2> su_env_mats;
+    init_env_tensor(kagome_rvb.site_tensors(cutting_sites[0])*kagome_rvb.bond_tensors(cutting_bonds[0])*kagome_rvb.bond_tensors(cutting_bonds[1]),kagome_rvb.site_tensors(cutting_sites[1])*kagome_rvb.bond_tensors(cutting_bonds[2]),kagome_cluster_env.sl_env_tensor(),su_env_mats);
+    PrintDat(su_env_mats[0]);
+    PrintDat(su_env_mats[1]);
+    //obtain env_tensors
+    std::vector<IQTensor> env_tensors;
+    obtain_kagome_normal_env_MPO(1,cutting_sites,cutting_bonds,su_env_mats,kagome_rvb,env_tensors);
 
-    General_Patch_RDM<IQTensor> kagome_tree_patch("tree shape I",kagome_rvb,kagome_env_tens[0][0],{0,1,2},{0,1,2});
+    //init kagome RDM
+    PEPSt_RDM<IQTensor> kagome_normal_rdm("two sites shape",cutting_sites,cutting_bonds,env_tensors,kagome_rvb,{0,0,0,0,1});
 
-    Print(kagome_tree_patch.wf_norm());
-    Print(heisenberg_energy_from_RDM(kagome_tree_patch));
+    Print(heisenberg_energy_from_RDM(kagome_normal_rdm));
 
     return 0;
 }

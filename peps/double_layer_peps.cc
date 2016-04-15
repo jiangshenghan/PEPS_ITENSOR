@@ -21,6 +21,7 @@ Double_Layer_PEPSt<TensorT>::Double_Layer_PEPSt(const PEPSt<TensorT> &peps):
     virt_leg_combiners_(peps.n_sites_total())
 {
     obtain_single_layer_tensors();
+    //cout << "Successful obtain single layer tensors!" << endl;
     
     obtain_layered_tensors_with_combined_legs();
 }
@@ -184,6 +185,7 @@ void Double_Layer_PEPSt<TensorT>::obtain_single_layer_tensors()
         //multiply neighbouring boundary tensors
         for (const auto &boundary_no : this->lattice().site_neighbour_boundaries(sitei))
         {
+            if (boundary_no<0) continue;
             site_tensor*=single_layer_peps_.boundary_tensors(boundary_no);
         }
         clean(site_tensor);

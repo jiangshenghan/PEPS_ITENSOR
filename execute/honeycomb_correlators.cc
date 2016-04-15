@@ -12,7 +12,7 @@ int main()
     //Output file name for double_layer_peps
     std::stringstream ss;
     //file name for cylinder
-    ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_Ly=" << Ly << "/Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
+    ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb/featureless_honeycomb_peps_Ly=" << Ly << "/Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
     //file name for ribbon
     //ss << "/home/jiangsb/code/peps_itensor/result/featureless_honeycomb_peps_ribbon" << "/Ly=" << Ly << "_Lx=" << Lx << "_A1=" << A1 << "_A2=" << A2 << "_double_layer_peps.txt";
 

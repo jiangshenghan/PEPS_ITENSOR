@@ -318,5 +318,22 @@ class Kagome_Cirac_Lattice_Torus : public Lattice_Base
         Kagome_Cirac_Lattice_Torus(const std::array<int,2> &n_uc);
 };
 
+//
+//Normal kagome lattice on torus
+//The convention follows the long paper,
+//For bonds, we have
+//B0: u->v
+//B1: u->w
+//B2: v->w
+//B3: v->(0,1,u)
+//B4: w->(1,0,u)
+//B5: (1,0,v)->(0,1,w)
+//
+class Kagome_Normal_Lattice_Torus : public Lattice_Base
+{
+    public:
+        Kagome_Normal_Lattice_Torus(const std::array<int,2> &n_uc);
+};
+
 
 #endif

@@ -1,2 +1,2 @@
 
-ADD_LIBRARY(simple_update simple_update_env.cc simple_update.cc simple_update_patch_general.cc simple_update_patch_square.cc)
+ADD_LIBRARY(simple_update simple_update_env.cc simple_update.cc simple_update_patch_general.cc simple_update_patch_square.cc simple_update_kagome_cirac.cc)

@@ -148,7 +148,7 @@ void init_square_rvb_bond_tensors(IQPEPS &square_rvb)
             }
             if (std::abs(mu_t1T+1)<EPSILON)
             {
-                bond_tensor_params[basei]*=Complex_i*sqrt(spin_list[0]+1.);
+                bond_tensor_params[basei]*=Complex_i;
             }
         }
     }//init params bond tensor

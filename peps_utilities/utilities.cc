@@ -355,7 +355,6 @@ TensorT tensor_permutation(const std::vector<int> &permuted_indices, const Tenso
         std::vector<IndexValT> leg_vals_permuted(NMAX,IndexValT::Null());
         for (int legi=0; legi<tensor_legs.r(); legi++) leg_vals_permuted[legi]=tensor_legs[legi](val_list_permuted[legi]+1);
 
-        //TODO:set complex number?
         tensor_permutation(leg_vals_permuted[0],leg_vals_permuted[1],leg_vals_permuted[2],leg_vals_permuted[3],leg_vals_permuted[4],leg_vals_permuted[5],leg_vals_permuted[6],leg_vals_permuted[7])=elem;
     }
     clean(tensor_permutation);
@@ -405,3 +404,141 @@ void tensor_assignment_diff_order(ITensor &TA, const ITensor &TB);
 template
 void tensor_assignment_diff_order(IQTensor &TA, const IQTensor &TB);
 
+
+arma::Mat<Complex> arma_mat_from_rank2_itensor(const ITensor &tensor)
+{
+    if (tensor.r()!=2)
+    {
+        cout << "Not a rank 2 tensor!" << endl;
+        EXIT;
+    }
+
+    Index leg1=tensor.indices()[0], leg2=tensor.indices()[1];
+    
+    return arma_mat_from_rank2_itensor(tensor,leg1,leg2);
+}
+
+arma::Mat<Complex> arma_mat_from_rank2_itensor(const ITensor &tensor, Index leg1=Index::Null(), Index leg2=Index::Null())
+{
+    if (tensor.r()!=2)
+    {
+        cout << "Not a rank 2 tensor!" << endl;
+        EXIT;
+    }
+
+    arma::Mat<Complex> matrix(leg1.m(),leg2.m());
+    matrix.zeros();
+
+    for (int rowi=0; rowi<leg1.m(); rowi++)
+    {
+        for (int coli=0; coli<leg2.m(); coli++)
+        {
+            if (tensor.isComplex())
+            {
+                matrix(rowi,coli)=tensor.cplx(leg1(rowi+1),leg2(coli+1));
+            }
+            else
+            {
+                matrix(rowi,coli)=tensor(leg1(rowi+1),leg2(coli+1));
+            }
+        }
+    }
+
+    return matrix;
+}
+
+ITensor rank2_itensor_from_arma_mat(arma::Mat<double> matrix, const Index &leg1, const Index &leg2)
+{
+    if (leg1.m()!=matrix.n_rows || leg2.m()!=matrix.n_cols)
+    {
+        cout << "Matrix size does not match!" << endl;
+        EXIT;
+    }
+
+    ITensor tensor(leg1,leg2);
+
+    for (int rowi=0; rowi<leg1.m(); rowi++)
+    {
+        for (int coli=0; coli<leg2.m(); coli++)
+        {
+            tensor(leg1(rowi+1),leg2(coli+1))=matrix(rowi,coli);
+        }
+    }
+
+    return tensor;
+}
+
+ITensor rank2_itensor_from_arma_mat(arma::Mat<Complex> matrix, const Index &leg1, const Index &leg2)
+{
+    if (leg1.m()!=matrix.n_rows || leg2.m()!=matrix.n_cols)
+    {
+        cout << "Matrix size does not match!" << endl;
+        EXIT;
+    }
+
+    ITensor tensor(leg1,leg2);
+
+    for (int rowi=0; rowi<leg1.m(); rowi++)
+    {
+        for (int coli=0; coli<leg2.m(); coli++)
+        {
+            tensor.set(leg1(rowi+1),leg2(coli+1),matrix(rowi,coli));
+        }
+    }
+
+    return tensor;
+}
+
+
+ITensor inverse_rank2_tensor_by_arma_mat(const ITensor &tensor)
+{
+    if (tensor.r()!=2)
+    {
+        cout << "Not a rank 2 ITensor! No inverse!" << endl;
+        EXIT;
+    }
+
+    Index leg1=tensor.indices()[0], leg2=tensor.indices()[1];
+    if (leg1.m()!=leg2.m())
+    {
+        cout << "The ITensor not a square matrix! No inverse!" << endl;
+        EXIT;
+    }
+
+    //set to Complex first
+    arma::Mat<Complex> matrix=arma_mat_from_rank2_itensor(tensor,leg1,leg2);
+    arma::Mat<Complex> matrix_inv=inv(matrix);
+    ITensor tensor_inv=rank2_itensor_from_arma_mat(matrix_inv,leg2,leg1);
+
+    if (!tensor.isComplex())
+        tensor_inv.takeRealPart();
+
+    return tensor_inv;
+}
+
+IQTensor inverse_rank2_tensor_by_arma_mat(const IQTensor &tensor)
+{
+    if (tensor.r()!=2)
+    {
+        cout << "Not a rank 2 IQTensor! No inverse!" << endl;
+        EXIT;
+    }
+
+    IQIndex leg1=tensor.indices()[0], leg2=tensor.indices()[1];
+    if (leg1.m()!=leg2.m())
+    {
+        cout << "The IQTensor is not a square matrix! No inverse!" << endl;
+        EXIT;
+    }
+
+    //TODO: consider case carefully where tensor has no inverse.
+    IQTensor tensor_inv(dag(leg1),dag(leg2));
+    for (const auto &block : tensor.blocks())
+    {
+        if (!block.valid()) continue;
+        auto block_inv=inverse_rank2_tensor_by_arma_mat(block);
+        tensor_inv+=block_inv;
+    }
+
+    return tensor_inv;
+}

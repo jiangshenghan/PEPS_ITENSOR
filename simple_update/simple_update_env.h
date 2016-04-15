@@ -12,6 +12,8 @@
 struct Env_Tens_Params
 {
     public:
+        Env_Tens_Params(std::vector<int> deg, std::vector<int> accumulate_deg, std::vector<Spin_Basis> basis, std::array<IQTensor,2> site_tensors, std::array<std::vector<IQTensor>,2> env_tensors):
+            flavor_deg(deg), flavor_accumulate_deg(accumulate_deg), spin_basis(basis), site_tens(site_tensors), env_tens(env_tensors) {}
         std::vector<int> flavor_deg;
         std::vector<int> flavor_accumulate_deg;
         std::vector<Spin_Basis> spin_basis;
@@ -34,13 +36,15 @@ void get_env_tensor_minimization(const IQTensor &site_tensA, const IQTensor &sit
 //init the env_tensors according to their spin and flavor qn
 void init_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, std::array<std::vector<IQTensor>,2> &env_tens);
 
+//generate the whole single layer env_tens of two sites from a single tensor
+void init_env_tensor(const IQTensor &site_tensA, const IQTensor &site_tensB, const IQTensor &init_tensor, std::array<std::vector<IQTensor>,2> &env_tens);
+
 //update environment for symmetric tensor where all legs have no extra deg
 //In this case, we can simply transfer the two tensors to two matrix:
 //          ---A--B---
 //Notice that we already include the previous environment matrix in A & B
 //Then QR(LQ) decomposition is trivial in the non-deg case 
-//Namely, diagonal elements of R(L) are just norms of cols of A (rows of B)
-//and the non-diagonal elements of R(L) vanishes
+//Namely, diagonal elements of R(L) are just norms of cols of A (rows of B) //and the non-diagonal elements of R(L) vanishes
 //the env matrix = R.L is a diagonal matrix. We stores the diagonal part on a vector
 std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQTensor &tens_B);
 
@@ -48,7 +52,7 @@ std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQ
 //transfer between env_elems and env_tens
 //env_elems is stored according to flavor and spin qns 
 std::vector<double> env_elems_from_env_tens(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::array<std::vector<IQTensor>,2> &env_tens);
-void obtain_env_tens_from_env_elems(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::vector<double> env_elems, std::array<std::vector<IQTensor>,2> &env_tens);
+void obtain_env_tens_from_env_elems(const std::vector<int> &flavor_accumulate_deg, const std::vector<Spin_Basis> &spin_basis, const std::vector<double> &env_elems, std::array<std::vector<IQTensor>,2> &env_tens);
 
 //The following provides f,df,fdf of gsl_minimization
 double updated_env_tens_diff_f(const gsl_vector *x, void *params);
