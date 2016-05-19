@@ -4,7 +4,7 @@
 template<class TensorT>
 TensorT_VMC_WF<TensorT>::TensorT_VMC_WF(const std::vector<int> init_spin_config, const PEPSt<TensorT> &peps, int maxm):
     spin_config_(init_spin_config),
-    peps_ptr_(new PEPSt<TensorT>(peps)),
+    combined_tensors_(peps.combined_site_tensors()),
     tensor_rg_(peps.lattice())
 {
     if (peps.d()!=2)
@@ -13,16 +13,15 @@ TensorT_VMC_WF<TensorT>::TensorT_VMC_WF(const std::vector<int> init_spin_config,
         exit(1);
     }
 
-
     //init tensor_rg_
-    if (peps_ptr_->have_combined_tensors()==false) peps_ptr_->obtain_combined_site_tensors();
     std::vector<TensorT> input_tensors;
     for (int sitei=0; sitei<spin_config_.size(); sitei++) 
     {
-        spin_prod_wf_.push_back(TensorT(dag(peps_ptr_->phys_legs(sitei)(spin_config_[sitei]+1))));
-        input_tensors.push_back(peps_ptr_->combined_tensors(sitei)*spin_prod_wf_[sitei]);
+        spin_prod_wf_.push_back(TensorT(dag(peps.phys_legs(sitei)(spin_config_[sitei]+1))));
+        input_tensors.push_back(combined_tensors_[sitei]*spin_prod_wf_[sitei]);
     }
-    tensor_rg_=TensorT_RG<TensorT>(peps_ptr_->lattice(),input_tensors, maxm);
+    tensor_rg_=TensorT_RG<TensorT>(peps.lattice(),input_tensors,maxm);
+    Print(tensor_rg_.trg_result());
 }
 template
 TensorT_VMC_WF<ITensor>::TensorT_VMC_WF(const std::vector<int> init_spin_config, const PEPSt<ITensor> &peps, int maxm);
@@ -37,8 +36,9 @@ void TensorT_VMC_WF<TensorT>::update_wf(std::vector<int> flip_inds)
     for (int ind: flip_inds)
     {
         spin_config_[ind]=1-spin_config_[ind];
-        spin_prod_wf_[ind]=TensorT((dag(peps_ptr_->phys_legs(ind)(spin_config_[ind]+1))));
-        update_input_tensors.push_back(peps_ptr_->combined_tensors(ind)*spin_prod_wf_[ind]);
+        IndexT phys_indice=spin_prod_wf_[ind].indices()[0];
+        spin_prod_wf_[ind]=TensorT(phys_indice(spin_config_[ind]+1));
+        update_input_tensors.push_back(combined_tensors_[ind]*spin_prod_wf_[ind]);
     }
     //Print(flip_inds);
     tensor_rg_.update_trg_network(flip_inds,update_input_tensors);

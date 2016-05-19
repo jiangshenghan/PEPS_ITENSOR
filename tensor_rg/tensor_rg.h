@@ -31,6 +31,7 @@ class TensorT_RG
         //
         //Acess Methods
         //
+        const Lattice_Base &lattice() const { return lattice_; }
         Complex trg_result() const { return trg_result_; }
         bool is_zero() const { return iszero_; }
 

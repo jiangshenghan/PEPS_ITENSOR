@@ -31,12 +31,12 @@ class TensorT_VMC_WF
         //
         //Acess Methods
         //
+        const Lattice_Base &lattice() const { return tensor_rg_.lattice(); }
         int n_sites() const { return spin_config_.size(); }
-        int n_bonds() const { return peps_ptr_->n_bonds_total(); }
+        int n_bonds() const { return this->lattice().n_bonds_total(); }
         int spin_config(int sitei) const { return spin_config_[sitei]; }
         Complex wf_weight() const { return tensor_rg_.trg_result(); }
         bool is_zero() const { return tensor_rg_.is_zero(); }
-        const PEPSt<TensorT> &peps() const { return *peps_ptr_; }
 
         //Update methods
         //we reverse the spins of flip inds and update tensor_wf
@@ -45,7 +45,8 @@ class TensorT_VMC_WF
     private:
         std::vector<int> spin_config_;
         std::vector<TensorT> spin_prod_wf_;
-        std::shared_ptr<PEPSt<TensorT>> peps_ptr_;
+        //the combined tensors should have one to one correspondance to lattice
+        std::vector<TensorT> combined_tensors_;
         TensorT_RG<TensorT> tensor_rg_;
 };
 
@@ -66,7 +67,7 @@ template <class TensorT>
 void vmc_one_step(TensorT_VMC_WF<TensorT> &tensor_vmc_wf)
 {
     std::vector<int> flip_inds(2);
-    TensorT_VMC_WF<TensorT> tensor_vmc_wf_upadate=tensor_vmc_wf;
+    TensorT_VMC_WF<TensorT> tensor_vmc_wf_update=tensor_vmc_wf;
 
     //get flipped spin until two spins antiparallel
     do
@@ -81,14 +82,14 @@ void vmc_one_step(TensorT_VMC_WF<TensorT> &tensor_vmc_wf)
     //Print(flip_inds);
     //Print(tensor_vmc_wf.spin_config(flip_inds[0]));
     //Print(tensor_vmc_wf.spin_config(flip_inds[1]));
-    tensor_vmc_wf_upadate.update_wf(flip_inds);
+    tensor_vmc_wf_update.update_wf(flip_inds);
 
-    double flip_prob=std::pow(std::abs(tensor_vmc_wf_upadate.wf_weight()/tensor_vmc_wf.wf_weight()),2.);
+    double flip_prob=std::pow(std::abs(tensor_vmc_wf_update.wf_weight()/tensor_vmc_wf.wf_weight()),2.);
     //Print(tensor_vmc_wf.wf_weight());
-    //Print(tensor_vmc_wf_upadate.wf_weight());
+    //Print(tensor_vmc_wf_update.wf_weight());
     //Print(flip_prob);
     if (flip_prob<((rand_gen()+1)/2.)) return;
-    tensor_vmc_wf=tensor_vmc_wf_upadate;
+    tensor_vmc_wf=tensor_vmc_wf_update;
     //cout << "Spin Flipped!" << endl;
 }
 //parallel update, using rand_gen_parallel
@@ -96,7 +97,7 @@ template <class TensorT, class RandGen>
 void vmc_one_step_parallel(TensorT_VMC_WF<TensorT> &tensor_vmc_wf, RandGen &generator_parallel)
 {
     std::vector<int> flip_inds(2);
-    TensorT_VMC_WF<TensorT> tensor_vmc_wf_upadate=tensor_vmc_wf;
+    TensorT_VMC_WF<TensorT> tensor_vmc_wf_update=tensor_vmc_wf;
     //auto rand_gen_parallel=std::bind(distribution,generator_parallel);
 
     //get flipped spin until two spins antiparallel
@@ -108,11 +109,14 @@ void vmc_one_step_parallel(TensorT_VMC_WF<TensorT> &tensor_vmc_wf, RandGen &gene
         //Print(flip_inds[1]);
     }
     while (tensor_vmc_wf.spin_config(flip_inds[0])==tensor_vmc_wf.spin_config(flip_inds[1]));
-    tensor_vmc_wf_upadate.update_wf(flip_inds);
+    tensor_vmc_wf_update.update_wf(flip_inds);
 
-    double flip_prob=std::pow(std::abs(tensor_vmc_wf_upadate.wf_weight()/tensor_vmc_wf.wf_weight()),2.);
+    double flip_prob=std::pow(std::abs(tensor_vmc_wf_update.wf_weight()/tensor_vmc_wf.wf_weight()),2.);
+
+    Print(tensor_vmc_wf_update.wf_weight());
+    Print(flip_prob);
     if (flip_prob<((distribution(generator_parallel)+1)/2.)) return;
-    tensor_vmc_wf=tensor_vmc_wf_upadate;
+    tensor_vmc_wf=tensor_vmc_wf_update;
 }
 
 
@@ -124,7 +128,7 @@ Complex vmc_Heisenberg_energy(const TensorT_VMC_WF<TensorT> &tensor_vmc_wf)
     Complex heisenberg_energy_total=0;
     for (int bondi=0; bondi<tensor_vmc_wf.n_bonds(); bondi++)
     {
-        std::vector<int> site_inds=tensor_vmc_wf.peps().lattice().bond_neighbour_sites(bondi);
+        std::vector<int> site_inds=tensor_vmc_wf.lattice().bond_neighbour_sites(bondi);
         //two site with the same spin
         if (tensor_vmc_wf.spin_config(site_inds[0])==tensor_vmc_wf.spin_config(site_inds[1])) heisenberg_energy_total+=0.25;
         else
@@ -143,7 +147,7 @@ Complex vmc_SzSz_bonds_energy(const TensorT_VMC_WF<TensorT> &tensor_vmc_wf)
     Complex szsz_energy_total=0;
     for (int bondi=0; bondi<tensor_vmc_wf.n_bonds(); bondi++)
     {
-        std::vector<int> site_inds=tensor_vmc_wf.peps().lattice().bond_neighbour_sites(bondi);
+        std::vector<int> site_inds=tensor_vmc_wf.lattice().bond_neighbour_sites(bondi);
         if (tensor_vmc_wf.spin_config(site_inds[0])==tensor_vmc_wf.spin_config(site_inds[1])) szsz_energy_total+=0.25;
         else szsz_energy_total-=0.25;
     }
