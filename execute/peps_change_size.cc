@@ -1,5 +1,6 @@
 
 #include "square_double_layer_peps.h"
+#include "square_rvb.h"
 #include "simple_update.h"
 
 using namespace square_psg;

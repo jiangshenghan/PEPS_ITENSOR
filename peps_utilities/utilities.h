@@ -249,4 +249,13 @@ ITensor inverse_rank2_tensor_by_arma_mat(const ITensor &tensor);
 IQTensor inverse_rank2_tensor_by_arma_mat(const IQTensor &tensor);
 
 
+//
+// The "factor" decomposition is based on the SVD, but factorizes a tensor T into only two tensors T=A*B where A and B share a single common index.
+//
+// If the SVD of T is T=U*S*V where S is a diagonal matrix of singular values, then A and B are schematically A=U*sqrt(S) and B=sqrt(S)*V.
+//
+// In addition to the named Args recognized by the svd routine, factor accepts an Arg "IndexName" which wil be the name of the common index connecting A and B.
+template <typename Tensor>
+void factor(Tensor const& T, Tensor &A, Tensor &B, Args const &args = Args::global());
+
 #endif

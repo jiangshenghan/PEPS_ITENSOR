@@ -11,6 +11,7 @@
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -mkl")
 
+FIND_PACKAGE(MPI REQUIRED)
 
 #SET(ITENSOR_INCLUDE_DIR "/home/jiangsb/tn_ying/tensor_network/ITensor/include")
 #SET(ITENSOR_LIB_DIR "/home/jiangsb/tn_ying/tensor_network/ITensor/utilities")
@@ -18,7 +19,7 @@
 #SET(ITPP_LIB_DIR "/home/jiangsb/opt/itpp_intel/lib")
 
 #include directories storing head files
-INCLUDE_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update full_update ${ITPP_INCLUDE_DIR} ${ITENSOR_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update full_update tensor_update tensor_rg tensor_vmc ${ITPP_INCLUDE_DIR} ${ITENSOR_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR} ${MPI_INCLUDE_PATH})
 
 #add directories for source file generate libraries
 ADD_SUBDIRECTORY(lattice)
@@ -27,11 +28,14 @@ ADD_SUBDIRECTORY(peps_utilities)
 ADD_SUBDIRECTORY(peps_ansatz)
 ADD_SUBDIRECTORY(simple_update)
 ADD_SUBDIRECTORY(full_update)
+ADD_SUBDIRECTORY(tensor_update)
+ADD_SUBDIRECTORY(tensor_rg)
+ADD_SUBDIRECTORY(tensor_vmc)
 #ADD_SUBDIRECTORY(corner_transfer_matrix)
 #ADD_SUBDIRECTORY(boundary_theory)
 
 #include directories for library
-LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz full_update simple_update ${ITPP_LIB_DIR} ${BLAS_LAPACK_LIB_DIR} )
+LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz full_update simple_update tensor_update tensor_rg tensor_vmc ${ITPP_LIB_DIR} ${BLAS_LAPACK_LIB_DIR} )
 
 #SET(ITENSOR_LIB utility itensor matrix)
 #SET(NUMERIC_LIB itpp_static gsl)

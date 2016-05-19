@@ -5,7 +5,12 @@
 #define _FULL_UPDATE_H_
 
 #include "peps_rdm.h"
+#include "peps_subtensor_rdm.h"
 #include "full_update_itebd.h"
+#include "full_update_ctm.h"
+#include "tnetwork.h"
+#include "tnetwork_ctm.h"
+#include "cluster_env.h"
 
 //
 //fast full update for kagome cirac geometry
@@ -89,6 +94,7 @@ void obtain_kagome_normal_env_MPO(int env_option, std::vector<int> cutting_sites
 
 //get tensors from contracting double layer site tensors and su_env_mat
 IQTensor env_site_combined_tensor(const IQTensor &env_mat, const IQTensor &site_tensor, const std::vector<IQIndex> &indices_contract, bool contract_phys_ind=true);
+
 
 //obtain double layer tensor as
 //      \ /

@@ -41,5 +41,7 @@ void random_init_kagome_rvb_normal_site_tensors(IQPEPS &kagome_rvb);
 void init_kagome_rvb_normal_bond_tensors(IQPEPS &kagome_rvb);
 //make site tensor rotation and reflection symmetric
 void rotation_reflection_symmetrize_kagome_rvb_normal_site_tensor(IQTensor &site_tensor);
+//get symmetric singlet basis for a given site tensor
+void obtain_kagome_rvb_normal_site_tensor_symmetric_basis(const Singlet_Tensor_Basis &site_singlet_basis, std::vector<IQTensor> &symmetric_singlet_basis);
 
 #endif

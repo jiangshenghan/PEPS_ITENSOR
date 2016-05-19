@@ -216,6 +216,7 @@ void random_init_kagome_rvb_normal_site_tensors(IQPEPS &kagome_rvb)
 {
     //Init symmetric site tensor in one site, then generating all other sites
     Singlet_Tensor_Basis site_tensor_basis(kagome_rvb.site_tensors(0).indices());
+    //PrintDat(site_tensor_basis);
     assert(site_tensor_basis.indices()[0].type()==Site);
     //the free params for basis satisfying
     //1. S_a half int, others int
@@ -232,7 +233,7 @@ void random_init_kagome_rvb_normal_site_tensors(IQPEPS &kagome_rvb)
         std::vector<int> spin_oddness;
         for (auto S : spin_list) spin_oddness.push_back(S%2);
         if (spin_oddness[1]==spin_oddness[2] || spin_oddness[1]==spin_oddness[3] || spin_oddness[1]==spin_oddness[4]) continue;
-        site_tensor_params[basei]=rand_gen();
+        site_tensor_params[basei]=5*rand_gen();
 
         //cout << "Spins: " << spin_list << endl
         //     << "Flavors: " << flavor_list << endl
@@ -249,6 +250,7 @@ void random_init_kagome_rvb_normal_site_tensors(IQPEPS &kagome_rvb)
 void init_kagome_rvb_normal_bond_tensors(IQPEPS &kagome_rvb)
 {
     Singlet_Tensor_Basis bond_tensor_basis(kagome_rvb.bond_tensors(0).indices());
+    //PrintDat(bond_tensor_basis);
     std::vector<Complex> bond_tensor_params(bond_tensor_basis.dim(),0);
 
     for (int basei=0; basei<bond_tensor_basis.dim(); basei++)
@@ -332,4 +334,27 @@ void rotation_reflection_symmetrize_kagome_rvb_normal_site_tensor(IQTensor &site
     obtain_tensor_after_eta_action(mu_sigma,site_tensor_permute[3],site_tensor.indices()[4]);
 
     site_tensor=0.25*(site_tensor_permute[0]+site_tensor_permute[1]+site_tensor_permute[2]+site_tensor_permute[3]);
+}
+
+
+void obtain_kagome_rvb_normal_site_tensor_symmetric_basis(const Singlet_Tensor_Basis &site_singlet_basis, std::vector<IQTensor> &symmetric_singlet_basis)
+{
+    symmetric_singlet_basis.clear();
+    for (int basei=0; basei<site_singlet_basis.dim(); basei++)
+    {
+        IQTensor base_tensor=site_singlet_basis[basei];
+        rotation_reflection_symmetrize_kagome_rvb_normal_site_tensor(base_tensor);
+        for (const auto &pre_base : symmetric_singlet_basis)
+        {
+            base_tensor-=(dag(pre_base)*base_tensor).toComplex()*pre_base;
+        }
+        if (base_tensor.norm()<1e-10) continue;
+
+        base_tensor/=base_tensor.norm();
+        symmetric_singlet_basis.push_back(base_tensor);
+
+        //Print(basei);
+        //Print(site_singlet_basis.spin_configs(basei));
+    }
+    Print(symmetric_singlet_basis.size());
 }

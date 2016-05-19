@@ -169,7 +169,8 @@ void Singlet_Tensor_Basis::init_singlet_tensors()
         }//end of for loop for different singlet for same spin_list
     }
 
-    //set norm of singlet_tensors_ to be 1
+    //set norm of singlet_tensors_ to be 1 and stores unnormalized tensor to origin_norm_singlet_tensors_;
+    origin_norm_singlet_tensors_=singlet_tensors_;
     for (auto &tensor :singlet_tensors_)
         tensor/=tensor.norm();
 

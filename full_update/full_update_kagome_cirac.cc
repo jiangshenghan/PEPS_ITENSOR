@@ -159,7 +159,7 @@ void kagome_cirac_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Param
             //full_update_env_tensors=full_update_ctm<IQTensor>(kagome_rvb_tnetwork_storage,env_options);
             //env_tensors={full_update_env_tensors.env_tensors(0),full_update_env_tensors.env_tensors(1),full_update_env_tensors.env_tensors(2)};
             env_tensors={env_tensors_temp(0),env_tensors_temp(1),env_tensors_temp(2)};
-            kagome_cirac_rdm.update_peps_rdm(env_tensors,kagome_rvb);
+            kagome_cirac_rdm.update_RDM(env_tensors,kagome_rvb);
             Print(SzSz_measure(full_update_env_tensors));
             Print(heisenberg_energy_from_RDM(kagome_cirac_rdm));
 

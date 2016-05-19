@@ -1,10 +1,5 @@
 
-#include "tnetwork.h"
-#include "tnetwork_ctm.h"
-#include "full_update_ctm.h"
 #include "full_update.h"
-#include "cluster_env.h"
-
 
 
 void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Params &su_params)
@@ -13,7 +8,7 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
         Ly=kagome_rvb.lattice().n_uc()[1];
 
     //using SIMPLE UPDATE environment
-    /*
+    // /*
     //init params
     std::vector<int> cutting_sites={3*(Lx+1),3*(Lx+1)+2}, 
                      cutting_bonds={6*(Lx+1),6*(Lx+1)+1,6*(Lx+1)+4};
@@ -38,21 +33,21 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
         random_init_kagome_rvb_normal_peps(kagome_rvb);
         get_env_tensor_minimization(kagome_rvb.site_tensors(cutting_sites[0])*kagome_rvb.bond_tensors(cutting_bonds[0])*kagome_rvb.bond_tensors(cutting_bonds[1]),kagome_rvb.site_tensors(cutting_sites[1])*kagome_rvb.bond_tensors(cutting_bonds[2]),su_env_mats);
         obtain_kagome_normal_env_MPO(0,cutting_sites,cutting_bonds,su_env_mats,kagome_rvb,env_tensors);
-        kagome_normal_rdm.update_peps_rdm(env_tensors,kagome_rvb);
+        kagome_normal_rdm.update_RDM(env_tensors,kagome_rvb);
     }
 
     //su_env_option=0 : simple update env, correspond to env_contract_seq={0,0,0,0,0,0}
     //su_env_option=1 : triangle shape, correspond to env_contract_seq={0,0,0,0,1}
     //su_env_option=2 : large tree shape, correspond to env_contract_seq={0,0,1}
-    int su_env_option=1;
-    std::vector<int> env_contract_seq={0,0,0,0,1};
+    int su_env_option=0;
+    std::vector<int> env_contract_seq={0,0,0,0,0,0};
     Print(su_env_option);
 
     // */
 
     //
     //using CLUSTER UPDATE
-    // /*
+    /*
     //init params
     std::vector<int> cutting_sites={3*(Lx+1),3*(Lx+1)+2}, 
                      cutting_bonds={6*(Lx+1),6*(Lx+1)+1,6*(Lx+1)+4};
@@ -89,7 +84,7 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
         kagome_cluster_env.obtain_sl_env_iterative_nodeg();
         init_env_tensor(kagome_rvb.site_tensors(cutting_sites[0])*kagome_rvb.bond_tensors(cutting_bonds[0])*kagome_rvb.bond_tensors(cutting_bonds[1]),kagome_rvb.site_tensors(cutting_sites[1])*kagome_rvb.bond_tensors(cutting_bonds[2]),kagome_cluster_env.sl_env_tensor(),su_env_mats);
         obtain_kagome_normal_env_MPO(su_env_option,cutting_sites,cutting_bonds,su_env_mats,kagome_rvb,env_tensors);
-        kagome_normal_rdm.update_peps_rdm(env_tensors,kagome_rvb);
+        kagome_normal_rdm.update_RDM(env_tensors,kagome_rvb);
     }
     // */
 
@@ -98,7 +93,6 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
     //using FAST FULL UPDATE
     /*
     //init params
-    //make sure we choose cutting sites right
     std::vector<int> cutting_sites={3*(Lx+1),3*(Lx+1)+2}, 
                      cutting_bonds={6*(Lx+1),6*(Lx+1)+1,6*(Lx+1)+4};
     std::vector<double> leg_gate_params;
@@ -110,7 +104,6 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
     //obtain env_tensors
     std::vector<IQTensor> env_tensors;
     obtain_kagome_normal_env_MPO(0,cutting_sites,cutting_bonds,su_env_mats,kagome_rvb,env_tensors);
-
     //init kagome RDM
     PEPSt_RDM<IQTensor> kagome_normal_rdm("two sites shape",cutting_sites,cutting_bonds,env_tensors,kagome_rvb);
     //Print(kagome_normal_rdm.RDM());
@@ -123,7 +116,7 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
         random_init_kagome_rvb_normal_peps(kagome_rvb);
         get_env_tensor_minimization(kagome_rvb.site_tensors(cutting_sites[0])*kagome_rvb.bond_tensors(cutting_bonds[0])*kagome_rvb.bond_tensors(cutting_bonds[1]),kagome_rvb.site_tensors(cutting_sites[1])*kagome_rvb.bond_tensors(cutting_bonds[2]),su_env_mats);
         obtain_kagome_normal_env_MPO(0,cutting_sites,cutting_bonds,su_env_mats,kagome_rvb,env_tensors);
-        kagome_normal_rdm.update_peps_rdm(env_tensors,kagome_rvb);
+        kagome_normal_rdm.update_RDM(env_tensors,kagome_rvb);
     }
 
     //init full update environment
@@ -150,7 +143,6 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
     kagome_normal_rdm=PEPSt_RDM<IQTensor>("two sites shape",cutting_sites,cutting_bonds,{env_tensors[0]*env_tensors[1],env_tensors[5],env_tensors[2]*env_tensors[3],env_tensors[4]},kagome_rvb,{0,1,0,1});
     //Print(kagome_normal_rdm.wf_norm_sq());
     // */
-
 
 
     for (int iter=0; iter<su_params.iter_nums; iter++)
@@ -223,7 +215,7 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
             }
             //Print((env_tensors[0]*env_tensors[1]).norm());
             //Print((env_tensors[2]*env_tensors[3]).norm());
-            kagome_normal_rdm.update_peps_rdm({env_tensors[0]*env_tensors[1],env_tensors[5],env_tensors[2]*env_tensors[3],env_tensors[4]},kagome_rvb);
+            kagome_normal_rdm.update_RDM({env_tensors[0]*env_tensors[1],env_tensors[5],env_tensors[2]*env_tensors[3],env_tensors[4]},kagome_rvb);
             Print(SzSz_measure(full_update_env_tensors));
             // */
 
@@ -232,17 +224,17 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
             //update env tensors
             get_env_tensor_minimization(kagome_rvb.site_tensors(cutting_sites[0])*kagome_rvb.bond_tensors(cutting_bonds[0])*kagome_rvb.bond_tensors(cutting_bonds[1]),kagome_rvb.site_tensors(cutting_sites[1])*kagome_rvb.bond_tensors(cutting_bonds[2]),su_env_mats);
             obtain_kagome_normal_env_MPO(su_env_option,cutting_sites,cutting_bonds,su_env_mats,kagome_rvb,env_tensors);
-            kagome_normal_rdm.update_peps_rdm(env_tensors,kagome_rvb,env_contract_seq);
+            kagome_normal_rdm.update_RDM(env_tensors,kagome_rvb,env_contract_seq);
             // */
 
             //CLUSTER UPDATE
-            // /*
+            /*
             //update env tensors
             kagome_cluster_env.update_site_tensors({kagome_rvb.site_tensors(0),kagome_rvb.site_tensors(1)*kagome_rvb.bond_tensors(0)*kagome_rvb.bond_tensors(2),kagome_rvb.site_tensors(2)*kagome_rvb.bond_tensors(1)});
             kagome_cluster_env.obtain_sl_env_iterative_nodeg();
             init_env_tensor(kagome_rvb.site_tensors(cutting_sites[0])*kagome_rvb.bond_tensors(cutting_bonds[0])*kagome_rvb.bond_tensors(cutting_bonds[1]),kagome_rvb.site_tensors(cutting_sites[1])*kagome_rvb.bond_tensors(cutting_bonds[2]),kagome_cluster_env.sl_env_tensor(),su_env_mats);
             obtain_kagome_normal_env_MPO(su_env_option,cutting_sites,cutting_bonds,su_env_mats,kagome_rvb,env_tensors);
-            kagome_normal_rdm.update_peps_rdm(env_tensors,kagome_rvb,env_contract_seq);
+            kagome_normal_rdm.update_RDM(env_tensors,kagome_rvb,env_contract_seq);
             // */
 
             Print(heisenberg_energy_from_RDM(kagome_normal_rdm));
@@ -314,9 +306,9 @@ void kagome_normal_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Para
             {
                 std::stringstream ss;
                 //SIMPLE UPDATE
-                //ss << "/home/jiangsb/tn_ying/tensor_network/result/peps_storage/kagome_rvb_normal_D=" << kagome_rvb.D() << "_Lx=" << kagome_rvb.n_uc()[0] << "_Ly=" << kagome_rvb.n_uc()[1] << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_su_env_option=" << su_env_option << "_iter=" << iter << "_step=" << step; 
+                ss << "/home/jiangsb/tn_ying/tensor_network/result/peps_storage/kagome_rvb_normal_D=" << kagome_rvb.D() << "_Lx=" << kagome_rvb.n_uc()[0] << "_Ly=" << kagome_rvb.n_uc()[1] << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_su_env_option=" << su_env_option << "_iter=" << iter << "_step=" << step; 
                 //CLUSTER UPDATE
-                ss << "/home/jiangsb/tn_ying/tensor_network/result/peps_storage/kagome_rvb_normal_D=" << kagome_rvb.D() << "_Lx=" << kagome_rvb.n_uc()[0] << "_Ly=" << kagome_rvb.n_uc()[1] << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_cluster_su_env_option=" << su_env_option << "_iter=" << iter << "_step=" << step; 
+                //ss << "/home/jiangsb/tn_ying/tensor_network/result/peps_storage/kagome_rvb_normal_D=" << kagome_rvb.D() << "_Lx=" << kagome_rvb.n_uc()[0] << "_Ly=" << kagome_rvb.n_uc()[1] << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_cluster_su_env_option=" << su_env_option << "_iter=" << iter << "_step=" << step; 
                 //FAST FULL UPDATE
                 //ss << "/home/jiangsb/tn_ying/tensor_network/result/peps_storage/kagome_rvb_normal_D=" << kagome_rvb.D() << "_Lx=" << kagome_rvb.n_uc()[0] << "_Ly=" << kagome_rvb.n_uc()[1] << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_fast_full_chi=" << env_options[1] << "_iter=" << iter << "_step=" << step; 
                 std::string file_name=ss.str();
@@ -357,8 +349,7 @@ bool obtain_kagome_normal_leg_gate_params_minimization(PEPSt_RDM<IQTensor> &kago
     //obtain distance between wf and wf_evolved
     Complex wf_norm_sq=kagome_normal_rdm.wf_norm_sq(),
            wf_evolved_wf_overlap=2.*(kagome_normal_rdm.RDM()*evolve_gate_tensor).toComplex(),
-           //wf_evolved_wf_distance=std::sqrt(2.*pow(evolved_wf_norm,2.)-evolved_wf_norm/wf_norm*wf_evolved_wf_overlap);
-           //TODO:normalize evolved_wf to get distance
+           //wf_evolved_wf_distance_sq=std::sqrt(2.*evolved_wf_norm_sq-std::sqrt(evolved_wf_norm_sq/wf_norm_sq)*wf_evolved_wf_overlap);
            wf_evolved_wf_distance_sq=wf_norm_sq+evolved_wf_norm_sq-wf_evolved_wf_overlap;
     //Print(wf_norm_sq);
     //Print(wf_evolved_wf_distance_sq);

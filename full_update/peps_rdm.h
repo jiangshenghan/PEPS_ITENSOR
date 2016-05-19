@@ -58,13 +58,13 @@ class PEPSt_RDM
         //
         //update peps_rdm
         //
-        void update_peps_rdm(const std::vector<IQTensor> &env_tensors, const PEPSt<TensorT> &peps)
+        void update_RDM(const std::vector<IQTensor> &env_tensors, const PEPSt<TensorT> &peps)
         {
             peps_=peps;
             env_tensors_=env_tensors;
             obtain_RDM_and_wf_norm();
         }
-        void update_peps_rdm(const std::vector<IQTensor> &env_tensors, const PEPSt<TensorT> &peps, std::vector<int> env_contract_seq)
+        void update_RDM(const std::vector<IQTensor> &env_tensors, const PEPSt<TensorT> &peps, std::vector<int> env_contract_seq)
         {
             env_contract_seq_=env_contract_seq;
             peps_=peps;
@@ -153,7 +153,6 @@ class PEPSt_RDM
         Complex wf_norm_sq_;
 
 };
-
 
 double heisenberg_energy_from_RDM(PEPSt_RDM<IQTensor> peps_rdm);
 

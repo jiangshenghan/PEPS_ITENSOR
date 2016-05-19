@@ -1,0 +1,2 @@
+
+ADD_LIBRARY(tensor_update tensor_update_kagome_normal.cc)

@@ -437,6 +437,15 @@ std::vector<ITensor> PEPSt<ITensor>::combined_site_tensors() const;
 template
 std::vector<IQTensor> PEPSt<IQTensor>::combined_site_tensors() const;
 
+template <typename TensorT>
+void PEPSt<TensorT>::obtain_combined_site_tensors()
+{
+    combined_site_tensors_=combined_site_tensors();
+}
+template 
+void PEPSt<ITensor>::obtain_combined_site_tensors();
+template
+void PEPSt<IQTensor>::obtain_combined_site_tensors();
 
 //before reading, we should init PEPSt use lattice
 template <class TensorT>

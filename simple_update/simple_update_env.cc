@@ -205,6 +205,7 @@ std::vector<double> nondeg_spin_sym_env_updated(const IQTensor &tens_A, const IQ
         double normA=sqrt(tens_A_norm_square(comm_leg_A(i),dag(prime(comm_leg_A(i))))),
                normB=sqrt(tens_B_norm_square(comm_leg_B(i),dag(prime(comm_leg_B(i)))));
 
+        //FIXME: good simple update env?
         //env_diag.push_back(normB);
         env_diag.push_back(sqrt(normA*normB));
         //env_diag.push_back(normA*normB);

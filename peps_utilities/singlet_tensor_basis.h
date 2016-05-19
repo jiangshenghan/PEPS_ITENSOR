@@ -36,6 +36,8 @@ class Singlet_Tensor_Basis
 
         const std::vector<IQTensor> &tensors() const { return singlet_tensors_; }
         const IQTensor &tensor(int i) const { return singlet_tensors_[i]; }
+        const std::vector<IQTensor> &origin_norm_tensors() const { return origin_norm_singlet_tensors_; }
+        const IQTensor &origin_norm_tensors(int i) const { return origin_norm_singlet_tensors_[i]; }
 
         const std::vector<int> &spin_configs(int i) const { return spin_configs_[i]; }
         const std::vector<int> &flavor_configs(int i) const { return flavor_configs_[i]; }
@@ -97,6 +99,7 @@ class Singlet_Tensor_Basis
 
 
         std::vector<IQTensor> singlet_tensors_;
+        std::vector<IQTensor> origin_norm_singlet_tensors_;
 
 };
 

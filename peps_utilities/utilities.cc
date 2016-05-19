@@ -542,3 +542,31 @@ IQTensor inverse_rank2_tensor_by_arma_mat(const IQTensor &tensor)
 
     return tensor_inv;
 }
+
+template <typename Tensor>
+void factor(Tensor const& T, Tensor& A, Tensor& B, Args const& args)
+{
+    auto name = args.getString("IndexName","c");
+    Tensor D;
+    svd(T,A,D,B,{args,"LeftIndexName",name});
+    auto dl = commonIndex(A,D);
+    auto dr = commonIndex(B,D);
+
+    D.mapElems([](Real x){ return std::sqrt(std::fabs(x)); });
+    A *= D;
+    B *= D;
+    //Replace index dl with dr
+    Tensor delta=dag(D);
+    delta.mapElems([](double x){ return ((x>0) ? 1:0); });
+    A*=delta;
+
+    //Print(dl);
+    //Print(dr);
+    //Print(A);
+    //Print(B);
+    //Print(D);
+}
+template void
+factor(ITensor const& T,ITensor& A, ITensor& B, Args const& args);
+template void
+factor(IQTensor const& T, IQTensor& A, IQTensor& B, Args const& args);

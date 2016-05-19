@@ -157,6 +157,20 @@ class PEPSt
             return bond_tensors_;
         }
 
+        const TensorT &combined_tensors(int i) const { return combined_site_tensors_[i]; }
+        TensorT &combined_tensors(int i) { return combined_site_tensors_[i]; }
+        const TensorT &combined_tensors(const Coordinate &coord) const
+        {
+            int site_ind=lattice().site_coord_to_list(coord);
+            return combined_site_tensors_[site_ind];
+        }
+        TensorT &combined_tensors(const Coordinate &coord)
+        {
+            int site_ind=lattice().site_coord_to_list(coord);
+            return combined_site_tensors_[site_ind];
+        }
+        const std::vector<TensorT> &combined_tensors() const { return combined_site_tensors_; }
+
         const TensorT &boundary_tensors(int i) const
         {
             return boundary_tensors_[i];
@@ -194,7 +208,8 @@ class PEPSt
         //this function returns site tensors that absorb the neighbour bond tensors and boundary tensors
         //this function only works for PEPS with canonical bond tensors (two ends)
         std::vector<TensorT> combined_site_tensors() const;
-
+        void obtain_combined_site_tensors();
+        bool have_combined_tensors() const { return !(combined_site_tensors_.empty()); }
 
         //
         //Constructor Helpers
@@ -225,10 +240,9 @@ class PEPSt
 
         std::shared_ptr<PEPSt_IndexSet_Base<IndexT>> indexset_ptr_;
 
-        std::vector<TensorT> site_tensors_, bond_tensors_; 
+        std::vector<TensorT> site_tensors_, bond_tensors_, combined_site_tensors_; 
 
         //using for boundary condition
-        //TODO:replaced by vector of MPS?
         std::vector<TensorT> boundary_tensors_;
 
 
