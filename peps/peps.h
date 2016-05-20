@@ -253,7 +253,6 @@ using PEPS=PEPSt<ITensor>;
 using IQPEPS=PEPSt<IQTensor>;
 
 
-
 //translate PEPS to Tnetwork_Storage
 template <class TensorT>
 Tnetwork_Storage<TensorT> peps_to_tnetwork_storage(const PEPSt<TensorT> &peps);

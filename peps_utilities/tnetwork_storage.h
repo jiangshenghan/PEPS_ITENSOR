@@ -29,8 +29,7 @@ public:
   int _Ly;
   //store the list of all site tensors (single-layer).
   itpp::Array<Tensor> _tensor_list;
-  //convert the site-coordinate: (x,y,n) to the
-  //index of that site in _tensor_list=_coor_to_siteind(x,y)(n)
+  //convert the site-coordinate: (x,y,n) to the index of that site in _tensor_list=_coor_to_siteind(x,y)(n)
   itpp::Mat< itpp::Vec<int> > _coor_to_siteind; 
   
   //read to disk file:
