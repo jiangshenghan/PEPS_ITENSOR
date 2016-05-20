@@ -10,9 +10,10 @@ public:
   //let us define: 
   //_tnetwork_type=1 for square square, 
   //_tnetwork_type=2 for honeycomb lattice,
-  //_tnetwork_type=3 for triangular lattice
-  //_tnetwork_type=4 for kagome lattice,
+  //_tnetwork_type=3 for triangular lattice 
   //_tnetwork_type=5 for kagome Cirac lattice,...
+  //_tnetwork_type=6 for kagome Cirac lattice with dummy,...
+  //_tnetwork_type=8 for kagome lattice,
   int _tnetwork_type;
   //label the boundary condition of the tensor network,
   //let us define:
