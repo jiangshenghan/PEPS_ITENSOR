@@ -223,7 +223,7 @@ void TensorT_RG<TensorT>::obtain_trg_result()
         return;
     }
     const auto &trg_tensors=layered_trg_tensors_.back();
-    auto result_tensor=trg_tensors[0]*trg_tensors[1]*trg_tensors[2]*trg_tensors[3];
+    auto result_tensor=(trg_tensors[0]*trg_tensors[1])*(trg_tensors[2]*trg_tensors[3]);
     trg_result_=result_tensor.toComplex();
     //Print(trg_result_);
 }

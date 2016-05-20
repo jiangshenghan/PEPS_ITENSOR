@@ -113,8 +113,8 @@ void vmc_one_step_parallel(TensorT_VMC_WF<TensorT> &tensor_vmc_wf, RandGen &gene
 
     double flip_prob=std::pow(std::abs(tensor_vmc_wf_update.wf_weight()/tensor_vmc_wf.wf_weight()),2.);
 
-    Print(tensor_vmc_wf_update.wf_weight());
-    Print(flip_prob);
+    //Print(tensor_vmc_wf_update.wf_weight());
+    //Print(flip_prob);
     if (flip_prob<((distribution(generator_parallel)+1)/2.)) return;
     tensor_vmc_wf=tensor_vmc_wf_update;
 }

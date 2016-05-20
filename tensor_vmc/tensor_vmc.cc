@@ -21,7 +21,7 @@ TensorT_VMC_WF<TensorT>::TensorT_VMC_WF(const std::vector<int> init_spin_config,
         input_tensors.push_back(combined_tensors_[sitei]*spin_prod_wf_[sitei]);
     }
     tensor_rg_=TensorT_RG<TensorT>(peps.lattice(),input_tensors,maxm);
-    Print(tensor_rg_.trg_result());
+    //Print(tensor_rg_.trg_result());
 }
 template
 TensorT_VMC_WF<ITensor>::TensorT_VMC_WF(const std::vector<int> init_spin_config, const PEPSt<ITensor> &peps, int maxm);
@@ -172,7 +172,7 @@ void tensor_vmc_parallel(const PEPSt<TensorT> &peps, const Args &measure_args)
     }
 
     //init random number generator
-    static std::default_random_engine generator_parallel(std::time(0)+mpi_id*std::time(0));
+    static std::default_random_engine generator_parallel(std::time(0)*getpid()+mpi_id*std::time(0));
 
 
     //init tensor_vmc_wf
@@ -220,11 +220,11 @@ void tensor_vmc_parallel(const PEPSt<TensorT> &peps, const Args &measure_args)
         for (int flipi=0; flipi<sweep_no; flipi++) 
         {
             vmc_one_step_parallel(tensor_vmc_wf,generator_parallel);
-            if (mpi_id==0) 
-            {
-                Print(flipi);
-                Print(tensor_vmc_wf.wf_weight());
-            }
+            //if (mpi_id==0) 
+            //{
+            //    Print(flipi);
+            //    Print(tensor_vmc_wf.wf_weight());
+            //}
         }
 
         //sweepi<0 means thermalization process

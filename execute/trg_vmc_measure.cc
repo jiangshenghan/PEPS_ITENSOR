@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     readFromFile(argv[1],kagome_rvb);
     cout << "Reading files successfully!" << endl;
 
-    tensor_vmc_parallel<IQTensor>(kagome_rvb,{"Operator","SzSz","Maxm",8,"InitSpins","antiferro","ThermalSteps",10,"MeasureSteps",3000});
+    tensor_vmc_parallel<IQTensor>(kagome_rvb,{"Operator","SzSz","Maxm",30,"InitSpins","antiferro","ThermalSteps",10,"MeasureSteps",300});
 
     MPI_Finalize();
 
