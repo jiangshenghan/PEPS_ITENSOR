@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     std::string ope=argv[2];
     int maxm=std::atoi(argv[3]);
-    Args measure_args={"Operator",ope,"Maxm",maxm,"InitSpins","antiferro","ThermalSteps",10,"MeasureSteps",300,"SpinFlipPrint",true};
+    Args measure_args={"Operator",ope,"Maxm",maxm,"InitSpins","antiferro","ThermalSteps",10,"MeasureSteps",300,"SpinFlipPrint",false};
 
 
     std::vector<IQTensor> combined_tensors;
