@@ -41,12 +41,12 @@ int main(int argc, char *argv[])
 
     std::string ope=argv[2];
     int maxm=std::atoi(argv[3]);
-    Args measure_args={"Operator",ope,"Maxm",maxm,"InitSpins","antiferro","ThermalSteps",10,"MeasureSteps",300,"SpinFlipPrint",true};
+    Args measure_args={"Operator",ope,"Maxm",maxm,"InitSpins","antiferro","ThermalSteps",10,"MeasureSteps",300,"SpinFlipPrint",false};
 
 
-    std::vector<IQTensor> combined_tensors;
-    for (int sitei=0; sitei<tnetwork_storage._tensor_list.size(); sitei++) combined_tensors.push_back(tnetwork_storage._tensor_list(sitei));
-    tensor_vmc_parallel<IQTensor>(combined_tensors,kagome_lattice,measure_args);
+    std::vector<ITensor> combined_tensors;
+    for (int sitei=0; sitei<tnetwork_storage._tensor_list.size(); sitei++) combined_tensors.push_back(tnetwork_storage._tensor_list(sitei).toITensor());
+    tensor_vmc_parallel<ITensor>(combined_tensors,kagome_lattice,measure_args);
 
     MPI_Finalize();
 
