@@ -45,6 +45,7 @@ TensorT_VMC_WF<TensorT>::TensorT_VMC_WF(const std::vector<int> init_spin_config,
             exit(1);
         }
     }
+    //Print(phys_legs);
     //init tensor_rg_
     std::vector<TensorT> input_tensors;
     for (int sitei=0; sitei<spin_config_.size(); sitei++) 
@@ -301,7 +302,7 @@ void tensor_vmc_parallel(const PEPSt<IQTensor> &peps, const Args &measure_args);
 
 
 template <class TensorT>
-void tensor_vmc_parallel(const std::vector<TensorT> &combined_tensors, const Lattice_Base &lattice, const Args &measure_args)
+void tensor_vmc_parallel(std::vector<TensorT> combined_tensors, const Lattice_Base &lattice, const Args &measure_args)
 {
     int mpi_id, bin_no;
     MPI_Comm_rank(MPI_COMM_WORLD,&mpi_id);
@@ -319,9 +320,9 @@ void tensor_vmc_parallel(const std::vector<TensorT> &combined_tensors, const Lat
     {
         Print(thermal_steps);
         Print(measure_steps);
-        Print(bin_no);
         Print(maxm);
         Print(ope);
+        Print(init_cond);
         Print(silent);
     }
 
@@ -329,47 +330,97 @@ void tensor_vmc_parallel(const std::vector<TensorT> &combined_tensors, const Lat
     static std::default_random_engine generator_parallel(std::time(0)*getpid()+mpi_id*std::time(0));
 
 
-    //init tensor_vmc_wf
-    //init spin configs
+    //init spin configs and tensor_vmc_wf
     std::vector<int> init_spin_config(lattice.n_sites_total());
+    TensorT_VMC_WF<TensorT> tensor_vmc_wf(lattice);
     if (init_cond.find("antiferro")!=std::string::npos)
     {
         for (int sitei=0; sitei<init_spin_config.size(); sitei++)
-            init_spin_config[sitei]=sitei%2;
+            init_spin_config[sitei]=(sitei+1)%2;
+        tensor_vmc_wf=TensorT_VMC_WF<TensorT>(init_spin_config,combined_tensors,lattice,maxm);
+        while (tensor_vmc_wf.is_zero())
+        {
+            std::vector<int> flip_inds(2);
+            do
+            {
+                flip_inds[0]=floor((distribution(generator_parallel)+1)/2.*tensor_vmc_wf.n_sites());
+                flip_inds[1]=floor((distribution(generator_parallel)+1)/2.*tensor_vmc_wf.n_sites());
+                //Print(flip_inds[0]);
+                //Print(flip_inds[1]);
+            }
+            while (init_spin_config[flip_inds[0]]==init_spin_config[flip_inds[1]]);
+            init_spin_config[flip_inds[0]]=1-init_spin_config[flip_inds[0]];
+            init_spin_config[flip_inds[1]]=1-init_spin_config[flip_inds[1]];
+            tensor_vmc_wf=TensorT_VMC_WF<TensorT>(init_spin_config,combined_tensors,lattice,maxm);
+            Print(init_spin_config);
+            if (tensor_vmc_wf.is_zero()==true) cout << "Not good init state!" << endl;
+        }
     }
     if (init_cond.find("random")!=std::string::npos)
     {
-        std::vector<int> spin_no(2,0);
-        for (int sitei=0; sitei<init_spin_config.size(); sitei++)
+        do
         {
-            int spin=round((distribution(generator_parallel)+1)/2.);
-            init_spin_config[sitei]=spin;
-            spin_no[spin]++;
-            if (spin_no[0]==init_spin_config.size()/2)
+            std::vector<int> spin_no(2,0);
+            for (int sitei=0; sitei<init_spin_config.size(); sitei++)
             {
-                for (int sitej=sitei+1; sitej<init_spin_config.size(); sitej++) init_spin_config[sitej]=1;
-                break;
+                int spin=round((distribution(generator_parallel)+1)/2.);
+                init_spin_config[sitei]=spin;
+                spin_no[spin]++;
+                if (spin_no[0]==init_spin_config.size()/2)
+                {
+                    for (int sitej=sitei+1; sitej<init_spin_config.size(); sitej++) init_spin_config[sitej]=1;
+                    break;
+                }
+                if (spin_no[1]==init_spin_config.size()/2)
+                {
+                    for (int sitej=sitei+1; sitej<init_spin_config.size(); sitej++) init_spin_config[sitej]=0;
+                    break;
+                }
             }
-            if (spin_no[1]==init_spin_config.size()/2)
-            {
-                for (int sitej=sitei+1; sitej<init_spin_config.size(); sitej++) init_spin_config[sitej]=0;
-                break;
-            }
-        }
-    }
-    //Print(init_spin_config);
+            Print(init_spin_config);
 
-    TensorT_VMC_WF<TensorT> tensor_vmc_wf(init_spin_config,combined_tensors,lattice,maxm);
-    if (tensor_vmc_wf.is_zero()==true)
-    {
-        cout << "Not good init state!" << endl;
-        exit(1);
+            tensor_vmc_wf=TensorT_VMC_WF<TensorT>(init_spin_config,combined_tensors,lattice,maxm);
+            if (tensor_vmc_wf.is_zero()==true) cout << "Not good init state!" << endl;
+        }
+        while (tensor_vmc_wf.is_zero()==true);
     }
+
+    double amplitude=2;
+    while (std::abs(tensor_vmc_wf.wf_weight())>1e15 || std::abs(tensor_vmc_wf.wf_weight())<1e-15)
+    {
+        while (std::abs(tensor_vmc_wf.wf_weight())<1e-15) 
+        {
+            for (auto &tensor: combined_tensors) tensor*=amplitude;
+            tensor_vmc_wf=TensorT_VMC_WF<TensorT>(init_spin_config,combined_tensors,lattice,maxm);
+            //Print(tensor_vmc_wf.wf_weight());
+        }
+        while (std::abs(tensor_vmc_wf.wf_weight())>1e15) 
+        {
+            for (auto &tensor: combined_tensors) tensor/=amplitude;
+            tensor_vmc_wf=TensorT_VMC_WF<TensorT>(init_spin_config,combined_tensors,lattice,maxm);
+            //Print(tensor_vmc_wf.wf_weight());
+        }
+        amplitude=1+(amplitude-1)/2;
+    }
+    Print(tensor_vmc_wf.wf_weight());
+
+    //tensor_vmc_wf=TensorT_VMC_WF<TensorT>(init_spin_config,combined_tensors,lattice,maxm);
+    //if (tensor_vmc_wf.is_zero()==true)
+    //{
+    //    cout << "Not good init state!" << endl;
+    //    exit(1);
+    //}
 
     Complex bin_energy=0;
     for (int sweepi=-thermal_steps; sweepi<measure_steps; sweepi++)
     {
-        if (mpi_id==0) Print(sweepi);
+        if (mpi_id==0) 
+        {
+            cout << "sweepi=" << sweepi << endl;
+            cout << "tensor_vmc_wf.wf_weight()=" << tensor_vmc_wf.wf_weight() << endl;
+            //Print(sweepi);
+            //Print(tensor_vmc_wf.wf_weight());
+        }
         //random flip spins
         for (int flipi=0; flipi<sweep_no; flipi++) 
         {
@@ -388,7 +439,8 @@ void tensor_vmc_parallel(const std::vector<TensorT> &combined_tensors, const Lat
         if (ope.find("SzSz")!=std::string::npos) energy_temp=vmc_SzSz_bonds_energy(tensor_vmc_wf);
         if (ope.find("Heisenberg")!=std::string::npos) energy_temp=vmc_Heisenberg_energy(tensor_vmc_wf);
         bin_energy+=energy_temp;
-        Print(energy_temp);
+        cout << "energy_temp=" << energy_temp << endl;
+        //Print(energy_temp);
     }
     bin_energy/=measure_steps*1.;
     
@@ -411,14 +463,14 @@ void tensor_vmc_parallel(const std::vector<TensorT> &combined_tensors, const Lat
         energysq/=bin_no*1.;
         double energy_err=sqrt((energysq-std::pow(std::abs(energy),2.))/(bin_no-1));
 
-        Print(energy);
-        Print(energy_err);
+        //Print(energy);
+        //Print(energy_err);
     }
 }
 template
-void tensor_vmc_parallel(const std::vector<ITensor> &combined_tensors, const Lattice_Base &lattice, const Args &measure_args);
+void tensor_vmc_parallel(std::vector<ITensor> combined_tensors, const Lattice_Base &lattice, const Args &measure_args);
 template
-void tensor_vmc_parallel(const std::vector<IQTensor> &combined_tensors, const Lattice_Base &lattice, const Args &measure_args);
+void tensor_vmc_parallel(std::vector<IQTensor> combined_tensors, const Lattice_Base &lattice, const Args &measure_args);
 
 
 

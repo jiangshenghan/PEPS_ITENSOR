@@ -8,7 +8,7 @@ TensorT_RG<TensorT>::TensorT_RG(const Lattice_Base &lattice, const std::vector<T
     lattice_(lattice),
     input_tensors_(input_tensors),
     factor_input_tensors_(input_tensors.size(),std::vector<TensorT>(2)),
-    //factor_args_("Maxm",maxm,"ShowEigs")
+    //factor_args_("Maxm",maxm,"ShowEigs"),
     factor_args_("Maxm",maxm),
     iszero_(false)
 {
@@ -20,9 +20,16 @@ TensorT_RG<TensorT>::TensorT_RG(const Lattice_Base &lattice, const std::vector<T
     for (int layeri=1; layeri<N_layer_; layeri++)
     {
         //obtain factor tensors of layeri-1
-        if (iszero_==true) break;
+        if (iszero_==true) 
+        {
+            break;
+            Print(layeri);
+        }
         for (int tensori=0; tensori<layered_trg_tensors_[layeri-1].size(); tensori++) obtain_factor_tensors(layeri-1,tensori);
-        for (int tensori=0; tensori<layered_trg_tensors_[layeri].size(); tensori++) obtain_trg_tensor(layeri,tensori);
+        for (int tensori=0; tensori<layered_trg_tensors_[layeri].size(); tensori++) 
+        {
+            obtain_trg_tensor(layeri,tensori);
+        }
     }
 
     obtain_trg_result();
@@ -42,6 +49,7 @@ void TensorT_RG<TensorT>::init_to_square_network()
     {
         layered_lattice_dim_.push_back(lattice_dim);
         layered_trg_tensors_.push_back(std::vector<TensorT>(N_tensors));
+        layered_trg_tensors_norm_.push_back(std::vector<double>(N_tensors));
         layered_factor_tensors_.push_back(std::vector<std::vector<TensorT>>(N_tensors,std::vector<TensorT>(2))); 
         if ((layeri+1)%2==0) { lattice_dim[0]/=2; lattice_dim[1]/=2; }
         N_tensors/=2;
@@ -121,9 +129,17 @@ void TensorT_RG<TensorT>::obtain_zeroth_layer_trg_tensor(int tensor_no)
 
         layered_trg_tensors_[0][tensor_no]=utensor*dtensor;
     }
-    if (layered_trg_tensors_[0][tensor_no].norm()<std::numeric_limits<double>::epsilon()) iszero_=true;
-    //Print(tensor_no);
-    //Print(layered_trg_tensors_[0][tensor_no].indices());
+    if (layered_trg_tensors_[0][tensor_no].norm()<std::numeric_limits<double>::min()) 
+    {
+        iszero_=true;
+        //Print(tensor_no);
+        //Print(layered_trg_tensors_[0][tensor_no].norm());
+    }
+    else
+    {
+        layered_trg_tensors_norm_[0][tensor_no]=layered_trg_tensors_[0][tensor_no].norm();
+        layered_trg_tensors_[0][tensor_no]/=layered_trg_tensors_norm_[0][tensor_no];
+    }
 }
 template
 void TensorT_RG<ITensor>::obtain_zeroth_layer_trg_tensor(int tensor_no);
@@ -156,7 +172,12 @@ void TensorT_RG<TensorT>::obtain_trg_tensor(int layer_no, int tensor_no)
     }
     layered_trg_tensors_[layer_no][tensor_no]=factor_tensors[surr_tensor_inds[0]][1]*factor_tensors[surr_tensor_inds[1]][0]*factor_tensors[surr_tensor_inds[2]][0]*factor_tensors[surr_tensor_inds[3]][1];
      
-    if (layered_trg_tensors_[layer_no][tensor_no].norm()<std::numeric_limits<double>::epsilon()) iszero_=true;
+    if (layered_trg_tensors_[layer_no][tensor_no].norm()<std::numeric_limits<double>::min()) iszero_=true;
+    else
+    {
+        layered_trg_tensors_norm_[layer_no][tensor_no]=layered_trg_tensors_[layer_no][tensor_no].norm();
+        layered_trg_tensors_[layer_no][tensor_no]/=layered_trg_tensors_norm_[layer_no][tensor_no];
+    }
 
     //Print(layer_no);
     //Print(tensor_no);
@@ -217,6 +238,7 @@ void TensorT_RG<IQTensor>::obtain_factor_tensors(int layer_no, int tensor_no);
 template <class TensorT>
 void TensorT_RG<TensorT>::obtain_trg_result()
 {
+    //Print(iszero_);
     if (iszero_==true) 
     {
         trg_result_=0;
@@ -225,6 +247,15 @@ void TensorT_RG<TensorT>::obtain_trg_result()
     const auto &trg_tensors=layered_trg_tensors_.back();
     auto result_tensor=(trg_tensors[0]*trg_tensors[1])*(trg_tensors[2]*trg_tensors[3]);
     trg_result_=result_tensor.toComplex();
+    for (int layer_no=0; layer_no<layered_trg_tensors_.size(); layer_no++)
+    {
+        for (double tensor_norm: layered_trg_tensors_norm_[layer_no]) trg_result_*=tensor_norm;
+    }
+    if (std::abs(trg_result_)<std::numeric_limits<double>::min()) 
+    {
+        trg_result_=0;
+        iszero_=true;
+    }
     //Print(trg_result_);
 }
 template

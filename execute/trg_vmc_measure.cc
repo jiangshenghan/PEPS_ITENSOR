@@ -41,16 +41,14 @@ int main(int argc, char *argv[])
 
     std::string ope=argv[2];
     int maxm=std::atoi(argv[3]);
-    Args measure_args={"Operator",ope,"Maxm",maxm,"InitSpins","antiferro","ThermalSteps",10,"MeasureSteps",300,"SpinFlipPrint",false};
+    Args measure_args={"Operator",ope,"Maxm",maxm,"InitSpins","antiferro","ThermalSteps",20,"MeasureSteps",500,"SpinFlipPrint",true};
 
-    Print(tnetwork_storage._tnetwork_type);
-    Print(tnetwork_storage._boundary_condition);
-    Print(tnetwork_storage._coor_to_siteind);
-    Print(tnetwork_storage._tensor_list);
-
-    std::vector<ITensor> combined_tensors;
-    for (int sitei=0; sitei<tnetwork_storage._tensor_list.size(); sitei++) combined_tensors.push_back(tnetwork_storage._tensor_list(sitei).toITensor());
-    tensor_vmc_parallel<ITensor>(combined_tensors,kagome_lattice,measure_args);
+    std::vector<IQTensor> combined_tensors;
+    for (int y=0; y<Ly; y++)
+        for (int x=0; x<Lx; x++)
+            for (int subi=0; subi<tnetwork_storage._n_subl; subi++) 
+                combined_tensors.push_back(tnetwork_storage._tensor_list(tnetwork_storage._coor_to_siteind(x,y)(subi)));
+    tensor_vmc_parallel<IQTensor>(combined_tensors,kagome_lattice,measure_args);
 
     MPI_Finalize();
 

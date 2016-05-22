@@ -26,6 +26,7 @@ class TensorT_VMC_WF
         //
         //Constructors
         //
+        TensorT_VMC_WF(const Lattice_Base &lattice): tensor_rg_(lattice) {};
         TensorT_VMC_WF(const std::vector<int> init_spin_config, const PEPSt<TensorT> &peps, int maxm=100);
         TensorT_VMC_WF(const std::vector<int> init_spin_config, const std::vector<TensorT> &combined_tensors, const Lattice_Base &lattice, int maxm=100);
 
@@ -61,7 +62,7 @@ void tensor_vmc(const PEPSt<TensorT> &peps, const Args &measure_args);
 template <class TensorT>
 void tensor_vmc_parallel(const PEPSt<TensorT> &peps, const Args &measure_args);
 template <class TensorT>
-void tensor_vmc_parallel(const std::vector<TensorT> &combined_tensors, const Lattice_Base &lattice, const Args &measure_args);
+void tensor_vmc_parallel(std::vector<TensorT> combined_tensors, const Lattice_Base &lattice, const Args &measure_args);
 
 
 

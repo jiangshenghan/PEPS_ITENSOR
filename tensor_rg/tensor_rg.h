@@ -181,7 +181,9 @@ class TensorT_RG
         //layered_trg_tensors_[n].size()=layered_trg_tensors_[n-1].size()/2;
         //layered_trg_tensors_[0] stores tensors of original lattice
         //for square lattice, the last layer stores four tensors
+        //we use normalized layered_trg_tensors_ to make result more accurracy
         std::vector<std::vector<TensorT>> layered_trg_tensors_;
+        std::vector<std::vector<double>> layered_trg_tensors_norm_;
         //layered_factor_tensors_ stores tensors from SVD decomposition 
         //the range is from 0 to N_layer_-1
         //order: down,left,right,up
