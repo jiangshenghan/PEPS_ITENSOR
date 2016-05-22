@@ -43,6 +43,10 @@ int main(int argc, char *argv[])
     int maxm=std::atoi(argv[3]);
     Args measure_args={"Operator",ope,"Maxm",maxm,"InitSpins","antiferro","ThermalSteps",10,"MeasureSteps",300,"SpinFlipPrint",false};
 
+    Print(tnetwork_storage._tnetwork_type);
+    Print(tnetwork_storage._boundary_condition);
+    Print(tnetwork_storage._coor_to_siteind);
+    Print(tnetwork_storage._tensor_list);
 
     std::vector<ITensor> combined_tensors;
     for (int sitei=0; sitei<tnetwork_storage._tensor_list.size(); sitei++) combined_tensors.push_back(tnetwork_storage._tensor_list(sitei).toITensor());

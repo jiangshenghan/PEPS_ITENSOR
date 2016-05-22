@@ -1,21 +1,18 @@
 
-#include "kagome_rvb.h"
-#include "tensor_update.h"
-
-const dP imps_normalization_factor=1.E2;
+#include "spin_sym_decomp.h"
 
 int main()
 {
-    IQIndex leg_a=Spin_leg({1,1,1},"leg_a",In),
-            leg_b=Spin_leg({2,0,1},"leg_b",In),
-            leg_c=Spin_leg({1,2},"leg_c",Out),
-            leg_d=Spin_leg({0,1,1},"leg_d",Out);
-    IQTensor T(leg_a(2),leg_b(4),leg_c(2),leg_d(3)),
-             A(leg_a,leg_b), B;
-    T.randomize();
+    IQIndex leg_a=Spin_leg({1,2,2},"leg_a",In),
+            leg_b=Spin_leg({2,2,2,1},"leg_b",Out);
+    Singlet_Tensor_Basis tensor_basis(std::vector<IQIndex>{leg_a,leg_b});
+    std::vector<double> params;
+    for (int basei=0; basei<tensor_basis.dim(); basei++) params.push_back(5.*rand_gen());
+    IQTensor T=singlet_tensor_from_basis_params(tensor_basis,params);
+    IQTensor U(leg_a),D,V;
+    spin_sym_svdRank2(T,leg_a,leg_b,U,D,V);
     Print(T);
-    factor(T,A,B,{"ShowEigs",true,"Maxm",30});
-    Print(norm(T-A*B));
+    Print(norm(T-U*D*V));
     return 0;
 }
 
