@@ -148,7 +148,6 @@ bool iqind_to_spin_basis(const IQIndex &sz_leg, const std::vector<int> &flavor_d
 }
 
 
-//TODO:change type of spin_basis_to_indval
 bool indval_from_spin_rep_basis(const std::vector<int> &flavor_deg, const std::vector<Spin_Basis> &spin_basis, std::vector<std::vector<std::vector<int>>> &spin_basis_to_indval)
 {
     spin_basis_to_indval.clear();
@@ -156,13 +155,14 @@ bool indval_from_spin_rep_basis(const std::vector<int> &flavor_deg, const std::v
     {
         spin_basis_to_indval.push_back(std::vector<std::vector<int>>(Si+1,std::vector<int>(flavor_deg[Si])));
     }
-    Print(spin_basis_to_indval.size());
+    //Print(spin_basis_to_indval.size());
     for (int val=0; val<spin_basis.size(); val++) 
     {
         int Si=spin_basis[val].S(),
             mi=spin_basis[val].m(),
             ti=spin_basis[val].t();
-        spin_basis_to_indval[Si][mi][ti]=val;
+        //we set second ind as (Si+mi)/2 to avoid negative ind
+        spin_basis_to_indval[Si][(Si+mi)/2][ti]=val;
     }
 }
 

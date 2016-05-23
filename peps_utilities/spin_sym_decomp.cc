@@ -80,8 +80,8 @@ void spin_sym_svdRank2(IQTensor A, const IQIndex &ui, const IQIndex &vi, IQTenso
             {
                 for (int lt=0; lt<Dflavor_deg[spini]; lt++)
                 {
-                    int ui_val=ui_spin_basis_to_indval[spini][mi][ut],
-                        Lval=Dspin_basis_to_indval[spini][mi][lt];
+                    int ui_val=ui_spin_basis_to_indval[spini][(spini+mi)/2][ut],
+                        Lval=Dspin_basis_to_indval[spini][(spini+mi)/2][lt];
                     U(ui(ui_val+1),dag(Lind)(Lval+1))=U_SS[spini](ui_SS[spini](ut+1),dag(Lind_SS[spini](lt+1)));
                 }
             }
@@ -90,15 +90,15 @@ void spin_sym_svdRank2(IQTensor A, const IQIndex &ui, const IQIndex &vi, IQTenso
             {
                 for (int rt=0; rt<Dflavor_deg[spini]; rt++)
                 {
-                    int vi_val=vi_spin_basis_to_indval[spini][mi][vt],
-                        Rval=Dspin_basis_to_indval[spini][mi][rt];
+                    int vi_val=vi_spin_basis_to_indval[spini][(spini+mi)/2][vt],
+                        Rval=Dspin_basis_to_indval[spini][(spini+mi)/2][rt];
                     V(vi(vi_val+1),dag(Rind)(Rval+1))=V_SS[spini](vi_SS[spini](vt+1),dag(Rind_SS[spini](rt+1)));
                 }
             }
             //get D
             for (int dt=0; dt<Dflavor_deg[spini]; dt++)
             {
-                int dval=Dspin_basis_to_indval[spini][mi][dt];
+                int dval=Dspin_basis_to_indval[spini][(spini+mi)/2][dt];
                 D(Lind(dval+1),Rind(dval+1))=D_SS[spini](Lind_SS[spini](dt+1),Rind_SS[spini](dt+1));
             }
         }

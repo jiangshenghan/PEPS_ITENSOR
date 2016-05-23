@@ -83,6 +83,7 @@ bool iqind_to_spin_basis(const IQIndex &sz_leg, std::vector<Spin_Basis> &spin_ba
 bool iqind_to_spin_basis(const IQIndex &sz_leg, const std::vector<int> &flavor_deg, std::vector<Spin_Basis> &spin_basis);
 
 //makes map from spin basis to iqindval
+//spin_basis_to_indval[S][S+m][t]=val of ind
 bool indval_from_spin_rep_basis(const std::vector<int> &flavor_deg, const std::vector<Spin_Basis> &spin_basis, std::vector<std::vector<std::vector<int>>> &spin_basis_to_indval);
 
 //This function construct eta from mu
