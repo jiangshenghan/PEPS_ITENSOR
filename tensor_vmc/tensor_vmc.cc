@@ -392,15 +392,16 @@ void tensor_vmc_parallel(std::vector<TensorT> combined_tensors, const Lattice_Ba
         {
             for (auto &tensor: combined_tensors) tensor*=amplitude;
             tensor_vmc_wf=TensorT_VMC_WF<TensorT>(init_spin_config,combined_tensors,lattice,maxm);
-            //Print(tensor_vmc_wf.wf_weight());
+            Print(tensor_vmc_wf.wf_weight());
         }
         while (std::abs(tensor_vmc_wf.wf_weight())>1e15) 
         {
             for (auto &tensor: combined_tensors) tensor/=amplitude;
             tensor_vmc_wf=TensorT_VMC_WF<TensorT>(init_spin_config,combined_tensors,lattice,maxm);
-            //Print(tensor_vmc_wf.wf_weight());
+            Print(tensor_vmc_wf.wf_weight());
         }
-        amplitude=1+(amplitude-1)/2;
+        amplitude=1+(amplitude-1)/2.;
+        //Print(amplitude);
     }
     Print(tensor_vmc_wf.wf_weight());
 

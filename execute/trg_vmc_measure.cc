@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     for (int y=0; y<Ly; y++)
         for (int x=0; x<Lx; x++)
             for (int subi=0; subi<tnetwork_storage._n_subl; subi++) 
-                combined_tensors.push_back(tnetwork_storage._tensor_list(tnetwork_storage._coor_to_siteind(x,y)(subi)));
+                combined_tensors.push_back(tnetwork_storage._tensor_list(tnetwork_storage._coor_to_siteind(x,y)(subi))*10);
     tensor_vmc_parallel<IQTensor>(combined_tensors,kagome_lattice,measure_args);
 
     MPI_Finalize();

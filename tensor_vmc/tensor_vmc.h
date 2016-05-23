@@ -39,6 +39,7 @@ class TensorT_VMC_WF
         int spin_config(int sitei) const { return spin_config_[sitei]; }
         Complex wf_weight() const { return tensor_rg_.trg_result(); }
         bool is_zero() const { return tensor_rg_.is_zero(); }
+        bool almost_zero_trg() const { return tensor_rg_.almost_zero_trg(); }
 
         //Update methods
         //we reverse the spins of flip inds and update tensor_wf

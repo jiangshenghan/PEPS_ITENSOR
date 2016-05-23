@@ -34,6 +34,7 @@ class TensorT_RG
         const Lattice_Base &lattice() const { return lattice_; }
         Complex trg_result() const { return trg_result_; }
         bool is_zero() const { return iszero_; }
+        bool almost_zero_trg() const { return almost_zero_trg_; }
 
         //
         //Methods to obtain/update layered trg_tensors and factor_tensors
@@ -189,7 +190,7 @@ class TensorT_RG
         //order: down,left,right,up
         std::vector<std::vector<std::vector<TensorT>>> layered_factor_tensors_;
         Complex trg_result_;
-        bool iszero_;
+        bool iszero_, almost_zero_trg_;
 
         //parameters for factor tensor
         Args factor_args_;

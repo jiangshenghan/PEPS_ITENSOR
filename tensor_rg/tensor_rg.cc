@@ -10,7 +10,8 @@ TensorT_RG<TensorT>::TensorT_RG(const Lattice_Base &lattice, const std::vector<T
     factor_input_tensors_(input_tensors.size(),std::vector<TensorT>(2)),
     //factor_args_("Maxm",maxm,"ShowEigs"),
     factor_args_("Maxm",maxm),
-    iszero_(false)
+    iszero_(false),
+    almost_zero_trg_(false)
 {
     N_layer_=std::round(std::log2(lattice_.n_uc()[0]*lattice_.n_uc()[1]*1./4.))+1;
     //TODO: consider case where we get zero tensor 
@@ -251,10 +252,10 @@ void TensorT_RG<TensorT>::obtain_trg_result()
     {
         for (double tensor_norm: layered_trg_tensors_norm_[layer_no]) trg_result_*=tensor_norm;
     }
+    //the case where trg_result_ is too small, we need to renormalize tensor
     if (std::abs(trg_result_)<std::numeric_limits<double>::min()) 
     {
-        trg_result_=0;
-        iszero_=true;
+        almost_zero_trg_=true;
     }
     //Print(trg_result_);
 }
