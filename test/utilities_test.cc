@@ -11,7 +11,7 @@ int main()
     IQTensor T=singlet_tensor_from_basis_params(tensor_basis,params);
     IQTensor U(leg_a),D,V;
     spin_sym_svdRank2(T,leg_a,leg_b,U,D,V);
-    Print(T);
+    PrintDat(T);
     Print(norm(T-U*D*V));
     return 0;
 }

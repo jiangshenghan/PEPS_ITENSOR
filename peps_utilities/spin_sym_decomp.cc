@@ -15,21 +15,10 @@ void spin_sym_svdRank2(IQTensor A, const IQIndex &ui, const IQIndex &vi, IQTenso
     iqind_to_spin_basis(ui,ui_spin_rep,ui_spin_basis);
     iqind_to_spin_basis(vi,vi_spin_rep,vi_spin_basis);
 
-    Print(ui);
-    Print(vi);
-    Print(ui_spin_rep);
-    Print(vi_spin_rep);
-    Print(ui_spin_basis);
-    Print(vi_spin_basis);
-
     //we can get the indval of a particular state |S,m,t\rangle of ui and vi
     std::vector<std::vector<std::vector<int>>> ui_spin_basis_to_indval, vi_spin_basis_to_indval;
     indval_from_spin_rep_basis(ui_spin_rep,ui_spin_basis,ui_spin_basis_to_indval);
     indval_from_spin_rep_basis(vi_spin_rep,vi_spin_basis,vi_spin_basis_to_indval);
-
-    Print(ui_spin_basis_to_indval);
-    Print(vi_spin_basis_to_indval);
-
 
     //perform SVD on the fixed S, and for each S, we only need to focus on one paticular m due to Wigner-Eckart theorem
     int S_max=std::min(ui_spin_rep.size(),vi_spin_rep.size());
@@ -73,7 +62,7 @@ void spin_sym_svdRank2(IQTensor A, const IQIndex &ui, const IQIndex &vi, IQTenso
 
     for (int spini=0; spini<S_max; spini++)
     {
-        for (int mi=0; mi<spini+1; mi++)
+        for (int mi=-spini; mi<=spini; mi+=2)
         {
             //get U
             for (int ut=0; ut<ui_spin_rep[spini]; ut++)
