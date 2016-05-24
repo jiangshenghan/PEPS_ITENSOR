@@ -310,16 +310,16 @@ IQTensor spin_fusion_tensor(std::vector<IQIndex> input_spin_legs, Arrow spin_dir
 
     //get all possible fusion channel
     std::vector<IQIndex> legs_form_singlet;
-    std::vector<IQIndex> fused_spin_legs;
+    std::vector<IQIndex> fixed_spin_legs;
     std::vector<IQTensor> fusion_tensor_basis;
     for (const auto &spin_leg: input_spin_legs) legs_form_singlet.push_back(dag(spin_leg));
     std::vector<int> output_spin_rep;
     for (int spini=0; spini<Smax+1; spini++)
     {
-        std::vector<int> fused_spin_qn(spini+1,0);
-        fused_spin_qn[spini]=1;
-        fused_spin_legs.push_back(Spin_leg(fused_spin_qn,nameint("fused_spin",spini),spin_dir));
-        legs_form_singlet.push_back(fused_spin_legs);
+        std::vector<int> spin_qn(spini+1,0);
+        spin_qn[spini]=1;
+        fixed_spin_legs.push_back(Spin_leg(spin_qn,nameint("fixed_spin",spini)+"_legs",spin_dir));
+        legs_form_singlet.push_back(fixed_spin_legs);
         fusion_tensor_basis.push_back(Singlet_Tensor_Basis(legs_form_singlet));
         output_spin_rep.push_back(fusion_tensor_basis.dim());
         legs_form_singlet.pop_back();
@@ -356,10 +356,13 @@ IQTensor spin_fusion_tensor(std::vector<IQIndex> input_spin_legs, Arrow spin_dir
             int oS=output_spin_basis[oval].S(),
                 om=output_spin_basis[oval].m(),
                 ot=output_spin_basis[oval].t();
-            basis_legs_val[ival_list.size()+1]=fused_spin_legs[oS][(oS-om)/2];
+            basis_legs_val[ival_list.size()+1]=fixed_spin_legs[oS][(oS-om)/2];
 
             fusion_tensor(fusion_legs_val[0],fusion_legs_val[1],fusion_legs_val[2],fusion_legs_val[3],fusion_legs_val[4],fusion_legs_val[5],fusion_legs_val[6],fusion_legs_val[7])=fusion_tensor_basis[oS][ot](basis_legs_val[0],basis_legs_val[1],basis_legs_val[2],basis_legs_val[3],basis_legs_val[4],basis_legs_val[5],basis_legs_val[6],basis_legs_val[7]);
         }
     }
 
+    for (const auto &dir_tensor: tensors_leg_dir) fusion_tensor*=dir_tensor;
+
+    return fusion_tensor;
 }

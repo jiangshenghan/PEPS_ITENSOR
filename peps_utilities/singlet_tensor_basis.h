@@ -141,6 +141,8 @@ double diff_tensor_and_singlet_projection(const IQTensor &tensor);
 double diff_tensor_and_singlet_projection(const IQTensor &tensor, const Singlet_Tensor_Basis &tensor_basis);
 
 //Get all the fusion channel by given a set of legs stored in tensor T^{u}_{abc...}. We require T^{dagger}.T=I
+//e.g. a=0\oplus1/2\oplus1, b=1/2\oplus1/2, all point out
+//then we generate another c=0\oplus0^2\oplus(1/2)^4\oplus1^2\oplus(3/2)^2, as well as a singlet Tensor T^c_{ab} encoding all fusion information of a and b
 IQTensor spin_fusion_tensor(std::vector<IQIndex> input_spin_legs, Arrow spin_dir);
 
 
