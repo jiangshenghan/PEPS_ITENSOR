@@ -140,5 +140,8 @@ IQTensor singlet_tensor_from_projection(const IQTensor &tensor_project, const Si
 double diff_tensor_and_singlet_projection(const IQTensor &tensor);
 double diff_tensor_and_singlet_projection(const IQTensor &tensor, const Singlet_Tensor_Basis &tensor_basis);
 
+//Get all the fusion channel by given a set of legs stored in tensor T^{u}_{abc...}. We require T^{dagger}.T=I
+IQTensor spin_fusion_tensor(std::vector<IQIndex> input_spin_legs, Arrow spin_dir);
+
 
 #endif

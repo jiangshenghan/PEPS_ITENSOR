@@ -282,3 +282,84 @@ double diff_tensor_and_singlet_projection(const IQTensor &tensor, const Singlet_
     auto tensor_singlet=singlet_tensor_from_projection(tensor,tensor_basis);
     return (tensor-tensor_singlet).norm();
 }
+
+
+IQTensor spin_fusion_tensor(std::vector<IQIndex> input_spin_legs, Arrow spin_dir)
+{
+    //change the direction of input legs, s.t. same as spin_dir
+    std::vector<IQTensor> tensors_leg_dir;
+    for (const auto &spin_leg : input_spin_legs)
+    {
+        if (input_spin_legs.dir()!=spin_dir)
+        {
+            IQTensor temp_tensor(dag(spin_leg),prime(dag(spin_leg)));
+            for (int val=0; val<spin_leg.m(); val++) temp_tensor(dag(spin_leg)(val+1),prime(dag(spin_leg))(val+1))=1-2*(val%2);
+            tensors_leg_dir.push_back(temp_tensor);
+            spin_leg.dag().prime();
+        }
+    }
+    
+    //get possible final spin qn's
+    int Smax=0;
+    std::vector<std::vector<int>> input_spin_reps(input_spin_legs.size());
+    for (int inputi=0; inputi<input_spin_legs.size(); inputi++) 
+    {
+        iqind_spin_rep(input_spin_legs[inputi],input_spin_reps[inputi]);
+        Smax+=input_spin_reps[inputi].size()-1;
+    }
+
+    //get all possible fusion channel
+    std::vector<IQIndex> legs_form_singlet;
+    std::vector<IQIndex> fused_spin_legs;
+    std::vector<IQTensor> fusion_tensor_basis;
+    for (const auto &spin_leg: input_spin_legs) legs_form_singlet.push_back(dag(spin_leg));
+    std::vector<int> output_spin_rep;
+    for (int spini=0; spini<Smax+1; spini++)
+    {
+        std::vector<int> fused_spin_qn(spini+1,0);
+        fused_spin_qn[spini]=1;
+        fused_spin_legs.push_back(Spin_leg(fused_spin_qn,nameint("fused_spin",spini),spin_dir));
+        legs_form_singlet.push_back(fused_spin_legs);
+        fusion_tensor_basis.push_back(Singlet_Tensor_Basis(legs_form_singlet));
+        output_spin_rep.push_back(fusion_tensor_basis.dim());
+        legs_form_singlet.pop_back();
+    }
+
+
+    //obtain the fusion_tensor
+    IQTensor output_spin_leg=Spin_leg(output_spin_rep,"output_spin_leg",spin_dir);
+    std::vector<Spin_Basis> output_spin_basis;
+    iqind_to_spin_basis(output_spin_leg,flavor_deg,output_spin_basis);
+
+    legs_form_singlet.push_back(output_spin_leg);
+    IQTensor fusion_tensor(legs_form_singlet);
+    std::vector<int> input_legs_dim;
+    int input_total_dim=1;
+    for (const auto &spin_leg: input_spin_legs) 
+    {
+        input_legs_dim.push_back(spin_leg.m());
+        input_total_dim*=spin_leg.m();
+    }
+
+    for (int ival=0; ival<input_total_dim; ival++)
+    {
+        std::vector<int> ival_list=list_from_num(ival,input_legs_dim);
+        for (int oval=0; oval<output_spin_leg.m(); oval++)
+        {
+            std::array<IQIndexVal,8> fusion_legs_val, basis_legs_val;
+            for (int legi=0; legi<ival_list.size(); legi++) 
+            {
+                fusion_legs_val[legi]=input_spin_legs[legi](ival_list+1);
+                basis_legs_val[legi]=input_spin_legs[legi](ival_list+1);
+            }
+            fusion_legs_val[ival_list.size()+1]=output_spin_leg(oval+1);
+            int oS=output_spin_basis[oval].S(),
+                om=output_spin_basis[oval].m(),
+                ot=output_spin_basis[oval].t();
+            basis_legs_val[ival_list.size()+1]=fused_spin_legs[oS][(oS-om)/2];
+
+            fusion_tensor(fusion_legs_val[0],fusion_legs_val[1],fusion_legs_val[2],fusion_legs_val[3],fusion_legs_val[4],fusion_legs_val[5],fusion_legs_val[6],fusion_legs_val[7])=fusion_tensor_basis[oS][ot](basis_legs_val[0],basis_legs_val[1],basis_legs_val[2],basis_legs_val[3],basis_legs_val[4],basis_legs_val[5],basis_legs_val[6],basis_legs_val[7]);
+        }
+    }
+
+}
