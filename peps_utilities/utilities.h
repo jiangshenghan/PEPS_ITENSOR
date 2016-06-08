@@ -261,4 +261,9 @@ IQTensor inverse_rank2_tensor_by_arma_mat(const IQTensor &tensor);
 template <typename Tensor>
 void factor(Tensor const& T, Tensor &A, Tensor &B, Args const &args = Args::global());
 
+//the eigen_factor is based on diagHermitian of a tensor T (see itensor/svdalgs.h). T is positive and hermitian with indices i,j,k,... and i',j',k',...
+//Assume  T=dag(U)*D*prime(U), where D stores eigenvalues, then, we get X=dag(U).sqrt(D), and X^dagger=sqrt(D)*prime(U). Thus, T=X.X^dagger. 
+template <typename Tensor>
+void eigen_factor(Tensor const& T, Tensor &X, Args const &args = Args::global());
+
 #endif

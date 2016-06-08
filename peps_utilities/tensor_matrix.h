@@ -5,7 +5,7 @@
 
 #include "utilities.h"
 
-//TODO:debug this class
+//TODO:debug this file
 //
 //define tensor_matrix_arnoldi class with size and product, used in arnoldi method 
 //
