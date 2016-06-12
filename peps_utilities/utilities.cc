@@ -596,7 +596,7 @@ void eigen_factor(Tensor const& T, Tensor &X, Args const &args = Args::global())
     Tensor U,D;
     diagHermitian(T,U,D,args);
     //TODO:debug the case where D has negativeentries
-    D.mapElem([](Real x){ if (x<0) { cout<<"Negative eigenvalue!"<<endl; exit(1); } return std::sqrt(x); });
+    D.mapElem([](Real x){ return std::sqrt(std::abs(x)); });
     X=dag(U)*D;
 }
 template
