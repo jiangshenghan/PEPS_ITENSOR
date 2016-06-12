@@ -284,11 +284,12 @@ void TensorT_RG<TensorT>::update_trg_network(const std::vector<int> &input_inds,
     std::vector<int> update_inds_last=update_inds_curr;
     for (int layeri=1; layeri<N_layer_; layeri++)
     {
+        cout << "trg update layer " << layeri << endl;
+        Print(update_inds_last);
+        Print(update_inds_curr);
         if (iszero_==true) break;
         //get updated factor tensors of last layer
         obtain_update_inds(update_inds_curr,update_inds_last,layeri);
-        //Print(update_inds_last);
-        //Print(update_inds_curr);
         for (int tensor_no: update_inds_last) obtain_factor_tensors(layeri-1,tensor_no);
         for (int tensor_no: update_inds_curr) obtain_trg_tensor(layeri,tensor_no);
         update_inds_last=update_inds_curr;
