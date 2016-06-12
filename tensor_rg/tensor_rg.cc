@@ -243,6 +243,7 @@ void TensorT_RG<TensorT>::obtain_trg_result()
     if (iszero_==true) 
     {
         trg_result_=0;
+        cout << "trg_result equals zero!" << endl;
         return;
     }
     const auto &trg_tensors=layered_trg_tensors_.back();

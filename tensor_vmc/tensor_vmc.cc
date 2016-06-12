@@ -72,7 +72,7 @@ void TensorT_VMC_WF<TensorT>::update_wf(std::vector<int> flip_inds)
         spin_prod_wf_[ind]=TensorT(phys_indice(spin_config_[ind]+1));
         update_input_tensors.push_back(combined_tensors_[ind]*spin_prod_wf_[ind]);
     }
-    //Print(flip_inds);
+    Print(flip_inds);
     tensor_rg_.update_trg_network(flip_inds,update_input_tensors);
 }
 template
