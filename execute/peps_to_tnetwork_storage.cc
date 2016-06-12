@@ -12,19 +12,22 @@ int main()
 
     //Kagome Lattice
     // /*
-    Kagome_Normal_Lattice_Torus kagome_normal_lattice({Lx,Ly});
-    IQPEPS kagome_peps(kagome_normal_lattice);
     kagome_psg::mu_12=-1;
-    kagome_psg::mu_c6=1;
+    kagome_psg::mu_c6=-1;
+
+    Kagome_Normal_Lattice_Torus kagome_normal_lattice({Lx,Ly});
+    //IQPEPS kagome_peps(kagome_normal_lattice);
+    IQPEPS kagome_peps=kagome_normal_srvb_peps(Lx,Ly);
 
     std::stringstream ss;
-    ss << "/home/jiangsb/tn_ying/tensor_network/result/peps_storage/kagome_simple_update/kagome_rvb_normal_D=" << D << "_Lx=" << Lx << "_Ly=" << Ly << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_step=1e-3";
+    //ss << "/home/jiangsb/tn_ying/tensor_network/result/peps_storage/kagome_simple_update/kagome_rvb_normal_D=" << D << "_Lx=" << Lx << "_Ly=" << Ly << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_step=1e-3";
     std::string file_name=ss.str();
-    readFromFile(file_name,kagome_peps);
+    //readFromFile(file_name,kagome_peps);
 
     Tnetwork_Storage<IQTensor> kagome_rvb_storage=peps_to_tnetwork_storage(kagome_peps);
     ss.str("");
-    ss << "/home/jiangsb/tn_ying/tensor_network/result/tnetwork_storage/kagome_simple_update/kagome_rvb_normal_D=" << D << "_Lx=" << Lx << "_Ly=" << Ly << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_step=1e-3";
+    //ss << "/home/jiangsb/tn_ying/tensor_network/result/tnetwork_storage/kagome_simple_update/kagome_rvb_normal_D=" << D << "_Lx=" << Lx << "_Ly=" << Ly << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6 << "_step=1e-3";
+    ss << "/home/jiangsb/tn_ying/tensor_network/result/tnetwork_storage/kagome_srvb_Lx=" << Lx << "_Ly=" << Ly << "_mu12=" << kagome_psg::mu_12 << "_muc6=" << kagome_psg::mu_c6; 
     file_name=ss.str();
     writeToFile(file_name,kagome_rvb_storage);
     // */
