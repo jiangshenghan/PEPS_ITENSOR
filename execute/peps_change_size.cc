@@ -19,8 +19,8 @@ int main()
 
 
     //change to another size of torus
-    Lx=16;
-    Ly=16;
+    Lx=8;
+    Ly=8;
     Kagome_Normal_Lattice_Torus new_kagome_lattice({Lx,Ly});
     IQPEPS_IndexSet_SpinHalf new_index_set(D,new_kagome_lattice);
 

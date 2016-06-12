@@ -122,6 +122,7 @@ void vmc_one_step_parallel(TensorT_VMC_WF<TensorT> &tensor_vmc_wf, RandGen &gene
     //Print(flip_prob);
     if (flip_prob<((distribution(generator_parallel)+1)/2.)) return;
     tensor_vmc_wf=tensor_vmc_wf_update;
+    //cout << "Spin flipped!" << endl;
 }
 
 

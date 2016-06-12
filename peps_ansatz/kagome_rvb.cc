@@ -69,6 +69,25 @@ IQPEPS kagome_normal_srvb_peps(int Lx, int Ly)
     return kagome_srvb;
 }
 
+void kagome_normal_srvb_peps(IQPEPS &kagome_srvb)
+{
+    //input kagome_srvb ansatz
+    Singlet_Tensor_Basis site_tensor_basis(kagome_srvb.site_tensors(0).indices()),
+                         bond_tensor_basis(kagome_srvb.bond_tensors(0).indices());
+    //Print(site_tensor_basis);
+    std::vector<Complex> site_tensor_params(site_tensor_basis.dim()),
+                         bond_tensor_params={1,Cplx_i*sqrt(2)};
+    site_tensor_params[0]=sqrt(2)*std::pow(Complex(mu_sigma),-0.5);
+    site_tensor_params[1]=sqrt(2)*std::pow(Complex(mu_12*mu_c6),-0.5)*std::pow(Complex(mu_sigma),-0.5)*mu_12*mu_c6;
+    site_tensor_params[2]=sqrt(2)*std::pow(Complex(mu_12*mu_c6),-0.5);
+    site_tensor_params[5]=sqrt(2);
+    IQTensor site_tensor=singlet_tensor_from_basis_params(site_tensor_basis,site_tensor_params),
+             bond_tensor=singlet_tensor_from_basis_params(bond_tensor_basis,bond_tensor_params);
+
+    kagome_srvb.generate_site_tensors({site_tensor,site_tensor,site_tensor});
+    kagome_srvb.generate_bond_tensors({bond_tensor,tensor_after_eta_action(mu_c6,tensor_permutation({0,1},bond_tensor),bond_tensor.indices()[0]),bond_tensor,tensor_permutation({0,1},bond_tensor),bond_tensor,bond_tensor},mu_12);
+}
+
 
 void random_init_kagome_rvb_cirac_peps(IQPEPS &kagome_rvb, std::array<double,2> bond_param_norms)
 {
