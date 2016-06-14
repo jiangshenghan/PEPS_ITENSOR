@@ -195,7 +195,7 @@ class DL_iMPSt
 
 //
 //class for impo from double layer peps
-//an impo site tensor is formed by contraction of top and bottom tensor, which share the same phys_legs
+//an impo site tensor is formed by contraction of ket and bra tensor, which share the same phys_legs
 //
 //          /
 // i   --ttens--
@@ -204,9 +204,12 @@ class DL_iMPSt
 // S   --btens--
 //         /
 //
-//there are four site legs per tensor. Top tensor and bottom tensor share a phys leg (type==Site)
-//we will save all site legs as well as four boundary legs 
-//
+//we will save the incoming and outgoing legs, where other legs can be obtained by commonIndex method
+//We implement different types of impos, shown in Fig.5 arXiv:0711.3960
+//type_one: one-one-one
+//type_two: two-one-two
+//type_three: two-one-one
+//type_four: one-one-two
 template <class TensorT>
 class DLPEPS_iMPOt
 {
@@ -220,33 +223,101 @@ class DLPEPS_iMPOt
         //
         DLPEPS_iMPOt() {}
         //we will reconstruct the indices for all tensors
-        DLPEPS_iMPOt(const std::vector<TensorT> &btensors, const IndexT &blind, const IndexT &brind, const std::vector<IndexT> &inb_siteinds, const std::vector<IndexT> &outb_siteinds):
-            n_sites_uc_(site_tensors.size())
+        DLPEPS_iMPOt(std::string type_name, const std::vector<IndexT> &init_ket_tensors, const std::vector<IndexT> &init_incoming_inds, const std::vector<IndexT> &init_outgoing_inds, const std::vector<IndexT> init_boundary_inds=std::vector<IndexT>())
+            type_name_(type_name),
+            n_tensors_uc_(init_ket_tensors.size())
         {
-            bottom_lind_=isomorphic_legs(blind,"bottom_left_ind");
-            bottom_rind_=isomorphic_legs(brind,"bottom_right_ind");
-            top_lind_=isomorphic_legs(dag(blind),"top_left_ind");
-            top_rind_=isomorphic_legs(dag(brind),"top_right_ind");
-
-            for (int sitei=0; sitei<n_sites_uc_; sitei++)
+            //get the incoming and outgoing inds
+            for (int tensori=0; tensori<n_tensors_uc_; tensori++)
             {
-                inbottom_siteinds_.push_back(isomorphic_legs(inb_siteinds[sitei]),nameint("in_bottom_siteind_",sitei));
-                outbottom_siteinds_.push_back(isomorphic_legs(outb_siteinds[sitei],nameint("out_bottom_siteind_",sitei)));
-                intop_siteinds_.push_back(isomorphic_legs(dag(inb_siteinds[sitei])),nameint("in_top_siteind_",sitei));
-                outtop_siteinds_.push_back(isomorphic_legs(dag(outb_siteinds[sitei]),nameint("out_top_siteind_",sitei)));
+                ket_incoming_inds_.push_back(isomorphic_legs(init_incoming_inds[tensori],nameint("ket_incoming_ind_",tensori)));
+                ket_outgoing_inds_.push_back(isomorphic_legs(init_outgoing_inds[tensori],nameint("ket_outgoing_ind_",tensori)));
+                bra_incoming_inds_.push_back(isomorphic_legs(dag(init_incoming_inds[tensori]),nameint("bra_incoming_ind_",tensori)));
+                bra_outgoing_inds_.push_back(isomorphic_legs(dag(init_outgoing_inds[tensori]),nameint("bra_outgoing_ind_",tensori)));
             }
 
-            //TODO
-            for ()
+            //reconstruct tensors for different types separately
+            if (type_name_.find("type_one")!=std::string::npos)
+            {
+                //obtain virt indices
+                std::vector<IndexT> init_virt_inds(n_tensors_uc_+1);
+
+                init_virt_inds[0]=dag(init_boundary_inds[0]);
+                init_virt_inds[n_tensors_uc_]=dag(init_boundary_inds[1]);
+                for (int tensori=1; tensori<n_tensors_uc_; tensori++)
+                {
+                    init_virt_inds[tensori]=commonIndex(init_ket_tensors[tensori],init_ket_tensors[tensori-1]);
+                }
+                for (int indi=0; indi<=n_tensors_uc_; indi++)
+                {
+                    ket_virt_inds_.push_back(isomorphic_legs(init_virt_inds[indi],nameinit("ket_virt_ind_",indi)));
+                    bra_virt_inds_.push_back(isomorphic_legs(dag(init_virt_inds[indi]),nameint("bra_virt_ind_",indi)));
+                }
+
+                //construct ket and bra tensor
+                for (int tensori=0; tensori<n_tensors_uc_; tensori++)
+                {
+                    TensorT temp_ket_tensor=init_ket_tensors[tensori], 
+                            temp_bra_tensor=dag(temp_ket_tensor);
+
+                    temp_ket_tensor.replaceIndex(init_incoming_inds[tensori],ket_incoming_inds_[tensori]);
+                    temp_ket_tensor.replaceIndex(init_outgoing_inds[tensori],ket_outgoing_inds_[tensori]);
+                    temp_ket_tensor.replaceIndex(init_virt_inds[tensori],ket_virt_inds_[tensori]);
+                    temp_ket_tensor.replaceIndex(dag(init_virt_inds[tensori+1]),dag(ket_virt_inds_[tensori+1])));
+                    ket_tensors_.push_back(temp_ket_tensor);
+
+                    temp_bra_tensor.replaceIndex(dag(init_incoming_inds[tensori],bra_incoming_inds_[tensori]));
+                    temp_bra_tensor.replaceIndex(dag(init_outgoing_inds[tensori],bra_outgoing_inds_[tensori]));
+                    temp_bra_tensor.replaceIndex(dag(init_virt_inds[tensori]),bra_virt_inds_[tensori]);
+                    temp_bra_tensor.replaceIndex(init_virt_inds[tensori+1],bra_virt_inds_[tensori+1]);
+                    bra_tensors_.push_back(temp_bra_tensor);
+                }
+            }
+
+            if (type_name_.find("type_two")!=std::string::npos)
+            {
+                for (int tensori=0; tensori<n_tensors_uc_; tensori++)
+                {
+                    TensorT temp_ket_tensor=init_ket_tensors[tensori],
+                            temp_bra_tensor=dag(temp_ket_tensor);
+
+                    temp_ket_tensor.replaceIndex(init_incoming_inds[2*tensori],ket_incoming_inds_[2*tensori]);
+                    temp_ket_tensor.replaceIndex(init_incoming_inds[2*tensori+1],ket_incoming_inds_[2*tensori+1]);
+                    temp_ket_tensor.replaceIndex(init_outgoing_inds[2*tensori],ket_outgoing_inds_[2*tensori]);
+                    temp_ket_tensor.replaceIndex(init_outgoing_inds[2*tensori+1],ket_outgoing_inds_[2*tensori+1]);
+                    ket_tensors_.push_back(temp_ket_tensor);
+
+                    temp_bra_tensor.replaceIndex(dag(init_incoming_inds[2*tensori]),bra_incoming_inds_[2*tensori]);
+                    temp_bra_tensor.replaceIndex(dag(init_incoming_inds[2*tensori+1]),bra_incoming_inds_[2*tensori+1]);
+                    temp_bra_tensor.replaceIndex(dag(init_outgoing_inds[2*tensori]),bra_outgoing_inds_[2*tensori]);
+                    temp_bra_tensor.replaceIndex(dag(init_outgoing_inds[2*tensori+1]),bra_outgoing_inds_[2*tensori+1]);
+                    bra_tensors_.push_back(temp_bra_tensor);
+                }
+            }
+
+            //TODO: implement other two types
         }
 
+
     private:
-        int n_sites_uc_;
-        //four boundary legs
-        IndexT top_lind_, bottom_lind_, top_rind_, bottom_rind_;
-        //four type of site legs
-        std::vector<IndexT> intop_siteinds_, inbottom_siteinds_, outtop_siteinds_, outbottom_siteinds_;
-        std::vector<TensorT> top_tensors_, bottom_tensors_;
+        //type_name_ follows fig.5 in arXiv:0711.3960
+        std::string type_name_;
+        //number of impo tensors in one unit cell
+        int n_tensors_uc_;
+        //four type of site legs (site legs are not physical legs)
+        std::vector<IndexT> bra_incoming_inds_, ket_incoming_inds_, bra_outgoing_inds_, ket_outgoing_inds_;
+        //virt legs for impo, we use the convention
+        //
+        //                   |
+        //                outgoing
+        //                   |
+        // --virt_inds[i]--tensor[i]--dag(virt_inds[i+1])--
+        //                   |
+        //                 incoming
+        //                   |
+        //
+        std::vector<IndexT> bra_virt_inds_, ket_virt_inds_;
+        std::vector<TensorT> bra_tensors_, ket_tensors_;
 }
 
 #endif
