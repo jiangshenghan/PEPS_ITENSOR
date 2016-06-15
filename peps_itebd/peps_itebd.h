@@ -7,7 +7,6 @@
 
 //
 //this class is to obtain effective environment of PEPS from itebd method
-//TODO: Now, we only implement two-sites env. Consider env for more sites
 //
 template <class TensorT>
 class PEPSt_iTEBD
@@ -28,15 +27,14 @@ class PEPSt_iTEBD
         //peps_storage_ are imposed in periodic BC. We use one u.c. (or two u.c. for pi-flux case) to generate iPEPS
         const Tnetwork_Storage<TensorT> &peps_storage_;
         //stores contraction results of left/right cols
-        std::vector<DL_iMPS<TensorT>> peps_imps_;
+        DL_iMPS<TensorT> left_dl_imps_, right_dl_imps;
         std::vector<TensorT> env_tensors_;
         //itebd_options:
         //getInt: Maxm 
-        //getRead: Cutoff
-        //getString: ContractMethod(single_layer)
+        //getReal: Cutoff
+        //getString: ContractMethod(single_layer), ContractGeometry(normal)
         Args itebd_opts_; 
-}
+};
 
-void update_peps_imps(int stepno)
 
 #endif

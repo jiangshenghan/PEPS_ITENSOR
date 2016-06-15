@@ -473,6 +473,48 @@ D	peps/peps.h	/^        int D() const$/;"	f	class:PEPSt	access:public	signature:
 D	peps/peps_indexset.h	/^        inline const int &D() const$/;"	f	class:PEPSt_IndexSet_Base	access:public	signature:() const
 DEC	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	409;"	d	file:
 DEC	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	404;"	d	file:
+DL_iMPOt	peps_utilities/imps.h	/^        DL_iMPOt() {}$/;"	f	class:DL_iMPOt	access:public	signature:()
+DL_iMPOt	peps_utilities/imps.h	/^        DL_iMPOt(std::string type_name, const std::vector<IndexT> &init_ket_tensors, const std::vector<IndexT> &init_incoming_inds, const std::vector<IndexT> &init_outgoing_inds, const std::vector<IndexT> init_boundary_inds=std::vector<IndexT>()):$/;"	f	class:DL_iMPOt	access:public	signature:(std::string type_name, const std::vector<IndexT> &init_ket_tensors, const std::vector<IndexT> &init_incoming_inds, const std::vector<IndexT> &init_outgoing_inds, const std::vector<IndexT> init_boundary_inds=std::vector<IndexT>())
+DL_iMPOt	peps_utilities/imps.h	/^class DL_iMPOt$/;"	c
+DL_iMPOt::DL_iMPOt	peps_utilities/imps.h	/^        DL_iMPOt() {}$/;"	f	class:DL_iMPOt	access:public	signature:()
+DL_iMPOt::DL_iMPOt	peps_utilities/imps.h	/^        DL_iMPOt(std::string type_name, const std::vector<IndexT> &init_ket_tensors, const std::vector<IndexT> &init_incoming_inds, const std::vector<IndexT> &init_outgoing_inds, const std::vector<IndexT> init_boundary_inds=std::vector<IndexT>()):$/;"	f	class:DL_iMPOt	access:public	signature:(std::string type_name, const std::vector<IndexT> &init_ket_tensors, const std::vector<IndexT> &init_incoming_inds, const std::vector<IndexT> &init_outgoing_inds, const std::vector<IndexT> init_boundary_inds=std::vector<IndexT>())
+DL_iMPOt::bra_incoming_inds	peps_utilities/imps.h	/^        const IndexT &bra_incoming_inds(int indi) const { return bra_incoming_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+DL_iMPOt::bra_incoming_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_incoming_inds_, ket_incoming_inds_, bra_outgoing_inds_, ket_outgoing_inds_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPOt::bra_outgoing_inds	peps_utilities/imps.h	/^        const IndexT &bra_outgoing_inds(int indi) const { return bra_outgoing_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+DL_iMPOt::bra_outgoing_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_incoming_inds_, ket_incoming_inds_, bra_outgoing_inds_, ket_outgoing_inds_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPOt::bra_tensors	peps_utilities/imps.h	/^        const TensorT &bra_tensors(int tensori) const { return bra_tensors_[tensori]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int tensori) const
+DL_iMPOt::bra_tensors_	peps_utilities/imps.h	/^        std::vector<TensorT> bra_tensors_, ket_tensors_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPOt::bra_virt_inds	peps_utilities/imps.h	/^        const IndexT &bra_virt_inds(int indi) const { return bra_virt_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+DL_iMPOt::bra_virt_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_virt_inds_, ket_virt_inds_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPOt::ket_incoming_inds	peps_utilities/imps.h	/^        const IndexT &ket_incoming_inds(int indi) const { return ket_incoming_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+DL_iMPOt::ket_incoming_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_incoming_inds_, ket_incoming_inds_, bra_outgoing_inds_, ket_outgoing_inds_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPOt::ket_outgoing_inds	peps_utilities/imps.h	/^        const IndexT &ket_outgoing_inds(int indi) const { return ket_outgoing_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+DL_iMPOt::ket_outgoing_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_incoming_inds_, ket_incoming_inds_, bra_outgoing_inds_, ket_outgoing_inds_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPOt::ket_tensors	peps_utilities/imps.h	/^        const TensorT &ket_tensors(int tensori) const { return ket_tensors_[tensori]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int tensori) const
+DL_iMPOt::ket_tensors_	peps_utilities/imps.h	/^        std::vector<TensorT> bra_tensors_, ket_tensors_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPOt::ket_virt_inds	peps_utilities/imps.h	/^        const IndexT &ket_virt_inds(int indi) const { return ket_virt_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+DL_iMPOt::ket_virt_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_virt_inds_, ket_virt_inds_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPOt::n_tensors_uc	peps_utilities/imps.h	/^        int n_tensors_uc() const { return n_tensors_uc_; }$/;"	f	class:DL_iMPOt	access:public	signature:() const
+DL_iMPOt::n_tensors_uc_	peps_utilities/imps.h	/^        int n_tensors_uc_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPOt::type_name	peps_utilities/imps.h	/^        std::string type_name() const { return type_name_; }$/;"	f	class:DL_iMPOt	access:public	signature:() const
+DL_iMPOt::type_name_	peps_utilities/imps.h	/^        std::string type_name_;$/;"	m	class:DL_iMPOt	access:private
+DL_iMPSt	peps_utilities/imps.h	/^        DL_iMPSt() {}$/;"	f	class:DL_iMPSt	access:public	signature:()
+DL_iMPSt	peps_utilities/imps.h	/^        DL_iMPSt(std::vector<TensorT> site_tensors, const IndexT &lind, const IndexT &rind, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds): ket_siteinds_(ket_siteinds), bra_siteinds_(bra_siteinds)$/;"	f	class:DL_iMPSt	access:public	signature:(std::vector<TensorT> site_tensors, const IndexT &lind, const IndexT &rind, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds)
+DL_iMPSt	peps_utilities/imps.h	/^class DL_iMPSt $/;"	c
+DL_iMPSt::DL_iMPSt	peps_utilities/imps.h	/^        DL_iMPSt() {}$/;"	f	class:DL_iMPSt	access:public	signature:()
+DL_iMPSt::DL_iMPSt	peps_utilities/imps.h	/^        DL_iMPSt(std::vector<TensorT> site_tensors, const IndexT &lind, const IndexT &rind, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds): ket_siteinds_(ket_siteinds), bra_siteinds_(bra_siteinds)$/;"	f	class:DL_iMPSt	access:public	signature:(std::vector<TensorT> site_tensors, const IndexT &lind, const IndexT &rind, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds)
+DL_iMPSt::bra_siteinds	peps_utilities/imps.h	/^        const IndexT &bra_siteinds(int indi) const { return bra_siteinds_[indi]; }$/;"	f	class:DL_iMPSt	access:public	signature:(int indi) const
+DL_iMPSt::bra_siteinds_	peps_utilities/imps.h	/^        std::vector<IndexT> ket_siteinds_, bra_siteinds_;$/;"	m	class:DL_iMPSt	access:private
+DL_iMPSt::imps_	peps_utilities/imps.h	/^        iMPSt<TensorT> imps_;$/;"	m	class:DL_iMPSt	access:private
+DL_iMPSt::ket_siteinds	peps_utilities/imps.h	/^        const IndexT &ket_siteinds(int indi) const { return ket_siteinds_[indi]; }$/;"	f	class:DL_iMPSt	access:public	signature:(int indi) const
+DL_iMPSt::ket_siteinds_	peps_utilities/imps.h	/^        std::vector<IndexT> ket_siteinds_, bra_siteinds_;$/;"	m	class:DL_iMPSt	access:private
+DL_iMPSt::n_sites_uc	peps_utilities/imps.h	/^        int n_sites_uc() const { return imps_.n_sites_uc(); }$/;"	f	class:DL_iMPSt	access:public	signature:() const
+DL_iMPSt::site_inds	peps_utilities/imps.h	/^        const IndexT &site_inds(int tensori) const { return imps_.site_inds(tensori); }$/;"	f	class:DL_iMPSt	access:public	signature:(int tensori) const
+DL_iMPSt::site_tensors	peps_utilities/imps.h	/^        const TensorT &site_tensors(int tensori) const { return imps_.site_tensors(tensori); }$/;"	f	class:DL_iMPSt	access:public	signature:(int tensori) const
+DL_iMPSt::siteind_combiners	peps_utilities/imps.h	/^        const CombinerT &siteind_combiners(int combineri) const { return siteind_combiners_[combineri]; }$/;"	f	class:DL_iMPSt	access:public	signature:(int combineri) const
+DL_iMPSt::siteind_combiners_	peps_utilities/imps.h	/^        std::vector<CombinerT> siteind_combiners_;$/;"	m	class:DL_iMPSt	access:private
+DL_iMPSt::truncate_tensors	peps_utilities/imps.h	/^        void truncate_tensors(const TensorT &VL, const TensorT &VR, const Args &args) $/;"	f	class:DL_iMPSt	access:public	signature:(const TensorT &VL, const TensorT &VR, const Args &args)
+DL_iMPSt::virt_inds	peps_utilities/imps.h	/^        const IndexT &virt_inds(int indi) const { return imps_.virt_inds(indi); }$/;"	f	class:DL_iMPSt	access:public	signature:(int indi) const
 D_	peps/peps.h	/^        int d_, D_;$/;"	m	class:PEPSt	access:private
 D_	peps/peps_indexset.h	/^        int d_, D_;$/;"	m	class:PEPSt_IndexSet_Base	access:protected
 Double_Layer_PEPSt	peps/double_layer_peps.cc	/^Double_Layer_PEPSt<IQTensor>::Double_Layer_PEPSt(const Lattice_Base &lattice);$/;"	p	class:Double_Layer_PEPSt	file:	signature:(const Lattice_Base &lattice)
@@ -1106,6 +1148,15 @@ PEPSt_Subtensor_RDM::update_RDM	full_update/peps_subtensor_rdm.cc	/^void PEPSt_S
 PEPSt_Subtensor_RDM::update_RDM	full_update/peps_subtensor_rdm.h	/^        void update_RDM(const std::vector<TensorT> &cutting_site_tensors, const std::vector<TensorT> &cutting_bond_tensors, const std::vector<TensorT> &env_tensors, const std::vector<int> &contract_seq=std::vector<int>());$/;"	p	class:PEPSt_Subtensor_RDM	access:public	signature:(const std::vector<TensorT> &cutting_site_tensors, const std::vector<TensorT> &cutting_bond_tensors, const std::vector<TensorT> &env_tensors, const std::vector<int> &contract_seq=std::vector<int>())
 PEPSt_Subtensor_RDM::wf_norm_sq	full_update/peps_subtensor_rdm.h	/^        Complex wf_norm_sq() const { return wf_norm_sq_; }$/;"	f	class:PEPSt_Subtensor_RDM	access:public	signature:() const
 PEPSt_Subtensor_RDM::wf_norm_sq_	full_update/peps_subtensor_rdm.h	/^        Complex wf_norm_sq_;$/;"	m	class:PEPSt_Subtensor_RDM	access:private
+PEPSt_iTEBD	peps_itebd/peps_itebd.h	/^        PEPSt_iTEBD(const std::vector<int> &cut_sites_, const Tnetwork_Storage<TensorT> &peps_storage, const Args &args);$/;"	p	class:PEPSt_iTEBD	access:public	signature:(const std::vector<int> &cut_sites_, const Tnetwork_Storage<TensorT> &peps_storage, const Args &args)
+PEPSt_iTEBD	peps_itebd/peps_itebd.h	/^class PEPSt_iTEBD$/;"	c
+PEPSt_iTEBD::PEPSt_iTEBD	peps_itebd/peps_itebd.h	/^        PEPSt_iTEBD(const std::vector<int> &cut_sites_, const Tnetwork_Storage<TensorT> &peps_storage, const Args &args);$/;"	p	class:PEPSt_iTEBD	access:public	signature:(const std::vector<int> &cut_sites_, const Tnetwork_Storage<TensorT> &peps_storage, const Args &args)
+PEPSt_iTEBD::cut_sites_	peps_itebd/peps_itebd.h	/^        std::vector<int> cut_sites_;$/;"	m	class:PEPSt_iTEBD	access:private
+PEPSt_iTEBD::env_tensors_	peps_itebd/peps_itebd.h	/^        std::vector<TensorT> env_tensors_;$/;"	m	class:PEPSt_iTEBD	access:private
+PEPSt_iTEBD::itebd_opts_	peps_itebd/peps_itebd.h	/^        Args itebd_opts_; $/;"	m	class:PEPSt_iTEBD	access:private
+PEPSt_iTEBD::left_dl_imps_	peps_itebd/peps_itebd.h	/^        DL_iMPS<TensorT> left_dl_imps_, right_dl_imps;$/;"	m	class:PEPSt_iTEBD	access:private
+PEPSt_iTEBD::peps_storage_	peps_itebd/peps_itebd.h	/^        const Tnetwork_Storage<TensorT> &peps_storage_;$/;"	m	class:PEPSt_iTEBD	access:private
+PEPSt_iTEBD::right_dl_imps	peps_itebd/peps_itebd.h	/^        DL_iMPS<TensorT> left_dl_imps_, right_dl_imps;$/;"	m	class:PEPSt_iTEBD	access:private
 PLATFORM_ID	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	269;"	d	file:
 PLATFORM_ID	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	272;"	d	file:
 PLATFORM_ID	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	275;"	d	file:
@@ -1808,6 +1859,16 @@ boundary_tensors	peps/peps.h	/^        const TensorT &boundary_tensors(int i) co
 boundary_tensors	peps/peps.h	/^        const std::vector<TensorT> &boundary_tensors() const$/;"	f	class:PEPSt	access:public	signature:() const
 boundary_tensors	peps/peps.h	/^        std::vector<TensorT> &boundary_tensors()$/;"	f	class:PEPSt	access:public	signature:()
 boundary_tensors_	peps/peps.h	/^        std::vector<TensorT> boundary_tensors_;$/;"	m	class:PEPSt	access:private
+bra_incoming_inds	peps_utilities/imps.h	/^        const IndexT &bra_incoming_inds(int indi) const { return bra_incoming_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+bra_incoming_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_incoming_inds_, ket_incoming_inds_, bra_outgoing_inds_, ket_outgoing_inds_;$/;"	m	class:DL_iMPOt	access:private
+bra_outgoing_inds	peps_utilities/imps.h	/^        const IndexT &bra_outgoing_inds(int indi) const { return bra_outgoing_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+bra_outgoing_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_incoming_inds_, ket_incoming_inds_, bra_outgoing_inds_, ket_outgoing_inds_;$/;"	m	class:DL_iMPOt	access:private
+bra_siteinds	peps_utilities/imps.h	/^        const IndexT &bra_siteinds(int indi) const { return bra_siteinds_[indi]; }$/;"	f	class:DL_iMPSt	access:public	signature:(int indi) const
+bra_siteinds_	peps_utilities/imps.h	/^        std::vector<IndexT> ket_siteinds_, bra_siteinds_;$/;"	m	class:DL_iMPSt	access:private
+bra_tensors	peps_utilities/imps.h	/^        const TensorT &bra_tensors(int tensori) const { return bra_tensors_[tensori]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int tensori) const
+bra_tensors_	peps_utilities/imps.h	/^        std::vector<TensorT> bra_tensors_, ket_tensors_;$/;"	m	class:DL_iMPOt	access:private
+bra_virt_inds	peps_utilities/imps.h	/^        const IndexT &bra_virt_inds(int indi) const { return bra_virt_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+bra_virt_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_virt_inds_, ket_virt_inds_;$/;"	m	class:DL_iMPOt	access:private
 bulk_tensors	corner_transfer_matrix/corner_transfer_matrix.h	/^        TensorT &bulk_tensors(const std::array<int,2> &coord)$/;"	f	class:Corner_Transfer_Matrix	access:public	signature:(const std::array<int,2> &coord)
 bulk_tensors	corner_transfer_matrix/corner_transfer_matrix.h	/^        TensorT &bulk_tensors(int x, int y) $/;"	f	class:Corner_Transfer_Matrix	access:public	signature:(int x, int y)
 bulk_tensors_	corner_transfer_matrix/corner_transfer_matrix.h	/^        std::vector<TensorT> bulk_tensors_;$/;"	m	class:Corner_Transfer_Matrix	access:private
@@ -1851,6 +1912,7 @@ comm_leg_	full_update/single_layer_env.h	/^        IQIndex comm_leg_;$/;"	m	clas
 construct_tensor	peps/peps.cc	/^void PEPSt<IQTensor>::construct_tensor(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)$/;"	f	class:PEPSt	signature:(IQTensor &tensor, std::vector<IQTensor::IndexT> &indexset)
 construct_tensor	peps/peps.cc	/^void PEPSt<ITensor>::construct_tensor(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)$/;"	f	class:PEPSt	signature:(ITensor &tensor, std::vector<ITensor::IndexT> &indexset)
 construct_tensor	peps/peps.h	/^        void construct_tensor(TensorT &tensor, std::vector<IndexT> &indexset);$/;"	p	class:PEPSt	access:public	signature:(TensorT &tensor, std::vector<IndexT> &indexset)
+contract_dl_impo_imps	peps_utilities/imps.h	/^void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts)$/;"	f	signature:(DL_iMPSt<TensorT> &dl_imps, DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts)
 contract_seq_	full_update/peps_subtensor_rdm.h	/^        std::vector<int> contract_seq_;$/;"	m	class:PEPSt_Subtensor_RDM	access:private
 contract_seq_	peps_utilities/tensor_matrix.h	/^        std::vector<int> contract_seq_, combiner_seq_;$/;"	m	class:TensorT_Matrix_Arnoldi	access:private
 contract_tensors_	peps_utilities/tensor_matrix.h	/^        std::vector<TensorT> contract_tensors_;$/;"	m	class:TensorT_Matrix_Arnoldi	access:private
@@ -1869,6 +1931,7 @@ ctm_sandwich_operator_value	corner_transfer_matrix/corner_transfer_matrix.cc	/^C
 ctm_sandwich_operator_value	corner_transfer_matrix/corner_transfer_matrix.h	/^        Complex ctm_sandwich_operator_value(int network_no, const std::vector<int> &bulk_position, TPOt<TensorT> tensor_operator);$/;"	p	class:Corner_Transfer_Matrix	access:public	signature:(int network_no, const std::vector<int> &bulk_position, TPOt<TensorT> tensor_operator)
 cut_off_	full_update/cluster_env.h	/^        double cut_off_;$/;"	m	class:Cluster_Env	access:private
 cut_off_	full_update/single_layer_env.h	/^        double cut_off_;$/;"	m	class:SL_Env_Tensors	access:private
+cut_sites_	peps_itebd/peps_itebd.h	/^        std::vector<int> cut_sites_;$/;"	m	class:PEPSt_iTEBD	access:private
 cutoff_	corner_transfer_matrix/corner_transfer_matrix.h	/^        double cutoff_, spec_diff_, converge_diff_;$/;"	m	class:Corner_Transfer_Matrix	access:private
 cutting_bond_tensor	simple_update/simple_update_patch_general.h	/^        const TensorT &cutting_bond_tensor() const$/;"	f	class:General_Patch_RDM	access:public	signature:() const
 cutting_bond_tensor	simple_update/simple_update_patch_square.h	/^        IQTensor cutting_bond_tensor() const$/;"	f	class:Square_Patch_RDM	access:public	signature:() const
@@ -1928,7 +1991,6 @@ decombine_sigma_lr	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_P
 decombine_sigma_lr	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<TensorT>::decombine_sigma_lr(int lr_no)$/;"	f	class:Square_Double_Layer_PEPSt	signature:(int lr_no)
 decombine_sigma_lr	peps/square_double_layer_peps.h	/^        void decombine_sigma_lr();$/;"	p	class:Square_Double_Layer_PEPSt	access:public	signature:()
 decombine_sigma_lr	peps/square_double_layer_peps.h	/^        void decombine_sigma_lr(int lr_no);$/;"	p	class:Square_Double_Layer_PEPSt	access:public	signature:(int lr_no)
-decompose_imps_uc_tensor	peps_utilities/imps.h	/^void decompose_imps_uc_tensor(iMPSt<TensorT> &imps, const TensorT &D);$/;"	p	signature:(iMPSt<TensorT> &imps, const TensorT &D)
 density_mat_spectrum	peps/square_double_layer_peps.h	/^        const std::vector<double> &density_mat_spectrum() const { return density_mat_spectrum_; }$/;"	f	class:Square_Double_Layer_PEPSt	access:public	signature:() const
 density_mat_spectrum_	peps/square_double_layer_peps.h	/^        std::vector<double> density_mat_spectrum_;$/;"	m	class:Square_Double_Layer_PEPSt	access:private
 diff_tensor_and_singlet_projection	peps_utilities/singlet_tensor_basis.cc	/^double diff_tensor_and_singlet_projection(const IQTensor &tensor)$/;"	f	signature:(const IQTensor &tensor)
@@ -1997,6 +2059,7 @@ env_tens_	simple_update/simple_update_patch_square.h	/^        IQTensor env_tens
 env_tensors_	full_update/peps_rdm.h	/^        std::vector<TensorT> env_tensors_;$/;"	m	class:PEPSt_RDM	access:private
 env_tensors_	full_update/peps_subtensor_rdm.h	/^        std::vector<TensorT> env_tensors_;$/;"	m	class:PEPSt_Subtensor_RDM	access:private
 env_tensors_	full_update/single_layer_env.h	/^        std::vector<IQTensor> site_tensors_, env_tensors_;$/;"	m	class:SL_Env_Tensors	access:private
+env_tensors_	peps_itebd/peps_itebd.h	/^        std::vector<TensorT> env_tensors_;$/;"	m	class:PEPSt_iTEBD	access:private
 eta_from_mu	peps_utilities/utilities.cc	/^IQTensor eta_from_mu(double mu, IQIndex eta_leg)$/;"	f	signature:(double mu, IQIndex eta_leg)
 eta_from_mu	peps_utilities/utilities.cc	/^IQTensor eta_from_mu(double mu, const std::vector<int> &flavor_deg)$/;"	f	signature:(double mu, const std::vector<int> &flavor_deg)
 eta_from_mu	peps_utilities/utilities.cc	/^ITensor eta_from_mu(double mu, Index eta_leg)$/;"	f	signature:(double mu, Index eta_leg)
@@ -2092,20 +2155,23 @@ heisenberg_energy_from_site_env_tensors	simple_update/simple_update.cc	/^double 
 heisenberg_energy_from_site_env_tensors	simple_update/simple_update.cc	/^double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)$/;"	f	signature:(const std::array<IQTensor,2> &site_env_tens, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)
 heisenberg_energy_from_site_env_tensors	simple_update/simple_update.h	/^double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate);$/;"	p	signature:(const std::array<IQTensor,2> &site_env_tens, const IQTensor &comm_bond_tensor, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)
 heisenberg_energy_from_site_env_tensors	simple_update/simple_update.h	/^double heisenberg_energy_from_site_env_tensors(const std::array<IQTensor,2> &site_env_tens, const NN_Heisenberg_Hamiltonian &hamiltonian_gate);$/;"	p	signature:(const std::array<IQTensor,2> &site_env_tens, const NN_Heisenberg_Hamiltonian &hamiltonian_gate)
+iMPSt	peps_utilities/imps.h	/^        iMPSt() {}$/;"	f	class:iMPSt	access:public	signature:()
 iMPSt	peps_utilities/imps.h	/^        iMPSt(const std::vector<TensorT> &site_tensors, const IndexT &lind, const IndexT &rind):$/;"	f	class:iMPSt	access:public	signature:(const std::vector<TensorT> &site_tensors, const IndexT &lind, const IndexT &rind)
 iMPSt	peps_utilities/imps.h	/^class iMPSt$/;"	c
+iMPSt::iMPSt	peps_utilities/imps.h	/^        iMPSt() {}$/;"	f	class:iMPSt	access:public	signature:()
 iMPSt::iMPSt	peps_utilities/imps.h	/^        iMPSt(const std::vector<TensorT> &site_tensors, const IndexT &lind, const IndexT &rind):$/;"	f	class:iMPSt	access:public	signature:(const std::vector<TensorT> &site_tensors, const IndexT &lind, const IndexT &rind)
-iMPSt::lind	peps_utilities/imps.h	/^        const IndexT &lind() const { return lind_; }$/;"	f	class:iMPSt	access:public	signature:() const
-iMPSt::lind_	peps_utilities/imps.h	/^        IndexT lind_, rind_;$/;"	m	class:iMPSt	access:private
-iMPSt::n_sites_uc_	peps_utilities/imps.h	/^        int n_sites_uc_;$/;"	m	class:iMPSt	access:private
-iMPSt::rind	peps_utilities/imps.h	/^        const IndexT &rind() const { return rind_; }$/;"	f	class:iMPSt	access:public	signature:() const
-iMPSt::rind_	peps_utilities/imps.h	/^        IndexT lind_, rind_;$/;"	m	class:iMPSt	access:private
-iMPSt::site_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> site_inds_;$/;"	m	class:iMPSt	access:private
+iMPSt::n_sites_uc	peps_utilities/imps.h	/^        int n_sites_uc() const { return n_sites_uc_; }$/;"	f	class:iMPSt	access:public	signature:() const
+iMPSt::n_sites_uc_	peps_utilities/imps.h	/^        int n_sites_uc_;$/;"	m	class:iMPSt	access:protected
+iMPSt::site_inds	peps_utilities/imps.h	/^        const IndexT &site_inds(int sitei) const { return site_inds_[sitei]; }$/;"	f	class:iMPSt	access:public	signature:(int sitei) const
+iMPSt::site_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> site_inds_;$/;"	m	class:iMPSt	access:protected
 iMPSt::site_tensors	peps_utilities/imps.h	/^        const TensorT &site_tensors(int sitei) const { return site_tensors_[sitei]; }$/;"	f	class:iMPSt	access:public	signature:(int sitei) const
-iMPSt::site_tensors_	peps_utilities/imps.h	/^        std::vector<TensorT> site_tensors_;$/;"	m	class:iMPSt	access:private
+iMPSt::site_tensors_	peps_utilities/imps.h	/^        std::vector<TensorT> site_tensors_;$/;"	m	class:iMPSt	access:protected
 iMPSt::truncate_tensors	peps_utilities/imps.h	/^        void truncate_tensors(const TensorT &VL, const TensorT &VR, int maxm, double cutoff=1e-16)$/;"	f	class:iMPSt	access:public	signature:(const TensorT &VL, const TensorT &VR, int maxm, double cutoff=1e-16)
 iMPSt::uc_tensor	peps_utilities/imps.h	/^        const TensorT &uc_tensor() const { return uc_tensor_; }$/;"	f	class:iMPSt	access:public	signature:() const
-iMPSt::uc_tensor_	peps_utilities/imps.h	/^        TensorT uc_tensor_;$/;"	m	class:iMPSt	access:private
+iMPSt::uc_tensor_	peps_utilities/imps.h	/^        TensorT uc_tensor_;$/;"	m	class:iMPSt	access:protected
+iMPSt::virt_inds	peps_utilities/imps.h	/^        const IndexT &virt_inds(int indi) const { return virt_inds_[indi]; }$/;"	f	class:iMPSt	access:public	signature:(int indi) const
+iMPSt::virt_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> virt_inds_;$/;"	m	class:iMPSt	access:protected
+imps_	peps_utilities/imps.h	/^        iMPSt<TensorT> imps_;$/;"	m	class:DL_iMPSt	access:private
 imps_normalization_factor	execute/full_update_kagome_normal.cc	/^const dP imps_normalization_factor=1.E2;$/;"	v
 imps_normalization_factor	test/full_update_test.cc	/^const dP imps_normalization_factor=1.E2;$/;"	v
 imps_normalization_factor	test/tensor_update_test.cc	/^const dP imps_normalization_factor=1.E2;$/;"	v
@@ -2240,6 +2306,7 @@ isomorphic_legs	peps_utilities/utilities.cc	/^Index isomorphic_legs(const Index 
 isomorphic_legs	peps_utilities/utilities.h	/^IQIndex isomorphic_legs(const IQIndex &old_leg, const std::string &new_leg_name);$/;"	p	signature:(const IQIndex &old_leg, const std::string &new_leg_name)
 isomorphic_legs	peps_utilities/utilities.h	/^Index isomorphic_legs(const Index &old_leg, const std::string &new_leg_name);$/;"	p	signature:(const Index &old_leg, const std::string &new_leg_name)
 iszero_	tensor_rg/tensor_rg.h	/^        bool iszero_, almost_zero_trg_;$/;"	m	class:TensorT_RG	access:private
+itebd_opts_	peps_itebd/peps_itebd.h	/^        Args itebd_opts_; $/;"	m	class:PEPSt_iTEBD	access:private
 iter_nums	simple_update/trotter_gate.h	/^        int iter_nums;$/;"	m	struct:Evolution_Params	access:public
 kagome_cirac_rdm	full_update/full_update.h	/^        PEPSt_RDM<IQTensor> &kagome_cirac_rdm;$/;"	m	struct:Kagome_Cirac_Wf_Distance_Params_FU	access:public
 kagome_cirac_rvb_fast_full_update	full_update/full_update.h	/^void kagome_cirac_rvb_fast_full_update(IQPEPS &kagome_rvb, const Evolution_Params &su_params, const std::array<double,2> &bond_param_norms={1,1});$/;"	p	signature:(IQPEPS &kagome_rvb, const Evolution_Params &su_params, const std::array<double,2> &bond_param_norms={1,1})
@@ -2275,7 +2342,9 @@ kagome_normal_rvb_reduced_update	full_update/reduced_update_kagome_normal.cc	/^v
 kagome_normal_rvb_tensor_update	tensor_update/tensor_update.h	/^void kagome_normal_rvb_tensor_update(IQPEPS &kagome_rvb);$/;"	p	signature:(IQPEPS &kagome_rvb)
 kagome_normal_rvb_tensor_update	tensor_update/tensor_update_kagome_normal.cc	/^void kagome_normal_rvb_tensor_update(IQPEPS &kagome_rvb)$/;"	f	signature:(IQPEPS &kagome_rvb)
 kagome_normal_srvb_peps	peps_ansatz/kagome_rvb.cc	/^IQPEPS kagome_normal_srvb_peps(int Lx, int Ly)$/;"	f	signature:(int Lx, int Ly)
+kagome_normal_srvb_peps	peps_ansatz/kagome_rvb.cc	/^void kagome_normal_srvb_peps(IQPEPS &kagome_srvb)$/;"	f	signature:(IQPEPS &kagome_srvb)
 kagome_normal_srvb_peps	peps_ansatz/kagome_rvb.h	/^IQPEPS kagome_normal_srvb_peps(int Lx, int Ly);$/;"	p	signature:(int Lx, int Ly)
+kagome_normal_srvb_peps	peps_ansatz/kagome_rvb.h	/^void kagome_normal_srvb_peps(IQPEPS &kagome_srvb);$/;"	p	signature:(IQPEPS &kagome_srvb)
 kagome_normal_wf_distance_sq_fu_df	full_update/full_update.h	/^void kagome_normal_wf_distance_sq_fu_df(const gsl_vector *x, void *params, gsl_vector *df);$/;"	p	signature:(const gsl_vector *x, void *params, gsl_vector *df)
 kagome_normal_wf_distance_sq_fu_df	full_update/full_update_kagome_normal.cc	/^void kagome_normal_wf_distance_sq_fu_df(const gsl_vector *x, void *params, gsl_vector *df)$/;"	f	signature:(const gsl_vector *x, void *params, gsl_vector *df)
 kagome_normal_wf_distance_sq_fu_f	full_update/full_update.h	/^double kagome_normal_wf_distance_sq_fu_f(const gsl_vector *x, void *params);$/;"	p	signature:(const gsl_vector *x, void *params)
@@ -2296,6 +2365,16 @@ kagome_psg::chi_sigmac6	peps_ansatz/kagome_rvb.cc	/^    double chi_sigmac6=1;$/;
 kagome_psg::mu_12	peps_ansatz/kagome_rvb.cc	/^    double mu_12=1;$/;"	m	namespace:kagome_psg	file:
 kagome_psg::mu_c6	peps_ansatz/kagome_rvb.cc	/^    double mu_c6=1;$/;"	m	namespace:kagome_psg	file:
 kagome_psg::mu_sigma	peps_ansatz/kagome_rvb.cc	/^    double mu_sigma=-1;$/;"	m	namespace:kagome_psg	file:
+ket_incoming_inds	peps_utilities/imps.h	/^        const IndexT &ket_incoming_inds(int indi) const { return ket_incoming_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+ket_incoming_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_incoming_inds_, ket_incoming_inds_, bra_outgoing_inds_, ket_outgoing_inds_;$/;"	m	class:DL_iMPOt	access:private
+ket_outgoing_inds	peps_utilities/imps.h	/^        const IndexT &ket_outgoing_inds(int indi) const { return ket_outgoing_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+ket_outgoing_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_incoming_inds_, ket_incoming_inds_, bra_outgoing_inds_, ket_outgoing_inds_;$/;"	m	class:DL_iMPOt	access:private
+ket_siteinds	peps_utilities/imps.h	/^        const IndexT &ket_siteinds(int indi) const { return ket_siteinds_[indi]; }$/;"	f	class:DL_iMPSt	access:public	signature:(int indi) const
+ket_siteinds_	peps_utilities/imps.h	/^        std::vector<IndexT> ket_siteinds_, bra_siteinds_;$/;"	m	class:DL_iMPSt	access:private
+ket_tensors	peps_utilities/imps.h	/^        const TensorT &ket_tensors(int tensori) const { return ket_tensors_[tensori]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int tensori) const
+ket_tensors_	peps_utilities/imps.h	/^        std::vector<TensorT> bra_tensors_, ket_tensors_;$/;"	m	class:DL_iMPOt	access:private
+ket_virt_inds	peps_utilities/imps.h	/^        const IndexT &ket_virt_inds(int indi) const { return ket_virt_inds_[indi]; }$/;"	f	class:DL_iMPOt	access:public	signature:(int indi) const
+ket_virt_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> bra_virt_inds_, ket_virt_inds_;$/;"	m	class:DL_iMPOt	access:private
 lattice	peps/double_layer_peps.h	/^        const Lattice_Base &lattice() const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:() const
 lattice	peps/peps.h	/^        const Lattice_Base &lattice() const$/;"	f	class:PEPSt	access:public	signature:() const
 lattice	tensor_rg/tensor_rg.h	/^        const Lattice_Base &lattice() const { return lattice_; }$/;"	f	class:TensorT_RG	access:public	signature:() const
@@ -2306,6 +2385,7 @@ layered_factor_tensors_	tensor_rg/tensor_rg.h	/^        std::vector<std::vector<
 layered_lattice_dim_	tensor_rg/tensor_rg.h	/^        std::vector<std::vector<int>> layered_lattice_dim_;$/;"	m	class:TensorT_RG	access:private
 layered_trg_tensors_	tensor_rg/tensor_rg.h	/^        std::vector<std::vector<TensorT>> layered_trg_tensors_;$/;"	m	class:TensorT_RG	access:private
 layered_trg_tensors_norm_	tensor_rg/tensor_rg.h	/^        std::vector<std::vector<double>> layered_trg_tensors_norm_;$/;"	m	class:TensorT_RG	access:private
+left_dl_imps_	peps_itebd/peps_itebd.h	/^        DL_iMPS<TensorT> left_dl_imps_, right_dl_imps;$/;"	m	class:PEPSt_iTEBD	access:private
 left_leg_of_combiners	peps_utilities/utilities.h	/^inline IQIndex left_leg_of_combiners(const IQCombiner &combiner, int i) { return combiner.left()[i]; }$/;"	f	signature:(const IQCombiner &combiner, int i)
 left_leg_of_combiners	peps_utilities/utilities.h	/^inline Index left_leg_of_combiners(const Combiner &combiner, int i) { return combiner.left(i); }$/;"	f	signature:(const Combiner &combiner, int i)
 left_legs_combiners_	simple_update/simple_update_patch_square.h	/^        std::vector<std::vector<IQCombiner>> left_legs_combiners_, down_legs_combiners_;$/;"	m	class:Square_Patch_RDM	access:private
@@ -2322,8 +2402,6 @@ leg_gates_basis	full_update/reduced_update.h	/^        std::vector<Singlet_Tenso
 leg_gates_basis	simple_update/simple_update_kagome_cirac.h	/^        std::array<std::vector<Singlet_Tensor_Basis>,2> leg_gates_basis; $/;"	m	struct:Kagome_Cirac_Wf_Distance_Params	access:public
 leg_gates_basis	simple_update/simple_update_kagome_cirac.h	/^        std::vector<Singlet_Tensor_Basis> leg_gates_basis; $/;"	m	struct:Kagome_Cirac_Wf_Distance_Params_NBLG	access:public
 legs_num_after_contraction	peps_utilities/utilities.h	/^inline int legs_num_after_contraction(const std::vector<TensorT> &curr_tensors)$/;"	f	signature:(const std::vector<TensorT> &curr_tensors)
-lind	peps_utilities/imps.h	/^        const IndexT &lind() const { return lind_; }$/;"	f	class:iMPSt	access:public	signature:() const
-lind_	peps_utilities/imps.h	/^        IndexT lind_, rind_;$/;"	m	class:iMPSt	access:private
 list_from_num	peps_utilities/utilities.cc	/^std::vector<int> list_from_num(int num, const std::vector<int> &max_nums)$/;"	f	signature:(int num, const std::vector<int> &max_nums)
 list_from_num	peps_utilities/utilities.h	/^std::vector<int> list_from_num(int num, const std::vector<int> &max_nums);$/;"	p	signature:(int num, const std::vector<int> &max_nums)
 lower_combiners_	peps/square_double_layer_peps.h	/^        std::array<std::vector<CombinerT>,2> lower_combiners_, upper_combiners_; ;$/;"	m	class:Square_Double_Layer_PEPSt	access:private
@@ -2397,8 +2475,12 @@ n_sites_total	peps/peps.h	/^        int n_sites_total() const$/;"	f	class:PEPSt	
 n_sites_total_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_to_one_bond_, n_sites_total_, n_bonds_total_, n_boundary_legs_;$/;"	m	class:Lattice_Base	access:protected
 n_sites_uc	lattice/lattice.h	/^        int n_sites_uc() const$/;"	f	class:Lattice_Base	access:public	signature:() const
 n_sites_uc	peps/peps.h	/^        int n_sites_uc() const$/;"	f	class:PEPSt	access:public	signature:() const
+n_sites_uc	peps_utilities/imps.h	/^        int n_sites_uc() const { return imps_.n_sites_uc(); }$/;"	f	class:DL_iMPSt	access:public	signature:() const
+n_sites_uc	peps_utilities/imps.h	/^        int n_sites_uc() const { return n_sites_uc_; }$/;"	f	class:iMPSt	access:public	signature:() const
 n_sites_uc_	lattice/lattice.h	/^        int n_sites_uc_, n_bonds_uc_, n_bonds_to_one_site_, n_sites_to_one_bond_, n_sites_total_, n_bonds_total_, n_boundary_legs_;$/;"	m	class:Lattice_Base	access:protected
-n_sites_uc_	peps_utilities/imps.h	/^        int n_sites_uc_;$/;"	m	class:iMPSt	access:private
+n_sites_uc_	peps_utilities/imps.h	/^        int n_sites_uc_;$/;"	m	class:iMPSt	access:protected
+n_tensors_uc	peps_utilities/imps.h	/^        int n_tensors_uc() const { return n_tensors_uc_; }$/;"	f	class:DL_iMPOt	access:public	signature:() const
+n_tensors_uc_	peps_utilities/imps.h	/^        int n_tensors_uc_;$/;"	m	class:DL_iMPOt	access:private
 n_uc	lattice/lattice.h	/^        inline const std::array<int,2> &n_uc() const$/;"	f	class:Lattice_Base	access:public	signature:() const
 n_uc	peps/peps.h	/^        const std::array<int,2> &n_uc() const$/;"	f	class:PEPSt	access:public	signature:() const
 n_uc_	lattice/lattice.h	/^        std::array<int,2> n_uc_;$/;"	m	class:Lattice_Base	access:protected
@@ -2629,6 +2711,7 @@ peps_	full_update/peps_rdm.h	/^        PEPSt<TensorT> peps_;$/;"	m	class:PEPSt_R
 peps_	simple_update/simple_update_patch_general.h	/^        const PEPSt<TensorT> &peps_;$/;"	m	class:General_Patch_RDM	access:private
 peps_name	full_update/peps_rdm.h	/^        const std::string &peps_name() const { return peps_.name(); }$/;"	f	class:PEPSt_RDM	access:public	signature:() const
 peps_name	simple_update/simple_update_patch_general.h	/^        std::string peps_name() const$/;"	f	class:General_Patch_RDM	access:public	signature:() const
+peps_storage_	peps_itebd/peps_itebd.h	/^        const Tnetwork_Storage<TensorT> &peps_storage_;$/;"	m	class:PEPSt_iTEBD	access:private
 peps_to_tnetwork_storage	peps/peps.cc	/^Tnetwork_Storage<IQTensor> peps_to_tnetwork_storage(const PEPSt<IQTensor> &peps);$/;"	p	file:	signature:(const PEPSt<IQTensor> &peps)
 peps_to_tnetwork_storage	peps/peps.cc	/^Tnetwork_Storage<ITensor> peps_to_tnetwork_storage(const PEPSt<ITensor> &peps);$/;"	p	file:	signature:(const PEPSt<ITensor> &peps)
 peps_to_tnetwork_storage	peps/peps.cc	/^Tnetwork_Storage<TensorT> peps_to_tnetwork_storage(const PEPSt<TensorT> &peps)$/;"	f	signature:(const PEPSt<TensorT> &peps)
@@ -2703,12 +2786,11 @@ recombine_sigma_lr	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_P
 recombine_sigma_lr	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<ITensor>::recombine_sigma_lr();$/;"	p	class:Square_Double_Layer_PEPSt	file:	signature:()
 recombine_sigma_lr	peps/square_double_layer_peps.cc	/^void Square_Double_Layer_PEPSt<TensorT>::recombine_sigma_lr()$/;"	f	class:Square_Double_Layer_PEPSt	signature:()
 recombine_sigma_lr	peps/square_double_layer_peps.h	/^        void recombine_sigma_lr();$/;"	p	class:Square_Double_Layer_PEPSt	access:public	signature:()
+right_dl_imps	peps_itebd/peps_itebd.h	/^        DL_iMPS<TensorT> left_dl_imps_, right_dl_imps;$/;"	m	class:PEPSt_iTEBD	access:private
 right_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<IQTensor>::right_move(int right_x0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int right_x0)
 right_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<ITensor>::right_move(int right_x0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int right_x0)
 right_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<TensorT>::right_move(int right_x0)$/;"	f	class:Corner_Transfer_Matrix	signature:(int right_x0)
 right_move	corner_transfer_matrix/corner_transfer_matrix.h	/^        void right_move(int right_x0);$/;"	p	class:Corner_Transfer_Matrix	access:public	signature:(int right_x0)
-rind	peps_utilities/imps.h	/^        const IndexT &rind() const { return rind_; }$/;"	f	class:iMPSt	access:public	signature:() const
-rind_	peps_utilities/imps.h	/^        IndexT lind_, rind_;$/;"	m	class:iMPSt	access:private
 rotation_reflection_symmetrize_kagome_rvb_normal_site_tensor	peps_ansatz/kagome_rvb.cc	/^void rotation_reflection_symmetrize_kagome_rvb_normal_site_tensor(IQTensor &site_tensor)$/;"	f	signature:(IQTensor &site_tensor)
 rotation_reflection_symmetrize_kagome_rvb_normal_site_tensor	peps_ansatz/kagome_rvb.h	/^void rotation_reflection_symmetrize_kagome_rvb_normal_site_tensor(IQTensor &site_tensor);$/;"	p	signature:(IQTensor &site_tensor)
 rotation_symmetrize_kagome_rvb_cirac_bond_tensor	peps_ansatz/kagome_rvb.cc	/^void rotation_symmetrize_kagome_rvb_cirac_bond_tensor(IQTensor &bond_tensor)$/;"	f	signature:(IQTensor &bond_tensor)
@@ -2748,7 +2830,9 @@ site_coord_to_list	lattice/lattice.h	/^        const int &site_coord_to_list(int
 site_coord_to_list	lattice/lattice.h	/^        inline const int &site_coord_to_list(Coordinate site_coord) const$/;"	f	class:Lattice_Base	access:public	signature:(Coordinate site_coord) const
 site_coord_to_list_	lattice/lattice.h	/^        std::vector<std::vector<std::vector<int>>> site_coord_to_list_, bond_coord_to_list_;$/;"	m	class:Lattice_Base	access:protected
 site_ind_surr_plaq	tensor_rg/tensor_rg.h	/^        inline int site_ind_surr_plaq(int plaq_ind, int surri, int layer_no) const$/;"	f	class:TensorT_RG	access:public	signature:(int plaq_ind, int surri, int layer_no) const
-site_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> site_inds_;$/;"	m	class:iMPSt	access:private
+site_inds	peps_utilities/imps.h	/^        const IndexT &site_inds(int sitei) const { return site_inds_[sitei]; }$/;"	f	class:iMPSt	access:public	signature:(int sitei) const
+site_inds	peps_utilities/imps.h	/^        const IndexT &site_inds(int tensori) const { return imps_.site_inds(tensori); }$/;"	f	class:DL_iMPSt	access:public	signature:(int tensori) const
+site_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> site_inds_;$/;"	m	class:iMPSt	access:protected
 site_list_to_coord	lattice/lattice.h	/^        Coordinate site_list_to_coord(int site_i) const$/;"	f	class:Lattice_Base	access:public	signature:(int site_i) const
 site_list_to_coord_	lattice/lattice.h	/^        std::vector<Coordinate> site_list_to_coord_, bond_list_to_coord_;$/;"	m	class:Lattice_Base	access:protected
 site_neighbour_bonds	lattice/lattice.h	/^        const std::vector<int> &site_neighbour_bonds(const int &site_i) const$/;"	f	class:Lattice_Base	access:public	signature:(const int &site_i) const
@@ -2768,6 +2852,7 @@ site_tensors	peps_utilities/TPO.h	/^        const TensorT &site_tensors(int i) c
 site_tensors	peps_utilities/TPO.h	/^        const std::vector<TensorT> &site_tensors() const { return site_tensors_; }$/;"	f	class:TPOt	access:public	signature:() const
 site_tensors	peps_utilities/TPO.h	/^        std::vector<TensorT> &site_tensors() { return site_tensors_; }$/;"	f	class:TPOt	access:public	signature:()
 site_tensors	peps_utilities/imps.h	/^        const TensorT &site_tensors(int sitei) const { return site_tensors_[sitei]; }$/;"	f	class:iMPSt	access:public	signature:(int sitei) const
+site_tensors	peps_utilities/imps.h	/^        const TensorT &site_tensors(int tensori) const { return imps_.site_tensors(tensori); }$/;"	f	class:DL_iMPSt	access:public	signature:(int tensori) const
 site_tensors	simple_update/trotter_gate.h	/^        const IQTensor &site_tensors(int i) const { return site_tensors_[i]; }$/;"	f	class:NN_Heisenberg_Hamiltonian	access:public	signature:(int i) const
 site_tensors	simple_update/trotter_gate.h	/^        const IQTensor &site_tensors(int i) const { return site_tensors_[i]; }$/;"	f	class:Trotter_Gate	access:public	signature:(int i) const
 site_tensors	simple_update/trotter_gate.h	/^        const std::vector<IQTensor> &site_tensors() const { return site_tensors_; }$/;"	f	class:Trotter_Gate	access:public	signature:() const
@@ -2775,9 +2860,11 @@ site_tensors_	full_update/cluster_env.h	/^        std::vector<IQTensor> site_ten
 site_tensors_	full_update/single_layer_env.h	/^        std::vector<IQTensor> site_tensors_, env_tensors_;$/;"	m	class:SL_Env_Tensors	access:private
 site_tensors_	peps/peps.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_, combined_site_tensors_; $/;"	m	class:PEPSt	access:private
 site_tensors_	peps_utilities/TPO.h	/^        std::vector<TensorT> site_tensors_, bond_tensors_;$/;"	m	class:TPOt	access:private
-site_tensors_	peps_utilities/imps.h	/^        std::vector<TensorT> site_tensors_;$/;"	m	class:iMPSt	access:private
+site_tensors_	peps_utilities/imps.h	/^        std::vector<TensorT> site_tensors_;$/;"	m	class:iMPSt	access:protected
 site_tensors_	simple_update/trotter_gate.h	/^        std::array<IQTensor,2> site_tensors_;$/;"	m	class:NN_Heisenberg_Hamiltonian	access:private
 site_tensors_	simple_update/trotter_gate.h	/^        std::vector<IQTensor> site_tensors_;$/;"	m	class:Trotter_Gate	access:protected
+siteind_combiners	peps_utilities/imps.h	/^        const CombinerT &siteind_combiners(int combineri) const { return siteind_combiners_[combineri]; }$/;"	f	class:DL_iMPSt	access:public	signature:(int combineri) const
+siteind_combiners_	peps_utilities/imps.h	/^        std::vector<CombinerT> siteind_combiners_;$/;"	m	class:DL_iMPSt	access:private
 size	peps_utilities/tensor_matrix.h	/^        int size() const { return size_; }$/;"	f	class:TensorT_Matrix_Arnoldi	access:public	signature:() const
 size_	peps_utilities/tensor_matrix.h	/^        int size_;$/;"	m	class:TensorT_Matrix_Arnoldi	access:private
 sl_env_tensor	full_update/cluster_env.h	/^        const IQTensor &sl_env_tensor() const$/;"	f	class:Cluster_Env	access:public	signature:() const
@@ -2915,12 +3002,15 @@ trotter_gate_kagome_cirac	peps_utilities/TPO.cc	/^IQTPO trotter_gate_kagome_cira
 trotter_gate_kagome_cirac	peps_utilities/TPO.h	/^IQTPO trotter_gate_kagome_cirac(const std::vector<IQIndex> &phys_legs, double t=1.);$/;"	p	signature:(const std::vector<IQIndex> &phys_legs, double t=1.)
 truncate	peps_utilities/tensor_svd.cc	/^truncate(Vector& D,$/;"	f	file:	signature:(Vector& D, int maxm, int minm, Real cutoff, bool absoluteCutoff, bool doRelCutoff)
 truncate	peps_utilities/tensor_svd.cc	/^truncate(std::vector<EigQN>& alleig, $/;"	f	file:	signature:(std::vector<EigQN>& alleig, int& m, Real& docut, int maxm, int minm, Real cutoff, bool absoluteCutoff, bool doRelCutoff)
+truncate_tensors	peps_utilities/imps.h	/^        void truncate_tensors(const TensorT &VL, const TensorT &VR, const Args &args) $/;"	f	class:DL_iMPSt	access:public	signature:(const TensorT &VL, const TensorT &VR, const Args &args)
 truncate_tensors	peps_utilities/imps.h	/^        void truncate_tensors(const TensorT &VL, const TensorT &VR, int maxm, double cutoff=1e-16)$/;"	f	class:iMPSt	access:public	signature:(const TensorT &VL, const TensorT &VR, int maxm, double cutoff=1e-16)
 ts	simple_update/trotter_gate.h	/^        std::vector<double> ts;$/;"	m	struct:Evolution_Params	access:public
 two_sites_RDM	simple_update/simple_update_patch_square.h	/^        const IQTensor &two_sites_RDM() const $/;"	f	class:Square_Patch_RDM	access:public	signature:() const
 two_sites_RDM_	simple_update/simple_update_patch_square.h	/^        IQTensor two_sites_RDM_;$/;"	m	class:Square_Patch_RDM	access:private
+type_name	peps_utilities/imps.h	/^        std::string type_name() const { return type_name_; }$/;"	f	class:DL_iMPOt	access:public	signature:() const
+type_name_	peps_utilities/imps.h	/^        std::string type_name_;$/;"	m	class:DL_iMPOt	access:private
 uc_tensor	peps_utilities/imps.h	/^        const TensorT &uc_tensor() const { return uc_tensor_; }$/;"	f	class:iMPSt	access:public	signature:() const
-uc_tensor_	peps_utilities/imps.h	/^        TensorT uc_tensor_;$/;"	m	class:iMPSt	access:private
+uc_tensor_	peps_utilities/imps.h	/^        TensorT uc_tensor_;$/;"	m	class:iMPSt	access:protected
 up_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<IQTensor>::up_move(int up_y0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int up_y0)
 up_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<ITensor>::up_move(int up_y0);$/;"	p	class:Corner_Transfer_Matrix	file:	signature:(int up_y0)
 up_move	corner_transfer_matrix/corner_transfer_matrix.cc	/^void Corner_Transfer_Matrix<TensorT>::up_move(int up_y0)$/;"	f	class:Corner_Transfer_Matrix	signature:(int up_y0)
@@ -2976,6 +3066,9 @@ vectorSpinChirality	peps_utilities/TPO.cc	/^std::array<IQTPO,3> vectorSpinChiral
 vectorSpinChirality	peps_utilities/TPO.cc	/^std::array<IQTPO,3> vectorSpinChirality(const std::array<IQIndex,2> &phys_legs)$/;"	f	signature:(const std::array<IQIndex,2> &phys_legs)
 vectorSpinChirality	peps_utilities/TPO.h	/^std::array<IQTPO,3> vectorSpinChirality();$/;"	p	signature:()
 vectorSpinChirality	peps_utilities/TPO.h	/^std::array<IQTPO,3> vectorSpinChirality(const std::array<IQIndex,2> &phys_legs);$/;"	p	signature:(const std::array<IQIndex,2> &phys_legs)
+virt_inds	peps_utilities/imps.h	/^        const IndexT &virt_inds(int indi) const { return imps_.virt_inds(indi); }$/;"	f	class:DL_iMPSt	access:public	signature:(int indi) const
+virt_inds	peps_utilities/imps.h	/^        const IndexT &virt_inds(int indi) const { return virt_inds_[indi]; }$/;"	f	class:iMPSt	access:public	signature:(int indi) const
+virt_inds_	peps_utilities/imps.h	/^        std::vector<IndexT> virt_inds_;$/;"	m	class:iMPSt	access:protected
 virt_leg_combiners	peps/double_layer_peps.h	/^        const CombinerT &virt_leg_combiners(const std::array<int,2> &sites_no) const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:(const std::array<int,2> &sites_no) const
 virt_leg_combiners	peps/double_layer_peps.h	/^        const CombinerT &virt_leg_combiners(int sitei, const IndexT &double_virt_ind) const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:(int sitei, const IndexT &double_virt_ind) const
 virt_leg_combiners	peps/double_layer_peps.h	/^        const CombinerT &virt_leg_combiners(int sitei, int j) const$/;"	f	class:Double_Layer_PEPSt	access:public	signature:(int sitei, int j) const

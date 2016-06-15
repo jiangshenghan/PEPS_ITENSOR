@@ -266,4 +266,48 @@ void factor(Tensor const& T, Tensor &A, Tensor &B, Args const &args = Args::glob
 template <typename Tensor>
 void eigen_factor(Tensor const& T, Tensor &X, Args const &args = Args::global());
 
+
+//TODO: debug the following
+//implement dag method to a vector of indices
+template <class IndexT>
+std::vector<IndexT> dag(const std::vector<IndexT> &indices)
+{
+    std::vector<IndexT> indices_dag;
+    for (auto &ind: indices) indices_dag.push_back(dag(ind));
+    return indices_dag;
+}
+
+//randomize a tensor. For IQTensor, we assume the case that total qn is zero if not assigned
+inline void randTensor(ITensor &tensor, const Args &args=Global::args())
+{
+    tensor.randomize(args);
+}
+inline void randTensor(IQTensor &tensor, const Args &args=Global::args())
+{
+    if (tensor.valid() && tensor.blocks().empty()==false)
+    {
+        tensor.randomize(args);
+        return;
+    }
+
+    //if qn is not assigned, then randomize zero qn blocks
+    IndexSet<Index> nset;
+    for (const auto &block: tensor.blocks())
+    {
+        QN div;
+        for (const auto &ind: block.indices())
+        {
+            div+=qn(tensor,ind)*dir(tensor,ind);
+        }
+        if (div==QN())
+        {
+            nset=block.indices();
+            break;
+        }
+    }
+    ITensor &block=getBlock(nset);
+    block.randomize(args);
+    tensor.randomize(args);
+}
+
 #endif
