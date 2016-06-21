@@ -591,15 +591,15 @@ template void
 factor(IQTensor const& T, IQTensor& A, IQTensor& B, Args const& args);
 
 template <typename Tensor>
-void eigen_factor(Tensor const& T, Tensor &X, Args const &args = Args::global())
+void eigen_factor(Tensor const& T, Tensor &X, Args const &args)
 {
     Tensor U,D;
     diagHermitian(T,U,D,args);
-    //TODO:debug the case where D has negativeentries
-    D.mapElem([](Real x){ return std::sqrt(std::abs(x)); });
+    //TODO:debug the case where D has negative entries
+    D.mapElems([](Real x){ return std::sqrt(std::abs(x)); });
     X=dag(U)*D;
 }
 template
-void eigen_factor(ITensor const& T, ITensor &X, Args const &args = Args::global());
+void eigen_factor(ITensor const& T, ITensor &X, Args const &args);
 template
-void eigen_factor(IQTensor const& T, IQTensor &X, Args const &args = Args::global());
+void eigen_factor(IQTensor const& T, IQTensor &X, Args const &args);

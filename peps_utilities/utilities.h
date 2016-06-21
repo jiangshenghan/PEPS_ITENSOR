@@ -313,7 +313,7 @@ inline void randTensor(IQTensor &tensor, const Args &args=Global::args())
             break;
         }
     }
-    ITensor &block=getBlock(nset);
+    ITensor &block=tensor.getBlock(nset);
     block.randomize(args);
     tensor.randomize(args);
 }

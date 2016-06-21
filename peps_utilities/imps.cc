@@ -5,7 +5,7 @@
 //class iMPSt
 //
 template <class TensorT>
-iMPSt<TenosrT>::iMPSt(const std::vector<TensorT> &site_tensors, const IndexT &lind, const IndexT &rind):
+iMPSt<TensorT>::iMPSt(const std::vector<TensorT> &site_tensors, const IndexT &lind, const IndexT &rind):
     n_sites_uc_(site_tensors.size()),
     site_tensors_(site_tensors)
 {

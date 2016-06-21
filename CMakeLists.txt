@@ -19,7 +19,7 @@ FIND_PACKAGE(MPI REQUIRED)
 #SET(ITPP_LIB_DIR "/home/jiangsb/opt/itpp_intel/lib")
 
 #include directories storing head files
-INCLUDE_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update full_update tensor_update tensor_rg tensor_vmc ${ITPP_INCLUDE_DIR} ${ITENSOR_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR} ${MPI_INCLUDE_PATH})
+INCLUDE_DIRECTORIES(peps lattice peps_utilities peps_ansatz simple_update full_update tensor_update tensor_rg tensor_vmc peps_itebd ${ITPP_INCLUDE_DIR} ${ITENSOR_INCLUDE_DIR} ${BLAS_LAPACK_INCLUDE_DIR} ${MPI_INCLUDE_PATH})
 
 #add directories for source file generate libraries
 ADD_SUBDIRECTORY(lattice)
@@ -31,11 +31,11 @@ ADD_SUBDIRECTORY(full_update)
 ADD_SUBDIRECTORY(tensor_update)
 ADD_SUBDIRECTORY(tensor_rg)
 ADD_SUBDIRECTORY(tensor_vmc)
+ADD_SUBDIRECTORY(peps_itebd)
 #ADD_SUBDIRECTORY(corner_transfer_matrix)
-#ADD_SUBDIRECTORY(boundary_theory)
 
 #include directories for library
-LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz full_update simple_update tensor_update tensor_rg tensor_vmc ${ITPP_LIB_DIR} ${BLAS_LAPACK_LIB_DIR} )
+LINK_DIRECTORIES(peps lattice peps_utilities peps_ansatz full_update simple_update tensor_update tensor_rg tensor_vmc peps_itebd ${ITPP_LIB_DIR} ${BLAS_LAPACK_LIB_DIR} )
 
 #SET(ITENSOR_LIB utility itensor matrix)
 #SET(NUMERIC_LIB itpp_static gsl)

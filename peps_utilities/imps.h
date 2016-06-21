@@ -162,7 +162,6 @@ class DL_iMPOt
         const IndexT &ket_incoming_inds(int indi) const { return ket_incoming_inds_[indi]; }
         const IndexT &ket_outgoing_inds(int indi) const { return ket_outgoing_inds_[indi]; }
         const std::vector<IndexT> &ket_outgoing_inds() const { return ket_outgoing_inds_; }
-        const std::vector<IndexT> &ket_outgoing_inds() const { return ket_outgoing_inds_; }
         const IndexT &bra_virt_inds(int indi) const { return bra_virt_inds_[indi]; }
         const IndexT &ket_virt_inds(int indi) const { return ket_virt_inds_[indi]; }
         const std::vector<IndexT> &ket_virt_inds() const { return ket_virt_inds_; }
@@ -207,7 +206,7 @@ class DL_iMPOt
 //contract_opts:
 //getInt: Maxm(for svd), MaxIter(for arnoldi), MaxRestart(for arnoldi)
 //getReal: Cutoff(for svd), ErrGoal(for arnoldi)
-template <TensorT>
+template <class TensorT>
 void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts);
 
 //truncate imps where the dominant eigenvectors are known
@@ -217,7 +216,7 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &
 //VL=X.X^dagger, VR=Y.Y^dagger
 //union_tensor=U^dagger.Y.(prod of tensors_uc).X.V^dagger
 //we then do svd on union_tensor to obtain site_tensors
-template <TensorT>
+template <class TensorT>
 iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc, const std::vector<typename TensorT::IndexT> &ket_siteinds, const std::vector<typename TensorT::IndexT> &bra_siteinds, const TensorT &VL, const TensorT &VR, int maxm, double cutoff=1e-16);
 
 
