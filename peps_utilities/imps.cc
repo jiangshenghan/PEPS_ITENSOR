@@ -70,6 +70,31 @@ template
 iMPSt<IQTensor>::iMPSt(const std::vector<IQTensor> &site_tensors, const std::vector<IQTensor::IndexT> &site_inds);
 
 
+template <class TensorT>
+void iMPSt<TensorT>::move_tensors(int movei)
+{
+    std::rotate(site_inds_.begin(),site_inds_.end()-movei,site_inds_.end());
+    //pay attention to boundary virt legs
+    std::vector<IndexT> new_virt_inds;
+    for (int indi=0; indi<=n_sites_uc_; indi++)
+    {
+        new_virt_inds.push_back(isomorphic_legs(virt_inds_[(n_sites_uc_-movei+indi)%n_sites_uc_],nameint("virt_ind_",indi)));
+    }
+
+    for (int sitei=0; sitei<n_sites_uc_; sitei++)
+    {
+        site_tensors_[sitei].replaceIndex(virt_inds_[sitei],new_virt_inds[(sitei+movei)%n_sites_uc_]);
+        if ((sitei+1+movei)==n_sites_uc_)
+            site_tensors_[sitei].replaceIndex(dag(virt_inds_[sitei+1]),dag(new_virt_inds[n_sites_uc_]));
+        else
+            site_tensors_[sitei].replaceIndex(dag(virt_inds_[sitei+1]),dag(new_virt_inds[(sitei+1+movei)%n_sites_uc_]));
+    }
+    std::rotate(site_tensors_.begin(),site_tensors_.end()-movei,site_tensors_.end());
+    virt_inds_=new_virt_inds;
+}
+
+
+
 //
 //class DL_iMPSt
 //
@@ -81,12 +106,18 @@ DL_iMPSt<TensorT>::DL_iMPSt(std::vector<TensorT> site_tensors, const std::vector
     std::vector<IndexT> site_inds;
     for (int sitei=0; sitei<site_tensors.size(); sitei++)
     {
-        if (ket_siteinds_[sitei]==prime(dag(bottom_siteinds_sitei]))) 
+        //avoid the case where ketind and braind the same up to dag and prime
+        if (ket_siteinds_[sitei]==(dag(bra_siteinds_[sitei])).noprime()) 
         {
-            cout << "Should not set ket_siteinds=prime(dag(bra_siteinds))!" << endl;
-            exit(1);
+            IndexT temp_ketind, temp_braind;
+            temp_ketind=isomorphic_legs(ket_siteinds_[sitei],nameint("ket_leg_",sitei));
+            temp_braind=isomorphic_legs(bra_siteinds_[sitei],nameint("bra_leg_",sitei));
+            site_tensors[sitei].replaceIndex(ket_siteinds_[sitei],temp_ketind);
+            site_tensors[sitei].replaceIndex(bra_siteinds_[sitei],temp_braind);
+            ket_siteinds_[sitei]=temp_ketind;
+            bra_siteinds_[sitei]=temp_braind;
         }
-        siteind_combiners_.push_back(CombinerT(ket_siteinds_[sitei],bottom_siteinds_[sitei]));
+        siteind_combiners_.push_back(CombinerT(ket_siteinds_[sitei],bra_siteinds_[sitei]));
         site_inds.push_back(siteind_combiners_[sitei].right());
         site_tensors[sitei]=site_tensors[sitei]*siteind_combiners_[sitei];
     }
@@ -98,64 +129,117 @@ template
 DL_iMPSt<IQTensor>::DL_iMPSt(std::vector<IQTensor> site_tensors, const std::vector<IQTensor::IndexT> &ket_siteinds, std::vector<IQTensor::IndexT> &bra_siteinds);
 
 
+//template <class TensorT>
+//DL_iMPSt<TensorT>::DL_iMPSt(std::vector<TensorT> site_tensors, const IndexT &lind, const IndexT &rind, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds): 
+//    ket_siteinds_(ket_siteinds), 
+//    bra_siteinds_(bra_siteinds)
+//{
+//    std::vector<IndexT> site_inds;
+//    for (int sitei=0; sitei<site_tensors.size(); sitei++)
+//    {
+//        //avoid the case where ketind and braind the same up to dag and prime
+//        if (ket_siteinds_[sitei]==(dag(bra_siteinds_[sitei]).noprime())) 
+//        {
+//            IndexT temp_ketind, temp_braind;
+//            temp_ketind=isomorphic_legs(ket_siteinds_[sitei],nameint("ket_leg_",sitei));
+//            temp_braind=isomorphic_legs(bra_siteinds_[sitei],nameint("bra_leg_",sitei));
+//            site_tensors[sitei].replaceIndex(ket_siteinds_[sitei],temp_ketind);
+//            site_tensors[sitei].replaceIndex(bra_siteinds_[sitei],temp_braind);
+//            ket_siteinds_[sitei]=temp_ketind;
+//            bra_siteinds_[sitei]=temp_braind;
+//        }
+//        siteind_combiners_.push_back(CombinerT(ket_siteinds_[sitei],bra_siteinds_[sitei]));
+//        site_inds.push_back(siteind_combiners_[sitei].right());
+//        site_tensors[sitei]=site_tensors[sitei]*siteind_combiners_[sitei];
+//    }
+//    imps_=iMPSt<TensorT>(site_tensors,lind,rind);
+//}
+//template
+//DL_iMPSt<ITensor>::DL_iMPSt(std::vector<ITensor> site_tensors, const ITensor::IndexT &lind, const ITensor::IndexT &rind, const std::vector<ITensor::IndexT> &ket_siteinds, std::vector<ITensor::IndexT> &bra_siteinds);
+//template
+//DL_iMPSt<IQTensor>::DL_iMPSt(std::vector<IQTensor> site_tensors, const IQTensor::IndexT &lind, const IQTensor::IndexT &rind, const std::vector<IQTensor::IndexT> &ket_siteinds, std::vector<IQTensor::IndexT> &bra_siteinds);
+
 template <class TensorT>
-DL_iMPSt<TensorT>::DL_iMPSt(std::vector<TensorT> site_tensors, const IndexT &lind, const IndexT &rind, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds): 
-    ket_siteinds_(ket_siteinds), 
-    bra_siteinds_(bra_siteinds)
+DL_iMPSt<TensorT>::DL_iMPSt(std::vector<TensorT> ket_site_tensors, const std::vector<IndexT> &ket_siteinds, const std::vector<IndexT> &sl_virt_inds)
 {
-    std::vector<IndexT> site_inds;
-    for (int sitei=0; sitei<site_tensors.size(); sitei++)
+    //init ket and bra site_tensors
+    std::vector<TensorT> bra_site_tensors;
+    for (int sitei=0; sitei<ket_site_tensors.size(); sitei++)
     {
-        if (ket_siteinds_[sitei]==prime(dag(bottom_siteinds_sitei]))) 
-        {
-            cout << "Should not set ket_siteinds=prime(dag(bra_siteinds))!" << endl;
-            exit(1);
-        }
-        siteind_combiners_.push_back(CombinerT(ket_siteinds_[sitei],bottom_siteinds_[sitei]));
-        site_inds.push_back(siteind_combiners_[sitei].right());
-        site_tensors[sitei]=site_tensors[sitei]*siteind_combiners_[sitei];
+        bra_siteinds_.push_back(isomorphic_legs(dag(ket_siteinds[sitei],nameint("bra_leg_",sitei))));
+        bra_site_tensors.push_back(dag(ket_site_tensors[sitei]));
+        bra_site_tensors[sitei].prime(dag(sl_virt_inds[sitei]));
+        bra_site_tensors[sitei].prime(sl_virt_inds[sitei+1]);
+        bra_site_tensors[sitei].replaceIndex(dag(ket_siteinds[sitei],bra_siteinds_[sitei]));
+        //modidy ket_site_leg
+        ket_siteinds_.push_back(isomorphic_legs(ket_siteinds[sitei],nameint("ket_leg_",sitei)));
+        ket_site_tensors[sitei].replaceIndex(ket_siteinds[sitei],ket_siteinds_[sitei]);
+        //init siteind_combiners_
+        siteind_combiners_.push_back(CombinerT(ket_siteinds_[sitei],bra_siteinds_[sitei]));
     }
-    imps_=iMPSt<TensorT>(site_tensors,lind,rind);
+
+    //obtain dl_site_tensors
+    std::vector<CombinerT> virt_leg_combiners;
+    for (const auto &virt_ind: sl_virt_inds)
+    {
+        virt_leg_combiners.push_back(CombinerT(virt_ind,dag(virt_ind).prime()));
+    }
+    std::vector<IndexT> dl_siteinds;
+    std::vector<TensorT> dl_site_tensors;
+    for (int sitei=0; sitei<ket_site_tensors.size(); sitei++)
+    {
+        dl_siteinds.push_back(siteind_combiners_[sitei].right());
+        dl_site_tensors.push_back(ket_site_tensors[sitei]*bra_site_tensors[sitei]*virt_leg_combiners[sitei]*dag(virt_leg_combiners[sitei+1])*siteind_combiners_[sitei]);
+    }
+
+    imps_=iMPSt<TensorT>(dl_site_tensors,dl_siteinds);
 }
 template
-DL_iMPSt<ITensor>::DL_iMPSt(std::vector<ITensor> site_tensors, const ITensor::IndexT &lind, const ITensor::IndexT &rind, const std::vector<ITensor::IndexT> &ket_siteinds, std::vector<ITensor::IndexT> &bra_siteinds);
+DL_iMPSt<ITensor>::DL_iMPSt(std::vector<ITensor> ket_site_tensors, const std::vector<ITensor::IndexT> &ket_siteinds, const std::vector<ITensor::IndexT> &sl_virt_inds);
 template
-DL_iMPSt<IQTensor>::DL_iMPSt(std::vector<IQTensor> site_tensors, const IQTensor::IndexT &lind, const IQTensor::IndexT &rind, const std::vector<IQTensor::IndexT> &ket_siteinds, std::vector<IQTensor::IndexT> &bra_siteinds);
+DL_iMPSt<IQTensor>::DL_iMPSt(std::vector<IQTensor> ket_site_tensors, const std::vector<IQTensor::IndexT> &ket_siteinds, const std::vector<IQTensor::IndexT> &sl_virt_inds);
+
+
+template <class TensorT>
+void DL_iMPSt<TensorT>::move_tensors(int movei)
+{
+    std::rotate(ket_siteinds_.begin(),ket_siteinds_.end()-movei,ket_siteinds_.end());
+    std::rotate(bra_siteinds_.begin(),bra_siteinds_.end()-movei,bra_siteinds_.end());
+    std::rotate(siteind_combiners_.begin(),siteind_combiners_.end()-movei,siteind_combiners_.end());
+    imps_.move_tensors(movei);
+}
+template
+void DL_iMPSt<ITensor>::move_tensors(int movei);
+template
+void DL_iMPSt<IQTensor>::move_tensors(int movei)
+
 
 
 //
 //class DL_iMPOt
 //
 template <class TensorT>
-DL_iMPOt<TensorT>::DL_iMPOt(std::string type_name, const std::vector<IndexT> &init_ket_tensors, const std::vector<IndexT> &init_incoming_inds, const std::vector<IndexT> &init_outgoing_inds, const std::vector<IndexT> init_boundary_inds=std::vector<IndexT>()):
+DL_iMPOt<TensorT>::DL_iMPOt(std::string type_name, const std::vector<IndexT> &init_ket_tensors, const std::vector<IndexT> &init_ket_incoming_inds, const std::vector<IndexT> &init_ket_outgoing_inds, const std::vector<IndexT> init_ket_virt_inds=std::vector<IndexT>()):
     type_name_(type_name),
     n_tensors_uc_(init_ket_tensors.size())
 {
     //get the incoming and outgoing inds
     for (int tensori=0; tensori<n_tensors_uc_; tensori++)
     {
-        ket_incoming_inds_.push_back(isomorphic_legs(init_incoming_inds[tensori],nameint("ket_incoming_ind_",tensori)));
-        ket_outgoing_inds_.push_back(isomorphic_legs(init_outgoing_inds[tensori],nameint("ket_outgoing_ind_",tensori)));
-        bra_incoming_inds_.push_back(isomorphic_legs(dag(init_incoming_inds[tensori]),nameint("bra_incoming_ind_",tensori)));
-        bra_outgoing_inds_.push_back(isomorphic_legs(dag(init_outgoing_inds[tensori]),nameint("bra_outgoing_ind_",tensori)));
+        ket_incoming_inds_.push_back(isomorphic_legs(init_ket_incoming_inds[tensori],nameint("ket_incoming_ind_",tensori)));
+        ket_outgoing_inds_.push_back(isomorphic_legs(init_ket_outgoing_inds[tensori],nameint("ket_outgoing_ind_",tensori)));
+        bra_incoming_inds_.push_back(isomorphic_legs(dag(init_ket_incoming_inds[tensori]),nameint("bra_incoming_ind_",tensori)));
+        bra_outgoing_inds_.push_back(isomorphic_legs(dag(init_ket_outgoing_inds[tensori]),nameint("bra_outgoing_ind_",tensori)));
     }
 
     //reconstruct tensors for different types separately
     if (type_name_.find("type_one")!=std::string::npos)
     {
         //obtain virt indices
-        std::vector<IndexT> init_virt_inds(n_tensors_uc_+1);
-
-        init_virt_inds[0]=init_boundary_inds[0];
-        init_virt_inds[n_tensors_uc_]=dag(init_boundary_inds[1]);
-        for (int tensori=1; tensori<n_tensors_uc_; tensori++)
-        {
-            init_virt_inds[tensori]=commonIndex(init_ket_tensors[tensori],init_ket_tensors[tensori-1]);
-        }
         for (int indi=0; indi<=n_tensors_uc_; indi++)
         {
-            ket_virt_inds_.push_back(isomorphic_legs(init_virt_inds[indi],nameinit("ket_virt_ind_",indi)));
-            bra_virt_inds_.push_back(isomorphic_legs(dag(init_virt_inds[indi]),nameint("bra_virt_ind_",indi)));
+            ket_virt_inds_.push_back(isomorphic_legs(init_ket_virt_inds[indi],nameinit("ket_virt_ind_",indi)));
+            bra_virt_inds_.push_back(isomorphic_legs(dag(init_ket_virt_inds[indi]),nameint("bra_virt_ind_",indi)));
         }
 
         //construct ket and bra tensor
@@ -164,16 +248,16 @@ DL_iMPOt<TensorT>::DL_iMPOt(std::string type_name, const std::vector<IndexT> &in
             TensorT temp_ket_tensor=init_ket_tensors[tensori], 
                     temp_bra_tensor=dag(temp_ket_tensor);
 
-            temp_ket_tensor.replaceIndex(init_incoming_inds[tensori],ket_incoming_inds_[tensori]);
-            temp_ket_tensor.replaceIndex(init_outgoing_inds[tensori],ket_outgoing_inds_[tensori]);
-            temp_ket_tensor.replaceIndex(init_virt_inds[tensori],ket_virt_inds_[tensori]);
-            temp_ket_tensor.replaceIndex(dag(init_virt_inds[tensori+1]),dag(ket_virt_inds_[tensori+1])));
+            temp_ket_tensor.replaceIndex(init_ket_incoming_inds[tensori],ket_incoming_inds_[tensori]);
+            temp_ket_tensor.replaceIndex(init_ket_outgoing_inds[tensori],ket_outgoing_inds_[tensori]);
+            temp_ket_tensor.replaceIndex(init_ket_virt_inds[tensori],ket_virt_inds_[tensori]);
+            temp_ket_tensor.replaceIndex(dag(init_ket_virt_inds[tensori+1]),dag(ket_virt_inds_[tensori+1]));
             ket_tensors_.push_back(temp_ket_tensor);
 
-            temp_bra_tensor.replaceIndex(dag(init_incoming_inds[tensori],bra_incoming_inds_[tensori]));
-            temp_bra_tensor.replaceIndex(dag(init_outgoing_inds[tensori],bra_outgoing_inds_[tensori]));
-            temp_bra_tensor.replaceIndex(dag(init_virt_inds[tensori]),bra_virt_inds_[tensori]);
-            temp_bra_tensor.replaceIndex(init_virt_inds[tensori+1],bra_virt_inds_[tensori+1]);
+            temp_bra_tensor.replaceIndex(dag(init_ket_incoming_inds[tensori],bra_incoming_inds_[tensori]));
+            temp_bra_tensor.replaceIndex(dag(init_ket_outgoing_inds[tensori],bra_outgoing_inds_[tensori]));
+            temp_bra_tensor.replaceIndex(dag(init_ket_virt_inds[tensori]),bra_virt_inds_[tensori]);
+            temp_bra_tensor.replaceIndex(init_ket_virt_inds[tensori+1],bra_virt_inds_[tensori+1]);
             bra_tensors_.push_back(temp_bra_tensor);
         }
     }
@@ -185,16 +269,16 @@ DL_iMPOt<TensorT>::DL_iMPOt(std::string type_name, const std::vector<IndexT> &in
             TensorT temp_ket_tensor=init_ket_tensors[tensori],
                     temp_bra_tensor=dag(temp_ket_tensor);
 
-            temp_ket_tensor.replaceIndex(init_incoming_inds[2*tensori],ket_incoming_inds_[2*tensori]);
-            temp_ket_tensor.replaceIndex(init_incoming_inds[2*tensori+1],ket_incoming_inds_[2*tensori+1]);
-            temp_ket_tensor.replaceIndex(init_outgoing_inds[2*tensori],ket_outgoing_inds_[2*tensori]);
-            temp_ket_tensor.replaceIndex(init_outgoing_inds[2*tensori+1],ket_outgoing_inds_[2*tensori+1]);
+            temp_ket_tensor.replaceIndex(init_ket_incoming_inds[2*tensori],ket_incoming_inds_[2*tensori]);
+            temp_ket_tensor.replaceIndex(init_ket_incoming_inds[2*tensori+1],ket_incoming_inds_[2*tensori+1]);
+            temp_ket_tensor.replaceIndex(init_ket_outgoing_inds[2*tensori],ket_outgoing_inds_[2*tensori]);
+            temp_ket_tensor.replaceIndex(init_ket_outgoing_inds[2*tensori+1],ket_outgoing_inds_[2*tensori+1]);
             ket_tensors_.push_back(temp_ket_tensor);
 
-            temp_bra_tensor.replaceIndex(dag(init_incoming_inds[2*tensori]),bra_incoming_inds_[2*tensori]);
-            temp_bra_tensor.replaceIndex(dag(init_incoming_inds[2*tensori+1]),bra_incoming_inds_[2*tensori+1]);
-            temp_bra_tensor.replaceIndex(dag(init_outgoing_inds[2*tensori]),bra_outgoing_inds_[2*tensori]);
-            temp_bra_tensor.replaceIndex(dag(init_outgoing_inds[2*tensori+1]),bra_outgoing_inds_[2*tensori+1]);
+            temp_bra_tensor.replaceIndex(dag(init_ket_incoming_inds[2*tensori]),bra_incoming_inds_[2*tensori]);
+            temp_bra_tensor.replaceIndex(dag(init_ket_incoming_inds[2*tensori+1]),bra_incoming_inds_[2*tensori+1]);
+            temp_bra_tensor.replaceIndex(dag(init_ket_outgoing_inds[2*tensori]),bra_outgoing_inds_[2*tensori]);
+            temp_bra_tensor.replaceIndex(dag(init_ket_outgoing_inds[2*tensori+1]),bra_outgoing_inds_[2*tensori+1]);
             bra_tensors_.push_back(temp_bra_tensor);
         }
     }
@@ -202,14 +286,14 @@ DL_iMPOt<TensorT>::DL_iMPOt(std::string type_name, const std::vector<IndexT> &in
     //TODO: implement other two types
 }
 template
-DL_iMPOt<ITensor>::DL_iMPOt(std::string type_name, const std::vector<ITensor> &init_ket_tensors, const std::vector<ITensor::IndexT> &init_incoming_inds, const std::vector<ITensor::IndexT> &init_outgoing_inds, const std::vector<ITensor::IndexT> init_boundary_inds=std::vector<ITensor::IndexT>());
+DL_iMPOt<ITensor>::DL_iMPOt(std::string type_name, const std::vector<ITensor> &init_ket_tensors, const std::vector<ITensor::IndexT> &init_ket_incoming_inds, const std::vector<ITensor::IndexT> &init_ket_outgoing_inds, const std::vector<ITensor::IndexT> init_ket_virt_inds=std::vector<ITensor::IndexT>());
 template
-DL_iMPOt<IQTensor>::DL_iMPOt(std::string type_name, const std::vector<IQTensor> &init_ket_tensors, const std::vector<IQTensor::IndexT> &init_incoming_inds, const std::vector<IQTensor::IndexT> &init_outgoing_inds, const std::vector<IQTensor::IndexT> init_boundary_inds=std::vector<ITensor::IndexT>());
+DL_iMPOt<IQTensor>::DL_iMPOt(std::string type_name, const std::vector<IQTensor> &init_ket_tensors, const std::vector<IQTensor::IndexT> &init_ket_incoming_inds, const std::vector<IQTensor::IndexT> &init_ket_outgoing_inds, const std::vector<IQTensor::IndexT> init_ket_virt_inds=std::vector<ITensor::IndexT>());
 
 
 //Methods to update imps
 template <TensorT>
-void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts)
+void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts)
 {
     using IndexT=typename TensorT::IndexT;
     using IndexValT=typename TensorT::IndexValT;
@@ -219,12 +303,6 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, DL_iMPOt<TensorT> &dl_imp
     //left and right dominant eigenvalue, should be real and equal if no degenerate
     Complex eta_L, eta_R;
     TensorT VR, VL;
-
-    //init arnoldi_args_
-    Args arnoldi_args;
-    arnoldi_args.add("MaxIter",10);
-    arnoldi_args.add("MaxRestart",1);
-    arnoldi_args.add("ErrGoal",1e-16);
 
     if (type_name_.find("type_one")!=std::string::npos)
     {
@@ -273,7 +351,6 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, DL_iMPOt<TensorT> &dl_imp
             leg_combiners.push_back(dag(temp_combiner).prime());
         }
         
-        //FIXME: modify left and right indices as well as combine seq for VL and VR
         //left and right indices 
         //left_inds are input(output) inds for VL(VR), and right_inds are output(input) inds for VL(VR)
         std::vector<IndexT> left_inds, right_inds;
@@ -313,8 +390,8 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, DL_iMPOt<TensorT> &dl_imp
         VR=TensorT(dag<IndexT>(right_inds));
         randTensor(VL);
         randTensor(VR);
-        eta_L=arnoldi(LMat,VL,arnoldi_args);
-        eta_R=arnoldi(RMat,VR,arnoldi_args);
+        eta_L=arnoldi(LMat,VL,contract_opts);
+        eta_R=arnoldi(RMat,VR,contract_opts);
     }
 
     if (type_name_.find("type_two")!=std::string::npos)
@@ -382,9 +459,9 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, DL_iMPOt<TensorT> &dl_imp
     dl_imps.truncate_tensors(VL,VR,contract_opts);
 }
 template
-void contract_dl_impo_imps(DL_iMPSt<ITensor> &dl_imps, DL_iMPOt<ITensor> &dl_impo, const Args &contract_opts);
+void contract_dl_impo_imps(DL_iMPSt<ITensor> &dl_imps, const DL_iMPOt<ITensor> &dl_impo, const Args &contract_opts);
 template
-void contract_dl_impo_imps(DL_iMPSt<IQTensor> &dl_imps, DL_iMPOt<IQTensor> &dl_impo, const Args &contract_opts);
+void contract_dl_impo_imps(DL_iMPSt<IQTensor> &dl_imps, const DL_iMPOt<IQTensor> &dl_impo, const Args &contract_opts);
 
 
 template <TensorT>

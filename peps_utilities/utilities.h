@@ -276,6 +276,14 @@ std::vector<IndexT> dag(const std::vector<IndexT> &indices)
     for (auto &ind: indices) indices_dag.push_back(dag(ind));
     return indices_dag;
 }
+//implement prime method to a vector of indices
+template <class IndexT>
+std::vector<IndexT> prime(const std::vector<IndexT> &indices, int inc=1)
+{
+    std::vector<IndexT> indices_prime;
+    for (auto &ind: indices) indices_prime.push_back(prime(ind,inc));
+    return indices_prime;
+}
 
 //randomize a tensor. For IQTensor, we assume the case that total qn is zero if not assigned
 inline void randTensor(ITensor &tensor, const Args &args=Global::args())
