@@ -27,6 +27,14 @@ class iMPSt
         iMPSt(const std::vector<TensorT> &site_tensors, const std::vector<IndexT> &site_inds);
 
         //
+        //Methods
+        //
+        bool valid() { return !site_tensors_.empty(); }
+        //change the order of tensors in one u.c. by moving tensors
+        void move_tensors(int movei=1);
+        
+
+        //
         //Access Methods
         //
         int n_sites_uc() const { return n_sites_uc_; }
@@ -76,7 +84,18 @@ class DL_iMPSt
         //
         DL_iMPSt() {}
         DL_iMPSt(std::vector<TensorT> site_tensors, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds);
-        DL_iMPSt(std::vector<TensorT> site_tensors, const IndexT &lind, const IndexT &rind, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds);
+        //DL_iMPSt(std::vector<TensorT> site_tensors, const IndexT &lind, const IndexT &rind, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds);
+        //init using ket tensors 
+        //indices will be replaced to avoid incorrect contraction
+        DL_iMPSt(std::vector<TensorT> ket_site_tensors, const std::vector<IndexT> &ket_siteinds, const std::vector<IndexT> &sl_virt_inds);
+
+        //
+        //Methods
+        //
+        //true if not default construct
+        bool valid() { return !site_tensors_.empty(); }
+        //change the order of tensors in one u.c. by moving tensors
+        void move_tensors(int movei=1);
 
         //
         //Acess Methods
@@ -85,6 +104,8 @@ class DL_iMPSt
         const IndexT &site_inds(int tensori) const { return imps_.site_inds(tensori); }
         const IndexT &virt_inds(int indi) const { return imps_.virt_inds(indi); }
         const TensorT &site_tensors(int tensori) const { return imps_.site_tensors(tensori); }
+        //get site_tensors with ket and bra indices separate
+        TensorT dl_site_tensors(int tensori) const { return imps_.site_tensors(tensori)*dag(siteind_combiners_[tensori]); }
         const IndexT &ket_siteinds(int indi) const { return ket_siteinds_[indi]; }
         const IndexT &bra_siteinds(int indi) const { return bra_siteinds_[indi]; }
         const CombinerT &siteind_combiners(int combineri) const { return siteind_combiners_[combineri]; }
@@ -92,9 +113,9 @@ class DL_iMPSt
 
 
     private:
-        iMPSt<TensorT> imps_;
         std::vector<IndexT> ket_siteinds_, bra_siteinds_;
         std::vector<CombinerT> siteind_combiners_;
+        iMPSt<TensorT> imps_;
 };
 
 
@@ -128,7 +149,7 @@ class DL_iMPOt
         //
         DL_iMPOt() {}
         //we will reconstruct the indices for all tensors
-        DL_iMPOt(std::string type_name, const std::vector<IndexT> &init_ket_tensors, const std::vector<IndexT> &init_incoming_inds, const std::vector<IndexT> &init_outgoing_inds, const std::vector<IndexT> init_boundary_inds=std::vector<IndexT>());
+        DL_iMPOt(std::string type_name, const std::vector<IndexT> &init_ket_tensors, const std::vector<IndexT> &init_ket_incoming_inds, const std::vector<IndexT> &init_ket_outgoing_inds, const std::vector<IndexT> init_ket_virt_inds=std::vector<IndexT>());
 
         //
         //Acess Method
@@ -141,10 +162,19 @@ class DL_iMPOt
         const IndexT &ket_incoming_inds(int indi) const { return ket_incoming_inds_[indi]; }
         const IndexT &ket_outgoing_inds(int indi) const { return ket_outgoing_inds_[indi]; }
         const std::vector<IndexT> &ket_outgoing_inds() const { return ket_outgoing_inds_; }
+        const std::vector<IndexT> &ket_outgoing_inds() const { return ket_outgoing_inds_; }
         const IndexT &bra_virt_inds(int indi) const { return bra_virt_inds_[indi]; }
         const IndexT &ket_virt_inds(int indi) const { return ket_virt_inds_[indi]; }
+        const std::vector<IndexT> &ket_virt_inds() const { return ket_virt_inds_; }
         const TensorT &ket_tensors(int tensori) const { return ket_tensors_[tensori]; }
+        const std::vector<TensorT> &ket_tensors() const { return ket_tensors_; }
         const TensorT &bra_tensors(int tensori) const { return bra_tensors_[tensori]; }
+        const std::vector<TensorT> &bra_tensors() const { return bra_tensors_; }
+
+        //
+        //Methods
+        //
+        bool valid() { return !ket_tensors_.empty(); }
 
 
     private:
@@ -175,19 +205,18 @@ class DL_iMPOt
 //
 //contract given dl_imps and dl_impo, and then do compression
 //contract_opts:
-//getInt: Maxm(for svd) 
-//getReal: Cutoff(for svd) 
-//getString: ContractMethod("single_layer")
+//getInt: Maxm(for svd), MaxIter(for arnoldi), MaxRestart(for arnoldi)
+//getReal: Cutoff(for svd), ErrGoal(for arnoldi)
 template <TensorT>
-void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts);
+void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts);
 
 //truncate imps where the dominant eigenvectors are known
 //VL_indices={dag(lind),prime(lind)}
 //VR_indices={dag(rind),prime(rind)}
 //Here product of tensors_uc equals product of all site tensors in one uc (may not share the same virt legs)
 //VL=X.X^dagger, VR=Y.Y^dagger
-//Gamma=U^dagger.Y.(prod of tensors_uc).X.V^dagger
-//we do svd on Gamma to obtain site_tensors
+//union_tensor=U^dagger.Y.(prod of tensors_uc).X.V^dagger
+//we then do svd on union_tensor to obtain site_tensors
 template <TensorT>
 iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc, const std::vector<typename TensorT::IndexT> &ket_siteinds, const std::vector<typename TensorT::IndexT> &bra_siteinds, const TensorT &VL, const TensorT &VR, int maxm, double cutoff=1e-16);
 
