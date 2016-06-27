@@ -1,10 +1,9 @@
 
-#include "itebd.h"
+#include "peps_itebd.h"
 
 template <class TensorT>
 PEPSt_iTEBD<TensorT>::PEPSt_iTEBD(const Tnetwork_Storage<TensorT> &peps_storage, const Args &itebd_opts):
     peps_storage_(peps_storage),
-    cutting_sites_(cutting_sites),
     itebd_opts_(itebd_opts)
 {
     init_impo();
@@ -29,39 +28,39 @@ void PEPSt_iTEBD<TensorT>::init_impo()
     if (peps_storage_._tnetwork_type==8)
     {
         //init ket tensors 
-        multicols_ket_tensors.push_back(std::vector<TensorT>{kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(0))});
-        multicols_ket_tensors.push_back(std::vector<TensorT>{kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(2))});
-        multicols_ket_tensors.push_back(std::vector<TensorT>{kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(0))});
-        multicols_ket_tensors.push_back(std::vector<TensorT>{kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(2))});
+        multicols_ket_tensors.push_back(std::vector<TensorT>{peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0))});
+        multicols_ket_tensors.push_back(std::vector<TensorT>{peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2))});
+        multicols_ket_tensors.push_back(std::vector<TensorT>{peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0))});
+        multicols_ket_tensors.push_back(std::vector<TensorT>{peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(2))});
 
         //init indices
-        multicols_linds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(Lx-1,1)(2))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(0)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(Lx-1,0)(2)))})
-            multicols_linds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(2)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(1))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(2)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(0)))})
-            multicols_linds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,1)(2))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(0)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(2)))})
-            multicols_linds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(2)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(1))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(2)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(0)))})
+        multicols_linds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(Lx-1,1)(2))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(Lx-1,0)(2)))});
+            multicols_linds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)))});
+            multicols_linds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,1)(2))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2)))});
+            multicols_linds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0)))});
 
-            multicols_rinds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(2))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(0)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(2)))});
-        multicols_rinds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(2)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(0))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(2)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,Ly-1)(1)))});
-        multicols_rinds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(2))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(0)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(2)))});
-        multicols_rinds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(2)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(2,0)(0))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(2)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(2,Ly-1)(1)))});
+            multicols_rinds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2)))});
+        multicols_rinds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,Ly-1)(1)))});
+        multicols_rinds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(2))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(2)))});
+        multicols_rinds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(2,0)(0))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(2,Ly-1)(1)))});
 
-        multicols_udinds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,1)(0))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(0)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(1))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,Ly-1)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(0)))});
+        multicols_udinds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,1)(0))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,Ly-1)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)))});
         multicols_udinds.push_back(std::vector<IndexT>{});
-        multicols_udinds.push_back(std::vector<IndexT>{commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,1)(0))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(0)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(1,0)(1))),commonIndex(kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,Ly-1)(1)),kagome_peps_storage._tensor_list(kagome_peps_storage._coor_to_siteind(0,0)(0)))});
+        multicols_udinds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,1)(0))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,Ly-1)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)))});
         multicols_udinds.push_back(std::vector<IndexT>{});
 
         //init impos
         lcols_dl_impos_.clear();
-        lcols_dl_impos_.push_back("type_one",multicols_ket_tensors[0],multicols_linds[0],multicols_rinds[0],multicols_udinds[0]);
-        lcols_dl_impos_.push_back("type_two",multicols_ket_tensors[1],multicols_linds[1],multicols_rinds[1]);
-        lcols_dl_impos_.push_back("type_one",multicols_ket_tensors[2],multicols_linds[2],multicols_rinds[2],multicols_udinds[2]);
-        lcols_dl_impos_.push_back("type_two",multicols_ket_tensors[3],multicols_linds[3],multicols_rinds[3]);
+        lcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_one",multicols_ket_tensors[0],multicols_linds[0],multicols_rinds[0],multicols_udinds[0]));
+        lcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_two",multicols_ket_tensors[1],multicols_linds[1],multicols_rinds[1]));
+        lcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_one",multicols_ket_tensors[2],multicols_linds[2],multicols_rinds[2],multicols_udinds[2]));
+        lcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_two",multicols_ket_tensors[3],multicols_linds[3],multicols_rinds[3]));
 
         rcols_dl_impos_.clear();
-        rcols_dl_impos_.push_back("type_one",multicols_ket_tensors[0],multicols_rinds[0],multicols_linds[0],multicols_udinds[0]);
-        rcols_dl_impos_.push_back("type_two",multicols_ket_tensors[1],multicols_rinds[1],multicols_linds[1]);
-        rcols_dl_impos_.push_back("type_one",multicols_ket_tensors[2],multicols_rinds[2],multicols_linds[2],multicols_udinds[2]);
-        rcols_dl_impos_.push_back("type_two",multicols_ket_tensors[3],multicols_rinds[3],multicols_linds[3]);
+        rcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_one",multicols_ket_tensors[0],multicols_rinds[0],multicols_linds[0],multicols_udinds[0]));
+        rcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_two",multicols_ket_tensors[1],multicols_rinds[1],multicols_linds[1]));
+        rcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_one",multicols_ket_tensors[2],multicols_rinds[2],multicols_linds[2],multicols_udinds[2]));
+        rcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_two",multicols_ket_tensors[3],multicols_rinds[3],multicols_linds[3]));
     }
 
 }
@@ -76,6 +75,9 @@ const std::vector<TensorT> &PEPSt_iTEBD<TensorT>::env_tensors_from_itebd(int n_s
 {
     //get left and right imps
     for (int stepi=0; stepi<n_steps; stepi++) update_imps_one_step();
+
+    int Lx=peps_storage_._Lx,
+        Ly=peps_storage_._Ly;
 
     //obtain env_tensors from left and right imps
     //kagome case
@@ -127,7 +129,7 @@ const std::vector<TensorT> &PEPSt_iTEBD<TensorT>::env_tensors_from_itebd(int n_s
         //contract_seq
         std::vector<int> VU_contract_seq, VD_contract_seq;
         VU_contract_seq.push_back(-1);
-        VR_contract_seq.push_back(-1);
+        VD_contract_seq.push_back(-1);
         for (int tensori=0; tensori<contract_tensors.size(); tensori++)
         {
             VU_contract_seq.push_back(tensori);
@@ -137,36 +139,38 @@ const std::vector<TensorT> &PEPSt_iTEBD<TensorT>::env_tensors_from_itebd(int n_s
         //up and down indices
         //up_inds are input(output) inds for VU(VD), and down_inds are output(input) inds for VU(VD)
         std::vector<IndexT> up_inds, down_inds;
-        up_inds.push_back(ldl_imps_.virt_inds.front());
+        up_inds.push_back(ldl_imps_.virt_inds().front());
         up_inds.push_back(cutting_ket_inds[4]);
         up_inds.push_back(dag(cutting_ket_inds[4]).prime());
-        up_inds.push_back(rdl_imps_.virt_inds.front());
+        up_inds.push_back(rdl_imps_.virt_inds().front());
 
-        down_inds.push_back(dag(ldl_imps_.virt_inds.back()));
+        down_inds.push_back(dag(ldl_imps_.virt_inds().back()));
         down_inds.push_back(cutting_ket_inds[5]);
         down_inds.push_back(dag(cutting_ket_inds[5]).prime());
-        down_inds.push_back(dag(rdl_imps_.virt_inds.back()));
+        down_inds.push_back(dag(rdl_imps_.virt_inds().back()));
 
         //obtain up and down dominant eigenvector
-        TensorT VU(dag<IndexT>(up_inds)),
-                VD(dag<IndexT>(down_inds));
+        std::vector<IndexT> up_inds_dag=dag<IndexT>(up_inds),
+                            down_inds_dag=dag<IndexT>(down_inds);
+        TensorT VU(up_inds_dag),
+                VD(down_inds_dag);
         randTensor(VU);
         randTensor(VD);
         TensorT_Matrix_Arnoldi<TensorT> UMat(up_inds,down_inds,contract_tensors,VU_contract_seq),
                                         DMat(down_inds,up_inds,contract_tensors,VD_contract_seq);
-        eta_U=arnoldi(UMat,VU,itebd_opts_);
-        eta_D=arnoldi(DMat,VD,itebd_opts_);
+        Complex eta_U=arnoldi(UMat,VU,itebd_opts_),
+                eta_D=arnoldi(DMat,VD,itebd_opts_);
         Print(eta_U);
         Print(eta_D);
 
         //get env_tensors_
         env_tensors_.clear();
-        env_tensors_.push_back(contract_tensors[0])
-        env_tensors_.push_back(contract_tensors[4])
-        env_tensors_.push_back(contract_tensors[3])
-        env_tensors_.push_back(contract_tensors[7])
+        env_tensors_.push_back(contract_tensors[0]);
+        env_tensors_.push_back(contract_tensors[4]);
+        env_tensors_.push_back(contract_tensors[3]);
+        env_tensors_.push_back(contract_tensors[7]);
         env_tensors_.push_back(VU);
-        env_tensors_.push_back(VR);
+        env_tensors_.push_back(VD);
     }
 
     return env_tensors_;
@@ -208,14 +212,14 @@ void PEPSt_iTEBD<TensorT>::update_imps_one_step()
         contract_dl_impo_imps(rdl_imps_,rcols_dl_impos_[1],itebd_opts_);
 
         //contract for third col
-        contract_dl_impo_imps(ldl_imps,lcols_dl_impos_[2],itebd_opts_);
-        contract_dl_impo_imps(rdl_imps,rcols_dl_impos_[2],itebd_opts_);
-        rdl_imps.move_tensors();
+        contract_dl_impo_imps(ldl_imps_,lcols_dl_impos_[2],itebd_opts_);
+        contract_dl_impo_imps(rdl_imps_,rcols_dl_impos_[2],itebd_opts_);
+        rdl_imps_.move_tensors();
 
         //contract for fourth col
-        contract_dl_impo_imps(ldl_imps,lcols_dl_impos_[3],itebd_opts_);
-        ldl_imps.move_tensors();
-        contract_dl_impo_imps(rdl_imps,rcols_dl_impos_[3],itebd_opts_);
+        contract_dl_impo_imps(ldl_imps_,lcols_dl_impos_[3],itebd_opts_);
+        ldl_imps_.move_tensors();
+        contract_dl_impo_imps(rdl_imps_,rcols_dl_impos_[3],itebd_opts_);
     }
 }
 template

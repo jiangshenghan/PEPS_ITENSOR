@@ -33,7 +33,7 @@ class TensorT_Matrix_Arnoldi
         //
         //constructor
         //
-        TensorT_Matrix_Arnoldi(const std::vector<IndexT> &input_indices, const std::vector<IndexT> &output_indices, const std::vector<TensorT> &contract_tensors, const std::vector<int> &contract_seq=std::vector<int>(), const std::vector<CombinerT> &leg_combiners=std::vector<CombinerT>(), const std::vector<std::vector<int>> &combiner_seq=std::vector<std::vector<int>>()):
+        TensorT_Matrix_Arnoldi(const std::vector<IndexT> &input_indices, const std::vector<IndexT> &output_indices, const std::vector<TensorT> &contract_tensors, const std::vector<int> &contract_seq=std::vector<int>(), const std::vector<CombinerT> &leg_combiners=std::vector<CombinerT>(), std::vector<std::vector<int>> combiner_seq=std::vector<std::vector<int>>()):
             input_indices_(input_indices),
             output_indices_(output_indices),
             leg_combiners_(leg_combiners),
@@ -51,7 +51,7 @@ class TensorT_Matrix_Arnoldi
                 for (int i=0; i<contract_tensors_.size(); i++) contract_seq_.push_back(i);
             }
 
-            if (leg_combiners_.empty() || combiner_seq_.empty()) combiner_seq_=std::vector<int>(contract_tensors.size()+1,std::vector<int>());
+            if (leg_combiners_.empty() || combiner_seq_.empty()) combiner_seq_=std::vector<std::vector<int>>(contract_tensors_.size()+1,std::vector<int>());
         }
 
         //
@@ -104,7 +104,8 @@ class TensorT_Matrix_Arnoldi
         std::vector<IndexT> input_indices_, output_indices_;
         std::vector<CombinerT> leg_combiners_;
         std::vector<TensorT> contract_tensors_;
-        std::vector<int> contract_seq_, combiner_seq_;
+        std::vector<int> contract_seq_;
+        std::vector<std::vector<int>>combiner_seq_;
 };
 
 #endif

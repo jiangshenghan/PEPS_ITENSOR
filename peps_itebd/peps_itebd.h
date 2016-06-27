@@ -12,6 +12,10 @@ template <class TensorT>
 class PEPSt_iTEBD
 {
     public:
+        using IndexT=typename TensorT::IndexT;
+        using IndexValT=typename TensorT::IndexValT;
+        using CombinerT=typename TensorT::CombinerT;
+
         //
         //Constructor
         //
@@ -30,13 +34,13 @@ class PEPSt_iTEBD
         //      |
         //      5
         //
-        const std::vector<IndexT> &env_tensors_from_itebd(int n_steps);
+        const std::vector<TensorT> &env_tensors_from_itebd(int n_steps);
         //update imps by contracting cols of impos
         void update_imps_one_step();
         //obtain expectation value of two-site mpo operator
         Complex expect_val_from_env_tensors(const std::vector<TensorT> &two_sites_mpo) const;
 
-        friend iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc, const std::vector<typename TensorT::IndexT> &ket_siteinds, const std::vector<typename TensorT::IndexT> &bra_siteinds, const TensorT &VL, const TensorT &VR, int maxm, double cutoff=1e-16);
+        friend void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts);
 
         //
         //Acess Method
@@ -53,8 +57,8 @@ class PEPSt_iTEBD
         //peps_storage_ are imposed in periodic BC. We use one u.c. (or two u.c. for pi-flux case) to generate iPEPS
         const Tnetwork_Storage<TensorT> &peps_storage_;
         //stores contraction results of left/right cols
-        DL_iMPS<TensorT> ldl_imps_, rdl_imps_;
-        std::vector<DL_iMPOt<TensorT>> lcols_dl_impos_, rcols_dl_impos
+        DL_iMPSt<TensorT> ldl_imps_, rdl_imps_;
+        std::vector<DL_iMPOt<TensorT>> lcols_dl_impos_, rcols_dl_impos_;
         std::vector<TensorT> env_tensors_;
         //itebd_options:
         //getInt: Maxm(for svd), MaxIter(for arnoldi), MaxRestart(for arnoldi)

@@ -1,3 +1,0 @@
-
-test function eigen_factor in peps_utilities/utilities.cc
-
