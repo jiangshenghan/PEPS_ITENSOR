@@ -74,13 +74,22 @@ class TensorT_Matrix_Arnoldi
                 else
                     phip*=temp_tensor;
 
+                //Print(i);
+                //Print(phip.indices());
                 for (int combineri: combiner_seq_[i])
                 {
+                    //Print(leg_combiners_[std::abs(combineri)]);
                     if (combineri>0) 
                         phip=phip*leg_combiners_[combineri];
                     else if (combineri<0)
                         phip=phip*dag(leg_combiners_[-combineri]);
                 }
+
+                //Print(i);
+                //Print(temp_tensor.indices());
+                //Print(phip.indices());
+                //Print(temp_tensor.norm());
+                //Print(phip.norm());
             }
 
             //TODO: consider the case where input_dir==output_dir

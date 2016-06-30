@@ -5,14 +5,14 @@
 #include "utilities.h"
 
 template<class Tensor> 
-bool tensor_svd(Tensor AA, Tensor& U, Tensor& D, Tensor& V, const Args& args=Global::args());
+Spectrum tensor_svd(Tensor AA, Tensor& U, Tensor& D, Tensor& V, const Args& args=Global::args());
 
-bool
+Spectrum
 tensor_svdRank2(ITensor A, const Index& ui, const Index& vi,
          ITensor& U, ITensor& D, ITensor& V,
          const Args& args = Global::args());
 
-bool 
+Spectrum 
 tensor_svdRank2(IQTensor A, const IQIndex& uI, const IQIndex& vI,
          IQTensor& U, IQTensor& D, IQTensor& V,
          const Args& args = Global::args());

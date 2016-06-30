@@ -1,47 +1,40 @@
 
-#include "spin_sym_decomp.h"
 #include "kagome_rvb.h"
-#include "tensor_rg.h"
+#include "trotter_gate.h"
+#include "peps_itebd.h"
 
 int main()
 {
-    int Lx=4, Ly=4;
-
-    Kagome_Normal_Lattice_Torus kagome_torus({Lx,Ly});
-    IQPEPS_IndexSet_SpinHalf indexset(3,kagome_torus);
-
-    std::vector<IQPEPS> kagome_srvbs(2,IQPEPS(kagome_torus,indexset));
-
     kagome_psg::mu_12=1;
     kagome_psg::mu_c6=1;
-    kagome_normal_srvb_peps(kagome_srvbs[0]);
+    
+    Print(kagome_psg::mu_12);
+    Print(kagome_psg::mu_c6);
 
-    kagome_psg::mu_12=1;
-    kagome_psg::mu_c6=1;
-    kagome_normal_srvb_peps(kagome_srvbs[1]);
+    int Lx=4, Ly=4, D=3;
 
-    std::vector<std::vector<IQTensor>> kagome_srvbs_tensors;
-    for (const auto &kagome_srvb: kagome_srvbs) kagome_srvbs_tensors.push_back(kagome_srvb.combined_site_tensors());
-    for (auto &tensor: kagome_srvbs_tensors[1]) tensor.prime(Link).dag();
+    IQPEPS kagome_rvb=kagome_normal_srvb_peps(Lx,Ly);
+    //Kagome_Normal_Lattice_Torus kagome_lattice({Lx,Ly});
+    //IQPEPS_IndexSet_SpinHalf index_set(3,kagome_lattice);
+    //IQPEPS kagome_rvb(kagome_lattice,index_set);
+    //random_init_kagome_rvb_normal_peps(kagome_rvb);
 
-    std::vector<IQCombiner> inds_combiners;
-    for (const auto &leg: indexset.virt_legs()) inds_combiners.push_back(IQCombiner(leg,dag(prime(leg))));
-    std::vector<IQTensor> overlap_tensors;
-    for (int sitei=0; sitei<kagome_torus.n_sites_total(); sitei++) overlap_tensors.push_back(kagome_srvbs_tensors[0][sitei]*kagome_srvbs_tensors[1][sitei]);
-    for (int sitei=0; sitei<kagome_torus.n_sites_total(); sitei++)
+    Tnetwork_Storage<IQTensor> kagome_rvb_storage=peps_to_tnetwork_storage(kagome_rvb);
+
+    PEPSt_iTEBD<IQTensor> kagome_itebd(kagome_rvb_storage,{"Maxm",30,"MaxIter",10,"MaxRestart",1,"Cutoff",1e-16,"ErrGoal",1e-16});
+    kagome_itebd.env_tensors_from_itebd(1);
+
+    NN_Heisenberg_Hamiltonian heisenberg_gate({findtype(kagome_rvb_storage._tensor_list(1),Site),findtype(kagome_rvb_storage._tensor_list(0),Site)});
+
+    for (int measurei=0; measurei<30; measurei++)
     {
-        for (int legi=0; legi<indexset.virt_legs().size(); legi++)
-        {
-            if (hasindex(overlap_tensors[sitei],indexset.virt_legs(legi))) 
-            {
-                if (hasindex(kagome_srvbs[0].site_tensors(sitei),indexset.virt_legs(legi))) overlap_tensors[sitei]=overlap_tensors[sitei]*inds_combiners[legi];
-                else overlap_tensors[sitei]=overlap_tensors[sitei]*dag(inds_combiners[legi]);
-            }
-        }
-        Print(sitei);
-        Print(overlap_tensors[sitei].indices());
+        //measure Heisenberg energy
+        Print(measurei);
+        Complex energy=kagome_itebd.expect_val_from_env_tensors({heisenberg_gate.site_tensors(0)*heisenberg_gate.bond_tensor(),heisenberg_gate.site_tensors(1)});
+        Print(energy);
+        kagome_itebd.env_tensors_from_itebd(1);
     }
-    TensorT_RG<IQTensor> wf_overlap(kagome_torus,overlap_tensors,20);
-    Print(wf_overlap.trg_result());
+
+    return 0;
 }
 

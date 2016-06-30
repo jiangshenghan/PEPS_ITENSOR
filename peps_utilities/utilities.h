@@ -267,7 +267,6 @@ template <typename Tensor>
 void eigen_factor(Tensor const& T, Tensor &X, Args const &args = Args::global());
 
 
-//TODO: debug the following
 //implement dag method to a vector of indices
 template <class IndexT>
 std::vector<IndexT> dag(const std::vector<IndexT> &indices)
@@ -285,37 +284,21 @@ std::vector<IndexT> prime(const std::vector<IndexT> &indices, int inc=1)
     return indices_prime;
 }
 
-//randomize a tensor. For IQTensor, we assume the case that total qn is zero if not assigned
-inline void randTensor(ITensor &tensor, const Args &args=Global::args())
+//randomize a tensor. 
+//For IQTensor, we randomize all blocks of tensors if qn is not assigned and all_blocks==true(TODO: fix this case)
+//othereise we randomize the given qn blocks 
+inline bool randTensor(ITensor &tensor, bool all_blocks=false, QN block_qn=QN(), const Args &args=Global::args())
 {
     tensor.randomize(args);
+    return true;
 }
-inline void randTensor(IQTensor &tensor, const Args &args=Global::args())
-{
-    if (tensor.valid() && tensor.blocks().empty()==false)
-    {
-        tensor.randomize(args);
-        return;
-    }
+bool randTensor(IQTensor &tensor, bool all_blocks=false, QN block_qn=QN(), const Args &args=Global::args());
 
-    //if qn is not assigned, then randomize zero qn blocks
-    IndexSet<Index> nset;
-    for (const auto &block: tensor.blocks())
-    {
-        QN div;
-        for (const auto &ind: block.indices())
-        {
-            div+=qn(tensor,ind)*dir(tensor,ind);
-        }
-        if (div==QN())
-        {
-            nset=block.indices();
-            break;
-        }
-    }
-    ITensor &block=tensor.getBlock(nset);
-    block.randomize(args);
-    tensor.randomize(args);
-}
+
+//get delta tensor
+template <class TensorT>
+TensorT delta_tensor(typename TensorT::IndexT in_ind, typename TensorT::IndexT out_ind);
+template <class TensorT>
+TensorT delta_tensor(const std::vector<typename TensorT::IndexT> in_inds, const std::vector<typename TensorT::IndexT> out_inds);
 
 #endif

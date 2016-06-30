@@ -42,7 +42,9 @@ class iMPSt
         const IndexT &virt_inds(int indi) const { return virt_inds_[indi]; }
         const std::vector<IndexT> &virt_inds() const { return virt_inds_; }
         const IndexT &site_inds(int sitei) const { return site_inds_[sitei]; }
+        const std::vector<IndexT> &site_inds() const { return site_inds_; }
         const TensorT &site_tensors(int sitei) const { return site_tensors_[sitei]; }
+        const std::vector<TensorT> &site_tensors() const { return site_tensors_; }
 
 
     protected:
@@ -85,9 +87,9 @@ class DL_iMPSt
         //Constructors
         //
         DL_iMPSt() {}
-        DL_iMPSt(std::vector<TensorT> site_tensors, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds);
+        DL_iMPSt(const std::vector<IndexT> &ket_siteinds, const std::vector<IndexT> &bra_siteinds, std::vector<TensorT> site_tensors);
         //DL_iMPSt(std::vector<TensorT> site_tensors, const IndexT &lind, const IndexT &rind, const std::vector<IndexT> &ket_siteinds, std::vector<IndexT> &bra_siteinds);
-        //init using ket tensors 
+        //init using ket tensors, the site tensors are obtained from contraction ket tensors and bra tensors with ket_siteinds and sl_virt_inds uncontracted 
         //indices will be replaced to avoid incorrect contraction
         DL_iMPSt(std::vector<TensorT> ket_site_tensors, const std::vector<IndexT> &ket_siteinds, const std::vector<IndexT> &sl_virt_inds);
 
@@ -110,8 +112,11 @@ class DL_iMPSt
         //get site_tensors with ket and bra indices separate
         TensorT dl_site_tensors(int tensori) const { return imps_.site_tensors(tensori)*dag(siteind_combiners_[tensori]); }
         const IndexT &ket_siteinds(int indi) const { return ket_siteinds_[indi]; }
+        const std::vector<IndexT> &ket_siteinds() const { return ket_siteinds_; }
         const IndexT &bra_siteinds(int indi) const { return bra_siteinds_[indi]; }
+        const std::vector<IndexT> &bra_siteinds() const { return bra_siteinds_; }
         const CombinerT &siteind_combiners(int combineri) const { return siteind_combiners_[combineri]; }
+        const std::vector<CombinerT> &siteind_combiners() const { return siteind_combiners_; }
         const iMPSt<TensorT> &imps() const { return imps_; }
 
 
@@ -160,12 +165,15 @@ class DL_iMPOt
         std::string type_name() const { return type_name_; }
         int n_tensors_uc() const { return n_tensors_uc_; }
         const IndexT &bra_incoming_inds(int indi) const { return bra_incoming_inds_[indi]; }
+        const std::vector<IndexT> &bra_incoming_inds() const { return bra_incoming_inds_; }
         const IndexT &bra_outgoing_inds(int indi) const { return bra_outgoing_inds_[indi]; }
         const std::vector<IndexT> &bra_outgoing_inds() const { return bra_outgoing_inds_; }
         const IndexT &ket_incoming_inds(int indi) const { return ket_incoming_inds_[indi]; }
+        const std::vector<IndexT> &ket_incoming_inds() const { return ket_incoming_inds_; }
         const IndexT &ket_outgoing_inds(int indi) const { return ket_outgoing_inds_[indi]; }
         const std::vector<IndexT> &ket_outgoing_inds() const { return ket_outgoing_inds_; }
         const IndexT &bra_virt_inds(int indi) const { return bra_virt_inds_[indi]; }
+        const std::vector<IndexT> &bra_virt_inds() const { return bra_virt_inds_; }
         const IndexT &ket_virt_inds(int indi) const { return ket_virt_inds_[indi]; }
         const std::vector<IndexT> &ket_virt_inds() const { return ket_virt_inds_; }
         const TensorT &ket_tensors(int tensori) const { return ket_tensors_[tensori]; }
@@ -221,6 +229,45 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &
 //we then do svd on union_tensor to obtain site_tensors
 template <class TensorT>
 DL_iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc, const std::vector<typename TensorT::IndexT> &ket_siteinds, const std::vector<typename TensorT::IndexT> &bra_siteinds, const TensorT &VL, const TensorT &VR, int maxm, double cutoff=1e-16);
+
+//print methods for above classes
+template <class TensorT>
+inline std::ostream &operator<<(std::ostream &s, const iMPSt<TensorT> imps)
+{
+    s << endl;
+    s << "n_sites_uc=" << imps.n_sites_uc() << endl;
+    s << "site_tensors:" << endl << imps.site_tensors() << endl;
+    s << "site_inds:" << endl << imps.site_inds() << endl;
+    s << "virt_inds:" << endl << imps.virt_inds() << endl;
+    return s;
+}
+
+template <class TensorT>
+inline std::ostream &operator<<(std::ostream &s, const DL_iMPSt<TensorT> dl_imps)
+{
+    s << endl;
+    s << "imps:" << endl << dl_imps.imps() << endl;
+    s << "ket_siteinds:" << endl << dl_imps.ket_siteinds() << endl;
+    s << "bra_siteinds:" << endl << dl_imps.bra_siteinds() << endl;
+    s << "siteind_combiners:" << endl << dl_imps.siteind_combiners() << endl;
+}
+
+template <class TensorT>
+inline std::ostream &operator<<(std::ostream &s, const DL_iMPOt<TensorT> &dl_impo)
+{
+    s << endl;
+    s << dl_impo.type_name() << endl;
+    s << "n_tensors_uc=" << dl_impo.n_tensors_uc() << endl;
+    s << "ket_tensors:" << endl << dl_impo.ket_tensors() << endl;
+    s << "bra_tensors:" << endl << dl_impo.bra_tensors() << endl;
+    s << "ket_incoming_inds:" << endl << dl_impo.ket_incoming_inds() << endl;
+    s << "ket_outgoing_inds:" << endl << dl_impo.ket_outgoing_inds() << endl;
+    s << "ket_virt_inds" << endl << dl_impo.ket_virt_inds() << endl;
+    s << "bra_incoming_inds:" << endl << dl_impo.bra_incoming_inds() << endl;
+    s << "bra_outgoing_inds:" << endl << dl_impo.bra_outgoing_inds() << endl;
+    s << "bra_virt_inds:" << endl << dl_impo.bra_virt_inds() << endl;
+    return s;
+}
 
 
 #endif

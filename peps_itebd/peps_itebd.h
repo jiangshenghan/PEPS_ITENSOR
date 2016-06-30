@@ -34,13 +34,14 @@ class PEPSt_iTEBD
         //      |
         //      5
         //
-        const std::vector<TensorT> &env_tensors_from_itebd(int n_steps);
+        void env_tensors_from_itebd(int n_steps);
         //update imps by contracting cols of impos
         void update_imps_one_step();
         //obtain expectation value of two-site mpo operator
         Complex expect_val_from_env_tensors(const std::vector<TensorT> &two_sites_mpo) const;
 
-        friend void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts);
+        template <class TensorU>
+        friend void contract_dl_impo_imps(DL_iMPSt<TensorU> &dl_imps, const DL_iMPOt<TensorU> &dl_impo, const Args &contract_opts);
 
         //
         //Acess Method
@@ -60,6 +61,7 @@ class PEPSt_iTEBD
         DL_iMPSt<TensorT> ldl_imps_, rdl_imps_;
         std::vector<DL_iMPOt<TensorT>> lcols_dl_impos_, rcols_dl_impos_;
         std::vector<TensorT> env_tensors_;
+        Complex wf_norm_;
         //itebd_options:
         //getInt: Maxm(for svd), MaxIter(for arnoldi), MaxRestart(for arnoldi)
         //getReal: Cutoff(for svd), ErrGoal(for arnoldi)

@@ -292,8 +292,12 @@ Index isomorphic_legs(const Index &old_leg, const std::string &new_leg_name)
 
 IQIndex isomorphic_legs(const IQIndex &old_leg, const std::string &new_leg_name)
 {
-    auto indices_qn=old_leg.indices();
-    return IQIndex(new_leg_name,indices_qn,old_leg.dir(),old_leg.primeLevel());
+    std::vector<IndexQN> new_indices_qn;
+    for (const auto &ind_qn: old_leg.indices())
+    {
+        new_indices_qn.push_back(IndexQN(isomorphic_legs(ind_qn,ind_qn.name()),ind_qn.qn));
+    }
+    return IQIndex(new_leg_name,new_indices_qn,old_leg.dir(),old_leg.primeLevel());
 }
 
 
@@ -595,7 +599,7 @@ void eigen_factor(Tensor const& T, Tensor &X, Args const &args)
 {
     Tensor U,D;
     diagHermitian(T,U,D,args);
-    //TODO:debug the case where D has negative entries
+    //TODO:consider the case where D has negative entries
     D.mapElems([](Real x){ return std::sqrt(std::abs(x)); });
     X=dag(U)*D;
 }
@@ -603,3 +607,106 @@ template
 void eigen_factor(ITensor const& T, ITensor &X, Args const &args);
 template
 void eigen_factor(IQTensor const& T, IQTensor &X, Args const &args);
+
+
+bool randTensor(IQTensor &tensor, bool all_blocks, QN block_qn, const Args &args)
+{
+    if (tensor.valid() && tensor.blocks().empty()==false)
+    {
+        tensor.randomize(args);
+        return true;
+    }
+
+
+    std::vector<int> indices_max_nums;
+    for (const auto &iqind: tensor.indices()) indices_max_nums.push_back(iqind.nindex());
+    
+    //if qn is not assigned and all_blocks==true, then we randomize all blocks, otherwise, randomize zero qn blocks
+    IndexSet<Index> nset;
+
+    if (all_blocks==true)
+    {
+        for (int blocki=0; blocki<tensor.blocks().maxSize(); blocki++)
+        {
+            std::vector<int> indices_nums=list_from_num(blocki,indices_max_nums);
+            for (int indi=0; indi<tensor.r(); indi++)
+            {
+                Index temp_ind=tensor.indices()[indi][indices_nums[indi]];
+                nset.addindex(temp_ind);
+            }
+            ITensor block(nset);
+            block.randomize(args);
+            tensor+=block;
+            nset.clear();
+
+            //Print(blocki);
+            //PrintDat(block);
+            //Print(tensor.norm());
+        }
+        //Print(tensor.norm());
+        return true;
+    }
+
+    nset.clear();
+    int block_count=0; 
+    for (int blocki=0; blocki<tensor.blocks().maxSize(); blocki++)
+    {
+        QN div;
+        std::vector<int> indices_nums=list_from_num(blocki,indices_max_nums);
+        for (int indi=0; indi<tensor.r(); indi++)
+        {
+            Index temp_ind=tensor.indices()[indi][indices_nums[indi]];
+            div+=qn(tensor,temp_ind)*dir(tensor,temp_ind);
+            nset.addindex(temp_ind);
+        }
+        if (div==block_qn) break;
+        else nset.clear();
+        block_count++;
+    }
+    //Print(tensor.blocks().maxSize());
+    //Print(block_count);
+    if (block_count==tensor.blocks().maxSize()) 
+    {
+        cout << "no such block qn!" << endl;
+        return false;
+    }
+    ITensor block(nset);
+    block.randomize(args);
+    tensor+=block;
+    tensor.randomize(args);
+    return true;
+}
+
+template <class TensorT>
+TensorT delta_tensor(typename TensorT::IndexT in_ind, typename TensorT::IndexT out_ind)
+{
+    TensorT res(in_ind,out_ind);
+    for (int indi=1; indi<=in_ind.m(); indi++)
+    {
+        res(in_ind(indi),out_ind(indi))=1.;
+    }
+    return res;
+}
+template 
+ITensor delta_tensor(typename ITensor::IndexT in_ind, typename ITensor::IndexT out_ind);
+template
+IQTensor delta_tensor(typename IQTensor::IndexT in_ind, typename IQTensor::IndexT out_ind);
+
+template <class TensorT>
+TensorT delta_tensor(const std::vector<typename TensorT::IndexT> in_inds, const std::vector<typename TensorT::IndexT> out_inds)
+{
+    int prime_level_shift=1000;
+    typename TensorT::CombinerT in_combiner, out_combiner;
+    for (const auto &ind: in_inds) in_combiner.addleft(ind);
+    TensorT res=delta_tensor<TensorT>(in_combiner.right(),dag(in_combiner.right()).prime(prime_level_shift));
+    res=res*dag(in_combiner)*prime(in_combiner,prime_level_shift);
+    for (int indi=0; indi<in_inds.size(); indi++)
+    {
+        res.replaceIndex(prime(dag(in_inds[indi]),prime_level_shift),out_inds[indi]);
+    }
+    return res;
+}
+template 
+ITensor delta_tensor(const std::vector<typename ITensor::IndexT> in_inds, const std::vector<typename ITensor::IndexT> out_inds);
+template
+IQTensor delta_tensor(const std::vector<typename IQTensor::IndexT> in_inds, const std::vector<typename IQTensor::IndexT> out_inds);

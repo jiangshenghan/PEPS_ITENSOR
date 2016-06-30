@@ -33,6 +33,8 @@ void PEPSt_iTEBD<TensorT>::init_impo()
         multicols_ket_tensors.push_back(std::vector<TensorT>{peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0))});
         multicols_ket_tensors.push_back(std::vector<TensorT>{peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(2))});
 
+        //Print(multicols_ket_tensors);
+
         //init indices
         multicols_linds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(Lx-1,1)(2))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(Lx-1,0)(2)))});
             multicols_linds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(2)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)))});
@@ -46,8 +48,12 @@ void PEPSt_iTEBD<TensorT>::init_impo()
 
         multicols_udinds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,1)(0))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(1))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,Ly-1)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)))});
         multicols_udinds.push_back(std::vector<IndexT>{});
-        multicols_udinds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,1)(0))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,Ly-1)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(0,0)(0)))});
+        multicols_udinds.push_back(std::vector<IndexT>{commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,1)(0))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(1))),commonIndex(peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,Ly-1)(1)),peps_storage_._tensor_list(peps_storage_._coor_to_siteind(1,0)(0)))});
         multicols_udinds.push_back(std::vector<IndexT>{});
+
+        //Print(multicols_linds);
+        //Print(multicols_rinds);
+        //Print(multicols_udinds);
 
         //init impos
         lcols_dl_impos_.clear();
@@ -61,6 +67,9 @@ void PEPSt_iTEBD<TensorT>::init_impo()
         rcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_two",multicols_ket_tensors[1],multicols_rinds[1],multicols_linds[1]));
         rcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_one",multicols_ket_tensors[2],multicols_rinds[2],multicols_linds[2],multicols_udinds[2]));
         rcols_dl_impos_.push_back(DL_iMPOt<TensorT>("type_two",multicols_ket_tensors[3],multicols_rinds[3],multicols_linds[3]));
+
+        //Print(lcols_dl_impos_);
+        //Print(rcols_dl_impos_);
     }
 
 }
@@ -71,15 +80,20 @@ void PEPSt_iTEBD<IQTensor>::init_impo();
 
 
 template <class TensorT>
-const std::vector<TensorT> &PEPSt_iTEBD<TensorT>::env_tensors_from_itebd(int n_steps)
+void PEPSt_iTEBD<TensorT>::env_tensors_from_itebd(int n_steps)
 {
     //get left and right imps
-    for (int stepi=0; stepi<n_steps; stepi++) update_imps_one_step();
+    for (int stepi=0; stepi<n_steps; stepi++) 
+    {
+        Print(stepi);
+        update_imps_one_step();
+    }
 
     int Lx=peps_storage_._Lx,
         Ly=peps_storage_._Ly;
 
     //obtain env_tensors from left and right imps
+    //
     //kagome case
     //for kagome lattice, env tensors are
     //
@@ -154,8 +168,8 @@ const std::vector<TensorT> &PEPSt_iTEBD<TensorT>::env_tensors_from_itebd(int n_s
                             down_inds_dag=dag<IndexT>(down_inds);
         TensorT VU(up_inds_dag),
                 VD(down_inds_dag);
-        randTensor(VU);
-        randTensor(VD);
+        randTensor(VU,true);
+        randTensor(VD,true);
         TensorT_Matrix_Arnoldi<TensorT> UMat(up_inds,down_inds,contract_tensors,VU_contract_seq),
                                         DMat(down_inds,up_inds,contract_tensors,VD_contract_seq);
         Complex eta_U=arnoldi(UMat,VU,itebd_opts_),
@@ -171,14 +185,16 @@ const std::vector<TensorT> &PEPSt_iTEBD<TensorT>::env_tensors_from_itebd(int n_s
         env_tensors_.push_back(contract_tensors[7]);
         env_tensors_.push_back(VU);
         env_tensors_.push_back(VD);
+
+        //get wf_norm_
+        wf_norm_=(env_tensors_[4]*env_tensors_[0]*peps_storage_._tensor_list(1)*dag(prime(peps_storage_._tensor_list(1)).noprime(Site))*env_tensors_[2]*env_tensors_[1]*peps_storage_._tensor_list(0)*dag(prime(peps_storage_._tensor_list(0)).noprime(Site))*env_tensors_[3]*env_tensors_[5]).toComplex();
     }
 
-    return env_tensors_;
 }
 template
-const std::vector<ITensor> &PEPSt_iTEBD<ITensor>::env_tensors_from_itebd(int n_steps);
+void PEPSt_iTEBD<ITensor>::env_tensors_from_itebd(int n_steps);
 template
-const std::vector<IQTensor> &PEPSt_iTEBD<IQTensor>::env_tensors_from_itebd(int n_steps);
+void PEPSt_iTEBD<IQTensor>::env_tensors_from_itebd(int n_steps);
 
 
 template <class TensorT>
@@ -188,37 +204,51 @@ void PEPSt_iTEBD<TensorT>::update_imps_one_step()
     if (peps_storage_._tnetwork_type==8)
     {
         //if default construct, then we init the imps using first col
+        cout << endl << "------------------------------------------------------------------------" << endl;
         if (!ldl_imps_.valid())
         {
+            cout << "init left imps!" << endl;
             ldl_imps_=DL_iMPSt<TensorT>(lcols_dl_impos_[0].ket_tensors(),lcols_dl_impos_[0].ket_outgoing_inds(),lcols_dl_impos_[0].ket_virt_inds());
         }
         else
         {
+            cout << "contract for left first col!" << endl;
             contract_dl_impo_imps(ldl_imps_,lcols_dl_impos_[0],itebd_opts_);
         }
         if (!rdl_imps_.valid())
         {
+            cout << "init right imps!" << endl;
             rdl_imps_=DL_iMPSt<TensorT>(rcols_dl_impos_[0].ket_tensors(),rcols_dl_impos_[0].ket_outgoing_inds(),rcols_dl_impos_[0].ket_virt_inds());
         }
         else
         {
+            cout << "contract for right first col!" << endl;
             contract_dl_impo_imps(rdl_imps_,rcols_dl_impos_[0],itebd_opts_);
         }
         rdl_imps_.move_tensors();
 
         //contract for second col
+        cout << endl << "------------------------------------------------------------------------" << endl;
+        cout << "contract for left second col!" << endl;
         contract_dl_impo_imps(ldl_imps_,lcols_dl_impos_[1],itebd_opts_);
         ldl_imps_.move_tensors();
+        cout << "contract for right second col!" << endl;
         contract_dl_impo_imps(rdl_imps_,rcols_dl_impos_[1],itebd_opts_);
 
         //contract for third col
+        cout << endl << "------------------------------------------------------------------------" << endl;
+        cout << "contract for left third col!" << endl;
         contract_dl_impo_imps(ldl_imps_,lcols_dl_impos_[2],itebd_opts_);
+        cout << "contract for right third col!" << endl;
         contract_dl_impo_imps(rdl_imps_,rcols_dl_impos_[2],itebd_opts_);
         rdl_imps_.move_tensors();
 
         //contract for fourth col
+        cout << endl << "------------------------------------------------------------------------" << endl;
+        cout << "contract for left fourth col!" << endl;
         contract_dl_impo_imps(ldl_imps_,lcols_dl_impos_[3],itebd_opts_);
         ldl_imps_.move_tensors();
+        cout << "contract for right fourth col!" << endl;
         contract_dl_impo_imps(rdl_imps_,rcols_dl_impos_[3],itebd_opts_);
     }
 }
@@ -235,7 +265,7 @@ Complex PEPSt_iTEBD<TensorT>::expect_val_from_env_tensors(const std::vector<Tens
     if (peps_storage_._tnetwork_type==8)
     {
         TensorT result_tensor=env_tensors_[4]*env_tensors_[0]*peps_storage_._tensor_list(1)*two_sites_mpo[0]*dag(prime(peps_storage_._tensor_list(1)))*env_tensors_[2]*env_tensors_[1]*peps_storage_._tensor_list(0)*two_sites_mpo[1]*dag(prime(peps_storage_._tensor_list(0)))*env_tensors_[3]*env_tensors_[5];
-        return result_tensor.toComplex();
+        return result_tensor.toComplex()/wf_norm_;
     }
 }
 template

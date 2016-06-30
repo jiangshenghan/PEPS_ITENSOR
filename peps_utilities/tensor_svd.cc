@@ -154,7 +154,7 @@ truncate(std::vector<EigQN>& alleig,
 
 
 template<class Tensor>
-bool tensor_svd(Tensor AA, Tensor& U, Tensor& D, Tensor& V, const Args& args)
+Spectrum tensor_svd(Tensor AA, Tensor& U, Tensor& D, Tensor& V, const Args& args)
     {
     using IndexT = typename Tensor::IndexT;
     using CombinerT = typename Tensor::CombinerT;
@@ -162,9 +162,9 @@ bool tensor_svd(Tensor AA, Tensor& U, Tensor& D, Tensor& V, const Args& args)
     const Real noise = args.getReal("Noise",0.);
     const bool useOrigM = args.getBool("UseOrigM",false);
     const Args* args_ = &args;
-    if(AA.valid()==false){  return false;}
+    if(AA.valid()==false){  return Spectrum();}
     if(vmc_isZero(AA)) {
-      return false;
+      return Spectrum();
     }
 
     if(noise > 0)
@@ -212,23 +212,20 @@ bool tensor_svd(Tensor AA, Tensor& U, Tensor& D, Tensor& V, const Args& args)
         args_ = &newArgs;
         }
 
-    bool svd_ok_q = 
+    Spectrum spec = 
     tensor_svdRank2(AA,Ucomb.right(),Vcomb.right(),U,D,V,*args_);
-    if(svd_ok_q==false){
-      return false;
-    }
 
     U = dag(Ucomb) * U;
     V = V * dag(Vcomb);
 
-    return true;
+    return spec;
 
     }
-template bool tensor_svd(ITensor AA, ITensor& U, ITensor& D, ITensor& V, const Args& args);
-template bool tensor_svd(IQTensor AA, IQTensor& U, IQTensor& D, IQTensor& V, const Args& args);
+template Spectrum tensor_svd(ITensor AA, ITensor& U, ITensor& D, ITensor& V, const Args& args);
+template Spectrum tensor_svd(IQTensor AA, IQTensor& U, IQTensor& D, IQTensor& V, const Args& args);
 
 
-bool 
+Spectrum 
 tensor_svdRank2(ITensor A, const Index& ui, const Index& vi,
          ITensor& U, ITensor& D, ITensor& V,
          const Args& args)
@@ -382,12 +379,12 @@ tensor_svdRank2(ITensor A, const Index& ui, const Index& vi,
     //    Global::lastd() *= A.scale().real();
     //    }
 
-    return true;
+    return Spectrum(DD,Args("Truncerr",terr));
 
     } // void svdRank2
 
 
-bool
+Spectrum
 tensor_svdRank2(IQTensor A, const IQIndex& uI, const IQIndex& vI,
          IQTensor& U, IQTensor& D, IQTensor& V,
          const Args& args)
@@ -415,7 +412,7 @@ tensor_svdRank2(IQTensor A, const IQIndex& uI, const IQIndex& vI,
 
     const int Nblock = A.blocks().size();
     if(Nblock == 0){
-        return false;
+        return Spectrum();
     }
 
     std::vector<Matrix> Umatrix(Nblock),
@@ -434,10 +431,10 @@ tensor_svdRank2(IQTensor A, const IQIndex& uI, const IQIndex& vI,
     alleig.reserve(min(uI.m(),vI.m()));
 
     if(uI.m() == 0){
-        return false;
+        return Spectrum();
     }
     if(vI.m() == 0){
-        return false;
+        return Spectrum();
     }
 
     LogNumber refNorm(logrefNorm,1);
@@ -484,7 +481,7 @@ tensor_svdRank2(IQTensor A, const IQIndex& uI, const IQIndex& vI,
         if(!cplx)
             {
             Matrix M(ui->m(),vi->m());
-	    if(t.r()!=2){return false;}
+	    if(t.r()!=2){return Spectrum();}
             t.toMatrix11NoScale(*ui,*vi,M);
 
             //SVD(M,UU,d,VV,thresh);
@@ -666,7 +663,7 @@ tensor_svdRank2(IQTensor A, const IQIndex& uI, const IQIndex& vI,
         }
 
     if(Liq.size() == 0){
-      return false;
+      return Spectrum();
     }
 
     IQIndex L(lname,Liq,uI.dir()), R(rname,Riq,vI.dir());
@@ -722,7 +719,7 @@ tensor_svdRank2(IQTensor A, const IQIndex& uI, const IQIndex& vI,
         qns[i] = alleig.at(aesize-1-i).qn;
         }
 
-    return true;
+    return Spectrum(DD,qns,Args("Truncerr",svdtruncerr));
 
     } //void svdRank2
 
