@@ -595,18 +595,23 @@ template void
 factor(IQTensor const& T, IQTensor& A, IQTensor& B, Args const& args);
 
 template <typename Tensor>
-void eigen_factor(Tensor const& T, Tensor &X, Args const &args)
+Spectrum eigen_factor(Tensor const& T, Tensor &X, Args const &args)
 {
     Tensor U,D;
-    diagHermitian(T,U,D,args);
+    Spectrum spec=diagHermitian(T,U,D,args);
     //TODO:consider the case where D has negative entries
-    D.mapElems([](Real x){ return std::sqrt(std::abs(x)); });
-    X=dag(U)*D;
+    Tensor D_sqrt=D;
+    D_sqrt.mapElems([](Real x){ return std::sqrt(std::abs(x)); });
+    X=dag(U)*D_sqrt*prime(U);
+    //Print(((X*dag(X).mapprime(0,2)).mapprime(2,1)-T).norm());
+    clean(X);
+
+    return spec;
 }
 template
-void eigen_factor(ITensor const& T, ITensor &X, Args const &args);
+Spectrum eigen_factor(ITensor const& T, ITensor &X, Args const &args);
 template
-void eigen_factor(IQTensor const& T, IQTensor &X, Args const &args);
+Spectrum eigen_factor(IQTensor const& T, IQTensor &X, Args const &args);
 
 
 bool randTensor(IQTensor &tensor, bool all_blocks, QN block_qn, const Args &args)
@@ -710,3 +715,24 @@ template
 ITensor delta_tensor(const std::vector<typename ITensor::IndexT> in_inds, const std::vector<typename ITensor::IndexT> out_inds);
 template
 IQTensor delta_tensor(const std::vector<typename IQTensor::IndexT> in_inds, const std::vector<typename IQTensor::IndexT> out_inds);
+
+Tnetwork_Storage<ITensor> tnetwork_storage_ITensor_from_IQTensor(const Tnetwork_Storage<IQTensor> &iqtnetwork_storage)
+{
+    Tnetwork_Storage<ITensor> tnetwork_storage;
+
+    tnetwork_storage._tnetwork_type=iqtnetwork_storage._tnetwork_type;
+    tnetwork_storage._n_subl=iqtnetwork_storage._n_subl;
+    tnetwork_storage._Lx=iqtnetwork_storage._Lx;
+    tnetwork_storage._Ly=iqtnetwork_storage._Ly;
+    tnetwork_storage._boundary_condition=iqtnetwork_storage._boundary_condition;
+    tnetwork_storage._coor_to_siteind=iqtnetwork_storage._coor_to_siteind;
+
+    int n_sites_total=iqtnetwork_storage._Lx*iqtnetwork_storage._Ly*iqtnetwork_storage._n_subl;
+    tnetwork_storage._tensor_list.set_size(n_sites_total);
+    for (int sitei=0; sitei<n_sites_total; sitei++)
+    {
+        tnetwork_storage._tensor_list(sitei)=iqtnetwork_storage._tensor_list(sitei).toITensor();
+    }
+
+    return tnetwork_storage;
+}

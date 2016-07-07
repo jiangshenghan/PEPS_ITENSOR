@@ -41,12 +41,19 @@ class PEPSt_iTEBD
         Complex expect_val_from_env_tensors(const std::vector<TensorT> &two_sites_mpo) const;
 
         template <class TensorU>
-        friend void contract_dl_impo_imps(DL_iMPSt<TensorU> &dl_imps, const DL_iMPOt<TensorU> &dl_impo, const Args &contract_opts);
+        friend void contract_dl_impo_imps(DL_iMPSt<TensorU> &dl_imps, const DL_iMPOt<TensorU> &dl_impo, Args contract_opts);
 
         //
         //Acess Method
         //
+        const DL_iMPSt<TensorT> &ldl_imps() const { return ldl_imps_; }
+        const DL_iMPSt<TensorT> &rdl_imps() const { return rdl_imps_; }
+        const DL_iMPOt<TensorT> &lcols_dl_impos(int coli) const { return lcols_dl_impos_[coli]; }
+        const std::vector<DL_iMPOt<TensorT>> lcols_dl_impos() const { return lcols_dl_impos_; }
+        const DL_iMPOt<TensorT> &rcols_dl_impos(int coli) const { return rcols_dl_impos_[coli]; }
+        const std::vector<DL_iMPOt<TensorT>> rcols_dl_impos() const { return rcols_dl_impos_; }
         const std::vector<TensorT> &env_tensors() const { return env_tensors_; }
+        const Args &itebd_opts() const { return itebd_opts_; }
         
         //
         //Constructor Helpers
@@ -61,10 +68,12 @@ class PEPSt_iTEBD
         DL_iMPSt<TensorT> ldl_imps_, rdl_imps_;
         std::vector<DL_iMPOt<TensorT>> lcols_dl_impos_, rcols_dl_impos_;
         std::vector<TensorT> env_tensors_;
+        std::vector<TensorT> cutting_tensors_;
         Complex wf_norm_;
         //itebd_options:
         //getInt: Maxm(for svd), MaxIter(for arnoldi), MaxRestart(for arnoldi)
         //getReal: Cutoff(for svd), ErrGoal(for arnoldi)
+        //getString: ContractMethod("normal","extra_delta_tensor","zero_slX","pi_slX"), AbsorbBond("left_bond","right_bond")
         Args itebd_opts_; 
 
 };

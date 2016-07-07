@@ -328,7 +328,7 @@ DL_iMPOt<IQTensor>::DL_iMPOt(std::string type_name, const std::vector<IQTensor> 
 
 //Methods to update imps
 template <class TensorT>
-void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts)
+void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, Args contract_opts)
 {
     using IndexT=typename TensorT::IndexT;
     using IndexValT=typename TensorT::IndexValT;
@@ -340,6 +340,7 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &
     TensorT VR, VL;
     //tensors_uc are for imps truncation
     std::vector<TensorT> tensors_uc;
+    TensorT_Matrix_Arnoldi<TensorT> LMat, RMat;
 
     Print(dl_impo.type_name());
     //Print(dl_impo);
@@ -444,26 +445,31 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &
         //Print(VR_combiner_seq);
 
         //implement arnoldi method
-        TensorT_Matrix_Arnoldi<TensorT> LMat(left_inds,right_inds,contract_tensors,VL_contract_seq,leg_combiners,VL_combiner_seq),
-                                        RMat(right_inds,left_inds,contract_tensors,VR_contract_seq,leg_combiners,VR_combiner_seq);
+        LMat=TensorT_Matrix_Arnoldi<TensorT>(left_inds,right_inds,contract_tensors,VL_contract_seq,leg_combiners,VL_combiner_seq);
+        RMat=TensorT_Matrix_Arnoldi<TensorT>(right_inds,left_inds,contract_tensors,VR_contract_seq,leg_combiners,VR_combiner_seq);
 
-        //std::vector<IndexT> VL_in_inds, VL_out_inds;
-        //for (const auto &ind: leg_combiners[1].left()) VL_in_inds.push_back(ind);
-        //for (const auto &ind: leg_combiners[2].left()) VL_out_inds.push_back(ind);
-        //VL=delta_tensor<TensorT>(VL_in_inds,VL_out_inds);
-        //Print(arnoldi(LMat,VL,contract_opts));
-        //exit(0);
+        //TODO: missing the case where the dominant eigenvector has sz!=0
+        //using identity matrix to init VL and VR
+        std::vector<IndexT> VL_in_inds, VL_out_inds,
+                            VR_in_inds, VR_out_inds;
+        for (const auto &ind: leg_combiners[1].left()) VL_in_inds.push_back(ind);
+        for (const auto &ind: leg_combiners[2].left()) VL_out_inds.push_back(ind);
+        for (const auto &ind: leg_combiners[2*n_tensors_uc+1].left()) VR_in_inds.push_back(dag(ind));
+        for (const auto &ind: leg_combiners.back().left()) VR_out_inds.push_back(dag(ind));
+        VL=delta_tensor<TensorT>(VL_in_inds,VL_out_inds);
+        VR=delta_tensor<TensorT>(VR_in_inds,VR_out_inds);
 
-        std::vector<IndexT> left_inds_dag=dag<IndexT>(left_inds),
-                            right_inds_dag=dag<IndexT>(right_inds);
-        VL=TensorT(left_inds_dag);
-        VR=TensorT(right_inds_dag);
-        randTensor(VL);
-        randTensor(VR);
-        eta_L=arnoldi(LMat,VL,contract_opts);
-        eta_R=arnoldi(RMat,VR,contract_opts);
+        //using random matrix to init VL and VR
+        //std::vector<IndexT> left_inds_dag=dag<IndexT>(left_inds),
+        //                    right_inds_dag=dag<IndexT>(right_inds);
+        //VL=TensorT(left_inds_dag);
+        //VR=TensorT(right_inds_dag);
+        //randTensor(VL);
+        //randTensor(VR);
+
     }
 
+    //FIXME: debug this case
     if (dl_impo.type_name().find("type_two")!=std::string::npos)
     {
         //init contract_tensors and tensors_uc
@@ -514,39 +520,62 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &
         right_inds.push_back(prime(dl_imps.virt_inds().back()));
 
         //implement arnoldi method
-        TensorT_Matrix_Arnoldi<TensorT> LMat(left_inds,right_inds,contract_tensors,VL_contract_seq),
-                                        RMat(right_inds,left_inds,contract_tensors,VR_contract_seq);
-        std::vector<IndexT> left_inds_dag=dag<IndexT>(left_inds),
-                            right_inds_dag=dag<IndexT>(right_inds);
-        VL=TensorT(left_inds_dag);
-        VR=TensorT(right_inds_dag);
-        randTensor(VL);
-        randTensor(VR);
-        eta_L=arnoldi(LMat,VL,contract_opts);
-        eta_R=arnoldi(RMat,VR,contract_opts);
+        LMat=TensorT_Matrix_Arnoldi<TensorT>(left_inds,right_inds,contract_tensors,VL_contract_seq);
+        RMat=TensorT_Matrix_Arnoldi<TensorT>(right_inds,left_inds,contract_tensors,VR_contract_seq);
+
+        //TODO: missing the case where the dominant eigenvector has sz!=0
+        //using identity matrix to init VL and VR
+        VL=delta_tensor<TensorT>(dag(dl_imps.virt_inds().front()),prime(dl_imps.virt_inds().front()));
+        VR=delta_tensor<TensorT>(dl_imps.virt_inds().back(),dag(prime(dl_imps.virt_inds().back())));
+
+        //using random matrix to init VL and VR
+        //std::vector<IndexT> left_inds_dag=dag<IndexT>(left_inds),
+        //                    right_inds_dag=dag<IndexT>(right_inds);
+        //VL=TensorT(left_inds_dag);
+        //VR=TensorT(right_inds_dag);
+        //randTensor(VL);
+        //randTensor(VR);
+
     }
 
     //TODO: implement other types
 
+    bool check_herm=false;
+    do
+    {
+        cout << "MaxIter: " << contract_opts.getInt("MaxIter") << endl;
+        eta_L=arnoldi(LMat,VL,contract_opts);
+        eta_R=arnoldi(RMat,VR,contract_opts);
+        contract_opts.add("MaxIter",contract_opts.getInt("MaxIter")+10);
+        TensorT VL_dag=dag(VL).prime().mapprime(2,0),
+                VR_dag=dag(VR).prime().mapprime(2,0);
+        if ((VL-VL_dag).norm()/VL.norm()<1e-8 && (VR-VR_dag).norm()/VR.norm()<1e-8) check_herm=true;
+
+        Print(eta_L);
+        Print(eta_R);
+        Print((eta_L-eta_R)/eta_L);
+        Print((VL-VL_dag).norm()/VL.norm());
+        Print((VR-VR_dag).norm()/VR.norm());
+    }
+    while ((std::abs((eta_L-eta_R)/eta_L)>1e-8 || (!check_herm)) && (contract_opts.getInt("MaxIter")<30));
+
     clean(VL);
     clean(VR);
-    Print(eta_L);
-    Print(eta_R);
-    //PrintDat(VL);
-    //PrintDat(VR);
+    //Print(eta_L);
+    //Print(eta_R);
 
     //update imps by truncation
-    dl_imps=dl_imps_from_truncation(tensors_uc,dl_impo.ket_outgoing_inds(),dl_impo.bra_outgoing_inds(),VL,VR,contract_opts.getInt("Maxm"),contract_opts.getReal("Cutoff"));
+    dl_imps=dl_imps_from_truncation(tensors_uc,dl_impo.ket_outgoing_inds(),dl_impo.bra_outgoing_inds(),VL,VR,contract_opts);
     cout << "Finish contraction and compression!" << endl;
 }
 template
-void contract_dl_impo_imps(DL_iMPSt<ITensor> &dl_imps, const DL_iMPOt<ITensor> &dl_impo, const Args &contract_opts);
+void contract_dl_impo_imps(DL_iMPSt<ITensor> &dl_imps, const DL_iMPOt<ITensor> &dl_impo, Args contract_opts);
 template
-void contract_dl_impo_imps(DL_iMPSt<IQTensor> &dl_imps, const DL_iMPOt<IQTensor> &dl_impo, const Args &contract_opts);
+void contract_dl_impo_imps(DL_iMPSt<IQTensor> &dl_imps, const DL_iMPOt<IQTensor> &dl_impo, Args contract_opts);
 
 
 template <class TensorT>
-DL_iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc, const std::vector<typename TensorT::IndexT> &ket_siteinds, const std::vector<typename TensorT::IndexT> &bra_siteinds, const TensorT &VL, const TensorT &VR, int maxm, double cutoff)
+DL_iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc, const std::vector<typename TensorT::IndexT> &ket_siteinds, const std::vector<typename TensorT::IndexT> &bra_siteinds, const TensorT &VL, const TensorT &VR, Args trunc_opts)
 {
     using IndexT=typename TensorT::IndexT;
     using IndexValT=typename TensorT::IndexValT;
@@ -557,22 +586,33 @@ DL_iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc
     //Print(VR);
 
     //set svd options
-    Args svd_args;
-    svd_args.add("Cutoff",cutoff);
-    svd_args.add("Maxm",maxm);
-    svd_args.add("DoRelCutoff",true);
-    svd_args.add("AbsoluteCutoff",false);
+    trunc_opts.add("DoRelCutoff",true);
+    trunc_opts.add("AbsoluteCutoff",false);
 
     //eigendecompose VL and VR
     TensorT X,Y;
-    eigen_factor(VR,X);
-    eigen_factor(VL,Y);
-    //Print(VR.indices());
-    //Print(X.indices());
-    //Print((X*dag(prime(X,commonIndex(VR,X)))-VR).norm());
+    Print(eigen_factor(VR,X));
+    Print(eigen_factor(VL,Y));
+
+    //combine the primed legs of X/Y
+    CombinerT X_primed_combiner, Y_primed_combiner;
+    for (const auto &ind: X.indices())
+    {
+        if (ind.primeLevel()!=0) X_primed_combiner.addleft(ind);
+    }
+    for (const auto &ind: Y.indices())
+    {
+        if (ind.primeLevel()!=0) Y_primed_combiner.addleft(ind);
+    }
+    X=X*X_primed_combiner; clean(X);
+    Y=Y*Y_primed_combiner; clean(Y);
+
+    IndexT Uind=uniqueIndex(Y,VL,Link), Vind=uniqueIndex(X,VR,Link);
+    cout << "check eigen-factor:" << endl;
+    Print((X*dag(prime(X).noprime(prime(Vind)))-VR).norm());
+    Print((Y*dag(prime(Y).noprime(prime(Uind)))-VL).norm());
 
     //singular value decompose of Y*X
-    IndexT Uind=uniqueIndex(Y,VL,Link), Vind=uniqueIndex(X,VR,Link);
     std::vector<IndexT> Ycontract_inds, Xcontract_inds;
     for (const auto &ind: Y.indices())
     {
@@ -586,14 +626,14 @@ DL_iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc
     }
     TensorT YX=tensor_contraction<TensorT,IndexT>(Y,X,Ycontract_inds,Xcontract_inds);
     TensorT U(Uind),D,V;
-    Print(tensor_svd(YX,U,D,V,svd_args));
+    //Print(tensor_svd(YX,U,D,V,trunc_opts));
+    Print(svd(YX,U,D,V,trunc_opts));
     D/=D.norm();
+    //Print(Y.norm());
+    //Print(X.norm());
+    //Print(YX.norm());
     //Print(D.diag());
-    TensorT Dinv_sqrt=dag(D);
-    Dinv_sqrt.pseudoInvert();
-    Dinv_sqrt.mapElems([](double x){ return std::sqrt(std::abs(x)); });
 
-    //FIXME: too many indices, use Combine
     //update union_tensor
     int site_indi=0;
     std::vector<CombinerT> siteind_combiners;
@@ -607,6 +647,8 @@ DL_iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc
             int combiner_last=siteind_combiners.size()-1;
             if (combiner_last>0) siteind_combiners.back().addleft(siteind_combiners[combiner_last-1].right());
             union_tensor=union_tensor*siteind_combiners.back();
+            //Print(siteind_combiners.back());
+            //Print(union_tensor.indices());
             site_indi++;
         }
     }
@@ -617,80 +659,95 @@ DL_iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc
     }
     //very important to do clean?
     clean(union_tensor);
-
-    //test union_tensor
-    //TensorT temp_union_tensor=dag(U)*Y;
-    //for (const auto &tens: tensors_uc)
-    //{
-    //    temp_union_tensor*=tens;
-    //}
-    //temp_union_tensor*=X*dag(V);
-    //Print((temp_union_tensor-union_tensor).norm());
-    //TensorT temp_P(ket_siteinds[0],bra_siteinds[0],commonIndex(temp_union_tensor,Dinv_sqrt)),temp_nlD,temp_Q;
-    //Print(tensor_svd(temp_union_tensor,temp_P,temp_nlD,temp_Q,svd_args));
-    //temp_P=TensorT(ket_siteinds[0],bra_siteinds[0],commonIndex(union_tensor,Dinv_sqrt));
-    //temp_nlD=TensorT();
-    //temp_Q=TensorT();
-    //Print(tensor_svd(union_tensor,temp_P,temp_nlD,temp_Q,svd_args));
+    Print(union_tensor.indices());
 
     //update site_tensors_ by svd. 
     //for example for n=2 case
     //
-    // --union_tensor-- = --P--nlD--Q--
-    //       | |            |       |
+    // --union_tensor-- = --P--nD--Q--
+    //       | |            |      |
     //
     //Then, we have
     //
-    //  --tens0-- = --lDinv_sqrt--P--nlD_sqrt--
-    //      |                     |
+    //  --tens0-- = --P--
+    //      |         |
     //
-    //  --tens1-- = --nlD_sqrt--Q--rDinv_sqrt--
-    //      |                   |
+    //  --tens1-- = --nD--Q--Dinv--
+    //      |             |
     //
-    TensorT lDinv_sqrt=prime(Dinv_sqrt,commonIndex(Dinv_sqrt,V)),
-            rDinv_sqrt=prime(Dinv_sqrt,commonIndex(Dinv_sqrt,U));
     std::vector<TensorT> site_tensors;
-    for (int sitei=0; sitei<ket_siteinds.size()-1; sitei++)
+    //choose the way to absorb bond tensor (entanglement spectrum)
+    std::string absorb_dir=trunc_opts.getString("AbsorbBond","left_bond");
+    //absorb LEFT bond tensor to site tensor
+    if (absorb_dir.find("left_bond")!=std::string::npos)
     {
-        IndexT lind=commonIndex(union_tensor,lDinv_sqrt);
-        TensorT P(ket_siteinds[sitei],bra_siteinds[sitei],lind),nlD,Q;
-        Print(tensor_svd(union_tensor,P,nlD,Q,svd_args));
-        nlD/=nlD.norm();
+        IndexT lind=commonIndex(union_tensor,U);
+        for (int sitei=0; sitei<ket_siteinds.size()-1; sitei++)
+        {
+            //decompose using svd method
+            TensorT P(ket_siteinds[sitei],bra_siteinds[sitei],lind),nD,Q;
+            Print(P.indices());
+            //Print(tensor_svd(union_tensor,P,nD,Q,trunc_opts));
+            Print(svd(union_tensor,P,nD,Q,trunc_opts));
+            nD/=nD.norm();
+            //Print(union_tensor.norm());
+            //Print(nD.diag());
+            site_tensors.push_back(P);
+            union_tensor=nD*Q;
+            lind=commonIndex(union_tensor,nD);
 
-        TensorT nlD_sqrt=nlD;
-        nlD_sqrt.mapElems([](double x){ return std::sqrt(std::abs(x)); });
-
-        //Print(union_tensor.indices());
-        //Print(lind);
-        //Print(lDinv_sqrt.indices());
-        //Print(nlD_sqrt.indices());
-        //Print(lDinv_sqrt.norm());
-        //Print(nlD_sqrt.norm());
-        //Print((lDinv_sqrt*P).norm());
-
-        //update site_tensors_ and bulk virt_inds_
-        site_tensors.push_back(lDinv_sqrt*P*nlD_sqrt);
-        site_tensors.back().noprime();
-
-        union_tensor=nlD*Q;
-        lDinv_sqrt=dag(nlD);
-        lDinv_sqrt.pseudoInvert();
-        lDinv_sqrt.mapElems([](double x){ return std::sqrt(abs(x)); });
+            //decompose using denmatDecomp method
+            //TensorT P(ket_siteinds[sitei],bra_siteinds[sitei],lind),nDQ;
+            //Print(denmatDecomp(union_tensor,P,nDQ,Fromleft,trunc_opts));
+            //site_tensors.push_back(P);
+            //lind=commonIndex(nDQ,P);
+            //union_tensor=nDQ;
+        }
+        TensorT Dinv=dag(D);
+        Dinv.pseudoInvert();
+        IndexT rind=commonIndex(Dinv,U);
+        Dinv.replaceIndex(rind,isomorphic_legs(rind,"rind"));
+        site_tensors.push_back(union_tensor*Dinv);
     }
-    site_tensors.push_back(lDinv_sqrt*union_tensor*rDinv_sqrt);
-    site_tensors.back().noprime();
 
-    //for (const auto &site_tensor: site_tensors)
-    //{
-    //    Print(site_tensor.indices());
-    //    Print(site_tensor.norm());
-    //}
+    //absorb RIGHT bond tensor to site tensor
+    if (absorb_dir.find("right_bond")!=std::string::npos)
+    {
+        IndexT rind=commonIndex(union_tensor,V);
+        for (int sitei=ket_siteinds.size()-1; sitei>0; sitei--)
+        {
+            //decompose using svd method
+            TensorT P,nD,Q(ket_siteinds[sitei],bra_siteinds[sitei],rind);
+            //Print(tensor_svd(union_tensor,P,nD,Q,trunc_opts));
+            Print(svd(union_tensor,P,nD,Q,trunc_opts));
+            nD/=nD.norm();
+            //Print(union_tensor.norm());
+            //Print(nD.diag());
+            site_tensors.insert(site_tensors.begin(),Q);
+            union_tensor=P*nD;
+            rind=commonIndex(union_tensor,nD);
+        }
+        TensorT Dinv=dag(D);
+        Dinv.pseudoInvert();
+        IndexT lind=commonIndex(Dinv,V);
+        Dinv.replaceIndex(lind,isomorphic_legs(lind,"lind"));
+        site_tensors.insert(site_tensors.begin(),Dinv*union_tensor);
+    }
+
+    for (auto &site_tensor: site_tensors)
+    {
+        int tensor_dim=1;
+        for (const auto &ind: site_tensor.indices()) tensor_dim*=ind.m();
+        site_tensor=site_tensor/site_tensor.norm()*std::sqrt(1.*tensor_dim);
+        //Print(site_tensor.indices());
+        //Print(site_tensor.norm());
+    }
 
     DL_iMPSt<TensorT> dl_imps(ket_siteinds,bra_siteinds,site_tensors);
     //Print(dl_imps);
     return dl_imps;
 }
 template
-DL_iMPSt<ITensor> dl_imps_from_truncation(const std::vector<ITensor> &tensors_uc, const std::vector<typename ITensor::IndexT> &ket_siteinds, const std::vector<typename ITensor::IndexT> &bra_siteinds, const ITensor &VL, const ITensor &VR, int maxm, double cutoff);
+DL_iMPSt<ITensor> dl_imps_from_truncation(const std::vector<ITensor> &tensors_uc, const std::vector<typename ITensor::IndexT> &ket_siteinds, const std::vector<typename ITensor::IndexT> &bra_siteinds, const ITensor &VL, const ITensor &VR, Args trunc_opts);
 template
-DL_iMPSt<IQTensor> dl_imps_from_truncation(const std::vector<IQTensor> &tensors_uc, const std::vector<typename IQTensor::IndexT> &ket_siteinds, const std::vector<typename IQTensor::IndexT> &bra_siteinds, const IQTensor &VL, const IQTensor &VR, int maxm, double cutoff);
+DL_iMPSt<IQTensor> dl_imps_from_truncation(const std::vector<IQTensor> &tensors_uc, const std::vector<typename IQTensor::IndexT> &ket_siteinds, const std::vector<typename IQTensor::IndexT> &bra_siteinds, const IQTensor &VL, const IQTensor &VR, Args trunc_opts);

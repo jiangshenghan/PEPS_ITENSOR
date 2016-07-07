@@ -214,11 +214,13 @@ class DL_iMPOt
 //Contraction Methods for imps
 //
 //contract given dl_imps and dl_impo, and then do compression
+//
 //contract_opts:
 //getInt: Maxm(for svd), MaxIter(for arnoldi), MaxRestart(for arnoldi)
 //getReal: Cutoff(for svd), ErrGoal(for arnoldi)
+//getString: AbsorbBond("left_bond","right_bond")
 template <class TensorT>
-void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, const Args &contract_opts);
+void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, Args contract_opts);
 
 //truncate imps where the dominant eigenvectors are known
 //VL_indices={dag(lind),prime(lind)}
@@ -227,8 +229,13 @@ void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &
 //VL=X.X^dagger, VR=Y.Y^dagger
 //union_tensor=U^dagger.Y.(prod of tensors_uc).X.V^dagger
 //we then do svd on union_tensor to obtain site_tensors
+//
+//trunc_opts:
+//getInt: Maxm
+//getReal: Cutoff
+//getString: AbsorbBond("left_bond","right_bond")
 template <class TensorT>
-DL_iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc, const std::vector<typename TensorT::IndexT> &ket_siteinds, const std::vector<typename TensorT::IndexT> &bra_siteinds, const TensorT &VL, const TensorT &VR, int maxm, double cutoff=1e-16);
+DL_iMPSt<TensorT> dl_imps_from_truncation(const std::vector<TensorT> &tensors_uc, const std::vector<typename TensorT::IndexT> &ket_siteinds, const std::vector<typename TensorT::IndexT> &bra_siteinds, const TensorT &VL, const TensorT &VR, Args trunc_opts);
 
 //print methods for above classes
 template <class TensorT>

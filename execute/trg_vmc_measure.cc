@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     //to run this file, type e.g.:
-    //mpirun -np 10 ./trg_vmc_measure.cc file_path/file_name operator(Heisenberg/SzSz) maxm(an int)
+    //mpirun -np 10 ./trg_vmc_measure.exe file_path/file_name operator(Heisenberg/SzSz) maxm(an int)
 
     //initialize mpi
     MPI_Init(&argc,&argv);

@@ -33,6 +33,7 @@ class TensorT_Matrix_Arnoldi
         //
         //constructor
         //
+        TensorT_Matrix_Arnoldi() {}
         TensorT_Matrix_Arnoldi(const std::vector<IndexT> &input_indices, const std::vector<IndexT> &output_indices, const std::vector<TensorT> &contract_tensors, const std::vector<int> &contract_seq=std::vector<int>(), const std::vector<CombinerT> &leg_combiners=std::vector<CombinerT>(), std::vector<std::vector<int>> combiner_seq=std::vector<std::vector<int>>()):
             input_indices_(input_indices),
             output_indices_(output_indices),
@@ -63,19 +64,32 @@ class TensorT_Matrix_Arnoldi
         {
             for (int i=0; i<contract_seq_.size(); i++)
             {
-                TensorT temp_tensor;
+                auto begin=std::chrono::steady_clock::now();
+
+                Print(i);
+
+                std::shared_ptr<TensorT> temp_tensor_ptr=std::make_shared<TensorT>();
                 if (contract_seq_[i]==-1) 
-                    temp_tensor=phi;
+                    temp_tensor_ptr=std::make_shared<TensorT>(phi);
                 else
-                    temp_tensor=contract_tensors_[contract_seq_[i]];
+                    temp_tensor_ptr=std::make_shared<TensorT>(contract_tensors_[contract_seq_[i]]);
+
+                Print(temp_tensor_ptr->indices());
+                Print(phip.indices());
 
                 if (i==0) 
-                    phip=temp_tensor;
+                    phip=*(temp_tensor_ptr.get());
                 else
-                    phip*=temp_tensor;
+                    phip*=*(temp_tensor_ptr.get());
 
-                //Print(i);
+                auto middle=std::chrono::steady_clock::now();
+                std::chrono::duration<double> contract_elapse=middle-begin;
+                Print(contract_elapse.count());
+
+                //cout << "product of matrix:" << endl;
+                //cout << "contract!" << endl;
                 //Print(phip.indices());
+
                 for (int combineri: combiner_seq_[i])
                 {
                     //Print(leg_combiners_[std::abs(combineri)]);
@@ -87,19 +101,24 @@ class TensorT_Matrix_Arnoldi
 
                 //Print(i);
                 //Print(temp_tensor.indices());
+                //cout << "act combiner!" << endl;
                 //Print(phip.indices());
                 //Print(temp_tensor.norm());
                 //Print(phip.norm());
+
+                auto end=std::chrono::steady_clock::now();
+                std::chrono::duration<double> combine_elapse=end-middle;
+                Print(combine_elapse.count());
             }
 
             //TODO: consider the case where input_dir==output_dir
             for (int indi=0; indi<input_indices_.size(); indi++)
             {
-                if (input_indices_[indi].dir()==output_indices_[indi].dir()) 
-                {
-                    cout << "Input indices and output indices of sparse matrix have conflict directions!" << endl;
-                    exit(1);
-                }
+                //if ((input_indices_[indi].dir()==In && output_indices_[indi].dir()==In) || (input_indices_[indi].dir()==Out && output_indices_[indi].dir()==Out))
+                //{
+                //    cout << "Input indices and output indices of sparse matrix have conflict directions!" << endl;
+                //    exit(1);
+                //}
                 phip.replaceIndex(output_indices_[indi],dag(input_indices_[indi]));
             }
         }
@@ -114,7 +133,7 @@ class TensorT_Matrix_Arnoldi
         std::vector<CombinerT> leg_combiners_;
         std::vector<TensorT> contract_tensors_;
         std::vector<int> contract_seq_;
-        std::vector<std::vector<int>>combiner_seq_;
+        std::vector<std::vector<int>> combiner_seq_;
 };
 
 #endif

@@ -264,7 +264,7 @@ void factor(Tensor const& T, Tensor &A, Tensor &B, Args const &args = Args::glob
 //the eigen_factor is based on diagHermitian of a tensor T (see itensor/svdalgs.h). T is positive and hermitian with indices i,j,k,... and i',j',k',...
 //Assume  T=dag(U)*D*prime(U), where D stores eigenvalues, then, we get X=dag(U).sqrt(D), and X^dagger=sqrt(D)*prime(U). Thus, T=X.X^dagger. 
 template <typename Tensor>
-void eigen_factor(Tensor const& T, Tensor &X, Args const &args = Args::global());
+Spectrum eigen_factor(Tensor const& T, Tensor &X, Args const &args = Args::global());
 
 
 //implement dag method to a vector of indices
@@ -300,5 +300,8 @@ template <class TensorT>
 TensorT delta_tensor(typename TensorT::IndexT in_ind, typename TensorT::IndexT out_ind);
 template <class TensorT>
 TensorT delta_tensor(const std::vector<typename TensorT::IndexT> in_inds, const std::vector<typename TensorT::IndexT> out_inds);
+
+//turn Tnetwork_Storage<IQTensor> to Tnetwork_Storage<ITensor>
+Tnetwork_Storage<ITensor> tnetwork_storage_ITensor_from_IQTensor(const Tnetwork_Storage<IQTensor> &iqtnetwork_storage);
 
 #endif
