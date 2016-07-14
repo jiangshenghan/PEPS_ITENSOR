@@ -213,12 +213,16 @@ class DL_iMPOt
 //
 //Contraction Methods for imps
 //
-//contract given dl_imps and dl_impo, and then do compression
-//
 //contract_opts:
 //getInt: Maxm(for svd), MaxIter(for arnoldi), MaxRestart(for arnoldi)
 //getReal: Cutoff(for svd), ErrGoal(for arnoldi)
 //getString: AbsorbBond("left_bond","right_bond")
+//
+//contract given imps and impo, and then do compression
+template <class TensorT>
+void contract_impo_imps(iMPSt<TenosrT> &imps, const iMPOt<TensorT> &imps, Args contract_opts);
+
+//contract given dl_imps and dl_impo, and then do compression
 template <class TensorT>
 void contract_dl_impo_imps(DL_iMPSt<TensorT> &dl_imps, const DL_iMPOt<TensorT> &dl_impo, Args contract_opts);
 
